@@ -23,7 +23,7 @@ _Basis.so: Basis_wrap.cxx libBasis.so
 	${CXX} -fPIC -std=c++11 -c Basis_wrap.cxx -o Basis_wrap.o -I. -I${CASADI_INCLUDE_DIR}  -I/usr/include/python2.7 -I/usr/include/python2.7/numpy
 	c++ -fPIC  -std=c++11 -shared Basis_wrap.o -L${CASADI_LIB_DIR} -lcasadi -ldl -lrt -Wl,-rpath,${CASADI_LIB_DIR} -L. -Wl,-R. -lBasis -lpython2.7 -o _Basis.so
 
-Basis_wrap_matlab.cxx:	
+Basis_wrap_matlab.cxx: Basis.i Basis.h
 	PATH=${PATH}:${MATLABSWIG}/bin/${MATLABSWIG}/share ${MATLABSWIG}/bin/swig -c++ -matlab -I${CASADI_INCLUDE_DIR} -o Basis_wrap_matlab.cxx Basis.i
 
 _Basis_matlab.so: Basis_wrap_matlab.cxx libBasis.so

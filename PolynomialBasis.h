@@ -1,21 +1,19 @@
+// Copyright 2016 Erik
 //
 // Created by erik on 08/04/16.
 //
 
-#ifndef CPP_SPLINE_POLYNOMIALBASIS_H
-#define CPP_SPLINE_POLYNOMIALBASIS_H
+#ifndef POLYNOMIALBASIS_H_
+#define POLYNOMIALBASIS_H_
 
 #include <vector>
 #include "Basis.h"
-//namespace spline {
-
+namespace spline {
 class PolynomialBasis : public Basis {
 public:
     PolynomialBasis(int degree);
-
     std::vector<double> f(double x);
-
 };
-//} // namespace spline
+}  // namespace spline
 
-#endif //CPP_SPLINE_POLYNOMIALBASIS_H
+#endif  // POLYNOMIALBASIS_H_

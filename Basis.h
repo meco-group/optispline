@@ -1,25 +1,21 @@
+// Copyright 2016 Erik
 //
 // Created by erik on 08/04/16.
 //
 
-#ifndef CPP_SPLINE_BASIS_H
-#define CPP_SPLINE_BASIS_H
+#ifndef BASIS_H_
+#define BASIS_H_
 
-//namespace spline{
-
-
+namespace spline {
 class Basis {
-public:
-    Basis(int degree) : degree(degree) { }
-    int get_degree() const {
+ public:
+  explicit Basis(int degree) : degree(degree) { }
+  int get_degree() const {
         return degree;
     }
 
-
-private:
-    int degree;
-
+ private:
+  int degree;
 };
-//} // namespace spline
-
-#endif //CPP_SPLINE_BASIS_H
+}
+#endif  // BASIS_H_
