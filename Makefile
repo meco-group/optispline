@@ -20,7 +20,7 @@ _Basis.so: Basis_wrap.cxx libBasis.so
 	c++ -fPIC  -std=c++11 -shared Basis_wrap.o -L${CASADI_LIB_DIR} -lcasadi -ldl -lrt -Wl,-rpath,${CASADI_LIB_DIR} -L. -Wl,-R. -lBasis -lpython2.7 -o _Basis.so
 
 clean:
-	rm -f Basis.py Basis.pyc Basis_wrap.cxx Basis.o _Basis.so libBasis.so Basis_wrap.o
+	rm -f Basis.py Basis.pyc Basis_wrap.cxx Basis.o _Basis.so libBasis.so Basis_wrap.o Basis_wrap.h
 
 
 	rm -rf build

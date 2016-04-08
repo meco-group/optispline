@@ -26,3 +26,13 @@
 *.exe
 *.out
 *.app
+
+Basis.py
+Basis.pyc
+Basis_wrap.cxx
+Basis.o
+_Basis.so
+libBasis.so
+Basis_wrap.o
+Basis_wrap.h
+.idea
