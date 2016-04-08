@@ -1,0 +1,1 @@
+/home/erik/Documents/Casadi source/casadi/swig/doc_merged.i
