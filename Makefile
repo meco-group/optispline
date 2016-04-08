@@ -10,8 +10,11 @@ all: _Basis.so _Basis_matlab.so
 Basis.o: Basis.cpp
 	${CXX}  -fPIC -c  Basis.cpp -std=c++11 -I${CASADI_INCLUDE_DIR}
 
-libBasis.so: Basis.o
-	${CXX} -fPIC -shared -Wl,-soname,libBasis.so -o libBasis.so  Basis.o
+PolynomialBasis.o: PolynomialBasis.cpp
+	${CXX}  -fPIC -c  PolynomialBasis.cpp -std=c++11 -I${CASADI_INCLUDE_DIR}
+
+libBasis.so: Basis.o PolynomialBasis.o
+	${CXX} -fPIC -shared -Wl,-soname,libBasis.so -o libBasis.so  Basis.o PolynomialBasis.o
 
 Basis_wrap.cxx: Basis.i Basis.h
 	swig -c++ -python -I${CASADI_INCLUDE_DIR} -o Basis_wrap.cxx Basis.i
@@ -35,3 +38,8 @@ clean:
 test: _Basis.so
 	python -c "import Basis;import casadi as C;b = Basis.Basis(4);assert(b.get_degree()==4)"
 	echo "addpath('/home/erik/Documents/casadi-matlab3.0/');import Basis.*;b = Basis.Basis(4);disp(b.get_degree());quit" | matlab -nodesktop -nosplash
+
+binary:
+	# tar -zcvf cpp_spline.tar.gz Basis.py _Basis.so libBasis.so BasisMEX.mexa64 +Basis SwigMem.m SwigRef.m SwigStorage.m
+	cp Basis.py _Basis.so libBasis.so BasisMEX.mexa64 SwigMem.m SwigRef.m SwigStorage.m ~/Dropbox/cpp_spline
+	cp -R +Basis ~/Dropbox/cpp_spline
