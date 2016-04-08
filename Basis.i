@@ -1,4 +1,4 @@
-%module(package="extending_casadi") extending_casadi
+%module(package="Basis") Basis
 
 // WORKAROUNDS BEGINS: Due to Python-related issues in casadi.i
 #ifdef SWIGPYTHON
@@ -17,8 +17,9 @@ import_array();
 %import "casadi.i"
 
 %{
-#include <extending_casadi.hpp>
+#include <Basis.h>
+#include <casadi/casadi.hpp>
 %}
 
-%include <extending_casadi.hpp>
+%include <Basis.h>
 
