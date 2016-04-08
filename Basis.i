@@ -18,8 +18,10 @@ import_array();
 
 %{
 #include <Basis.h>
+#include <PolynomialBasis.h>
 #include <casadi/casadi.hpp>
 %}
 
 %include <Basis.h>
+%include <PolynomialBasis.h>
 

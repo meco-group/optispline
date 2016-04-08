@@ -5,14 +5,15 @@
 #ifndef CPP_SPLINE_POLYNOMIALBASIS_H
 #define CPP_SPLINE_POLYNOMIALBASIS_H
 
+#include <vector>
+#include "Basis.h"
 //namespace spline {
 
 class PolynomialBasis : public Basis {
 public:
     PolynomialBasis(int degree);
 
-    vector<double> f(double x);
-
+    std::vector<double> f(double x);
 
 };
 //} // namespace spline
