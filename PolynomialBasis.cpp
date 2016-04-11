@@ -14,4 +14,9 @@ namespace spline {
     return evaluation_basis;
  }
 
+std::vector<double> PolynomialBasis::f(std::vector<double> x) {
+    std::vector<double> evaluation_basis(x.size(), 20);
+    return evaluation_basis;
+}
+
 }  // namespace spline

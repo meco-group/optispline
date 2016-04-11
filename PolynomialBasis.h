@@ -13,6 +13,7 @@ class PolynomialBasis : public Basis {
 public:
     PolynomialBasis(int degree);
     std::vector<double> f(double x);
+    std::vector<double> f(std::vector<double> x);
 };
 }  // namespace spline
 
