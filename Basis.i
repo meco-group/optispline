@@ -14,6 +14,14 @@ import_array();
 #endif // SWIGPYTHON
 // WORKAROUNDS END
 
+
+%include "std_vector.i"
+// Instantiate templates used by example
+namespace std {
+   %template(DoubleVector) vector<double>;
+}
+
+
 %import "casadi.i"
 
 %{
@@ -21,6 +29,8 @@ import_array();
 #include <PolynomialBasis.h>
 #include <casadi/casadi.hpp>
 %}
+
+
 
 %include <Basis.h>
 %include <PolynomialBasis.h>
