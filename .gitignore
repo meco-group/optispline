@@ -27,6 +27,13 @@
 *.out
 *.app
 
+*.py
+*.pyc
+*.cxx
+*.o
+*.so
+*_wrap.*
+
 Basis.py
 Basis.pyc
 Basis_wrap.cxx

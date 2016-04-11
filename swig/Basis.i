@@ -14,6 +14,21 @@ import_array();
 #endif // SWIGPYTHON
 // WORKAROUNDS END
 
+// Renameing PYTHON 
+//{% if false %}
+//%{
+//%remame(__eval__) Basis::evalBasis
+//%}
+//{% endif %}
+
+// Renameing MATLAB	 
+//{% if false %}
+//%{
+//%remame(f) Basis::evalBasis
+//%}
+//{% endif %}
+
+
 
 %include "std_vector.i"
 // Instantiate templates used by example
@@ -25,13 +40,14 @@ namespace std {
 %import "casadi.i"
 
 %{
-#include <Basis.h>
-#include <PolynomialBasis.h>
+#include <src/Basis/Basis.h>
+#include <src/Basis/UnivariateBasis.h>
+#include <src/Basis/MonomialeBasis.h>
 #include <casadi/casadi.hpp>
 %}
 
 
 
-%include <Basis.h>
-%include <PolynomialBasis.h>
-
+%include <src/Basis/Basis.h>
+%include <src/Basis/UnivariateBasis.h>
+%include <src/Basis/MonomialeBasis.h>
