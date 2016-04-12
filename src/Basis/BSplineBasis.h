@@ -6,16 +6,15 @@
 #define CPP_SPLINE_BSPLINEBASIS_H
 
 #include <vector>
-#include "Basis.h"
 #include "UnivariateBasis.h"
 
 namespace spline{
 
-class BSplineBasis : UnivariateBasis{
+class BSplineBasis : public UnivariateBasis{
 
 
 public:
-    BSplineBasis (std::vector<double >& knots, int degree);
+//    BSplineBasis (std::vector<double >& knots, int degree);
     BSplineBasis (std::vector<double >& bounds, int degree, int numberOfInternalKnots);
 
     std::vector<double> &getKnot ();

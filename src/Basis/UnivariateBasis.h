@@ -6,6 +6,7 @@
 #define CPP_SPLINE_UNIVARIATEBASIS_H
 
 #include "Basis.h"
+
 namespace spline {
     class UnivariateBasis : public Basis {
     public:

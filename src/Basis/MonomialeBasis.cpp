@@ -5,8 +5,6 @@
 
 #include <math.h>       /* pow */
 
-#include "Basis.h"
-#include "UnivariateBasis.h"
 #include "MonomialeBasis.h"
 
 namespace spline {

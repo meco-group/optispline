@@ -4,16 +4,14 @@
 
 #include <math.h>       /* pow */
 
-#include "Basis.h"
-#include "UnivariateBasis.h"
 #include "BSplineBasis.h"
 
 namespace spline{
 
-
-    BSplineBasis::BSplineBasis (std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(&knots){
-    }
-
+//
+//    BSplineBasis::BSplineBasis (std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(&knots){
+//    }
+//
 
     BSplineBasis::BSplineBasis (std::vector<double> &bounds, int degree, int numberOfIntervals) : UnivariateBasis(degree) {
         int nuberOfKnots = 2*degree + numberOfIntervals;
@@ -28,7 +26,8 @@ namespace spline{
             (*knots)[degree + 1 + i] = i/(numberOfIntervals-1);
         }
 
-        BSplineBasis(*knots,degree);
+        this->setKnot(*knots);
+//        BSplineBasis(*knots,degree);
 
     }
 

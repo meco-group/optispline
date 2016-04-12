@@ -7,7 +7,6 @@
 #define MONOMIALBASIS_H_
 
 #include <vector>
-#include "Basis.h"
 #include "UnivariateBasis.h"
 
 namespace spline {
