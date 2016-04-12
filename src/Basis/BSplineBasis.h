@@ -15,7 +15,7 @@ class BSplineBasis : public UnivariateBasis{
 
 public:
 //    BSplineBasis (std::vector<double >& knots, int degree);
-    BSplineBasis (std::vector<double >& bounds, int degree, int numberOfInternalKnots);
+    BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots);
 
     std::vector<double> &getKnot ();
     void setKnot (std::vector<double> &knots) ;
@@ -24,7 +24,7 @@ public:
 //        void init(std::vector<double >& knots, int degree);
     std::vector<double> evalBasis(double x);
     int length();
-    Basis* plus(Basis* other);
+    Basis& plus(Basis& other);
 
 
 

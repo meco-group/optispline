@@ -16,7 +16,7 @@ public:
     std::vector<double> evalBasis(double x);
 //    std::vector<double> evalBasis(std::vector<double> x);
     int  length();
-    Basis* plus(Basis* other);
+    Basis &plus(Basis& other);
     };
 }  // namespace spline
 

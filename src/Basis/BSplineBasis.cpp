@@ -13,7 +13,7 @@ namespace spline{
 //    }
 //
 
-    BSplineBasis::BSplineBasis (std::vector<double> &bounds, int degree, int numberOfIntervals) : UnivariateBasis(degree) {
+    BSplineBasis::BSplineBasis (const std::vector<double> &bounds, int degree, int numberOfIntervals) : UnivariateBasis(degree) {
         int nuberOfKnots = 2*degree + numberOfIntervals;
         std::vector<double> *knots = new std::vector<double>(nuberOfKnots);
 
@@ -47,8 +47,8 @@ namespace spline{
         return knots->size() - getDegree() - 1;
     }
 
-    Basis *BSplineBasis::plus (Basis *other) {
-        return nullptr;
+    Basis& BSplineBasis::plus (Basis &other) {
+        return other;
     }
 
 

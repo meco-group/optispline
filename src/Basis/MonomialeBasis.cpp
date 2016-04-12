@@ -27,8 +27,8 @@ namespace spline {
 
     int MonomialeBasis::length () {return this->getDegree() + 1; }
 
-    Basis *MonomialeBasis::plus (Basis *other) {
-        return nullptr;
+    Basis &MonomialeBasis::plus (Basis &other) {
+        return other;
     }
 
 
