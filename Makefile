@@ -33,11 +33,10 @@ all: dir _Basis.so _Basis_matlab.so
 # 	
 # 	
 $(OBJECTS_TEST): $(SOURCES)
-	${CXX} -o $(OBJDIR)/$@  -fPIC -c $< -std=c++11 -I${CASADI_INCLUDE_DIR}
+	${CXX} -o $(OBJDIR)/$@  -fPIC -c $(filter %/$*.cpp,$^) -std=c++11 -I${CASADI_INCLUDE_DIR}
 
 libBasis.so: $(OBJECTS_TEST)
-	echo ${red} enkel MonomialeBasis toegevoegd ${reset}
-	${CXX} -fPIC -shared -Wl,-soname,libBasis.so -o libBasis.so obj/MonomialeBasis.o
+	${CXX} -fPIC -shared -Wl,-soname,libBasis.so -o libBasis.so $(OBJ)
 
 Basis_wrap.cxx: $(SWIG) src/Basis/Basis.h
 	@echo ${green}SWIG${reset} 
