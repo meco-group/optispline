@@ -68,6 +68,6 @@ dir:
 	mkdir -p $(OBJDIR)
 
 binary:
-	# tar -zcvf cpp_spline.tar.gz Basis.py _Basis.so libBasis.so BasisMEX.mexa64 +Basis SwigMem.m SwigRef.m SwigStorage.m
+#	tar -zcvf cpp_spline.tar.gz Basis.py _Basis.so libBasis.so BasisMEX.mexa64 +Basis SwigMem.m SwigRef.m SwigStorage.m
 	cp Basis.py _Basis.so libBasis.so BasisMEX.mexa64 SwigMem.m SwigRef.m SwigStorage.m ~/Dropbox/cpp_spline
 	cp -R +Basis ~/Dropbox/cpp_spline
