@@ -14,28 +14,28 @@ namespace spline{
 //
 
     BSplineBasis::BSplineBasis (const std::vector<double> &bounds, int degree, int numberOfIntervals) : UnivariateBasis(degree) {
-        int nuberOfKnots = 2*degree + numberOfIntervals;
-        std::vector<double> *knots = new std::vector<double>(nuberOfKnots);
+        int numberOfKnots = 2*degree + numberOfIntervals;
+        std::vector<double> *knots = new std::vector<double>(numberOfKnots);
 
         for (int i = 0; i < degree; ++i) {
             (*knots)[i] = bounds[0];
-            (*knots)[nuberOfKnots - i - 1] = bounds[1];
+            (*knots)[numberOfKnots - i - 1] = bounds[1];
         }
 
         for (int i = 0; i < numberOfIntervals; ++i) {
             (*knots)[degree + 1 + i] = i/(numberOfIntervals-1);
         }
 
-        this->setKnot(*knots);
+        this->setKnots(*knots);
 //        BSplineBasis(*knots,degree);
 
     }
 
-    std::vector<double> &BSplineBasis::getKnot () {
+    std::vector<double> &BSplineBasis::getKnots () {
         return *knots;
     }
 
-    void BSplineBasis::setKnot (std::vector<double> &knots) {
+    void BSplineBasis::setKnots (std::vector<double> &knots) {
         BSplineBasis::knots = &knots;
     }
 

@@ -17,8 +17,8 @@ public:
 //    BSplineBasis (std::vector<double >& knots, int degree);
     BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots);
 
-    std::vector<double> &getKnot ();
-    void setKnot (std::vector<double> &knots) ;
+    std::vector<double> &getKnots ();
+    void setKnots (std::vector<double> &knots) ;
 //
 //    private:
 //        void init(std::vector<double >& knots, int degree);
