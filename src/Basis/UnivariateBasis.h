@@ -20,7 +20,7 @@ namespace spline {
             return degree;
         }
 
-    private:
+    protected:
         int degree;
     };
 } // namespace spline
