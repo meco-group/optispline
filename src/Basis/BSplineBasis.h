@@ -26,10 +26,12 @@ public:
     int length();
     Basis& plus(Basis& other);
 
-
+private:
+    std::vector<bool> indector(int i, double x);
 
 private:
     std::vector<double> knots;
+
 };
 
 
