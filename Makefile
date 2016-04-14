@@ -26,7 +26,9 @@ reset=`tput sgr0`
 # 	@echo ${red} $(source) ${reset} 
 # 	@echo ${red} $(object_files) ${reset} 
 
-all: dir _Basis.so _Basis_matlab.so
+all: dir _Basis.so
+
+matlab: dir _Basis_matlab.so
 
 # %.o: %.cpp
 # 	${CXX}  -fPIC -c $@ -std=c++11 -I${CASADI_INCLUDE_DIR}
