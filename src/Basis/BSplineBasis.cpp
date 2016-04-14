@@ -2,28 +2,27 @@
 // Created by erik on 12/04/16.
 //
 
+#include <stdio.h>
 #include <math.h>       /* pow */
 
 #include "BSplineBasis.h"
 
 namespace spline{
 
-//
-//    BSplineBasis::BSplineBasis (std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(&knots){
+//    BSplineBasis::BSplineBasis (std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(knots){
 //    }
-//
 
     BSplineBasis::BSplineBasis (const std::vector<double> &bounds, int degree, int numberOfIntervals) : UnivariateBasis(degree) {
         int numberOfKnots = 2*degree + numberOfIntervals;
         knots.resize(numberOfKnots);
 
         for (int i = 0; i < degree; ++i) {
-            (knots)[i] = bounds[0];
-            (knots)[numberOfKnots - i - 1] = bounds[1];
+            knots[i] = bounds[0];
+            knots[numberOfKnots - i - 1] = bounds[1];
         }
 
         for (int i = 0; i < numberOfIntervals; ++i) {
-            (knots)[degree + 1 + i] = i/(numberOfIntervals-1);
+            knots[degree + i] = (double)i/(numberOfIntervals-1);
         }
 
         this->setKnots(knots);
@@ -65,19 +64,12 @@ namespace spline{
             }
         }
 
-
         std::vector<double> r(length());
 
         for (int i = 0; i < length(); ++i) {
             r[i] = basis[degree][i];
         }
         return r;
-//            double y = 0.0;
-//            for (int l=0; l<(len_k-degree-1); l++){
-//                y += coeffs[l]*basis[degree][l];
-//            }
-//            return y;
-
     }
 
     int BSplineBasis::length () {
