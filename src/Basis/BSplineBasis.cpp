@@ -6,10 +6,11 @@
 #include <math.h>       /* pow */
 
 #include "BSplineBasis.h"
+#include "MonomialeBasis.h"
 
 namespace spline{
 
-//    BSplineBasis::BSplineBasis (std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(knots){
+    //    BSplineBasis::BSplineBasis (std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(knots)
 //    }
 
     BSplineBasis::BSplineBasis (const std::vector<double> &bounds, int degree, int numberOfIntervals) : UnivariateBasis(degree) {
@@ -26,6 +27,11 @@ namespace spline{
         }
 
         this->setKnots(knots);
+    }
+
+
+    BSplineBasis::~BSplineBasis () {
+        knots.~vector();
     }
 
     const std::vector<double> &BSplineBasis::getKnots () {
@@ -76,10 +82,6 @@ namespace spline{
         return knots.size() - degree - 1;
     }
 
-    Basis& BSplineBasis::plus (Basis &other) {
-        return other;
-    }
-
     std::vector<bool> BSplineBasis::indector (int i, double x) {
         std::vector<bool> r(knots.size() - 1);
 
@@ -89,6 +91,20 @@ namespace spline{
 
         return r;
 
+    }
+
+    Basis &BSplineBasis::plus (BSplineBasis &other) {
+        int newDegree = std::max(this->degree, other.degree);
+//        TODO : check bounds knots
+
+
+
+
+        return <#initializer#>;
+    }
+
+    Basis& BSplineBasis::plus (Basis &other) {
+        return other.plus(*this);
     }
 
 
