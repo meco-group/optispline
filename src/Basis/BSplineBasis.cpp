@@ -78,7 +78,7 @@ namespace spline{
         return r;
     }
 
-    int BSplineBasis::length () {
+    int BSplineBasis::length () const{
         return knots.size() - degree - 1;
     }
 
@@ -98,9 +98,7 @@ namespace spline{
 //        TODO : check bounds knots
 
 
-
-
-        return <#initializer#>;
+        return other;
     }
 
     Basis& BSplineBasis::plus (Basis &other) {

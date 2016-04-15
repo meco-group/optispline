@@ -15,7 +15,7 @@ public:
     MonomialeBasis(int degree);
     std::vector<double> evalBasis(double x);
 //    std::vector<double> evalBasis(std::vector<double> x);
-    int  length();
+    int length() const;
     Basis &plus(Basis& other);
     };
 }  // namespace spline

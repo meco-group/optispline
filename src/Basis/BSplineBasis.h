@@ -22,7 +22,7 @@ public:
     const std::vector<double> &getKnots ();
     void setKnots (const std::vector<double> &knots) ;
     std::vector<double> evalBasis(double x);
-    int length();
+    int length() const;
 
 
     Basis& plus(Basis& other);

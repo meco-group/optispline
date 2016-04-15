@@ -25,7 +25,7 @@ namespace spline {
 //        return evaluation_basis;
 //    }
 
-    int MonomialeBasis::length () {return this->getDegree() + 1; }
+    int MonomialeBasis::length () const{return this->getDegree() + 1; }
 
     Basis &MonomialeBasis::plus (Basis &other) {
         return other;
