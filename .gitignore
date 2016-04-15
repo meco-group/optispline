@@ -34,6 +34,8 @@
 *.so
 *_wrap.*
 
+build
+
 +Basis/*
 
 Basis.py

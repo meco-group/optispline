@@ -100,7 +100,7 @@ namespace spline{
 
 
 
-        return <#initializer#>;
+        return other;
     }
 
     Basis& BSplineBasis::plus (Basis &other) {

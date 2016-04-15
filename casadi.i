@@ -1,1 +1,0 @@
-/home/erik/Documents/Casadi source/casadi/swig/casadi.i
