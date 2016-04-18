@@ -47,3 +47,11 @@ libBasis.so
 Basis_wrap.o
 Basis_wrap.h
 .idea
+
+CMakeFiles
+CMakeCache.txt
+Makefile
+swig/+*
+*.mexa64
+swig/*.m
+*.cmake
