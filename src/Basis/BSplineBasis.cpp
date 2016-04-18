@@ -78,7 +78,7 @@ namespace spline{
         return r;
     }
 
-    int BSplineBasis::length () {
+    int BSplineBasis::length () const{
         return knots.size() - degree - 1;
     }
 
@@ -96,8 +96,6 @@ namespace spline{
     Basis &BSplineBasis::plus (BSplineBasis &other) {
         int newDegree = std::max(this->degree, other.degree);
 //        TODO : check bounds knots
-
-
 
 
         return other;

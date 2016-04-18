@@ -13,7 +13,7 @@ class Basis {
 public:
     virtual std::vector<double> evalBasis(double x) = 0;
 //    std::vector<double> evalBasis(std::vector<double> x);
-    virtual int length() = 0;
+    virtual int length() const= 0;
     virtual Basis &plus(Basis &other) = 0;
 };
 }
