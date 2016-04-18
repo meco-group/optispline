@@ -6,8 +6,8 @@
 #include <math.h>       /* pow */
 
 #include "BSplineBasis.h"
-#include "MonomialeBasis.h"
 
+#include "plus.h"
 namespace spline{
 
     //    BSplineBasis::BSplineBasis (std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(knots)
@@ -15,7 +15,7 @@ namespace spline{
 
     BSplineBasis::BSplineBasis (const std::vector<double> &bounds, int degree, int numberOfIntervals) : UnivariateBasis(degree) {
         int numberOfKnots = 2*degree + numberOfIntervals;
-        knots.resize(numberOfKnots);
+        knots.resize(numberOfKnots, 0);
 
         for (int i = 0; i < degree; ++i) {
             knots[i] = bounds[0];
@@ -26,23 +26,26 @@ namespace spline{
             knots[degree + i] = (double)i/(numberOfIntervals-1);
         }
 
-        this->setKnots(knots);
+        setKnots(knots);
     }
 
 
     BSplineBasis::~BSplineBasis () {
-        knots.~vector();
     }
 
-    const std::vector<double> &BSplineBasis::getKnots () {
+    const std::vector<double> &BSplineBasis::getKnots () const {
         return knots;
+    }
+
+    std::vector< std::vector<double> > BSplineBasis::evalBasis(const std::vector<double>& x) const {
+        return std::vector< std::vector<double> >({{1,2},{3,4,5}});
     }
 
     void BSplineBasis::setKnots (const std::vector<double> &knots) {
         BSplineBasis::knots = knots;
     }
 
-    std::vector<double> BSplineBasis::evalBasis (double x) {
+    std::vector<double> BSplineBasis::evalBasis (double x) const {
         double b;
         double bottom;
         double basis[degree+1][knots.size()-1];
@@ -93,17 +96,15 @@ namespace spline{
 
     }
 
-    Basis &BSplineBasis::plus (BSplineBasis &other) {
-        int newDegree = std::max(this->degree, other.degree);
-//        TODO : check bounds knots
-
-
-        return other;
+    BSplineBasis BSplineBasis::plus (const MonomialeBasis &other) const {
+        return plusBasis(*this, other);
     }
 
-    Basis& BSplineBasis::plus (Basis &other) {
-        return other.plus(*this);
+    BSplineBasis BSplineBasis::plus (const BSplineBasis &other) const{
+        return plusBasis(*this, other);
     }
+
+
 
 
 } // namespace spline

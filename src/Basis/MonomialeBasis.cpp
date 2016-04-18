@@ -7,10 +7,12 @@
 
 #include "MonomialeBasis.h"
 
+#include "plus.h"
+
 namespace spline {
     MonomialeBasis::MonomialeBasis (int degree) : UnivariateBasis(degree) { }
 
-    std::vector<double> MonomialeBasis::evalBasis (double x) {
+    std::vector<double> MonomialeBasis::evalBasis (double x) const {
         std::vector<double> evaluation_basis(this->length());
 
         for (int i = 0; i < this->length (); ++i) {
@@ -27,9 +29,16 @@ namespace spline {
 
     int MonomialeBasis::length () const{return this->getDegree() + 1; }
 
-    Basis &MonomialeBasis::plus (Basis &other) {
-        return other;
+    MonomialeBasis MonomialeBasis::plus (const MonomialeBasis &other)const  {
+        return plusBasis(*this, other);;
     }
+
+    BSplineBasis MonomialeBasis::plus (const BSplineBasis &other)const  {
+        return plusBasis(*this, other);
+    }
+
+
+
 
 
 } // namespace spline

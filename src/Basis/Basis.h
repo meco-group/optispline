@@ -11,10 +11,10 @@
 namespace spline {
 class Basis {
 public:
-    virtual std::vector<double> evalBasis(double x) = 0;
-//    std::vector<double> evalBasis(std::vector<double> x);
+    virtual std::vector<double> evalBasis(double x) const = 0;
+//    virtual std::vector<double> evalBasis(std::vector<double> x);
     virtual int length() const= 0;
-    virtual Basis &plus(Basis &other) = 0;
+//    virtual Basis &plus(Basis &other) = 0;
 };
 }
 #endif  // BASIS_H_

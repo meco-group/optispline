@@ -12,9 +12,9 @@ namespace spline {
     public:
         UnivariateBasis (int degree) : degree(degree) {}
 
-        virtual std::vector<double> evalBasis(double x) = 0;
+        virtual std::vector<double> evalBasis(double x) const = 0;
         virtual int length() const = 0;
-        virtual Basis &plus(Basis &other) = 0;
+//        virtual Basis plus(Basis &other) = 0;
 
         int getDegree () const {
             return degree;

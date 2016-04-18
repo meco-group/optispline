@@ -6,17 +6,26 @@
 #ifndef MONOMIALBASIS_H_
 #define MONOMIALBASIS_H_
 
+
+class MonomialeBasis;
+class BSplineBasis;
+
 #include <vector>
 #include "UnivariateBasis.h"
 
+
+
 namespace spline {
-    class MonomialeBasis : public UnivariateBasis {
+    class BSplineBasis;
+
+class MonomialeBasis : public UnivariateBasis {
 public:
     MonomialeBasis(int degree);
-    std::vector<double> evalBasis(double x);
+    std::vector<double> evalBasis(double x) const;
 //    std::vector<double> evalBasis(std::vector<double> x);
     int length() const;
-    Basis &plus(Basis& other);
+    MonomialeBasis plus(const MonomialeBasis& other)const ;
+    BSplineBasis plus(const BSplineBasis& other)const ;
     };
 }  // namespace spline
 

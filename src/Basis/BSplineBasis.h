@@ -5,8 +5,14 @@
 #ifndef CPP_SPLINE_BSPLINEBASIS_H
 #define CPP_SPLINE_BSPLINEBASIS_H
 
+
+class MonomialeBasis;
+class BSplineBasis;
+
 #include <vector>
 #include "UnivariateBasis.h"
+#include "MonomialeBasis.h"
+
 
 namespace spline{
 
@@ -19,14 +25,14 @@ public:
 
     ~BSplineBasis ();
 
-    const std::vector<double> &getKnots ();
+    const std::vector<double> &getKnots () const;
     void setKnots (const std::vector<double> &knots) ;
-    std::vector<double> evalBasis(double x);
+    std::vector<double> evalBasis( double x) const ;
+    std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const ;
     int length() const;
 
-
-    Basis& plus(Basis& other);
-    Basis& plus(BSplineBasis& other);
+    BSplineBasis plus(const MonomialeBasis& other) const ;
+    BSplineBasis plus(const BSplineBasis& other) const ;
 
 private:
     std::vector<bool> indector(int i, double x);
