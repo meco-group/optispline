@@ -9,7 +9,7 @@
 
 namespace spline{
 
-    std::vector<double> unionKnots(const std::vector<double> kn1,  const std::vector<double> kn2, int degree) ;
+    std::vector<double> unionKnots(const std::vector<double> kn1,  const std::vector<double> kn2, int degree, int degree1, int degree2) ;
 
 }  // namespace spline
 

@@ -11,7 +11,7 @@ namespace spline{
 BSplineBasis plusBasis (const BSplineBasis &b1, const BSplineBasis &b2) {
 
     int newDegree = std::max(b1.getDegree(), b2.getDegree());
-    const std::vector<double> v = unionKnots(b1.getKnots(), b2.getKnots(), newDegree);
+    const std::vector<double> v = unionKnots(b1.getKnots(), b2.getKnots(), newDegree, b1.getDegree(), b2.getDegree());
     return BSplineBasis(v, newDegree) ;
 }
 
