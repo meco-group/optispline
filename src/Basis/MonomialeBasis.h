@@ -24,8 +24,8 @@ public:
     std::vector<double> evalBasis(double x) const;
 //    std::vector<double> evalBasis(std::vector<double> x);
     int length() const;
-    MonomialeBasis plus(const MonomialeBasis& other)const ;
-    BSplineBasis plus(const BSplineBasis& other)const ;
+    MonomialeBasis operator+(const MonomialeBasis& other)const ;
+    BSplineBasis operator+(const BSplineBasis& other)const ;
     };
 }  // namespace spline
 

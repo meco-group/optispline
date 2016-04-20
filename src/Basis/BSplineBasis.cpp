@@ -96,11 +96,11 @@ namespace spline{
 
     }
 
-    BSplineBasis BSplineBasis::plus (const MonomialeBasis &other) const {
+    BSplineBasis BSplineBasis::operator+ (const MonomialeBasis &other) const {
         return plusBasis(*this, other);
     }
 
-    BSplineBasis BSplineBasis::plus (const BSplineBasis &other) const{
+    BSplineBasis BSplineBasis::operator+ (const BSplineBasis &other) const{
         return plusBasis(*this, other);
     }
 

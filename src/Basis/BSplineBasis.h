@@ -31,8 +31,8 @@ public:
     std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const ;
     int length() const;
 
-    BSplineBasis plus(const MonomialeBasis& other) const ;
-    BSplineBasis plus(const BSplineBasis& other) const ;
+    BSplineBasis operator+(const MonomialeBasis& other) const ;
+    BSplineBasis operator+(const BSplineBasis& other) const ;
 
 private:
     std::vector<bool> indector(int i, double x);

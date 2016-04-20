@@ -29,11 +29,11 @@ namespace spline {
 
     int MonomialeBasis::length () const{return this->getDegree() + 1; }
 
-    MonomialeBasis MonomialeBasis::plus (const MonomialeBasis &other)const  {
+    MonomialeBasis MonomialeBasis::operator+ (const MonomialeBasis &other)const  {
         return plusBasis(*this, other);;
     }
 
-    BSplineBasis MonomialeBasis::plus (const BSplineBasis &other)const  {
+    BSplineBasis MonomialeBasis::operator+ (const BSplineBasis &other)const  {
         return plusBasis(*this, other);
     }
 
