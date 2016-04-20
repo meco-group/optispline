@@ -1,0 +1,20 @@
+{
+    Supp 1
+    Memcheck:Addr4
+    obj:/usr/bin/python2.7
+    fun:_PyString_Resize
+    fun:PyString_FromFormatV
+    fun:PyString_FromFormat
+    obj:/usr/lib/python2.7/dist-packages/numpy/core/umath.x86_64-linux-gnu.so
+}
+
+{
+    Supp 2
+    Memcheck:Cond
+    obj:/usr/bin/python2.7
+    fun:_PyString_Resize
+    fun:PyString_FromFormatV
+    fun:PyString_FromFormat
+    obj:/usr/lib/python2.7/dist-packages/numpy/core/umath.x86_64-linux-gnu.so
+}
+
