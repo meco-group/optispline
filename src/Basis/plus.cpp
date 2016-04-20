@@ -3,6 +3,7 @@
 //
 #include <vector>
 #include "plus.h"
+#include "vectorUtilities.h"
 
 
 namespace spline{
@@ -10,13 +11,13 @@ namespace spline{
 BSplineBasis plusBasis (const BSplineBasis &b1, const BSplineBasis &b2) {
 
     int newDegree = std::max(b1.getDegree(), b2.getDegree());
-    const std::vector<double> v {0.0, 1.0};
-    return BSplineBasis(v, 0, 0 ) ;
+    const std::vector<double> v = unionKnots(b1.getKnots(), b2.getKnots(), newDegree);
+    return BSplineBasis(v, newDegree) ;
 }
 
-    BSplineBasis plusBasis (const BSplineBasis &b1, const MonomialeBasis &b2) {
+BSplineBasis plusBasis (const BSplineBasis &b1, const MonomialeBasis &b2) {
     const std::vector<double> v {0.0, 1.0};
-    return BSplineBasis(v, 0, 0 ) ;
+    return BSplineBasis(v, 0) ;
 }
 
 
