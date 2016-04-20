@@ -11,7 +11,7 @@ namespace spline{
 
     std::vector<double> unionKnots (const std::vector<double> kn1, const std::vector<double> kn2, int degree) {
         std::vector<double> knots;
-        knots.resize(kn1.lenght() + kn2.lenght());
+        knots.resize(kn1.size() + kn2.size());
         int index = 0;
         int index1 = 0;
         int index2 = 0;
@@ -20,19 +20,19 @@ namespace spline{
 
 
 
-        while(index1 < kn1.length() || index2 < kn2.length() ){
+        while(index1 < kn1.size() || index2 < kn2.size() ){
             if (kn1[index1] < kn2[index2]){
                 value = kn1[index1];
                 index1++;
-                if (value == kn1 (kn1.back())){
-                    index1 == kn1.length()
+                if (value == kn1[kn1.back()]){
+                    index1 == kn1.size();
                 }
 
             } else {
                 value = kn1[index2];
                 index2++;
-                if (value == kn2 (kn2.back())){
-                    index2 == kn2.length()
+                if (value == kn2[kn2.back()]){
+                    index2 == kn2.size();
                 }
             }
 
