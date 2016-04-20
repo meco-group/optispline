@@ -11,7 +11,7 @@ foreach(SWIGMATLABHINT ${SWIGMATLABHINTS})
   )
   # Check if the found SWIG binary supports MATLAB
   execute_process(COMMAND ${SWIG_EXECUTABLE} -matlab ERROR_VARIABLE SWIGOUT)
-  if(${SWIGOUT} STREQUAL "Must specify an input file. Use -help for available options.")
+  if("${SWIGOUT}" STREQUAL "Must specify an input file. Use -help for available options.")
     # Found a version of SWIG supporting MATLAB
     break()
   elseif()

@@ -1,0 +1,40 @@
+env:
+  global:
+    - CASADIVERSION=3.0.0
+    
+# works from matplotlib 1.5 onwards
+#    - MPLBACKEND=Agg # Matplotlib backend; must be headless to run on travis
+  
+
+sudo: required
+dist: trusty
+language: generic
+
+before_script:
+  - set -e
+  - set -o pipefail  # otherwise, piping with grep discards exit statuses
+
+script:
+  - ctest -V -R python
+
+install:
+  - export CASADI_PREFIX=$HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+  
+  # A little bit of hacks; future CasADi version should not rely on these
+  - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/casadi.i -O $CASADI_PREFIX/include/casadi.i
+  - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/doc_merged.i -O $CASADI_PREFIX/include/doc_merged.i
+  - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/python/numpy.hpp -O $CASADI_PREFIX/include/numpy.hpp
+  # End of hacks
+
+  - cmake -DWITH_MATLAB=OFF .
+  - make
+
+before_install:
+  - wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/linux/casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz/download -O casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz
+  - mkdir $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+  - tar -zxf casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz -C $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+  - sudo apt-get install -y python-numpy python-scipy python-matplotlib swig
+  - mkdir -p $HOME/.matplotlib/
+  - "echo 'backend : Agg' > $HOME/.matplotlib/matplotlibrc"
+  - export PYTHONPATH=$PYTHONPATH:$HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+
