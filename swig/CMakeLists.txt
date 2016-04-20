@@ -22,6 +22,8 @@ set(CMAKE_SWIG_FLAGS "")
 set_source_files_properties(Basis.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE Basis.i PROPERTY SWIG_FLAGS "-I${PROJECT_SOURCE_DIR}" "-I${CASADI_INCLUDE_DIR}" "-I${CASADI_INCLUDE_DIR}" "-D__STDC_UTF_16__")
 
+set(SWIG_MODULE_Basis_EXTRA_DEPS ${CMAKE_SOURCE_DIR}/src/libBasis.a)
+  
 if(WITH_PYTHON)
   swig_add_module(Basis python Basis.i)
   swig_link_libraries(Basis ${PYTHON_LIBRARIES} Basis ${CASADI_LIBRARIES})
