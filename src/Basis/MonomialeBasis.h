@@ -21,9 +21,16 @@ namespace spline {
 class MonomialeBasis : public UnivariateBasis {
 public:
     MonomialeBasis(int degree);
+
+    //    evalution Basis
     std::vector<double> evalBasis(double x) const;
-//    std::vector<double> evalBasis(std::vector<double> x);
+    std::vector<double> operator()(double x) const { return evalBasis(x); };
+    std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const ;
+    std::vector< std::vector<double> > operator()(const std::vector<double>& x) const { return evalBasis(x); };
+
+
     int length() const;
+
     MonomialeBasis operator+(const MonomialeBasis& other)const ;
     BSplineBasis operator+(const BSplineBasis& other)const ;
     };

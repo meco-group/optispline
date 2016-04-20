@@ -22,10 +22,9 @@ namespace spline {
         return evaluation_basis;
     }
 
-//    std::vector<double> MonomialeBasis::evalBasis (std::vector<double> x) {
-//        std::vector<double> evaluation_basis(x.size(), 20);
-//        return evaluation_basis;
-//    }
+    std::vector< std::vector<double> > MonomialeBasis::evalBasis(const std::vector<double>& x) const {
+        return std::vector< std::vector<double> >({{1,2},{3,4,5}});
+    }
 
     int MonomialeBasis::length () const{return this->getDegree() + 1; }
 

@@ -10,8 +10,7 @@
 #include "plus.h"
 namespace spline{
 
-    //    BSplineBasis::BSplineBasis (std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(knots)
-//    }
+    BSplineBasis::BSplineBasis (const std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(knots) {}
 
     BSplineBasis::BSplineBasis (const std::vector<double> &bounds, int degree, int numberOfIntervals) : UnivariateBasis(degree) {
         int numberOfKnots = 2*degree + numberOfIntervals;
@@ -37,9 +36,6 @@ namespace spline{
         return knots;
     }
 
-    std::vector< std::vector<double> > BSplineBasis::evalBasis(const std::vector<double>& x) const {
-        return std::vector< std::vector<double> >({{1,2},{3,4,5}});
-    }
 
     void BSplineBasis::setKnots (const std::vector<double> &knots) {
         BSplineBasis::knots = knots;
@@ -79,6 +75,11 @@ namespace spline{
             r[i] = basis[degree][i];
         }
         return r;
+    }
+
+
+    std::vector< std::vector<double> > BSplineBasis::evalBasis(const std::vector<double>& x) const {
+        return std::vector< std::vector<double> >({{1,2},{3,4,5}});
     }
 
     int BSplineBasis::length () const{

@@ -20,15 +20,20 @@ class BSplineBasis : public UnivariateBasis{
 
 
 public:
-//    BSplineBasis (std::vector<double >& knots, int degree);
+    BSplineBasis (const std::vector<double >& knots, int degree);
     BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots);
 
     ~BSplineBasis ();
 
     const std::vector<double> &getKnots () const;
     void setKnots (const std::vector<double> &knots) ;
-    std::vector<double> evalBasis( double x) const ;
+
+    //    evalution Basis
+    std::vector<double> evalBasis(double x) const;
+    std::vector<double> operator()(double x) const { return evalBasis(x); };
     std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const ;
+    std::vector< std::vector<double> > operator()(const std::vector<double>& x) const { return evalBasis(x); };
+
     int length() const;
 
     BSplineBasis operator+(const MonomialeBasis& other) const ;
