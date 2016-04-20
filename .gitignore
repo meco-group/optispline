@@ -27,7 +27,6 @@
 *.out
 *.app
 
-*.py
 *.pyc
 *.cxx
 *.o
