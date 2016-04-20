@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.6)
 project( cpp_splines CXX C )
+enable_testing()
 
 # CMake module(s) path
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR} )
@@ -36,3 +37,5 @@ add_subdirectory(src)
 if(WITH_MATLAB OR WITH_PYTHON)
   add_subdirectory(swig)
 endif()
+
+add_subdirectory(tests)
