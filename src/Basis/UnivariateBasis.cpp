@@ -10,3 +10,8 @@ namespace spline {
 
 }  // namespace spline
 
+
+void spline::UnivariateBasis::increaseDegree (int d) {
+    degree += d;
+}
+

@@ -15,11 +15,8 @@ namespace spline {
         virtual std::vector<double> evalBasis(double x) const = 0;
         virtual int length() const = 0;
 //        virtual Basis plus(Basis &other) = 0;
-
-        int getDegree () const {
-            return degree;
-        }
-
+        int getDegree () const { return degree;}
+        void increaseDegree(int d);
     protected:
         int degree;
     };

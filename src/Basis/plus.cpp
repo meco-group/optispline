@@ -26,7 +26,9 @@ BSplineBasis plusBasis (const BSplineBasis &b1, const BSplineBasis &b2) {
 
 
      MonomialeBasis plusBasis (const MonomialeBasis &b1, const MonomialeBasis &b2) {
-    return MonomialeBasis(6);
+
+         int newDegree = std::max(b1.getDegree(), b2.getDegree());
+         return MonomialeBasis(newDegree);
 }
 
 }
