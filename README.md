@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/meco-group/cpp_splines.svg?branch=master)](https://travis-ci.org/meco-group/cpp_splines)
+
 # cpp_splines
 
 
