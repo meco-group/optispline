@@ -121,7 +121,10 @@ namespace spline{
         }
 
         return g;
+    }
 
+    std::vector<double> BSplineBasis::evaluatonGrid (void) const {
+        return greville();
     }
 
 

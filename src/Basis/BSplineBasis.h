@@ -44,6 +44,8 @@ public:
 
     std::vector<double> greville () const;
 
+    std::vector<double> evaluatonGrid(void) const;
+
 private:
     std::vector<bool> indector(int i, double x);
 

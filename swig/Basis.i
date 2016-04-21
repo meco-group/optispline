@@ -58,8 +58,6 @@ namespace std {
 #include <casadi/casadi.hpp>
 %}
 
-
-
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialeBasis.h>

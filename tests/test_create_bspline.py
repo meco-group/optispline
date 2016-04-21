@@ -19,14 +19,17 @@ print 'BSplineBasis'
 
 b = Basis.BSplineBasis([0.0, 10.0], 3, 5)
 print b.evalBasis(0.5)
+print b.evalBasis([0.5,0.6])
 print b.length()
 print b.getKnots()
 print b.greville()
 
 print 'Bernstein'
 
-b = Basis.BSplineBasis([0.0, 1.0], 1, 2)
+c = Basis.BSplineBasis([0.0, 1.0], 1, 2)
 
-print 'b.evalBasis(0.1)'
-print b.getKnots()
-print b.evalBasis(0.1)
+print 'c.evalBasis(0.1)'
+print c.getKnots()
+print c.evalBasis(0.1)
+
+print b.transformation(c)
