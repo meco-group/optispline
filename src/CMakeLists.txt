@@ -1,6 +1,6 @@
 # Simple library that shows how CasADi can be extended
 include_directories(${CASADI_INCLUDE_DIR})
-add_library(Basis
+add_library(Basis SHARED
             Basis/Basis.h Basis/Basis.cpp
             Basis/vectorUtilities.h Basis/vectorUtilities.cpp
             Basis/plus.h Basis/plus.cpp
