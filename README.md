@@ -4,8 +4,8 @@
 
  1. 
     - Linux: `sudo mount -t davfs https://drives.kuleuven.be/hcwebdav /mnt`
-    - Windows: should be mounted already.
- 2. Locate and run the example scripts on the mounted drive `software/cpp_splines/master/test.*`
+    - Windows: should be mounted already ('J:').
+ 2. Locate and run the example scripts on the mounted drive, inside the MECO folder, `software/cpp_splines/master/test.*`
 
 # cpp_splines
 
