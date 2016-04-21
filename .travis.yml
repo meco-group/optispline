@@ -202,6 +202,10 @@ matrix:
           SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
           set(CMAKE_SHARED_LIBRARY_SUFFIX "dll")
 
+
+        - cmake -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake -DWITH_PYTHON=OFF .
+        - make VERBOSE=1
+        
         - cp src/*.dll swig
         
     - env:
