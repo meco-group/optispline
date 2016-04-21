@@ -30,7 +30,7 @@ matrix:
         - wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/linux/casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz/download -O casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz
         - mkdir $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
         - tar -zxf casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz -C $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
-        - sudo apt-get install -y python-numpy python-scipy python-matplotlib swig valgrind
+        - sudo apt-get install -y python-numpy python-scipy python-matplotlib swig valgrind moreutils
         - mkdir -p $HOME/.matplotlib/
         - "echo 'backend : Agg' > $HOME/.matplotlib/matplotlibrc"
         - export PYTHONPATH=$PYTHONPATH:$HOME/casadi-py27-np1.9.1-v$CASADIVERSION
@@ -45,6 +45,13 @@ matrix:
         - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/test/internal/valgrind-casadi.supp -O $CASADI_PREFIX/include/valgrind-casadi.supp
         # End of hacks
 
+
+        - |
+          cat <<EOF | cat - swig/CMakeLists.txt | sponge swig/CMakeLists.txt
+          SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
+
+          SET(CMAKE_INSTALL_RPATH "\\\$ORIGIN/src:\\\$ORIGIN:$CASADI_PREFIX/casadi:.")
+          
         - cmake -DWITH_MATLAB=OFF .
         - make
         - cp src/*.so swig
@@ -83,7 +90,13 @@ matrix:
         - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/doc_merged.i -O $CASADI_PREFIX/include/doc_merged.i
         - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/python/numpy.hpp -O $CASADI_PREFIX/include/numpy.hpp
         # End of hacks
+         
+        - |
+          cat <<EOF | cat - swig/CMakeLists.txt | sponge swig/CMakeLists.txt
+          SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
 
+          SET(CMAKE_INSTALL_RPATH "\\\$ORIGIN/src:\\\$ORIGIN:$CASADI_PREFIX:.")
+          
         - cmake -DWITH_PYTHON=OFF .
         - make
         

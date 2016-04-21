@@ -13,17 +13,6 @@ else()
 endif()
 
 set(CASADI_LIBS_LIST
-  casadi_cplex_interface
-  casadi_nlpsol_ipopt
-  casadi_lapack_interface
-  casadi_sundials_interface
-  casadi_csparse_interface
-  casadi_knitro_interface
-  casadi_optimal_control
-  casadi_integration
-  casadi_nonlinear_programming
-  casadi_csparse
-  casadi_tinyxml
   casadi)
 
 foreach(LIB in ${CASADI_LIBS_LIST})
