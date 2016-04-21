@@ -46,6 +46,17 @@ public:
 
     std::vector<double> evaluatonGrid(void) const;
 
+    /// Return a string with a representation (for SWIG)
+    std::string getRepresentation() const { return "BSplineBasis object"; };
+
+#ifndef SWIG
+    /// Print a representation of the object to a stream (shorthand)
+    inline friend
+      std::ostream& operator<<(std::ostream &stream, const BSplineBasis& obj) {
+      return stream << obj.getRepresentation();
+    }
+#endif // SWIG
+
 private:
     std::vector<bool> indector(int i, double x);
 

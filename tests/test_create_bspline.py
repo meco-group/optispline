@@ -27,6 +27,7 @@ print b.greville()
 print 'Bernstein'
 
 c = Basis.BSplineBasis([0.0, 1.0], 1, 2)
+print c
 
 print 'c.evalBasis(0.1)'
 print c.getKnots()

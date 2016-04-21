@@ -23,6 +23,19 @@ import_array();
 #endif
 %}
 
+#ifdef SWIGPYTHON
+%pythoncode %{
+
+_swig_repr_default = _swig_repr
+def _swig_repr(self):
+  if hasattr(self,'getRepresentation'):
+    return self.getRepresentation()
+  else:
+    return _swig_repr_default(self)
+
+%}
+#endif // WITH_SWIGPYTHON
+
 // WORKAROUNDS END
 
 // Renameing PYTHON 
