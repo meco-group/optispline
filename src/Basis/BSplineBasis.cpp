@@ -2,13 +2,14 @@
 // Created by erik on 12/04/16.
 //
 
-#include <stdio.h>
 #include <math.h>       /* pow */
+#include <numeric>      // std::accumulate -> greville
 
 #include "BSplineBasis.h"
 
 #include "plus.h"
 #include "times.h"
+
 namespace spline{
 
     BSplineBasis::BSplineBasis (const std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(knots) {}
@@ -23,7 +24,7 @@ namespace spline{
         }
 
         for (int i = 0; i < numberOfIntervals; ++i) {
-            knots[degree + i] = (double)i/(numberOfIntervals-1);
+            knots[degree + i] = bounds[0] + (bounds[1] - bounds[0]) * (double)i/(numberOfIntervals-1);
         }
 
         setKnots(knots);
@@ -112,6 +113,22 @@ namespace spline{
 
     BSplineBasis BSplineBasis::operator* (const BSplineBasis &other) const{
         return timesBasis(*this, other);
+    }
+
+    std::vector<double> BSplineBasis::greville () const {
+        int d = degree;
+        if(d == 1){
+            d =1;
+        }
+
+        std::vector<double> g (length());
+        double s;
+        for (int i = 0; i < length(); ++i) {
+            g[i] = std::accumulate(knots.begin()+i+1,knots.begin()+i+d+1, 0.0) / (d);
+        }
+
+        return g;
+
     }
 
 

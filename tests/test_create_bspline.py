@@ -17,8 +17,11 @@ print b.evalBasis(0.5)
 
 print 'BSplineBasis'
 
-b = Basis.BSplineBasis([0.0, 1.0], 3, 5)
+b = Basis.BSplineBasis([0.0, 10.0], 3, 5)
 print b.evalBasis(0.5)
+print b.length()
+print b.getKnots()
+print b.greville()
 
 print 'Bernstein'
 
