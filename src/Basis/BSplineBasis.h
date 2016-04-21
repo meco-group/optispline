@@ -29,10 +29,10 @@ public:
     void setKnots (const std::vector<double> &knots) ;
 
     //    evalution Basis
-    std::vector<double> evalBasis(double x) const;
-    std::vector<double> operator()(double x) const { return evalBasis(x); };
-    std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const ;
-    std::vector< std::vector<double> > operator()(const std::vector<double>& x) const { return evalBasis(x); };
+    virtual std::vector<double> evalBasis(double x) const;
+
+    // TODO(jgillis): find out why this is needed to have proper swig interface
+    virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const { return UnivariateBasis::evalBasis(x); };
 
     int length() const;
 

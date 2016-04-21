@@ -30,7 +30,6 @@ namespace spline{
         setKnots(knots);
     }
 
-
     BSplineBasis::~BSplineBasis () {
     }
 
@@ -79,11 +78,6 @@ namespace spline{
         return r;
     }
 
-
-    std::vector< std::vector<double> > BSplineBasis::evalBasis(const std::vector<double>& x) const {
-        return std::vector< std::vector<double> >({{1,2},{3,4,5}});
-    }
-
     int BSplineBasis::length () const{
         return knots.size() - degree - 1;
     }
@@ -96,7 +90,6 @@ namespace spline{
         }
 
         return r;
-
     }
 
     BSplineBasis BSplineBasis::operator+ (const MonomialeBasis &other) const {

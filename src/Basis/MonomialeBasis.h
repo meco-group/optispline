@@ -24,10 +24,6 @@ public:
 
     //    evalution Basis
     std::vector<double> evalBasis(double x) const;
-    std::vector<double> operator()(double x) const { return evalBasis(x); };
-    std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const ;
-    std::vector< std::vector<double> > operator()(const std::vector<double>& x) const { return evalBasis(x); };
-
 
     int length() const;
 
