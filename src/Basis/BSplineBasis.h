@@ -39,6 +39,8 @@ public:
     BSplineBasis operator+(const MonomialeBasis& other) const ;
     BSplineBasis operator+(const BSplineBasis& other) const ;
 
+    BSplineBasis operator*(const MonomialeBasis& other) const ;
+    BSplineBasis operator*(const BSplineBasis& other) const ;
 
 
 private:

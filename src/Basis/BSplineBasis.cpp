@@ -8,6 +8,7 @@
 #include "BSplineBasis.h"
 
 #include "plus.h"
+#include "times.h"
 namespace spline{
 
     BSplineBasis::BSplineBasis (const std::vector<double> &knots, int degree) : UnivariateBasis(degree), knots(knots) {}
@@ -105,7 +106,13 @@ namespace spline{
         return plusBasis(*this, other);
     }
 
+    BSplineBasis BSplineBasis::operator* (const MonomialeBasis &other) const {
+        return timesBasis(*this, other);
+    }
 
+    BSplineBasis BSplineBasis::operator* (const BSplineBasis &other) const{
+        return timesBasis(*this, other);
+    }
 
 
 } // namespace spline

@@ -33,6 +33,9 @@ public:
 
     MonomialeBasis operator+(const MonomialeBasis& other)const ;
     BSplineBasis operator+(const BSplineBasis& other)const ;
+
+    MonomialeBasis operator*(const MonomialeBasis& other)const ;
+    BSplineBasis operator*(const BSplineBasis& other)const ;
     };
 }  // namespace spline
 

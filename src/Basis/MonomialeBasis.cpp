@@ -8,6 +8,7 @@
 #include "MonomialeBasis.h"
 
 #include "plus.h"
+#include "times.h"
 
 namespace spline {
     MonomialeBasis::MonomialeBasis (int degree) : UnivariateBasis(degree) { }
@@ -34,6 +35,14 @@ namespace spline {
 
     BSplineBasis MonomialeBasis::operator+ (const BSplineBasis &other)const  {
         return plusBasis(*this, other);
+    }
+
+    MonomialeBasis MonomialeBasis::operator* (const MonomialeBasis &other)const  {
+        return timesBasis(*this, other);
+    }
+
+    BSplineBasis MonomialeBasis::operator* (const BSplineBasis &other)const  {
+        return timesBasis(*this, other);
     }
 
 
