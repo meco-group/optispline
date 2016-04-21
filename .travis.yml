@@ -202,9 +202,6 @@ matrix:
           SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
           set(CMAKE_SHARED_LIBRARY_SUFFIX "dll")
 
-        - cmake -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake -DWITH_PYTHON=OFF .
-        - make
-        
         - cp src/*.dll swig
         
     - env:
@@ -299,7 +296,14 @@ matrix:
         - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/python/numpy.hpp -O $CASADI_PREFIX/include/numpy.hpp
         # End of hacks
 
+
+        # Fix for #1477 (part 1)
+        - sed -i -e 's/\"SwigPyObject\"/\"SwigPyCasadiObject\"/g' $HOME/swig/share/swig/2.0.12/python/pyrun.swg
+
         - cmake -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake -DWITH_MATLAB=OFF .
         - make VERBOSE=1
-        
+
+        # Fix for #1477 (part 2)
+        - sed -i -e "s/'SwigPyObject'/'SwigPyCasadiObject'/g" swig/Basis.py
+                  
         - cp src/*.dll swig
