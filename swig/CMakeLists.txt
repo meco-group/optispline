@@ -22,7 +22,7 @@ set(CMAKE_SWIG_FLAGS "")
 set_source_files_properties(Basis.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE Basis.i PROPERTY SWIG_FLAGS "-I${PROJECT_SOURCE_DIR}" "-I${CASADI_INCLUDE_DIR}" "-I${CASADI_INCLUDE_DIR}" "-D__STDC_UTF_16__")
 
-set(SWIG_MODULE_Basis_EXTRA_DEPS ${CMAKE_SOURCE_DIR}/src/libBasis.a)
+set(SWIG_MODULE_Basis_EXTRA_DEPS ${CMAKE_SOURCE_DIR}/src/libBasis${CMAKE_SHARED_LIBRARY_SUFFIX})
   
 if(WITH_PYTHON)
   swig_add_module(Basis python Basis.i)
@@ -31,7 +31,7 @@ endif()
 
 if(WITH_MATLAB)
   swig_add_module(BasisMEX matlab Basis.i)
-  swig_link_libraries(BasisMEX -ldl -lrt ${MATLAB_LIBRARIES} Basis)
+  swig_link_libraries(BasisMEX ${MATLAB_LIBRARIES} Basis ${CASADI_LIBRARIES})
   set_target_properties(BasisMEX PROPERTIES PREFIX "" SUFFIX .${MATLAB_MEX_EXT})
   add_custom_target(Basis_matlab DEPENDS BasisMEX Basis)
 endif()

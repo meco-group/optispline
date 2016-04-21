@@ -6,38 +6,287 @@ env:
 #    - MPLBACKEND=Agg # Matplotlib backend; must be headless to run on travis
   
 
-sudo: required
-dist: trusty
-language: generic
-
-before_script:
-  - set -e
-  - set -o pipefail  # otherwise, piping with grep discards exit statuses
-
-script:
-  - ctest -V -R python
-  - ctest -V -R valgrind
-  
-install:
-  - export CASADI_PREFIX=$HOME/casadi-py27-np1.9.1-v$CASADIVERSION
-  
-  # A little bit of hacks; future CasADi version should not rely on these
-  - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/casadi.i -O $CASADI_PREFIX/include/casadi.i
-  - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/doc_merged.i -O $CASADI_PREFIX/include/doc_merged.i
-  - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/python/numpy.hpp -O $CASADI_PREFIX/include/numpy.hpp
-  - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/test/internal/valgrind-python.supp -O $CASADI_PREFIX/include/valgrind-python.supp
-  - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/test/internal/valgrind-casadi.supp -O $CASADI_PREFIX/include/valgrind-casadi.supp
-  # End of hacks
-
-  - cmake -DWITH_MATLAB=OFF .
-  - make
 
 before_install:
-  - wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/linux/casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz/download -O casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz
-  - mkdir $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
-  - tar -zxf casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz -C $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
-  - sudo apt-get install -y python-numpy python-scipy python-matplotlib swig valgrind
-  - mkdir -p $HOME/.matplotlib/
-  - "echo 'backend : Agg' > $HOME/.matplotlib/matplotlibrc"
-  - export PYTHONPATH=$PYTHONPATH:$HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+  - git clone https://github.com/meco-group/bob.git
+  - pushd bob && source setup.sh && popd
+  - set -e
+  - set -o pipefail  # otherwise, piping with grep discards exit statuses
+  
+after_success:
+  - bob_putdir swig cpp_spline/$TRAVIS_BRANCH/$TARGET
+  
+matrix:
+  include:
+    - env:
+        - TARGET=LINUX-PYTHON
+      sudo: required
+      dist: trusty
+      language: generic
+      script:
+        - ctest -V -R python
+        - ctest -V -R valgrind
+      install:
+        - wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/linux/casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz/download -O casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz
+        - mkdir $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+        - tar -zxf casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz -C $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+        - sudo apt-get install -y python-numpy python-scipy python-matplotlib swig valgrind
+        - mkdir -p $HOME/.matplotlib/
+        - "echo 'backend : Agg' > $HOME/.matplotlib/matplotlibrc"
+        - export PYTHONPATH=$PYTHONPATH:$HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+        
+        - export CASADI_PREFIX=$HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+        
+        # A little bit of hacks; future CasADi version should not rely on these
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/casadi.i -O $CASADI_PREFIX/include/casadi.i
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/doc_merged.i -O $CASADI_PREFIX/include/doc_merged.i
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/python/numpy.hpp -O $CASADI_PREFIX/include/numpy.hpp
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/test/internal/valgrind-python.supp -O $CASADI_PREFIX/include/valgrind-python.supp
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/test/internal/valgrind-casadi.supp -O $CASADI_PREFIX/include/valgrind-casadi.supp
+        # End of hacks
 
+        - cmake -DWITH_MATLAB=OFF .
+        - make
+        - cp src/*.so swig
+
+    - env:
+        - TARGET=LINUX-MATLAB
+        - MATLABRELEASE=R2014a
+        - MATLAB_ROOT=$HOME/matlab
+      sudo: required
+      script:
+        - ctest -V -R matlab
+      install:
+        - sudo add-apt-repository ppa:umn-claoit-rce/compute-packages -y
+        - sudo add-apt-repository ppa:baltix-members/ppa -y #  for libslicot-dev
+        - sudo apt-get update -qq
+        # Not available on 12.04: libslicot-dev
+        - sudo apt-get install -y binutils gcc g++ gfortran git cmake liblapack-dev ipython python-dev python-numpy python-scipy python-matplotlib libmumps-seq-dev libblas-dev liblapack-dev libxml2-dev
+        - sudo apt-get install fakeroot rpm alien
+        
+        - wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/linux/casadi-matlab${MATLABRELEASE}-v$CASADIVERSION.tar.gz/download -O casadi-matlab${MATLABRELEASE}-v$CASADIVERSION.tar.gz
+        - mkdir $HOME/casadi-matlab${MATLABRELEASE}-v$CASADIVERSION
+        - tar -zxf casadi-matlab${MATLABRELEASE}-v$CASADIVERSION.tar.gz -C $HOME/casadi-matlab${MATLABRELEASE}-v$CASADIVERSION
+        - export CASADI_PREFIX=$HOME/casadi-matlab${MATLABRELEASE}-v$CASADIVERSION
+
+        - export swig_matlab_file=swig_matlab
+        - bob_get ${swig_matlab_file}.tar.gz && mkdir $HOME/swig && tar -xf ${swig_matlab_file}.tar.gz -C $HOME/swig
+        - mkdir -p /home/travis/build/casadi/testbot && pushd /home/travis/build/casadi/testbot && ln -s  $HOME/swig  swig-matlab-install  && popd
+        - export SWIGMATLAB=$HOME/swig/bin
+        - export PATH=$HOME/swig/bin:$HOME/swig/share:$PATH
+
+        - bob_get matlab$MATLABRELEASE.tar.gz
+        - mkdir $HOME/matlab && tar -xf matlab$MATLABRELEASE.tar.gz -C $HOME/matlab > /dev/null
+        
+        # A little bit of hacks; future CasADi version should not rely on these
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/casadi.i -O $CASADI_PREFIX/include/casadi.i
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/doc_merged.i -O $CASADI_PREFIX/include/doc_merged.i
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/python/numpy.hpp -O $CASADI_PREFIX/include/numpy.hpp
+        # End of hacks
+
+        - cmake -DWITH_PYTHON=OFF .
+        - make
+        
+        - sudo bash -c "echo '127.0.0.1	$FLEX_SERVER' >> /etc/hosts;echo '127.0.0.1	$FLEX_HOSTNAME' >> /etc/hosts"
+        - sudo hostname $FLEX_HOSTNAME
+        - mkdir -p ~/.matlab/${MATLABRELEASE}_licenses/
+        - echo -e "SERVER $FLEX_SERVER ANY 1715\nUSE_SERVER" > ~/.matlab/${MATLABRELEASE}_licenses/license.lic
+        - ssh-keyscan $GATE_SERVER >> ~/.ssh/known_hosts
+        - ssh -i $HOME/id_rsa_bob $USER_GATE@$GATE_SERVER -L 1701:$FLEX_SERVER:1701 -L 1719:$FLEX_SERVER:1719 -L 1718:$FLEX_SERVER:1718 -L 2015:$FLEX_SERVER:2015 -L 1815:$FLEX_SERVER:1815 -L 1715:$FLEX_SERVER:1715 -N &
+        - export PATH=$HOME/matlab/bin/:$PATH
+        
+        - cp src/*.so swig
+        
+    - env:
+        - TARGET=WINDOWS-MATLAB
+        - compilerprefix=x86_64-w64-mingw32
+        - MATLABRELEASE=R2014a
+        - MATLAB_ROOT=$HOME/matlab
+      sudo: required
+      dist: trusty
+      script:
+        - echo "all fine"
+      install:
+      
+                
+        - wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/windows/casadi-matlab$MATLABRELEASE-v$CASADIVERSION.zip/download -O casadi-matlab$MATLABRELEASE.zip
+        - mkdir $HOME/casadi-matlab$MATLABRELEASE
+        - unzip casadi-matlab$MATLABRELEASE.zip -d $HOME/casadi-matlab$MATLABRELEASE
+        - export CASADI_PREFIX=$HOME/casadi-matlab$MATLABRELEASE
+      
+        # A little bit of hacks; future CasADi version should not rely on these
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/casadi.i -O $CASADI_PREFIX/include/casadi.i
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/doc_merged.i -O $CASADI_PREFIX/include/doc_merged.i
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/python/numpy.hpp -O $CASADI_PREFIX/include/numpy.hpp
+        # End of hacks
+        
+        - sudo apt-get update
+        - sudo apt-get install -y binutils gcc g++ gfortran git cmake cmake-data liblapack-dev ipython python-dev libxml2-dev
+        - sudo apt-get remove -qq -y mingw32
+        - |
+          cat <<EOF | sudo tee --append  /etc/apt/sources.list
+          deb-src http://archive.ubuntu.com/ubuntu vivid main restricted universe multiverse
+          deb http://archive.ubuntu.com/ubuntu vivid main restricted universe multiverse
+        - |
+          cat <<EOF | sudo tee /etc/apt/preferences.d/mytest
+          Package: *
+          Pin: release n=trusty
+          Pin-priority: 700
+          Package: *
+          Pin: release n=vivid
+          Pin-priority: 600
+        - tail /etc/apt/sources.list
+        - tail /etc/apt/preferences.d/mytest
+        - sudo apt-get update
+        - sudo apt-get install -q -y -t vivid mingw-w64
+
+        - export swig_matlab_file=swig_matlab
+        - bob_get ${swig_matlab_file}.tar.gz && mkdir $HOME/swig && tar -xf ${swig_matlab_file}.tar.gz -C $HOME/swig
+        - mkdir -p /home/travis/build/casadi/testbot && pushd /home/travis/build/casadi/testbot && ln -s  $HOME/swig  swig-matlab-install  && popd
+        - export PATH=$HOME/swig/bin:$HOME/swig/share:$PATH
+        - export SWIGMATLAB=$HOME/swig/bin
+        - bob_get matlab$MATLABRELEASE-win.zip
+        - mkdir $HOME/matlab && unzip matlab$MATLABRELEASE-win.zip -d $HOME/matlab > /dev/null
+        
+        - |
+          cat <<EOF >> swig/Basis.i
+          %begin %{
+          #define UINT64_T unsigned long long int
+          %}
+          
+        - |
+          cat <<EOF > CMakeLists2.txt
+          set(MATLAB_LIBRARIES $MATLAB_ROOT/bin/win64/libut.dll $MATLAB_ROOT/bin/win64/libmex.dll $MATLAB_ROOT/bin/win64/libmx.dll $MATLAB_ROOT/bin/win64/libeng.dll)
+          
+          set(MATLAB_INCLUDE_DIR "$MATLAB_ROOT/extern/include")
+          set(MATLAB_EXTRA_CXXFLAGS "-D__STDC_UTF_16__")
+          set(MATLAB_MEX_EXT "mexw64")
+
+        - grep -v "find_package(MATLAB" swig/CMakeLists.txt >> CMakeLists2.txt
+        - rm swig/CMakeLists.txt && mv CMakeLists2.txt swig/CMakeLists.txt
+
+        - |
+          cat <<EOF >toolchain.cmake
+          # this one is important
+          SET(CMAKE_SYSTEM_NAME Windows)
+          #this one not so much
+          SET(CMAKE_SYSTEM_VERSION 1)
+          SET(PREFIX $compilerprefix)
+          # specify the cross compiler
+          SET(CMAKE_C_COMPILER   $compilerprefix-gcc)
+          SET(CMAKE_CXX_COMPILER $compilerprefix-g++)
+          SET(CMAKE_Fortran_COMPILER $compilerprefix-gfortran)
+          set(CMAKE_RC_COMPILER $compilerprefix-windres)
+          
+          # where is the target environment 
+          SET(CMAKE_FIND_ROOT_PATH  /usr/$compilerprefix)
+          SET(CMAKE_CXX_FLAGS "-fno-ipa-cp-clone" CACHE STRING "" FORCE)
+          
+          # search for programs in the build host directories
+          SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+          # for libraries and headers in the target directories
+          SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
+          SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
+          set(CMAKE_SHARED_LIBRARY_SUFFIX "dll")
+
+        - cmake -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake -DWITH_PYTHON=OFF .
+        - make
+        
+        - cp src/*.dll swig
+        
+    - env:
+        - TARGET=WINDOWS-PYTHON
+        - PYTHONVERSION=27
+        - NUMPYVERSION=1.9.1
+        - compilerprefix=i686-w64-mingw32
+        - BITNESS=32
+        - NUMPYSUFFIX=win32
+        - EXTRA_FLAGS=""
+        - WINEENV=py27
+      sudo: required
+      script:
+        - echo "all fine"
+      install:
+
+
+        - sudo add-apt-repository ppa:umn-claoit-rce/compute-packages -y
+        - sudo add-apt-repository ppa:baltix-members/ppa -y #  for libslicot-dev
+        - sudo add-apt-repository ppa:tkelman/mingw-backport -y
+        - sudo apt-get update -qq
+        - sudo apt-get install -y binutils gcc g++ gfortran git cmake liblapack-dev ipython python-dev python-numpy python-scipy python-matplotlib coinor-libipopt-dev libmumps-seq-dev libblas-dev liblapack-dev libslicot-dev libxml2-dev
+        - sudo apt-get remove -qq -y mingw32
+        - sudo apt-get install -q -y mingw-w64 g++-mingw-w64 gcc-mingw-w64 gfortran-mingw-w64
+        - wget https://raw.githubusercontent.com/casadi/python-lib-template/master/.travis-setup.sh && chmod +x .travis-setup.sh
+        - "./.travis-setup.sh"
+        - wget -O numpy.exe https://github.com/casadi/testbot/releases/download/perpetual/numpy-$NUMPYVERSION-sse2.exe
+        - /opt/wine-staging/bin/wine C:/Python27/Scripts/easy_install.exe numpy.exe && rm numpy.exe
+        
+        - |
+          cat <<EOF >toolchain.cmake
+          # this one is important
+          SET(CMAKE_SYSTEM_NAME Windows)
+          #this one not so much
+          SET(CMAKE_SYSTEM_VERSION 1)
+          SET(PREFIX $compilerprefix)
+          # specify the cross compiler
+          SET(CMAKE_C_COMPILER   $compilerprefix-gcc)
+          SET(CMAKE_CXX_COMPILER $compilerprefix-g++)
+          SET(CMAKE_Fortran_COMPILER $compilerprefix-gfortran)
+          set(CMAKE_RC_COMPILER $compilerprefix-windres)
+          
+          # where is the target environment 
+          SET(CMAKE_FIND_ROOT_PATH  /usr/$compilerprefix)
+          SET(CMAKE_CXX_FLAGS "$EXTRA_FLAGS" CACHE STRING "" FORCE)
+          
+          # search for programs in the build host directories
+          SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+          # for libraries and headers in the target directories
+          SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
+          SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
+        - |
+          cat <<EOF >>patch.txt
+          find_library(PYTHON_LIBRARY
+            NAMES
+              python27
+            PATHS
+              /home/travis/.wine/drive_c/Python27/libs
+            NO_SYSTEM_ENVIRONMENT_PATH
+          )
+          
+          find_path(PYTHON_INCLUDE_DIR
+              NAMES Python.h
+          PATHS
+             /home/travis/.wine/drive_c/Python27/include
+            NO_SYSTEM_ENVIRONMENT_PATH
+          )
+          set(PYTHON_EXECUTABLE /home/travis/.wine/drive_c/Python27/python.exe)
+          set(NUMPY_INCLUDE_DIR /home/travis/.wine/drive_c/Python27/Lib/site-packages/numpy-1.9.1-py2.7-$NUMPYSUFFIX.egg/numpy/core/include)
+          set(NUMPY_INCLUDED_DIRS /home/travis/.wine/drive_c/Python27/Lib/site-packages/numpy-1.9.1-py2.7-$NUMPYSUFFIX.egg/numpy/core/include/numpy)
+          set(NUMPY_PATH /home/travis/.wine/drive_c/Python27/Lib/site-packages/numpy-1.9.1-py2.7-$NUMPYSUFFIX.egg/numpy/core/include/numpy)
+        - cat patch.txt
+        - cat toolchain.cmake
+          
+        - wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/windows/casadi-py27-np1.9.1-v$CASADIVERSION.zip/download -O casadi-py27-np1.9.1-v$CASADIVERSION.zip
+        - mkdir $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+        - unzip casadi-py27-np1.9.1-v$CASADIVERSION.zip -d $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+        - export CASADI_PREFIX=$HOME/casadi-py27-np1.9.1-v$CASADIVERSION
+      
+        - bob_get swig.tar.gz
+        - mkdir $HOME/swig && tar -xf swig.tar.gz -C $HOME/swig && rm swig.tar.gz
+        - mkdir -p /home/travis/build/casadi/testbot && pushd /home/travis/build/casadi/testbot && ln -s  $HOME/swig  swig-install  && popd
+        - export PATH=$HOME/swig/bin:$HOME/swig/share:$PATH
+        - export SWIGMATLAB=$HOME/swig/bin
+        - cat patch.txt swig/CMakeLists.txt > temp.txt
+        - mv temp.txt swig/CMakeLists.txt
+  
+        
+        # A little bit of hacks; future CasADi version should not rely on these
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/casadi.i -O $CASADI_PREFIX/include/casadi.i
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/doc_merged.i -O $CASADI_PREFIX/include/doc_merged.i
+        - wget https://raw.githubusercontent.com/casadi/casadi/$CASADIVERSION/swig/python/numpy.hpp -O $CASADI_PREFIX/include/numpy.hpp
+        # End of hacks
+
+        - cmake -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake -DWITH_MATLAB=OFF .
+        - make VERBOSE=1
+        
+        - cp src/*.dll swig

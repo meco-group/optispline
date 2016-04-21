@@ -12,6 +12,17 @@
 import_array();
 %}
 #endif // SWIGPYTHON
+// Incude cmath early on, see #622
+%begin %{
+#include <cmath>
+#ifdef _XOPEN_SOURCE
+#undef _XOPEN_SOURCE
+#endif
+#ifdef _POSIX_C_SOURCE
+#undef _POSIX_C_SOURCE
+#endif
+%}
+
 // WORKAROUNDS END
 
 // Renameing PYTHON 
