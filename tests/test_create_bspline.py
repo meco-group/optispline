@@ -33,4 +33,7 @@ print 'c.evalBasis(0.1)'
 print c.getKnots()
 print c.evalBasis(0.1)
 
+print '\nb.transformation(c)'
+print b.length()
+print c.length()
 print b.transformation(c)

@@ -26,13 +26,13 @@ namespace spline {
 
     casadi::DM UnivariateBasis::transformation( const Basis &b) const {
         std::vector<double> grid = evaluatonGrid();
-
-//        casadi::DM A(std::vector< std::vector<double> >({{1,3},{4,6}}));
-//        casadi::DM B(std::vector< std::vector<double> >({{1,3},{3,7}}));
-
-        casadi::DM A(evalBasis(grid));
+        
+	casadi::DM A(evalBasis(grid));
         casadi::DM B(b.evalBasis(grid));
 
+        std::vector<double> grid = evaluationGrid();
+        casadi::DM A(std::vector< std::vector<double> >(evalBasis(grid)));
+        casadi::DM B(std::vector< std::vector<double> >(b.evalBasis(grid)));
         return casadi::DM::solve(A, B);
     }
 

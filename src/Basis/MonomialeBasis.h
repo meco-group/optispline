@@ -33,13 +33,9 @@ public:
     MonomialeBasis operator*(const MonomialeBasis& other)const ;
     BSplineBasis operator*(const BSplineBasis& other)const ;
 
-
-    std::vector<double> evaluatonGrid(void) const;
+    virtual std::vector<double> evaluationGrid(void) const;
 
     };
-
-
-
 }  // namespace spline
 
 #endif  // MONOMIALBASIS_H_

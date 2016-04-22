@@ -43,7 +43,7 @@ namespace spline {
     }
 
 // TODO(ErikLambr) check is grid is valid
-    std::vector<double> MonomialeBasis::evaluatonGrid(void) const {
+    std::vector<double> MonomialeBasis::evaluationGrid () const {
         std::vector<double> grid;
         for( int i = 0; i < length(); i++ )
             grid.push_back( (double)i );

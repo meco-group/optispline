@@ -44,7 +44,7 @@ public:
 
     std::vector<double> greville () const;
 
-    std::vector<double> evaluatonGrid(void) const;
+    virtual std::vector<double> evaluationGrid (void) const;
 
     /// Return a string with a representation (for SWIG)
     std::string getRepresentation() const { return "BSplineBasis object"; };
