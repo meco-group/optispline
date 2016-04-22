@@ -17,7 +17,7 @@ print b.evalBasis(0.5)
 
 print 'BSplineBasis'
 
-b = Basis.BSplineBasis([0.0, 10.0], 1, 5)
+b = Basis.BSplineBasis([0.0, 10.0],2, 5)
 print b.evalBasis(0.5)
 print b.evalBasis([0.5,0.6])
 print b.length()
