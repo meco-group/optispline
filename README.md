@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/meco-group/cpp_splines.svg?branch=master)](https://travis-ci.org/meco-group/cpp_splines)
-
+[![Coverage Status](https://coveralls.io/repos/github/meco-group/cpp_splines/badge.svg?branch=master)](https://coveralls.io/github/meco-group/cpp_splines?branch=master)
 # Run the binariess (inside MECO group):
 
  1. 
