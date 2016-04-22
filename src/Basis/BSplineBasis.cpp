@@ -128,15 +128,15 @@ namespace spline{
         return greville();
     }
 
-//TODO(ErikLambre) is this the best way
+
     BSplineBasis BSplineBasis::addKnots(const std::vector<double> newKnots, bool unique) const {
+        std::vector<double> kn;
         if (unique){
-            const std::vector<double> kn = addKnotsUnique(knots, newKnots);
-            return BSplineBasis(kn, degree);
+            kn = addKnotsUnique(knots, newKnots);
         } else {
-            const std::vector<double> kn = addKnotsNotUnique(knots, newKnots);
-            return BSplineBasis(kn, degree);
+            kn = addKnotsNotUnique(knots, newKnots);
         }
+        return BSplineBasis(kn, degree);
     }
 
 } // namespace spline

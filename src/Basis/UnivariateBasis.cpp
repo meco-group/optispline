@@ -15,11 +15,9 @@ namespace spline {
 
     std::vector< std::vector<double> > UnivariateBasis::evalBasis(const std::vector<double>& x) const{
         std::vector< std::vector<double> > r(x.size(), std::vector<double>(length()));
-
         for (int i = 0; i < x.size(); ++i) {
             r[i] = evalBasis(x[i]);
         }
-
         return r;
     }
 
@@ -27,8 +25,8 @@ namespace spline {
 //    TODO(ErikLambre) check order
     casadi::DM UnivariateBasis::transformation( const Basis &b) const {
         std::vector<double> grid = evaluationGrid();
-        casadi::DM A(std::vector< std::vector<double> >(evalBasis(grid)));
-        casadi::DM B(std::vector< std::vector<double> >(b.evalBasis(grid)));
+        casadi::DM A(evalBasis(grid));
+        casadi::DM B(b.evalBasis(grid));
         return casadi::DM::solve(A, B);
     }
 

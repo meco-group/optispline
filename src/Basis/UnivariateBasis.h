@@ -24,7 +24,6 @@ namespace spline {
         int getDegree () const { return degree;}
         void increaseDegree(int d);
 
-
         casadi::DM transformation( const Basis &b) const;
 
         virtual std::vector<double> evaluationGrid (void) const = 0;
