@@ -68,6 +68,7 @@ namespace std {
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialeBasis.h>
 #include <src/Basis/BSplineBasis.h>
+#include <src/Basis/vectorUtilities.h> // Debug
 #include <casadi/casadi.hpp>
 %}
 
@@ -75,3 +76,4 @@ namespace std {
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialeBasis.h>
 %include <src/Basis/BSplineBasis.h>
+%include <src/Basis/vectorUtilities.h> // Debug

@@ -45,6 +45,7 @@ public:
     std::vector<double> greville () const;
 
     virtual std::vector<double> evaluationGrid (void) const;
+    BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
 
     /// Return a string with a representation (for SWIG)
     std::string getRepresentation() const { return "BSplineBasis object"; };

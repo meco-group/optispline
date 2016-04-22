@@ -17,7 +17,7 @@ print b.evalBasis(0.5)
 
 print 'BSplineBasis'
 
-b = Basis.BSplineBasis([0.0, 10.0], 3, 5)
+b = Basis.BSplineBasis([0.0, 10.0], 1, 5)
 print b.evalBasis(0.5)
 print b.evalBasis([0.5,0.6])
 print b.length()
@@ -37,3 +37,21 @@ print '\nb.transformation(c)'
 print b.length()
 print c.length()
 print b.transformation(c)
+print '\n\n'
+print Basis.addKnotsUnique([0.,0.1,0.2], [0.,0.3,0.2])
+print '\n\n'
+print Basis.addKnotsNotUnique([0.,0.1,0.2], [0.,0.3,0.2])
+
+
+print '\n\n'
+d = b.addKnots([1])
+print b.getKnots()
+print d.getKnots()
+T =  d.transformation(b)
+print T
+
+import numpy as np
+T = np.matrix(T)
+T[abs(T.real) < 10**-3] = 0.0
+
+print T
