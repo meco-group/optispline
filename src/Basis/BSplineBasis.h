@@ -20,8 +20,10 @@ class BSplineBasis : public UnivariateBasis{
 
 
 public:
-    BSplineBasis (const std::vector<double >& knots, int degree);
-    BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots);
+//    BSplineBasis (const std::vector<double >& knots, int degree);
+//    BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots);
+    BSplineBasis (const std::vector<double >& knots, int degree,std::string argument = std::string("__"));
+    BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots, std::string argument = std::string("__"));
 
     ~BSplineBasis ();
 
@@ -59,6 +61,9 @@ public:
 #endif // SWIG
 
 private:
+
+    void initBSplineBasis (const std::vector<double >& knots, int degree, std::string argument);
+
     std::vector<bool> indector(int i, double x);
 
 private:

@@ -9,10 +9,14 @@
 
 #include <casadi/casadi.hpp>
 
+#include <string>
+
 namespace spline {
     class UnivariateBasis : public Basis {
     public:
-        UnivariateBasis (int degree) : degree(degree) {}
+//        UnivariateBasis (int degree);
+        UnivariateBasis (int degree, std::string argument = std::string("__"));
+
 
         //    evalution Basis
         virtual std::vector<double> evalBasis(double x) const = 0;
@@ -28,8 +32,19 @@ namespace spline {
 
         virtual std::vector<double> evaluationGrid (void) const = 0;
 
+        void setArguments (const std::string argument);
+
+
+        void setDegree (int degree);
+
+    private:
+        void initUnivariateBasis (int degree, std::string argument);
+
+
     protected:
         int degree;
+
+
     };
 } // namespace spline
 

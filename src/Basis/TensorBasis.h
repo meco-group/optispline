@@ -20,7 +20,7 @@ namespace spline{
 //        virtual std::vector<double> evalBasis(double x) const = 0;
         virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const;
         virtual std::vector< std::vector< std::vector<double> > > evalBasis(const std::vector< std::vector<double> >& x) const;
-        
+
         virtual TensorBasis plus(TensorBasis &other);
 
     private:

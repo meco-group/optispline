@@ -7,6 +7,21 @@
 
 namespace spline {
 
+    UnivariateBasis::UnivariateBasis (int degree, std::string argument){
+        initUnivariateBasis(degree, argument);
+    }
+
+//    UnivariateBasis::UnivariateBasis (int degree) {
+//        //TODO(ErikLambre) make default code for arg
+//        std::string arg = "__";
+//        initUnivariateBasis(degree, arg);
+//    }
+
+    void UnivariateBasis::initUnivariateBasis (int degree, std::string argument){
+        UnivariateBasis::degree = degree;
+        setArguments(argument);
+    }
+
 
     void UnivariateBasis::increaseDegree (int d) {
         degree += d;
@@ -31,5 +46,14 @@ namespace spline {
     }
 
 
+    void UnivariateBasis::setArguments (const std::string argument){
+        std::vector<std::string> argumentList = {argument};
+        Basis::setArguments(argumentList);
+    }
+
+
+    void UnivariateBasis::setDegree (int degree) {
+        UnivariateBasis::degree = degree;
+    }
 }  // namespace spline
 

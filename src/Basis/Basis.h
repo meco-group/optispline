@@ -6,7 +6,9 @@
 #ifndef BASIS_H_
 #define BASIS_H_
 
+#include <string>
 #include <vector>
+
 
 namespace spline {
 class Basis {
@@ -17,8 +19,22 @@ public:
     virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const = 0;
     std::vector< std::vector<double> > operator()(std::vector<double>& x) const { return evalBasis(x); };
 
+//    Basis* plus(Basis &other);
+//
+
     virtual int length() const= 0;
-//    virtual Basis &plus(Basis &other) = 0;
+
+
+    int getDimensions () const;
+    void setDimensions (int dimensions);
+
+    std::vector<std::string > getArguments () const;
+    virtual void setArguments (const std::vector <std::string> arguments);
+
+
+protected:
+    int dimensions;
+    std::vector< std::string > arguments;
 };
 }
 #endif  // BASIS_H_
