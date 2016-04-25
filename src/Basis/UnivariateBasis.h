@@ -26,6 +26,7 @@ namespace spline {
 //        virtual Basis plus(Basis &other) = 0;
 
         int getDegree () const { return degree;}
+        void setDegree (int degree);
         void increaseDegree(int d);
 
         casadi::DM transformation( const Basis &b) const;
@@ -34,8 +35,6 @@ namespace spline {
 
         void setArguments (const std::string argument);
 
-
-        void setDegree (int degree);
 
     private:
         void initUnivariateBasis (int degree, std::string argument);

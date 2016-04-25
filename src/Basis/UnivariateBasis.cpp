@@ -20,6 +20,7 @@ namespace spline {
     void UnivariateBasis::initUnivariateBasis (int degree, std::string argument){
         UnivariateBasis::degree = degree;
         setArguments(argument);
+        setDimensions(1);
     }
 
 

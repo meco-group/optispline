@@ -8,6 +8,7 @@ add_library(Basis SHARED
             Basis/BSplineBasis.h Basis/BSplineBasis.cpp
             Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
             Basis/MonomialeBasis.h Basis/MonomialeBasis.cpp
+            Basis/TensorBasis.h Basis/TensorBasis.cpp
           )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
 add_definitions(-DSHARED_LIBRARY)

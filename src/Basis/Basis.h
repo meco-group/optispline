@@ -9,7 +9,6 @@
 #include <string>
 #include <vector>
 
-
 namespace spline {
 class Basis {
 public:
@@ -33,7 +32,7 @@ public:
 
 
 protected:
-    int dimensions;
+    int dimension;
     std::vector< std::string > arguments;
 };
 }

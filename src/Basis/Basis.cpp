@@ -15,10 +15,10 @@ namespace spline {
     }
 
     int Basis::getDimensions () const {
-        return dimensions;
+        return dimension;
     }
 
     void Basis::setDimensions (int dimensions) {
-        Basis::dimensions = dimensions;
+        Basis::dimension = dimensions;
     }
 } // namespace spline
