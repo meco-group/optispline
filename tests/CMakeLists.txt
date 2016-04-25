@@ -2,6 +2,7 @@ enable_testing()
 
 add_test(python 
   python test_create_bspline.py
+  python test_argument.py
 )
 
 add_test(matlab
