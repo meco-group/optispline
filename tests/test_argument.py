@@ -18,3 +18,7 @@ b = Basis.BSplineBasis([0.0, 10.0],2, 5, 'x')
 
 print a.getArguments()
 print b.getArguments()
+
+c = Basis.TensorBasis([a,b])
+
+print c.getArguments()
