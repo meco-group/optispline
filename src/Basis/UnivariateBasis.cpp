@@ -47,7 +47,7 @@ namespace spline {
     }
 
 
-    void UnivariateBasis::setArguments (const std::string argument){
+    void UnivariateBasis::setArguments (const std::string& argument){
         std::vector<std::string> argumentList = {argument};
         Basis::setArguments(argumentList);
     }

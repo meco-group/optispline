@@ -33,7 +33,7 @@ namespace spline {
 
         virtual std::vector<double> evaluationGrid (void) const = 0;
 
-        void setArguments (const std::string argument);
+        void setArguments (const std::string& argument);
 
 
     private:
