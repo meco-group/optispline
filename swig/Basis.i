@@ -60,8 +60,8 @@ namespace std {
    %template(DoubleVector) vector<double>;
 }
 
-
 %import "casadi.i"
+
 
 %{
 #include <src/Basis/Basis.h>
@@ -79,3 +79,8 @@ namespace std {
 %include <src/Basis/BSplineBasis.h>
 %include <src/Basis/TensorBasis.h>
 %include <src/Basis/vectorUtilities.h> // Debug
+
+namespace std {
+   %template(BasisPtrVector) vector< spline::Basis* >;
+}
+

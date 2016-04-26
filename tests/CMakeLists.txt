@@ -1,9 +1,7 @@
 enable_testing()
 
-add_test(python 
-  python test_create_bspline.py
-  python test_argument.py
-)
+add_test(python python test_create_bspline.py)
+add_test(python_arg python test_argument.py)
 
 add_test(matlab
   matlab -nojvm -nodesktop -r "addpath('$ENV{CASADI_PREFIX}');addpath('${CMAKE_CURRENT_SOURCE_DIR}/../swig');test_matlab"
