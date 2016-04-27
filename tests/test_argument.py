@@ -25,3 +25,13 @@ v.append(b)
 c = Basis.TensorBasis(v)
 
 print c.getArguments()
+print c.getDimensions()
+
+print a(1.0)
+print b(8.0)
+
+print b([2.0,  6.8])
+
+print c([1.0,8.0])
+
+

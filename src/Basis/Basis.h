@@ -16,7 +16,7 @@ public:
     virtual std::vector<double> evalBasis(double x) const = 0;
     std::vector<double> operator()(double x) const { return evalBasis(x); };
     virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const = 0;
-    std::vector< std::vector<double> > operator()(std::vector<double>& x) const { return evalBasis(x); };
+    std::vector< std::vector<double> > operator()(const std::vector<double>& x) const { return evalBasis(x); };
 
 //    Basis* plus(Basis &other);
 //

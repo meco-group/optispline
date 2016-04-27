@@ -18,7 +18,6 @@ namespace spline{
         std::vector<double> uniqueKnots(kn1.size() + kn2.size());
         std::vector<double>::iterator it;
 
-
         it=std::set_union (kn1.begin(),kn1.end(), kn2.begin(),kn2.end(), uniqueKnots.begin());
         uniqueKnots.resize(it-uniqueKnots.begin());
         uniqueKnots.erase( unique( uniqueKnots.begin(), uniqueKnots.end() ), uniqueKnots.end() );
@@ -40,7 +39,6 @@ namespace spline{
         }
         return knots;
     }
-
 
     std::vector<double> addKnotsUnique(const std::vector<double> knots_,  const std::vector<double> newKnots_) {
 

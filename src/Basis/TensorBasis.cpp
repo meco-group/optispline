@@ -19,10 +19,22 @@ namespace spline{
         return std::vector<double>();
     }
 
+    // TODO(ErikLambre) this is wrong
     std::vector< std::vector<double> > TensorBasis::evalBasis (const std::vector<double>& x) const {
         std::vector< std::vector<double> > r;
         for (int i = 0; i < getDimensions(); ++i) {
             r.push_back((basis[i])->evalBasis(x[i]));
+        }
+        return r;
+    }
+
+
+
+    // TODO(ErikLambre) make it work
+    std::vector< std::vector< std::vector<double> > > TensorBasis::evalBasis (const std::vector< std::vector<double> >& x) const {
+        std::vector< std::vector< std::vector<double> > > r;
+        for (int i = 0; i < x.size(); ++i) {
+		r.push_back(TensorBasis::evalBasis(x[i]));
         }
         return r;
     }
@@ -32,42 +44,5 @@ namespace spline{
     }
 
 
-    // TODO(ErikLambre) make it work
-    std::vector< std::vector< std::vector<double> > > TensorBasis::evalBasis (const std::vector< std::vector<double> >& x) const {
-
-        std::vector< std::vector< std::vector<double> > > r;
-//        std::vector< std::vector<double> > r_;
-        for (int i = 0; i < x.size(); ++i) {
-//            r_.clear();
-//            for (int j = 0; j < TensorBasis::getDimensions(); ++j) {
-//                r_.push_back((basis[j]).evalBasis(x[i][j]));
-//            }
-
-
-            r.push_back(TensorBasis::evalBasis(x[i]));
-//            r.push_back(r_);
-        }
-        return r;
-
-
-
-//
-//
-//        std::vector< std::vector< std::vector<double> > > r;
-//        std::vector< std::vector<double> > r_;
-//        std::vector< std::vector<double> > r__;
-//        for (int i = 0; i < x.size(); ++i) {
-//
-////            r_.resize(basis[j].getDimensions(), basis[j].getLenght());
-//            r_.clear();
-//            for (int j = 0; j < getDimensions(); ++j) {
-//                for (int k = 0; k < basis[j].getLenght(); ++k) {
-//
-//                }
-//                r_.push_back(basis[j].evalBasis(x[i]));
-//            }
-//            r.push_back(r_);
-//        }
-//        return r;
-    }
 } // namespace spline
+
