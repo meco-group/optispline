@@ -10,5 +10,13 @@ add_library(Basis SHARED
             Basis/MonomialeBasis.h Basis/MonomialeBasis.cpp
             Basis/TensorBasis.h Basis/TensorBasis.cpp
           )
+add_library(Coefficients SHARED
+            Coefficients/Coefficients.h Coefficients/Coefficients.cpp
+          )
+add_library(Function SHARED
+            Function/Function.h Function/Function.cpp
+          )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
+target_link_libraries(Coefficients ${CASADI_LIBRARIES})
+target_link_libraries(Function ${CASADI_LIBRARIES})
 add_definitions(-DSHARED_LIBRARY)

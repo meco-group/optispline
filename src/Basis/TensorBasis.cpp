@@ -39,9 +39,9 @@ namespace spline{
         return r;
     }
 
-    int TensorBasis::getDimensions () const {
-        return basis.size();
-    }
+int TensorBasis::getDimensions () const {
+    return basis.size();
+}
 
 
 } // namespace spline

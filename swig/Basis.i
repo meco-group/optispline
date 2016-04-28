@@ -70,6 +70,11 @@ namespace std {
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/TensorBasis.h>
 #include <src/Basis/vectorUtilities.h> // Debug
+
+#include <src/Coefficients/Coefficients.h>
+
+#include <src/Function/Function.h>
+
 #include <casadi/casadi.hpp>
 %}
 
@@ -79,6 +84,11 @@ namespace std {
 %include <src/Basis/BSplineBasis.h>
 %include <src/Basis/TensorBasis.h>
 %include <src/Basis/vectorUtilities.h> // Debug
+
+%include <src/Coefficients/Coefficients.h>
+
+%include <src/Function/Function.h>
+
 
 namespace std {
    %template(BasisPtrVector) vector< spline::Basis* >;

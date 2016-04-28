@@ -3,6 +3,9 @@ sys.path.insert(0, '../swig')
 sys.path.insert(0, '/home/erik/Documents/casadi3.0')
 import os
 
+def assertEqual(v1, v2, message = '', tol = 10**-10):
+	assert abs(v1 - v2) < tol, message
+
 # Boolean flag to indicate if we run in valgrind
 # To speed up valgrind, you may choose to put
 # expensive computations within 'if not valgrind'
@@ -33,5 +36,7 @@ print b(8.0)
 print b([2.0,  6.8])
 
 print c([1.0,8.0])
+
+
 
 
