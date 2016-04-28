@@ -12,6 +12,7 @@ add_library(Basis SHARED
           )
 add_library(Coefficients SHARED
             Coefficients/Coefficients.h Coefficients/Coefficients.cpp
+            Coefficients/Coefficient.h Coefficients/Coefficient.cpp
           )
 add_library(Function SHARED
             Function/Function.h Function/Function.cpp
