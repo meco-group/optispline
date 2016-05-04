@@ -7,33 +7,33 @@
 #define MONOMIALBASIS_H_
 
 
-class MonomialeBasis;
-class BSplineBasis;
+
 
 #include <vector>
+#include "Basis.h"
 #include "UnivariateBasis.h"
 
-
-
-namespace spline {
-    class BSplineBasis;
-
+namespace spline{
+   class BSplineBasis;
 class MonomialeBasis : public UnivariateBasis {
 public:
-    MonomialeBasis(int degree);
+    MonomialeBasis(){}
+    //MonomialeBasis(int degree);
 
     //    evalution Basis
-    std::vector<double> evalBasis(double x) const;
+//   std::vector<double> evalBasis(double x) const;
 
-    int length() const;
+//    int length() const;
 
-    MonomialeBasis operator+(const MonomialeBasis& other)const ;
-    BSplineBasis operator+(const BSplineBasis& other)const ;
+    virtual Basis operator+(const MonomialeBasis& other) const ;
+    virtual Basis operator+(const BSplineBasis& other) const ;
+    virtual Basis operator+(const Basis& other) const ;
 
-    MonomialeBasis operator*(const MonomialeBasis& other)const ;
-    BSplineBasis operator*(const BSplineBasis& other)const ;
+   virtual std::string getRepresentation() const { return "MonomialeBasis object"; };
+//   Basis operator*(const MonomialeBasis& other)const ;
+//   Basis operator*(const BSplineBasis& other)const ;
 
-    virtual std::vector<double> evaluationGrid(void) const;
+ //    virtual std::vector<double> evaluationGrid(void) const;
 
     };
 }  // namespace spline

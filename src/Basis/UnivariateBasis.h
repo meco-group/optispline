@@ -12,38 +12,40 @@
 #include <string>
 
 namespace spline {
-    class UnivariateBasis : public Basis {
-    public:
-//        UnivariateBasis (int degree);
-        UnivariateBasis (int degree, std::string argument = std::string("__"));
+class MonomialeBasis;
+class BSplineBasis;
+class UnivariateBasis : public Basis {
+public:
+    UnivariateBasis(){}
+//   UnivariateBasis (int dimension, const std::vector<int> &size, const Argument &argument, int degree);
+//   UnivariateBasis (int degree);
+//   UnivariateBasis (int degree, std::string argument);
+//
+//   //    evalution Basis
+//   std::vector<double> operator()(double x) const;
+//   virtual std::vector< std::vector<double> > operator()(const std::vector<double>& x) const = 0;
+///    std::vector< double > operator()(const std::vector<double, 1>& x) const;
+//   std::vector< std::vector< std::vector<double> > > operator()(const std::vector< std::vector<double> >& x) const;
+//
+///        virtual Basis plus(Basis &other) = 0;
+//
+//   int getDegree () const { return degree;}
+//   void setDegree (int degree);
+//   void increaseDegree(int d);
+//
+//   int getLenght() const ;
+//
+//   casadi::DM transformation( const Basis &b) const;
+//
+//   virtual std::vector<double> evaluationGrid (void) const = 0;
 
+    virtual Basis operator+ (const Basis &other) const;
+    virtual Basis operator+ (const MonomialeBasis &other) const;
+    virtual Basis operator+ (const BSplineBasis &other) const;
+    virtual std::string getRepresentation() const { return "UnivariateBasis object"; };
 
-        //    evalution Basis
-        virtual std::vector<double> evalBasis(double x) const = 0;
-        virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const;
-
-        virtual int length() const = 0;
-//        virtual Basis plus(Basis &other) = 0;
-
-        int getDegree () const { return degree;}
-        void setDegree (int degree);
-        void increaseDegree(int d);
-
-        casadi::DM transformation( const Basis &b) const;
-
-        virtual std::vector<double> evaluationGrid (void) const = 0;
-
-        void setArguments (const std::string& argument);
-
-
-    private:
-        void initUnivariateBasis (int degree, std::string argument);
-
-
-    protected:
-        int degree;
-
-
+protected:
+    int degree;
     };
 } // namespace spline
 

@@ -22,7 +22,6 @@ BSplineBasis timesBasis (const BSplineBasis &b1, const MonomialeBasis &b2) {
     return BSplineBasis(v, newDegree) ;
 }
 
-
      BSplineBasis timesBasis (const MonomialeBasis &b1, const BSplineBasis &b2) {
     return timesBasis(b2, b1);
 }

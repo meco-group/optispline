@@ -8,32 +8,41 @@
 
 #include <string>
 #include <vector>
+//#include "BSplineBasis.h"
+//#include "MonomialeBasis.h"
+//#include "../Function/Argument.h"
+//#include "../Math/Tensor.h"
+//#include "../Math/Domain.h"
 
 namespace spline {
+    class BSplineBasis;
+    class MonomialeBasis;
+
 class Basis {
 public:
-//    evalution Basis
-    virtual std::vector<double> evalBasis(double x) const = 0;
-    std::vector<double> operator()(double x) const { return evalBasis(x); };
-    virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const = 0;
-    std::vector< std::vector<double> > operator()(const std::vector<double>& x) const { return evalBasis(x); };
+      Basis ();
+//    Basis (std::vector< Basis> vectorBasis ); 
+//    Basis (int dimension, const std::vector<int> &size, const Argument &argument);
 
-//    Basis* plus(Basis &other);
-//
+ //   virtual Tensor operator()(const casadi::DM & x) const;
+//    virtual std::vector< Tensor > operator()(const std::vector< casadi::DM >& x) const = 0;
 
-    virtual int length() const= 0;
+ //   int getDimension () const;
 
+ //   std::vector<int> getSize () const;
 
-    int getDimensions () const;
-    void setDimensions (int dimensions);
+//    void setArgument (const Argument& argument);
+//    void setArgument (const std::string& argumentName);
+//    Argument getArgument () const;
 
-    std::vector<std::string > getArguments () const;
-    virtual void setArguments (const std::vector <std::string> arguments);
-
-
+    virtual Basis operator+(const MonomialeBasis& other) const;
+    virtual Basis operator+(const BSplineBasis& other) const;
+    virtual Basis operator+(const Basis& other) const;
+    virtual std::string getRepresentation() const { return "Basis object"; };
 protected:
-    int dimension;
-    std::vector< std::string > arguments;
+//    std::vector< Basis > vectorBasis;
+    //Argument argument;
+//    Domain domain;
 };
 }
 #endif  // BASIS_H_
