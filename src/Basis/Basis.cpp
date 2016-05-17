@@ -10,7 +10,7 @@ namespace spline {
 
     Basis::Basis(){}
 
-//    std::shared_ptr<Basis>::std::shared_ptr<Basis>(std::vector< std::shared_ptr<Basis>> vectorstd::shared_ptr<Basis>) : vectorstd::shared_ptr<Basis>(vectorstd::shared_ptr<Basis>){}
+    Basis::Basis(std::vector< Basis_ptr> allSubBasis) : allSubBasis(allSubBasis){}
     
 //    std::shared_ptr<Basis>::std::shared_ptr<Basis> (int dimension, const std::vector<int> &size, const Argument &argument) : dimension(dimension),
  //                                                                                          size(size),
@@ -44,16 +44,16 @@ namespace spline {
 //   }
     
     Basis_ptr Basis::operator+ (const Basis& rhs) const {
-         return Basis_ptr();
+         return std::make_shared<Basis>();
         //        return rhs + *this;
     }
 
     Basis_ptr Basis::operator+ (const MonomialeBasis& rhs) const {
-return std::shared_ptr<Basis>();//        return plusstd::shared_ptr<Basis>(*this, rhs);
+        return std::make_shared<Basis>();//        return plusstd::shared_ptr<Basis>(*this, rhs);
     }
 
     Basis_ptr Basis::operator+ (const BSplineBasis& rhs) const{
-return std::shared_ptr<Basis>();//        return plusstd::shared_ptr<Basis>(*this, rhs);
+        return std::make_shared<Basis>();//        return plusstd::shared_ptr<Basis>(*this, rhs);
     }
 
 } // namespace spline

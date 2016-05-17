@@ -53,14 +53,18 @@ namespace spline {
 //  
 //  
     Basis_ptr UnivariateBasis::operator+ (const Basis& other) const  { 
-        return other + *this;
+        //return other + *this;
+        return std::make_shared<Basis>();
     } 
     Basis_ptr UnivariateBasis::operator+ (const MonomialeBasis &other) const  { 
-        return Basis_ptr();//plusstd::shared_ptr<Basis>(*this, other);
+        //return Basis_ptr();//plusstd::shared_ptr<Basis>(*this, other);
+        
+        return std::make_shared<Basis>();
     } 
     Basis_ptr UnivariateBasis::operator+ (const BSplineBasis &other) const  { 
-       return Basis_ptr(); 
+       //return Basis_ptr(); 
         //return plusstd::shared_ptr<Basis>(*this, other); 
+        return std::make_shared<Basis>();
       }
 
 //     void Univariatestd::shared_ptr<Basis>::setArguments (const std::string& argument){
