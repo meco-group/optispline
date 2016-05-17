@@ -10,7 +10,7 @@ namespace spline {
 
     Basis::Basis(){}
 
-    Basis::Basis(std::vector< Basis_ptr> allSubBasis) : allSubBasis(allSubBasis){}
+    //Basis::Basis(std::vector<  Basis > allSubBasis) : allSubBasis(allSubBasis){}
     
 //    std::shared_ptr<Basis>::std::shared_ptr<Basis> (int dimension, const std::vector<int> &size, const Argument &argument) : dimension(dimension),
  //                                                                                          size(size),

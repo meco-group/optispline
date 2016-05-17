@@ -23,7 +23,7 @@ namespace spline {
 class Basis {
 public:
     Basis ();
-    Basis (std::vector< Basis> vectorBasis ); 
+    //Basis (std::vector< Basis> vectorBasis ); 
 //    Basis (int dimension, const std::vector<int> &size, const Argument &argument);
 
 //   virtual Tensor operator()(const casadi::DM & x) const;
