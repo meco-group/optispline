@@ -8,29 +8,29 @@
 
 namespace spline{
 
-BSplineBasis timesBasis (const BSplineBasis &b1, const BSplineBasis &b2) {
+BSplinestd::shared_ptr<Basis> timesstd::shared_ptr<Basis> (const BSplinestd::shared_ptr<Basis> &b1, const BSplinestd::shared_ptr<Basis> &b2) {
 
     int newDegree = b1.getDegree() + b2.getDegree();
     const std::vector<double> v = unionKnots(b1.getKnots(), b2.getKnots(), newDegree, b1.getDegree(), b2.getDegree());
-    return BSplineBasis(v, newDegree) ;
+    return BSplinestd::shared_ptr<Basis>(v, newDegree) ;
 }
 
-BSplineBasis timesBasis (const BSplineBasis &b1, const MonomialeBasis &b2) {
+BSplinestd::shared_ptr<Basis> timesstd::shared_ptr<Basis> (const BSplinestd::shared_ptr<Basis> &b1, const Monomialestd::shared_ptr<Basis> &b2) {
 //    TODO experimantal implementation
     int newDegree = b1.getDegree() + b2.getDegree();
     const std::vector<double> v = unionKnots(b1.getKnots(), b1.getKnots(), newDegree, b1.getDegree(), b2.getDegree());
-    return BSplineBasis(v, newDegree) ;
+    return BSplinestd::shared_ptr<Basis>(v, newDegree) ;
 }
 
-     BSplineBasis timesBasis (const MonomialeBasis &b1, const BSplineBasis &b2) {
-    return timesBasis(b2, b1);
+     BSplinestd::shared_ptr<Basis> timesstd::shared_ptr<Basis> (const Monomialestd::shared_ptr<Basis> &b1, const BSplinestd::shared_ptr<Basis> &b2) {
+    return timesstd::shared_ptr<Basis>(b2, b1);
 }
 
 
-     MonomialeBasis timesBasis (const MonomialeBasis &b1, const MonomialeBasis &b2) {
+     Monomialestd::shared_ptr<Basis> timesstd::shared_ptr<Basis> (const Monomialestd::shared_ptr<Basis> &b1, const Monomialestd::shared_ptr<Basis> &b2) {
 
          int newDegree = b1.getDegree() + b2.getDegree();
-         return MonomialeBasis(newDegree);
+         return Monomialestd::shared_ptr<Basis>(newDegree);
 }
 
 }

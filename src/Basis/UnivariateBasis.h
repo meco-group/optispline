@@ -27,7 +27,7 @@ public:
 ///    std::vector< double > operator()(const std::vector<double, 1>& x) const;
 //   std::vector< std::vector< std::vector<double> > > operator()(const std::vector< std::vector<double> >& x) const;
 //
-///        virtual Basis plus(Basis &other) = 0;
+///        virtual std::shared_ptr<Basis> plus(Basis &other) = 0;
 //
 //   int getDegree () const { return degree;}
 //   void setDegree (int degree);
@@ -39,9 +39,9 @@ public:
 //
 //   virtual std::vector<double> evaluationGrid (void) const = 0;
 
-    virtual Basis operator+ (const Basis &other) const;
-    virtual Basis operator+ (const MonomialeBasis &other) const;
-    virtual Basis operator+ (const BSplineBasis &other) const;
+    virtual Basis_ptr operator+ (const Basis& other) const;
+    virtual Basis_ptr operator+ (const MonomialeBasis& other) const;
+    virtual Basis_ptr operator+ (const BSplineBasis& other) const;
     virtual std::string getRepresentation() const { return "UnivariateBasis object"; };
 
 protected:

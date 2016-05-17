@@ -13,9 +13,9 @@
 #include "times.h"
 
 namespace spline {
-//    MonomialeBasis::MonomialeBasis (int degree) : UnivariateBasis(degree) { }
+//    Monomialestd::shared_ptr<Basis>::Monomialestd::shared_ptr<Basis> (int degree) : Univariatestd::shared_ptr<Basis>(degree) { }
 //
-//   std::vector<double> MonomialeBasis::evalBasis (double x) const {
+//   std::vector<double> Monomialestd::shared_ptr<Basis>::evalstd::shared_ptr<Basis> (double x) const {
 //       std::vector<double> evaluation_basis(this->length());
 //
 //       for (int i = 0; i < this->length (); ++i) {
@@ -26,32 +26,33 @@ namespace spline {
 //   }
 //
 
- //   int MonomialeBasis::length () const{return this->getDegree() + 1; }
+ //   int Monomialestd::shared_ptr<Basis>::length () const{return this->getDegree() + 1; }
 
-    Basis MonomialeBasis::operator+ (const Basis &other)const  {
-        return other + *this;
+    Basis_ptr MonomialeBasis::operator+ (const Basis& other)const  {
+        //return plusBasis(*this, other);
+        return std::make_shared<Basis>();
     }
 
-    Basis MonomialeBasis::operator+ (const MonomialeBasis &other)const  {
-        return Basis();
-        //  return plusBasis(*this, other);
+    Basis_ptr MonomialeBasis::operator+ (const MonomialeBasis& other)const  {
+        return std::make_shared<Basis>();
+        //  return plusstd::shared_ptr<Basis>(*this, other);
     }
 
-    Basis MonomialeBasis::operator+ (const BSplineBasis &other)const  {
-        return Basis();
-        //  return plusBasis(*this, other);
+    Basis_ptr MonomialeBasis::operator+ (const BSplineBasis& other)const  {
+        return std::make_shared<Basis>();
+        //  return plusstd::shared_ptr<Basis>(*this, other);
     }
 
-//   Basis MonomialeBasis::operator* (const MonomialeBasis &other)const  {
-//       return timesBasis(*this, other);
+//   std::shared_ptr<Basis> Monomialestd::shared_ptr<Basis>::operator* (const Monomialestd::shared_ptr<Basis> &other)const  {
+//       return timesstd::shared_ptr<Basis>(*this, other);
 //   }
 //
-//   Basis MonomialeBasis::operator* (const BSplineBasis &other)const  {
-//       return timesBasis(*this, other);
+//   std::shared_ptr<Basis> Monomialestd::shared_ptr<Basis>::operator* (const BSplinestd::shared_ptr<Basis> &other)const  {
+//       return timesstd::shared_ptr<Basis>(*this, other);
 //   }
 //
 /// TODO(ErikLambr) check is grid is valid
-//   std::vector<double> MonomialeBasis::evaluationGrid () const {
+//   std::vector<double> Monomialestd::shared_ptr<Basis>::evaluationGrid () const {
 ///        std::vector<double> grid = casadi::range(length());
 //       std::vector<double> grid;
 //       for( int i = 0; i < length(); i++ )

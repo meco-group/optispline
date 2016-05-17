@@ -5,7 +5,8 @@
 
 #ifndef BASIS_H_
 #define BASIS_H_
-
+#include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 //#include "BSplineBasis.h"
@@ -15,8 +16,11 @@
 //#include "../Math/Domain.h"
 
 namespace spline {
+    class Basis;
     class BSplineBasis;
     class MonomialeBasis;
+
+    typedef std::shared_ptr<Basis> Basis_ptr;
 
 class Basis {
 public:
@@ -35,9 +39,9 @@ public:
 //    void setArgument (const std::string& argumentName);
 //    Argument getArgument () const;
 
-    virtual Basis operator+(const MonomialeBasis& other) const;
-    virtual Basis operator+(const BSplineBasis& other) const;
-    virtual Basis operator+(const Basis& other) const;
+    virtual Basis_ptr operator+(const Basis& rhs) const;
+    virtual Basis_ptr operator+(const MonomialeBasis& rhs) const;
+    virtual Basis_ptr operator+(const BSplineBasis& rhs) const;
     virtual std::string getRepresentation() const { return "Basis object"; };
 protected:
 //    std::vector< Basis > vectorBasis;

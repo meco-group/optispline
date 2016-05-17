@@ -5,28 +5,28 @@
 #include <math.h>       /* pow */
 #include <numeric>      // std::accumulate -> greville
 
-#include "BSplineBasis.h"
+#include "Basis.h"
 
 #include "plus.h"
 //#include "times.h"
 
 namespace spline{
 
-//    BSplineBasis::BSplineBasis (const std::vector<double> &knots, int degree){
+//    std::make_shared<Basis>::std::make_shared<Basis> (const std::vector<double> &knots, int degree){
 //        std::string arg = "__";
-//        initBSplineBasis(knots, degree, arg);
+//        initstd::make_shared<Basis>(knots, degree, arg);
 //    }
 //
-//    BSplineBasis::BSplineBasis (const std::vector<double> &bounds, int degree, int numberOfIntervals){
+//    std::make_shared<Basis>::std::make_shared<Basis> (const std::vector<double> &bounds, int degree, int numberOfIntervals){
 //        std::string arg = "__";
-//        BSplineBasis(bounds, degree, numberOfIntervals, arg);
+//        std::make_shared<Basis>(bounds, degree, numberOfIntervals, arg);
 //    }
 
-//   BSplineBasis::BSplineBasis (const std::vector<double> &knots, int degree, std::string argument) : UnivariateBasis(degree,argument), knots(knots){
-///        initBSplineBasis(knots, degree, argument);
+//   std::make_shared<Basis>::std::make_shared<Basis> (const std::vector<double> &knots, int degree, std::string argument) : Univariatestd::shared_ptr<Basis>(degree,argument), knots(knots){
+///        initstd::make_shared<Basis>(knots, degree, argument);
 //   }
 //
-//   BSplineBasis::BSplineBasis (const std::vector<double> &bounds, int degree, int numberOfIntervals, std::string argument) : UnivariateBasis(degree,argument) {
+//   std::make_shared<Basis>::std::make_shared<Basis> (const std::vector<double> &bounds, int degree, int numberOfIntervals, std::string argument) : Univariatestd::shared_ptr<Basis>(degree,argument) {
 //       int numberOfKnots = 2*degree + numberOfIntervals;
 //       knots.resize(numberOfKnots, 0);
 //
@@ -39,30 +39,30 @@ namespace spline{
 //           knots[degree + i] = bounds[0] + (bounds[1] - bounds[0]) * (double)i/(numberOfIntervals-1);
 //       }
 //
-///        initBSplineBasis(knots, degree, argument);
+///        initstd::make_shared<Basis>(knots, degree, argument);
 //       setKnots(knots);
 //   }
 //
-//   void BSplineBasis::initBSplineBasis (const std::vector<double >& knots, int degree, std::string argument) {
+//   void std::make_shared<Basis>::initstd::make_shared<Basis> (const std::vector<double >& knots, int degree, std::string argument) {
 //       setKnots(knots);
 //       setDegree(degree);
 //       setArguments(argument);
 //   }
 //
 //
-//   BSplineBasis::~BSplineBasis () {
+//   std::make_shared<Basis>::~std::make_shared<Basis> () {
 //   }
 //
-//   const std::vector<double> &BSplineBasis::getKnots () const {
+//   const std::vector<double> &std::make_shared<Basis>::getKnots () const {
 //       return knots;
 //   }
 //
 //
-//   void BSplineBasis::setKnots (const std::vector<double> &knots) {
-//       BSplineBasis::knots = knots;
+//   void std::make_shared<Basis>::setKnots (const std::vector<double> &knots) {
+//       std::make_shared<Basis>::knots = knots;
 //   }
 //
-//   std::vector<double> BSplineBasis::evalBasis (double x) const {
+//   std::vector<double> std::make_shared<Basis>::evalstd::shared_ptr<Basis> (double x) const {
 //       double b;
 //       double bottom;
 //       double basis[degree+1][knots.size()-1];
@@ -98,11 +98,11 @@ namespace spline{
 //       return r;
 //   }
 //
-//   int BSplineBasis::length () const{
+//   int std::make_shared<Basis>::length () const{
 //       return knots.size() - degree - 1;
 //   }
 //
-//   std::vector<bool> BSplineBasis::indector (int i, double x) {
+//   std::vector<bool> std::make_shared<Basis>::indector (int i, double x) {
 //       std::vector<bool> r(knots.size() - 1);
 //
 //       for (int i = 0; i < knots.size() - 1; ++i) {
@@ -112,30 +112,30 @@ namespace spline{
 //       return r;
 //   }
 //
-    Basis BSplineBasis::operator+ (const Basis &other) const {
-         return BSplineBasis();
+    Basis_ptr BSplineBasis::operator+ (const Basis& other) const {
+         return std::make_shared<Basis>();
         //        return other + *this;
     }
 
-    Basis BSplineBasis::operator+ (const MonomialeBasis &other) const {
-        return BSplineBasis();
-        //        return plusBasis(*this, other);
+    Basis_ptr BSplineBasis::operator+ (const MonomialeBasis& other) const {
+        return std::make_shared<Basis>();
+        //        return plusBasis_ptr(*this, other);
     }
 
-    Basis BSplineBasis::operator+ (const BSplineBasis &other) const{
-         return BSplineBasis();
-        //        return plusBasis(*this, other);
+    Basis_ptr BSplineBasis::operator+ (const BSplineBasis& other) const{
+         return std::make_shared<Basis>();
+        //        return plusBasis_ptr(*this, other);
     }
 
-//   BSplineBasis BSplineBasis::operator* (const MonomialeBasis &other) const {
-//       return timesBasis(*this, other);
+//   std::make_shared<Basis>::operator* (const Monomialestd::shared_ptr<Basis> &other) const {
+//       return timesstd::shared_ptr<Basis>(*this, other);
 //   }
 //
-//   BSplineBasis BSplineBasis::operator* (const BSplineBasis &other) const{
-//       return timesBasis(*this, other);
+//   std::make_shared<Basis>::operator* (const std::make_shared<Basis> &other) const{
+//       return timesstd::shared_ptr<Basis>(*this, other);
 //   }
 //
-//   std::vector<double> BSplineBasis::greville () const {
+//   std::vector<double> std::make_shared<Basis>::greville () const {
 //       int d = degree;
 //       if(d == 1){
 //           d =1;
@@ -150,19 +150,19 @@ namespace spline{
 //       return g;
 //   }
 //
-//   std::vector<double> BSplineBasis::evaluationGrid (void) const {
+//   std::vector<double> std::make_shared<Basis>::evaluationGrid (void) const {
 //       return greville();
 //   }
 //
 //
-//   BSplineBasis BSplineBasis::addKnots(const std::vector<double> newKnots, bool unique) const {
+//   std::make_shared<Basis>::addKnots(const std::vector<double> newKnots, bool unique) const {
 //       std::vector<double> kn;
 //       if (unique){
 //           kn = addKnotsUnique(knots, newKnots);
 //       } else {
 //           kn = addKnotsNotUnique(knots, newKnots);
 //       }
-//       return BSplineBasis(kn, degree);
+//       return std::make_shared<Basis>(kn, degree);
 //   }
 
 

@@ -12,10 +12,10 @@
 
 namespace spline{
 
-    BSplineBasis plusBasis(const BSplineBasis& b1 , const BSplineBasis& b2);
-    MonomialeBasis plusBasis(const MonomialeBasis& b1 , const MonomialeBasis& b2);
-    BSplineBasis plusBasis(const MonomialeBasis& b1 , const BSplineBasis& b2);
-    BSplineBasis plusBasis(const BSplineBasis& b1 , const MonomialeBasis& b2);
+    Basis_ptr plusBasis(const BSplineBasis& b1 , const BSplineBasis& b2);
+    Basis_ptr plusBasis(const MonomialeBasis& b1 , const MonomialeBasis& b2);
+    Basis_ptr plusBasis(const MonomialeBasis& b1 , const BSplineBasis& b2);
+    Basis_ptr plusBasis(const BSplineBasis& b1 , const MonomialeBasis& b2);
 
 
 } // namespace spline

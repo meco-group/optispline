@@ -39,9 +39,9 @@ public:
 //
 //   int length() const;
 
-    virtual Basis operator+(const Basis& other) const ;
-    virtual Basis operator+(const MonomialeBasis& other) const ;
-    virtual Basis operator+(const BSplineBasis& other) const ;
+    virtual Basis_ptr operator+(const Basis& other) const ;
+    virtual Basis_ptr operator+(const MonomialeBasis& other) const ;
+    virtual Basis_ptr operator+(const BSplineBasis& other) const ;
 
 //   BSplineBasis operator*(const MonomialeBasis& other) const ;
 //   BSplineBasis operator*(const BSplineBasis& other) const ;
