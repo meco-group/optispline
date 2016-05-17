@@ -33,16 +33,19 @@ public:
 
     std::vector<int> getSize () const;
 
-    void setArgument (const Argument& argument);
-    void setArgument (const std::string& argumentName);
-    Argument getArgument () const;
+//      void setArgument (const Argument& argument);
+//      void setArgument (const std::string& argumentName);
+    
+//    void addArgument (const Argument& argument);
+//    void addArgument (const std::string& argumentName);
+    //Argument getArgument () const;
 
     virtual Basis_ptr operator+(const Basis& rhs) const;
     virtual Basis_ptr operator+(const MonomialeBasis& rhs) const;
     virtual Basis_ptr operator+(const BSplineBasis& rhs) const;
     virtual std::string getRepresentation() const { return "Basis object"; };
 protected:
-    std::vector< Basis > allSubBasis;
+    std::vector< Basis_ptr > allSubBasis;
     Argument argument;
 //    Domain domain;
 };

@@ -68,13 +68,12 @@ namespace std {
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialeBasis.h>
 #include <src/Basis/BSplineBasis.h>
-//#include <src/Basis/TensorBasis.h>
 #include <src/Basis/vectorUtilities.h> // Debug
 
 //#include <src/Coefficients/Coefficients.h>
 
 //#include <src/Function/Function.h>
-//#include <src/Function/Argument.h>
+#include <src/Function/Argument.h>
 
 #include <casadi/casadi.hpp>
 %}
@@ -83,16 +82,21 @@ namespace std {
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialeBasis.h>
 %include <src/Basis/BSplineBasis.h>
-//%include <src/Basis/TensorBasis.h>
 %include <src/Basis/vectorUtilities.h> // Debug
 
 //%include <src/Coefficients/Coefficients.h>
 
 //%include <src/Function/Function.h>
-//%include <src/Function/Argument.h>
-
+%include <src/Function/Argument.h>
 
 namespace std {
    %template(BasisPtrVector) vector< spline::Basis* >;
 }
 
+// TODO
+//%include <std_string.i>
+//%include <std_shared_ptr.i>
+//%shared_ptr(Basis)
+//%shared_ptr(UnivariateBasis)
+//%shared_ptr(MonomialeBasis)
+//%shared_ptr(BSplineBasis)

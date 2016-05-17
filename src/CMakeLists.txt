@@ -14,13 +14,8 @@
 # #             Coefficients/Coefficients.h Coefficients/Coefficients.cpp
 # #             Coefficients/Coefficient.h Coefficients/Coefficient.cpp
 # #           )
-# # add_library(Function SHARED
-# #             Function/Function.h Function/Function.cpp
-# #             Function/Argument.h Function/Argument.cpp
-# #           )
 # target_link_libraries(Basis ${CASADI_LIBRARIES})
 # # target_link_libraries(Coefficients ${CASADI_LIBRARIES})
-# # target_link_libraries(Function ${CASADI_LIBRARIES})
 # add_definitions(-DSHARED_LIBRARY)
 
 
@@ -35,6 +30,11 @@ add_library(Basis SHARED
             Basis/BSplineBasis.h Basis/BSplineBasis.cpp
             Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
             Basis/MonomialeBasis.h Basis/MonomialeBasis.cpp
+            #          )
+            #add_library(Function SHARED
+    #            Function/Function.h Function/Function.cpp
+            Function/Argument.h Function/Argument.cpp
           )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
+#target_link_libraries(Function ${CASADI_LIBRARIES})
 add_definitions(-DSHARED_LIBRARY)

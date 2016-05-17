@@ -27,8 +27,7 @@ namespace spline {
     }
 
     void Argument::setName (const std::vector< std::string > &name) {
-        name = name;
-
+        this->name = name;
     }
 
 

@@ -8,7 +8,9 @@
 
 namespace spline {
 
-    Basis::Basis(){}
+    Basis::Basis(){
+        std::vector< Basis_ptr > allSubBasis;
+    }
 
     //Basis::Basis(std::vector<  Basis > allSubBasis) : allSubBasis(allSubBasis){}
     
@@ -16,32 +18,41 @@ namespace spline {
  //                                                                                          size(size),
 //                                                                                           argument(argument) { }
 
-//    int std::shared_ptr<Basis>::getDimension () const {
-//        return vectorstd::shared_ptr<Basis>.size();
-//    }
-//
-//    void std::shared_ptr<Basis>::setArgument (const Argument &argument) {
+    int Basis::getDimension () const {
+        return allSubBasis.size();
+    }
+
+//    void Basis::addArgument (const Argument &argument) {
 //        this->argument = argument;
 //    }
 //
-//    void std::shared_ptr<Basis>::setArgument (const std::string& argument) {
+//    void Basis::addArgument (const std::string& argument) {
+//        this->argument = Argument(argument);
+//    }
+
+//    void Basis::setArgument (const Argument &argument) {
+//        this->argument = argument;
+//    }
+//
+//    void Basis::setArgument (const std::string& argument) {
 //        this->argument = Argument(argument);
 //    }
 //
-//    Argument std::shared_ptr<Basis>::getArgument () const {
+//    Argument Basis::getArgument () const {
 //        return argument;
 //    }
 //
-//   std::vector<int> std::shared_ptr<Basis>::getSize () const {
-//       std::vector<int> size;
-//       std::vector<int> sizeSubstd::shared_ptr<Basis>;
-//       for(int i = 0; i < getDimension(); i++){
-//           sizeSubstd::shared_ptr<Basis> = vectorstd::shared_ptr<Basis>.getSize(); 
-//           for(int j = 0; j < sizeSubstd::shared_ptr<Basis>.size(); j++){
-//           size.push_back(sizeSubstd::shared_ptr<Basis>(j));
-//       }
-//       return size;
-//   }
+   std::vector<int> Basis::getSize () const {
+       std::vector<int> size;
+       std::vector<int> sizeSubBasis;
+       for(int i = 0; i < getDimension(); i++){
+           sizeSubBasis = allSubBasis[i]->getSize(); 
+           for(int j = 0; j < sizeSubBasis.size(); j++){
+                size.push_back(sizeSubBasis[j]);
+           }
+       }
+       return size;
+   }
     
     Basis_ptr Basis::operator+ (const Basis& rhs) const {
          return std::make_shared<Basis>();
