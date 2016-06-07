@@ -1,7 +1,3 @@
-//
-// Created by erik on 19/04/16.
-//
-
 #ifndef CPP_SPLINES_VECTORUTILITIES_H
 #define CPP_SPLINES_VECTORUTILITIES_H
 

@@ -64,6 +64,8 @@ namespace std {
 
 
 %{
+#include <src/SharedObject/SharedObject.h>
+#include <src/SharedObject/SharedObjectNode.h>
 #include <src/Basis/Basis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialeBasis.h>
@@ -78,6 +80,8 @@ namespace std {
 #include <casadi/casadi.hpp>
 %}
 
+%include <src/SharedObject/SharedObject.h>
+%include <src/SharedObject/SharedObjectNode.h>
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialeBasis.h>
@@ -93,10 +97,3 @@ namespace std {
    %template(BasisPtrVector) vector< spline::Basis* >;
 }
 
-// TODO
-//%include <std_string.i>
-//%include <std_shared_ptr.i>
-//%shared_ptr(Basis)
-//%shared_ptr(UnivariateBasis)
-//%shared_ptr(MonomialeBasis)
-//%shared_ptr(BSplineBasis)

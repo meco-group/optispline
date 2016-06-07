@@ -1,9 +1,6 @@
-//
-// Created by erik on 18/04/16.
-//
-
 #ifndef CPP_SPLINES_TIMES_H
 #define CPP_SPLINES_TIMES_H
+
 
 
 #include "BSplineBasis.h"

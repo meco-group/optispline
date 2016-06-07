@@ -1,70 +1,86 @@
-// Copyright 2016 Erik
-//
-// Created by erik on 08/04/16.
-//
-
 #include "Basis.h"
 #include "plus.h"
 
 namespace spline {
 
-    Basis::Basis(){
-        std::vector< Basis_ptr > allSubBasis;
-    }
+    // Basis::Basis(){
+    //     std::vector< Basis > allSubBasis;
+    // }
 
     //Basis::Basis(std::vector<  Basis > allSubBasis) : allSubBasis(allSubBasis){}
-    
-//    std::shared_ptr<Basis>::std::shared_ptr<Basis> (int dimension, const std::vector<int> &size, const Argument &argument) : dimension(dimension),
- //                                                                                          size(size),
-//                                                                                           argument(argument) { }
 
-    int Basis::getDimension () const {
-        return allSubBasis.size();
+    //    std::shared_ptr<Basis>::std::shared_ptr<Basis> (int dimension, const std::vector<int> &size, const Argument &argument) : dimension(dimension),
+    //                                                                                          size(size),
+    //                                                                                           argument(argument) { }
+
+    // int Basis::getDimension () const {
+    //     return allSubBasis.size();
+    // }
+
+    //    void Basis::addArgument (const Argument &argument) {
+    //        this->argument = argument;
+    //    }
+    //
+    //    void Basis::addArgument (const std::string& argument) {
+    //        this->argument = Argument(argument);
+    //    }
+
+    //    void Basis::setArgument (const Argument &argument) {
+    //        this->argument = argument;
+    //    }
+    //
+    //    void Basis::setArgument (const std::string& argument) {
+    //        this->argument = Argument(argument);
+    //    }
+    //
+    //    Argument Basis::getArgument () const {
+    //        return argument;
+    //    }
+    //
+    // std::vector<int> Basis::getSize () const {
+    //     std::vector<int> size;
+    //     std::vector<int> sizeSubBasis;
+    //     for(int i = 0; i < getDimension(); i++){
+    //         sizeSubBasis = allSubBasis[i]->getSize(); 
+    //         for(int j = 0; j < sizeSubBasis.size(); j++){
+    //              size.push_back(sizeSubBasis[j]);
+    //         }
+    //     }
+    //     return size;
+    // }
+    std::string BasisNode::getRepresentation() const {return "Basis";};
+
+    BasisNode* Basis::get() const { return static_cast<BasisNode*>(SharedObject::get()); };
+    BasisNode* Basis::operator->() const { return get(); }
+    // Basis::Basis()  { assign_node(new BasisNode()); };
+
+    std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
+    std::ostream& operator<<(std::ostream &stream, const Basis& base){
+        return stream << base.getRepresentation();
     }
 
-//    void Basis::addArgument (const Argument &argument) {
-//        this->argument = argument;
-//    }
-//
-//    void Basis::addArgument (const std::string& argument) {
-//        this->argument = Argument(argument);
-//    }
-
-//    void Basis::setArgument (const Argument &argument) {
-//        this->argument = argument;
-//    }
-//
-//    void Basis::setArgument (const std::string& argument) {
-//        this->argument = Argument(argument);
-//    }
-//
-//    Argument Basis::getArgument () const {
-//        return argument;
-//    }
-//
-   std::vector<int> Basis::getSize () const {
-       std::vector<int> size;
-       std::vector<int> sizeSubBasis;
-       for(int i = 0; i < getDimension(); i++){
-           sizeSubBasis = allSubBasis[i]->getSize(); 
-           for(int j = 0; j < sizeSubBasis.size(); j++){
-                size.push_back(sizeSubBasis[j]);
-           }
-       }
-       return size;
-   }
-    
-    Basis_ptr Basis::operator+ (const Basis& rhs) const {
-         return std::make_shared<Basis>();
-        //        return rhs + *this;
+    Basis Basis::operator+ (const Basis& rhs) const {
+        return (*this)->operator+(rhs);
     }
 
-    Basis_ptr Basis::operator+ (const MonomialeBasis& rhs) const {
-        return std::make_shared<Basis>();//        return plusstd::shared_ptr<Basis>(*this, rhs);
+    Basis BasisNode::operator+ (const Basis& rhs) const {
+        return Basis();
     }
 
-    Basis_ptr Basis::operator+ (const BSplineBasis& rhs) const{
-        return std::make_shared<Basis>();//        return plusstd::shared_ptr<Basis>(*this, rhs);
+    Basis Basis::operator+ (const MonomialeBasis& rhs) const {
+        return (*this)->operator+(rhs);
+    }
+
+    Basis BasisNode::operator+ (const MonomialeBasis& rhs) const {
+        return Basis();
+    }
+
+    Basis Basis::operator+ (const BSplineBasis& rhs) const{
+        return (*this)->operator+(rhs);
+    }
+
+    Basis BasisNode::operator+ (const BSplineBasis& rhs) const{
+        return Basis();
     }
 
 } // namespace spline

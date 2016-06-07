@@ -34,6 +34,7 @@ add_library(Basis SHARED
             #add_library(Function SHARED
     #            Function/Function.h Function/Function.cpp
             Function/Argument.h Function/Argument.cpp
+            SharedObject/SharedObject.h SharedObject/SharedObjectNode.cpp
           )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
 #target_link_libraries(Function ${CASADI_LIBRARIES})

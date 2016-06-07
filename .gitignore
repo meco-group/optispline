@@ -54,3 +54,5 @@ swig/+*
 *.mexa64
 swig/*.m
 *.cmake
+
+*.swp

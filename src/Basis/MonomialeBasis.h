@@ -1,41 +1,69 @@
-// Copyright 2016 Erik
-//
-// Created by erik on 08/04/16.
-//
-
 #ifndef MONOMIALBASIS_H_
 #define MONOMIALBASIS_H_
 
-
-
-
 #include <vector>
+
+#include "../SharedObject/SharedObject.h"
+#include "../SharedObject/SharedObjectNode.h"
+
 #include "Basis.h"
 #include "UnivariateBasis.h"
 
 namespace spline{
-   class BSplineBasis;
-class MonomialeBasis : public UnivariateBasis {
-public:
-    MonomialeBasis(){}
-    //MonomialeBasis(int degree);
+    class BSplineBasis;
 
-    //    evalution Basis
-//   std::vector<double> evalBasis(double x) const;
+#ifndef SWIG
 
-//    int length() const;
+    class MonomialeBasisNode : public UnivariateBasisNode {
+    public:
+        MonomialeBasisNode(){}
+        //MonomialeBasis(int degree);
 
-    virtual Basis_ptr operator+(const MonomialeBasis& other) const ;
-    virtual Basis_ptr operator+(const BSplineBasis& other) const ;
-    virtual Basis_ptr operator+(const Basis& other) const ;
+        //    evalution Basis
+        //   std::vector<double> evalBasis(double x) const;
 
-   virtual std::string getRepresentation() const { return "MonomialeBasis object"; };
-//   Basis operator*(const MonomialeBasis& other)const ;
-//   Basis operator*(const BSplineBasis& other)const ;
+        //    int length() const;
 
- //    virtual std::vector<double> evaluationGrid(void) const;
+        virtual Basis operator+(const MonomialeBasis& other) const ;
+        virtual Basis operator+(const BSplineBasis& other) const ;
+        virtual Basis operator+(const Basis& other) const ;
+
+        virtual std::string getRepresentation() const ;
+        //   Basis operator*(const MonomialeBasis& other)const ;
+        //   Basis operator*(const BSplineBasis& other)const ;
+
+        //    virtual std::vector<double> evaluationGrid(void) const;
+
+    };
+
+#endif // SWIG
+
+    class MonomialeBasis : public UnivariateBasis {
+    public:
+#ifndef SWIG
+        MonomialeBasis() { };
+        MonomialeBasisNode* get() const ;
+        MonomialeBasisNode* operator->() const ;
+#endif // SWIG
+        //MonomialeBasis(int degree);
+
+        //    evalution Basis
+        //   std::vector<double> evalBasis(double x) const;
+
+        //    int length() const;
+
+        virtual Basis operator+(const MonomialeBasis& other) const ;
+        virtual Basis operator+(const BSplineBasis& other) const ;
+        virtual Basis operator+(const Basis& other) const ;
+
+        virtual std::string getRepresentation() const ;
+        //   Basis operator*(const MonomialeBasis& other)const ;
+        //   Basis operator*(const BSplineBasis& other)const ;
+
+        //    virtual std::vector<double> evaluationGrid(void) const;
 
     };
 }  // namespace spline
+
 
 #endif  // MONOMIALBASIS_H_
