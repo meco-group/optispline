@@ -2,9 +2,7 @@ import sys
 sys.path.insert(0, '../swig')
 sys.path.insert(0, '/home/erik/Documents/casadi3.0')
 import os
-
-def assertEqual(v1, v2, message = '', tol = 10**-10):
-	assert abs(v1 - v2) < tol, message
+import unittest
 
 # Boolean flag to indicate if we run in valgrind
 # To speed up valgrind, you may choose to put
@@ -13,13 +11,22 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 
 import Basis
 
+
+#     def test_upper(self):
+#         self.assertEqual('foo'.upper(), 'FOO')
+#
+# if __name__ == '__main__':
+#     suite = unittest.TestLoader().loadTestsFromTestCase(TestStringMethods)
+#     unittest.TextTestRunner(verbosity=2).run(suite)
+#
+
 B = Basis.Basis()
 
 BS1 = Basis.BSplineBasis()
 BS2 = Basis.BSplineBasis()
 
-MO1 = Basis.MonomialeBasis()
-MO2 = Basis.MonomialeBasis()
+# MO1 = Basis.MonomialeBasis()
+# MO2 = Basis.MonomialeBasis()
 
 BS3 = BS1 + BS2
 

@@ -48,38 +48,38 @@ namespace spline {
     //     }
     //     return size;
     // }
-    std::string BasisNode::getRepresentation() const {return "Basis";};
 
     BasisNode* Basis::get() const { return static_cast<BasisNode*>(SharedObject::get()); };
     BasisNode* Basis::operator->() const { return get(); }
-    // Basis::Basis()  { assign_node(new BasisNode()); };
+    Basis::Basis()  { assign_node(new BasisNode()); };
 
+    std::string BasisNode::getRepresentation() const {return "Basis";};
     std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
     std::ostream& operator<<(std::ostream &stream, const Basis& base){
         return stream << base.getRepresentation();
     }
 
-    Basis Basis::operator+ (const Basis& rhs) const {
-        return (*this)->operator+(rhs);
+    Basis Basis::operator+ (const Basis& other) const {
+        return (*this)->operator+(other);
     }
 
-    Basis BasisNode::operator+ (const Basis& rhs) const {
+    Basis BasisNode::operator+ (const Basis& other) const {
+        return other + shared_from_this<Basis>();
+    }
+
+    Basis Basis::operator+ (const MonomialeBasis& other) const {
+        return (*this)->operator+(other);
+    }
+
+    Basis BasisNode::operator+ (const MonomialeBasis& other) const {
         return Basis();
     }
 
-    Basis Basis::operator+ (const MonomialeBasis& rhs) const {
-        return (*this)->operator+(rhs);
+    Basis Basis::operator+ (const BSplineBasis& other) const{
+        return (*this)->operator+(other);
     }
 
-    Basis BasisNode::operator+ (const MonomialeBasis& rhs) const {
-        return Basis();
-    }
-
-    Basis Basis::operator+ (const BSplineBasis& rhs) const{
-        return (*this)->operator+(rhs);
-    }
-
-    Basis BasisNode::operator+ (const BSplineBasis& rhs) const{
+    Basis BasisNode::operator+ (const BSplineBasis& other) const{
         return Basis();
     }
 

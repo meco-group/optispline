@@ -22,7 +22,7 @@ namespace spline {
 
     class BasisNode : public SharedObjectNode {
     public:
-        BasisNode ();
+        BasisNode (){};
         //Basis (std::vector< Basis> vectorBasis ); 
         //    Basis (int dimension, const std::vector<int> &size, const Argument &argument);
 
@@ -56,7 +56,8 @@ namespace spline {
     public:
 
 #ifndef SWIG
-        Basis (){};
+        // Basis (){};
+        Basis ();
         BasisNode* get() const ;
         BasisNode* operator->() const ;
 
