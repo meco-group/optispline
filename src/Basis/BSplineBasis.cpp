@@ -111,7 +111,7 @@ namespace spline{
     BSplineBasisNode* BSplineBasis::get() const { return static_cast<BSplineBasisNode*>(SharedObject::get()); };
     BSplineBasisNode* BSplineBasis::operator->() const { return get(); }
 
-    // BSplineBasis::BSplineBasis(int number)  { assign_node(new BSplineBasisNode(number)); };
+    BSplineBasis::BSplineBasis()  { assign_node(new BSplineBasisNode()); };
 
     std::string BSplineBasisNode::getRepresentation() const { return "BSplineBasis object"; };
     std::string BSplineBasis::getRepresentation() const { return (*this)->getRepresentation() ;};

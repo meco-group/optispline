@@ -36,3 +36,7 @@ print BS3
 
 print 'B is a ',
 print B
+
+a = Basis.Argument('erik')
+print 'a is ',
+print a

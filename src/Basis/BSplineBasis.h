@@ -7,7 +7,6 @@
 #include "../SharedObject/SharedObjectNode.h"
 
 #include "UnivariateBasis.h"
-//#include "MonomialeBasis.h"
 
 namespace spline{
 
@@ -79,7 +78,7 @@ class BSplineBasis : public UnivariateBasis{
 
 public:
     #ifndef SWIG
-    BSplineBasis() { };
+    BSplineBasis() ;
     BSplineBasisNode* get() const ;
     BSplineBasisNode* operator->() const ;
 
