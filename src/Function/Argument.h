@@ -9,8 +9,8 @@
 
 namespace spline{
 #ifndef SWIG
-    class ArgumentNode : public SharedObjectNode{
-
+    class ArgumentNode : public SharedObjectNode
+    {
     public:
         ArgumentNode ();
         ArgumentNode (const std::string &name);
@@ -26,22 +26,19 @@ namespace spline{
 
 #endif // SWIG
 
-    class Argument : public  SharedObject {
-
-
+    class Argument : public  SharedObject 
+    {
     public:
 #ifndef SWIG
-        // Basis (){};
-        Argument ();
         ArgumentNode* get() const ;
         ArgumentNode* operator->() const ;
 
 #endif // SWIG
+        Argument ();
         Argument (const std::string &name);
 
         const std::string  & getName () const;
         void setName (const std::string &name);
-
      
 #ifndef SWIG
     inline friend

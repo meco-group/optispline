@@ -37,6 +37,11 @@ print BS3
 print 'B is a ',
 print B
 
+a = Basis.Argument()
+print 'a is ',
+print a
 a = Basis.Argument('erik')
 print 'a is ',
 print a
+a.setName('Erik')
+print 'a changed to ' + str( a )

@@ -10,13 +10,10 @@ namespace spline {
     ArgumentNode* Argument::get() const { return static_cast<ArgumentNode*>(SharedObject::get()); };
     ArgumentNode* Argument::operator->() const { return get(); }
     
-    Argument::Argument()  { assign_node(new ArgumentNode()); };
-    Argument::Argument(const std::string &name)  {
-        assign_node(new ArgumentNode(name));
-    };
+    Argument::Argument() { assign_node(new ArgumentNode()); };
+    Argument::Argument(const std::string &name) { assign_node(new ArgumentNode(name)); };
 
     ArgumentNode::ArgumentNode () : name("_"){ }
-
     ArgumentNode::ArgumentNode (const std::string &name) : name(name){ }
 
     const std::string& ArgumentNode::getName () const {
@@ -30,6 +27,7 @@ namespace spline {
     void ArgumentNode::setName (const std::string &name) {
         this->name = name;
     }
+
     void Argument::setName (const std::string &name) {
         (*this)->setName(name);
     }
