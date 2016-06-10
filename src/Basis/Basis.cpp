@@ -38,11 +38,11 @@ namespace spline {
         return argument;
     }
 
-    std::vector< Basis* > Basis::getSubBasis () const {
+    std::vector< const Basis* > Basis::getSubBasis () const {
         return (*this)->getSubBasis ();
     }
 
-    std::vector< Basis* > BasisNode::getSubBasis () const {
+    std::vector< const Basis* > BasisNode::getSubBasis () const {
         return allSubBasis;
     }
 

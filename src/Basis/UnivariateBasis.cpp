@@ -107,5 +107,13 @@ namespace spline {
     } 
 
 
+    std::vector< const Basis* >  UnivariateBasis::getSubBasis () const {
+        return std::vector< const Basis* > {this} ;
+        // return (*this)->getSubBasis ();
+    }
+
+    // std::vector< Basis* >  UnivariateBasisNode::getSubBasis () const {
+    //     return std::vector< Basis* > {get()} ;
+    // }
 }  // namespace spline
 

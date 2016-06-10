@@ -43,12 +43,12 @@ namespace spline {
         virtual Basis operator+(const BSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 
-        std::vector< Basis* > getSubBasis() const;
+        virtual std::vector< const Basis* > getSubBasis() const;
         void addBasis(Basis* basis);
 
     protected:
         Argument& argument;
-        std::vector< Basis* > allSubBasis;
+        std::vector< const Basis* > allSubBasis;
         //    Domain domain;
     };
 
@@ -84,7 +84,7 @@ namespace spline {
         virtual Basis operator+(const BSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 
-        std::vector< Basis* > getSubBasis() const;
+        virtual std::vector< const Basis* > getSubBasis() const;
         void addBasis(Basis* basis);
     protected:
         //    Domain domain;
