@@ -66,6 +66,7 @@ namespace std {
 %{
 #include <src/SharedObject/SharedObject.h>
 #include <src/SharedObject/SharedObjectNode.h>
+#include <src/Function/Argument.h>
 #include <src/Basis/Basis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialeBasis.h>
@@ -75,13 +76,13 @@ namespace std {
 //#include <src/Coefficients/Coefficients.h>
 
 //#include <src/Function/Function.h>
-#include <src/Function/Argument.h>
 
 #include <casadi/casadi.hpp>
 %}
 
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
+%include <src/Function/Argument.h>
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialeBasis.h>
@@ -91,7 +92,6 @@ namespace std {
 //%include <src/Coefficients/Coefficients.h>
 
 //%include <src/Function/Function.h>
-%include <src/Function/Argument.h>
 
 namespace std {
    %template(BasisPtrVector) vector< spline::Basis* >;

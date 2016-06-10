@@ -45,3 +45,12 @@ print 'a is ',
 print a
 a.setName('Erik')
 print 'a changed to ' + str( a )
+print  B.getArgument()
+B.setArgument('x')
+print  B.getArgument()
+B.setArgument(a)
+print  B.getArgument()
+a.setName('z')
+print  B.getArgument()
+
+
