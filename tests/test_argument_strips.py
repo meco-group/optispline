@@ -53,4 +53,14 @@ print  B.getArgument()
 a.setName('z')
 print  B.getArgument()
 
+print 'B subBasis',
+print B.getSubBasis()
 
+
+print 'BS3 subBasis',
+print BS3.getSubBasis()
+
+B.addBasis(BS1)
+B.addBasis(BS2)
+print 'B subBasis',
+print B.getSubBasis()
