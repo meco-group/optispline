@@ -38,8 +38,13 @@ print 'B is a ',
 print B
 
 a = Basis.Argument()
+b = Basis.Argument('x')
 print 'a is ',
 print a
+print 'b is ',
+print b
+print 'a == b', str(a==b)
+print "b == 'x'", str(b=="x")
 a = Basis.Argument('erik')
 print 'a is ',
 print a
@@ -54,13 +59,16 @@ a.setName('z')
 print  B.getArgument()
 
 print 'B subBasis',
-print B.getSubBasis()
+print list(B.getSubBasis())
 
 
 print 'BS3 subBasis',
-print BS3.getSubBasis()
+print list(BS3.getSubBasis())
 
 B.addBasis(BS1)
 B.addBasis(BS2)
 print 'B subBasis',
-print B.getSubBasis()
+print list(B.getSubBasis())
+
+print BS1([1])
+print B([1,2])

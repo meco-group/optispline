@@ -2,7 +2,6 @@
 #define BASIS_H_
 
 #include <iostream>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -10,7 +9,7 @@
 #include "../SharedObject/SharedObjectNode.h"
 
 #include "../Function/Argument.h"
-//#include "../Math/Tensor.h"
+#include <tensor.hpp>
 //#include "../Math/Domain.h"
 
 namespace spline {
@@ -43,12 +42,13 @@ namespace spline {
         virtual Basis operator+(const BSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 
-        virtual std::vector< const Basis* > getSubBasis() const;
-        void addBasis(Basis* basis);
+        virtual std::vector< Basis > getSubBasis() const;
+        void addBasis(Basis basis);
 
+        virtual DT operator()(const std::vector< double >& x) const;
     protected:
         Argument& argument;
-        std::vector< const Basis* > allSubBasis;
+        std::vector< Basis > allSubBasis;
         //    Domain domain;
     };
 
@@ -73,7 +73,6 @@ namespace spline {
         // int getDimension () const;
 
         // std::vector<int> getSize () const;
-
         void setArgument (const Argument& argument);
         void setArgument (const std::string& argumentName);
 
@@ -84,8 +83,9 @@ namespace spline {
         virtual Basis operator+(const BSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 
-        virtual std::vector< const Basis* > getSubBasis() const;
-        void addBasis(Basis* basis);
+        std::vector< Basis > getSubBasis() const;
+        void addBasis(Basis basis);
+        DT operator()(const std::vector< double >& x) const;
     protected:
         //    Domain domain;
     };

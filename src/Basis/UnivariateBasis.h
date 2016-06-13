@@ -44,7 +44,8 @@ namespace spline {
         virtual Basis operator+ (const BSplineBasis& other) const;
         virtual std::string getRepresentation() const ;
 
-        // virtual std::vector< Basis* > getSubBasis() const;
+        virtual std::vector< Basis > getSubBasis() const;
+        virtual DT operator()(const std::vector< double >& x) const { assert(0);};
     protected:
         int degree;
     };
@@ -84,7 +85,6 @@ namespace spline {
         virtual Basis operator+ (const BSplineBasis& other) const;
 
         virtual std::string getRepresentation() const ;
-        virtual std::vector< const Basis* > getSubBasis() const;
     };
 } // namespace spline
 

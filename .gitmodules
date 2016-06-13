@@ -1,0 +1,3 @@
+[submodule "tensor-tools"]
+	path = tensor-tools
+	url = git@github.com:meco-group/tensor-tools.git

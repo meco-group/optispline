@@ -34,6 +34,7 @@ namespace spline{
 
         //    virtual std::vector<double> evaluationGrid(void) const;
 
+        virtual DT operator()(const std::vector< double >& x) const;
     };
 
 #endif // SWIG

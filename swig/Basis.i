@@ -73,6 +73,7 @@ namespace std {
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/vectorUtilities.h> // Debug
 
+#include <tensor.hpp>
 //#include <src/Coefficients/Coefficients.h>
 
 //#include <src/Function/Function.h>
@@ -88,12 +89,12 @@ namespace std {
 %include <src/Basis/MonomialeBasis.h>
 %include <src/Basis/BSplineBasis.h>
 %include <src/Basis/vectorUtilities.h> // Debug
+%include <tensor.hpp>
 
 //%include <src/Coefficients/Coefficients.h>
 
 //%include <src/Function/Function.h>
 
-namespace std {
-   %template(BasisPtrVector) vector< spline::Basis* >;
-}
+%template(BasisVector) std::vector< spline::Basis >;
+%template(DTensor) Tensor<DM>;
 

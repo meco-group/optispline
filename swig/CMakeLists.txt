@@ -4,7 +4,7 @@ endif()
 find_package(SWIG REQUIRED)
 include(${SWIG_USE_FILE})
 
-include_directories(${CASADI_INCLUDE_DIR})
+include_directories(${CASADI_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-tools)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 if(WITH_PYTHON)
   find_package(PythonLibs 2.7)

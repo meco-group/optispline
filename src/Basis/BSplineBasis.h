@@ -59,7 +59,7 @@ public:
     //   std::ostream& operator<<(std::ostream &stream, const BSplineBasis& obj) {
     //   return stream << obj.getRepresentation();
     // }
-
+        virtual DT operator()(const std::vector< double >& x) const;
 
 private:
 

@@ -7,7 +7,7 @@ namespace spline {
     BasisNode* Basis::operator->() const { return get(); }
     Basis::Basis()  { assign_node(new BasisNode()); };
     BasisNode::BasisNode () : argument(*new Argument()) {
-         std::vector< Basis* > allSubBasis;
+         std::vector< Basis > allSubBasis;
     };
 
     // int Basis::getDimension () const {
@@ -38,19 +38,19 @@ namespace spline {
         return argument;
     }
 
-    std::vector< const Basis* > Basis::getSubBasis () const {
+    std::vector< Basis > Basis::getSubBasis () const {
         return (*this)->getSubBasis ();
     }
 
-    std::vector< const Basis* > BasisNode::getSubBasis () const {
+    std::vector< Basis > BasisNode::getSubBasis () const {
         return allSubBasis;
     }
 
-    void  Basis::addBasis  (Basis*  basis ) {
+    void  Basis::addBasis  (Basis  basis ) {
         (*this)->addBasis (basis );
     }
     
-    void  BasisNode::addBasis  (Basis*  basis ) {
+    void  BasisNode::addBasis  (Basis  basis ) {
          this->allSubBasis.push_back(basis);
     }
     // std::vector<int> Basis::getSize () const {
@@ -96,4 +96,17 @@ namespace spline {
         return Basis();
     }
 
+    
+    DT  Basis::operator()  (const std::vector< double > &  x   ) const {
+        return (*this)->operator() (x);
+    }
+
+    DT  BasisNode::operator()  (const std::vector< double > &  x   ) const {
+        assert(x.size()==allSubBasis.size());
+        DT ret(1,{});
+        for (int i = 0; i < x.size(); ++i) {
+            ret = ret.outer_product(allSubBasis[i]({x[i]}));
+        }
+        return ret;
+    }
 } // namespace spline
