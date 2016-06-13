@@ -57,20 +57,20 @@ namespace spline {
     }
 
 
-    DT  MonomialeBasis::operator()  (const std::vector< double > &  x   ) const {
+    DT  MonomialeBasisNode::operator()  (const std::vector< double > &  x   ) const {
         assert(x.size()==1);
         casadi::DM A(std::vector< double > {1.0, 2.0, 3.0});
         return DT(A,{3}); 
     }
 
-    ST  MonomialeBasis::operator()  (const std::vector< SX > &  x   ) const {
+    ST  MonomialeBasisNode::operator()  (const std::vector< SX > &  x   ) const {
         assert(x.size()==1);
-        return ST(A,{3}); 
+        return ST(vertcat(x),{3}); 
     }
 
-    MT  MonomialeBasis::operator()  (const std::vector< MX > &  x   ) const {
+    MT  MonomialeBasisNode::operator()  (const std::vector< MX > &  x   ) const {
         assert(x.size()==1);
-        return MT(A,{3}); 
+        return MT(vertcat(x),{3}); 
     }
     //   std::shared_ptr<Basis> Monomialestd::shared_ptr<Basis>::operator* (const BSplinestd::shared_ptr<Basis> &other)const  {
     //       return timesstd::shared_ptr<Basis>(*this, other);
