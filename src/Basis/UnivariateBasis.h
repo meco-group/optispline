@@ -46,6 +46,8 @@ namespace spline {
 
         virtual std::vector< Basis > getSubBasis() const;
         virtual DT operator()(const std::vector< double >& x) const { assert(0);};
+        virtual ST operator()(const std::vector< SX >& x) const { assert(0);};
+        virtual MT operator()(const std::vector< MX >& x) const { assert(0);};
     protected:
         int degree;
     };

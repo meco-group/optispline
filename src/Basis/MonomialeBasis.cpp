@@ -1,8 +1,3 @@
-// Copyright 2016 Erik
-//
-// Created by erik on 08/04/16.
-//
-
 #include <math.h>       /* pow */
 
 #include <casadi/casadi.hpp> // range
@@ -13,7 +8,6 @@
 #include "times.h"
 
 namespace spline {
-    //    Monomialestd::shared_ptr<Basis>::Monomialestd::shared_ptr<Basis> (int degree) : Univariatestd::shared_ptr<Basis>(degree) { }
     //
     //   std::vector<double> Monomialestd::shared_ptr<Basis>::evalstd::shared_ptr<Basis> (double x) const {
     //       std::vector<double> evaluation_basis(this->length());
@@ -62,14 +56,22 @@ namespace spline {
         return Basis();
     }
 
-    DT  MonomialeBasisNode::operator()  (const std::vector< double > &  x   ) const {
+
+    DT  MonomialeBasis::operator()  (const std::vector< double > &  x   ) const {
+        assert(x.size()==1);
         casadi::DM A(std::vector< double > {1.0, 2.0, 3.0});
         return DT(A,{3}); 
     }
-    //   std::shared_ptr<Basis> Monomialestd::shared_ptr<Basis>::operator* (const Monomialestd::shared_ptr<Basis> &other)const  {
-    //       return timesstd::shared_ptr<Basis>(*this, other);
-    //   }
-    //
+
+    ST  MonomialeBasis::operator()  (const std::vector< SX > &  x   ) const {
+        assert(x.size()==1);
+        return ST(A,{3}); 
+    }
+
+    MT  MonomialeBasis::operator()  (const std::vector< MX > &  x   ) const {
+        assert(x.size()==1);
+        return MT(A,{3}); 
+    }
     //   std::shared_ptr<Basis> Monomialestd::shared_ptr<Basis>::operator* (const BSplinestd::shared_ptr<Basis> &other)const  {
     //       return timesstd::shared_ptr<Basis>(*this, other);
     //   }

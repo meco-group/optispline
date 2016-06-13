@@ -46,6 +46,8 @@ namespace spline {
         void addBasis(Basis basis);
 
         virtual DT operator()(const std::vector< double >& x) const;
+        virtual ST operator()(const std::vector< SX >& x) const;
+        virtual MT operator()(const std::vector< MX >& x) const;
     protected:
         Argument& argument;
         std::vector< Basis > allSubBasis;
@@ -86,6 +88,8 @@ namespace spline {
         std::vector< Basis > getSubBasis() const;
         void addBasis(Basis basis);
         DT operator()(const std::vector< double >& x) const;
+        ST operator()(const std::vector< SX >& x) const;
+        MT operator()(const std::vector< MX >& x) const;
     protected:
         //    Domain domain;
     };

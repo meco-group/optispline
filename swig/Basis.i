@@ -97,4 +97,6 @@ namespace std {
 
 %template(BasisVector) std::vector< spline::Basis >;
 %template(DTensor) Tensor<DM>;
+%template(STensor) Tensor<SX>;
+%template(MTensor) Tensor<MX>;
 

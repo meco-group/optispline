@@ -146,6 +146,16 @@ namespace spline{
         casadi::DM A(std::vector< double > {1.0, 2.0, 3.0});
         return DT(A,{3}); 
     }
+
+    ST  BSplineBasisNode::operator()  (const std::vector< SX > &  x   ) const {
+        assert(x.size()==1);
+        return ST(x,{3}); 
+    }
+
+    MT  BSplineBasisNode::operator()  (const std::vector< MX > &  x   ) const {
+        assert(x.size()==1);
+        return MT(x); 
+    }
     //   std::make_shared<Basis>::operator* (const Monomialestd::shared_ptr<Basis> &other) const {
     //       return timesstd::shared_ptr<Basis>(*this, other);
     //   }

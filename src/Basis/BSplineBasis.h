@@ -60,7 +60,8 @@ public:
     //   return stream << obj.getRepresentation();
     // }
         virtual DT operator()(const std::vector< double >& x) const;
-
+        virtual ST operator()(const std::vector< SX >& x) const ;
+        virtual MT operator()(const std::vector< MX >& x) const ;
 private:
 
 //  void initBSplineBasis (const std::vector<double >& knots, int degree, std::string argument);
