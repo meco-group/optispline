@@ -142,6 +142,7 @@ namespace spline{
     }
 
     DT  BSplineBasisNode::operator()  (const std::vector< double > &  x   ) const {
+        assert(x.size()==1);
         casadi::DM A(std::vector< double > {1.0, 2.0, 3.0});
         return DT(A,{3}); 
     }

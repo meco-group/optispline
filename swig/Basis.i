@@ -64,6 +64,7 @@ namespace std {
 
 
 %{
+#include <tensor.hpp>
 #include <src/SharedObject/SharedObject.h>
 #include <src/SharedObject/SharedObjectNode.h>
 #include <src/Function/Argument.h>
@@ -73,7 +74,6 @@ namespace std {
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/vectorUtilities.h> // Debug
 
-#include <tensor.hpp>
 //#include <src/Coefficients/Coefficients.h>
 
 //#include <src/Function/Function.h>
@@ -81,6 +81,7 @@ namespace std {
 #include <casadi/casadi.hpp>
 %}
 
+%include <tensor.hpp>
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
 %include <src/Function/Argument.h>
@@ -89,7 +90,6 @@ namespace std {
 %include <src/Basis/MonomialeBasis.h>
 %include <src/Basis/BSplineBasis.h>
 %include <src/Basis/vectorUtilities.h> // Debug
-%include <tensor.hpp>
 
 //%include <src/Coefficients/Coefficients.h>
 
