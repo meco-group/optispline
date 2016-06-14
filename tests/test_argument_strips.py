@@ -21,21 +21,18 @@ from casadi import *
 #
 
 B = Basis.Basis()
+M = Basis.Basis()
 
 BS1 = Basis.BSplineBasis()
 BS2 = Basis.BSplineBasis()
 
-# MO1 = Basis.MonomialeBasis()
-# MO2 = Basis.MonomialeBasis()
+MO1 = Basis.MonomialeBasis()
+MO2 = Basis.MonomialeBasis()
 
 BS3 = BS1 + BS2
 
-print 'BS1 is a ' +  BS1.getRepresentation()
-print 'BS3 is a ',
-print BS3
-
-print 'B is a ',
-print B
+assert B.getRepresentation()== 'Basis'
+assert BS3.getRepresentation()== 'BSplineBasis object'
 
 a = Basis.Argument()
 b = Basis.Argument('x')
@@ -81,3 +78,13 @@ print BS1( [x] )
 BS1.setDegree(5)
 print BS1.getDegree()
 
+MO1.setDegree(2)
+MO2.setDegree(3)
+
+print MO1
+print MO1.getSubBasis()
+print MO1([0.5]).data()
+
+M.addBasis(MO1)
+M.addBasis(MO2)
+print M([2,3]).data()

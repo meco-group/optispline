@@ -10,20 +10,19 @@
 namespace spline {
     //
     //   std::vector<double> Monomialestd::shared_ptr<Basis>::evalstd::shared_ptr<Basis> (double x) const {
-    //       std::vector<double> evaluation_basis(this->length());
-    //
-    //       for (int i = 0; i < this->length (); ++i) {
-    //           evaluation_basis[i] = pow (x,i);
-    //       }
-    //
+
     //       return evaluation_basis;
     //   }
     //
 
     //   int Monomialestd::shared_ptr<Basis>::length () const{return this->getDegree() + 1; }
-    std::string MonomialeBasisNode::getRepresentation() const {return "MonomialeBasis, number is ";};
-    std::string MonomialeBasis::getRepresentation() const { return (*this)->getRepresentation() ;};
+    std::string MonomialeBasisNode::getRepresentation() const {
+        return "MonomialeBasis";
+    }
 
+    std::string MonomialeBasis::getRepresentation() const {
+        return (*this)->getRepresentation() ;
+    }
 
     MonomialeBasisNode* MonomialeBasis::get() const { return static_cast<MonomialeBasisNode*>(SharedObject::get()); };
     MonomialeBasisNode* MonomialeBasis::operator->() const { return get(); }
@@ -56,18 +55,23 @@ namespace spline {
     }
 
 
-    DT  MonomialeBasisNode::operator()  (const std::vector< double > &  x   ) const {
+    DT  MonomialeBasisNode::operator() (const std::vector< double >& x ) const {
         assert(x.size()==1);
-        casadi::DM A(std::vector< double > {1.0, 2.0, 3.0});
-        return DT(A,{3}); 
+        double x_ = x[0];
+        std::vector<double> evaluation_basis(this->getLenght());
+        for (int i = 0; i < getLenght(); ++i) {
+              evaluation_basis[i] = pow(x_,i);
+        }
+        casadi::DM A(evaluation_basis);
+        return DT(A,{getLenght()}); 
     }
 
-    ST  MonomialeBasisNode::operator()  (const std::vector< SX > &  x   ) const {
+    ST  MonomialeBasisNode::operator() (const std::vector< SX > &  x   ) const {
         assert(x.size()==1);
         return ST(vertcat(x),{3}); 
     }
 
-    MT  MonomialeBasisNode::operator()  (const std::vector< MX > &  x   ) const {
+    MT  MonomialeBasisNode::operator() (const std::vector< MX > &  x   ) const {
         assert(x.size()==1);
         return MT(vertcat(x),{3}); 
     }
