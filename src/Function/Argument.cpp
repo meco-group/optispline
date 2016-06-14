@@ -32,19 +32,19 @@ namespace spline {
         (*this)->setName(name);
     }
     
-    bool  Argument::operator== (const Argument&  other_arg ) const {
-        return (*this)->operator== (other_arg.get()->getName() );
+    bool Argument::operator==(const Argument& other_arg ) const {
+        return (*this)->operator==(other_arg.get()->getName());
     }
     
-    // bool  ArgumentNode::operator== (const Argument&  other_arg ) const {
-    //      return this->name.compare(other_arg.name) ;
-    // }
+    bool ArgumentNode::operator==(const Argument& other_arg ) const {
+         return !this->name.compare(other_arg.get()->getName()) ;
+    }
 
-    bool  Argument::operator==(const std::string&  other_arg_name ) const {
-        return (*this)->operator== (other_arg_name );
+    bool Argument::operator==(const std::string& other_arg_name ) const {
+        return (*this)->operator==(other_arg_name );
     }
     
-    bool  ArgumentNode::operator==(const std::string&  other_arg_name ) const {
-         return this->name.compare(other_arg_name);
+    bool ArgumentNode::operator==(const std::string& other_arg_name ) const {
+         return !this->name.compare(other_arg_name);
     }
 } // namespace spline
