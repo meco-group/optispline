@@ -24,7 +24,7 @@ B = Basis.Basis()
 M = Basis.Basis()
 
 BS1 = Basis.BSplineBasis()
-BS2 = Basis.BSplineBasis()
+BS2 = Basis.BSplineBasis([0.0 ,1.0 ],3,4)
 
 MO1 = Basis.MonomialeBasis()
 MO2 = Basis.MonomialeBasis()
@@ -35,13 +35,14 @@ assert B.getRepresentation()== 'Basis'
 assert BS3.getRepresentation()== 'BSplineBasis object'
 
 a = Basis.Argument()
-b = Basis.Argument('x')
+b = Basis.Argument("x")
 print 'a is ',
 print a
 print 'b is ',
 print b
-print 'a == b', str(a==b)
-print "b == 'x'", str(b=="x")
+print 'a == a', str(a=="_")
+print 'b == a', str(b==a)
+print "b == 'x'", str(b=='x')
 a = Basis.Argument('erik')
 print 'a is ',
 print a
@@ -75,7 +76,7 @@ x = SX.sym("x")
 print [x]
 print BS1( [x] )
 
-BS1.setDegree(5)
+BS1.setDegree(3)
 print BS1.getDegree()
 
 MO1.setDegree(2)

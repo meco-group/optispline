@@ -128,8 +128,50 @@ namespace spline{
     //       return std::make_shared<Basis>(kn, degree);
     //   }
 
-      int BSplineBasisNode::getLenght () const{
-          return knots.size() - degree - 1;
-      }
+    int BSplineBasisNode::getLenght () const{
+        return knots.size() - degree - 1;
+    }
 
+    //   std::make_shared<Basis>::std::make_shared<Basis> (const std::vector<double> &bounds, int degree, int numberOfIntervals, std::string argument) : Univariatestd::shared_ptr<Basis>(degree,argument) {
+    //   }
+    //
+
+    BSplineBasis::BSplineBasis (std::vector<double >& knots, int degree)  { assign_node(new BSplineBasisNode(knots, degree)); };
+    BSplineBasisNode::BSplineBasisNode (std::vector<double >& knots, int degree) {
+        setKnots(knots);
+        setDegree(degree);
+    }
+
+    BSplineBasis::BSplineBasis (std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
+    BSplineBasisNode::BSplineBasisNode (std::vector<double >& bounds, int degree, int numberOfIntervals) {
+        int numberOfKnots = 2*degree + numberOfIntervals;
+        knots.resize(numberOfKnots, 0);
+
+        for (int i = 0; i < degree; ++i) {
+            knots[i] = bounds[0];
+            knots[numberOfKnots - i - 1] = bounds[1];
+        }
+
+        for (int i = 0; i < numberOfIntervals; ++i) {
+            knots[degree + i] = bounds[0] + (bounds[1] - bounds[0]) * (double)i/(numberOfIntervals-1);
+        }
+
+        setKnots(knots);
+        setDegree(degree);
+    }
+
+    std::vector< double >& BSplineBasis::getKnots () { return (*this)->getKnots(); } 
+    std::vector< double >& BSplineBasisNode::getKnots () {
+        return knots;
+    }
+
+    const std::vector< double >& BSplineBasis::getKnots () const { return (*this)->getKnots(); } 
+    const std::vector< double >& BSplineBasisNode::getKnots () const {
+        return knots;
+    }
+
+    void BSplineBasis::setKnots (std::vector< double >& knots) { return (*this)->setKnots (knots); } 
+    void BSplineBasisNode::setKnots (std::vector< double >& knots) {
+        knots = knots;
+    }
 } // namespace spline
