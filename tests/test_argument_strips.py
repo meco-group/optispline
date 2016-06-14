@@ -78,3 +78,6 @@ x = SX.sym("x")
 print [x]
 print BS1( [x] )
 
+BS1.setDegree(5)
+print BS1.getDegree()
+

@@ -27,14 +27,6 @@ namespace spline {
         ///    std::vector< double > operator()(const std::vector<double, 1>& x) const;
         //   std::vector< std::vector< std::vector<double> > > operator()(const std::vector< std::vector<double> >& x) const;
         //
-        ///        virtual std::shared_ptr<Basis> plus(Basis &other) = 0;
-        //
-        //   int getDegree () const { return degree;}
-        //   void setDegree (int degree);
-        //   void increaseDegree(int d);
-        //
-        //   int getLenght() const ;
-        //
         //   casadi::DM transformation( const Basis &b) const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
@@ -48,6 +40,10 @@ namespace spline {
         virtual DT operator()(const std::vector< double >& x) const { assert(0);};
         virtual ST operator()(const std::vector< SX >& x) const { assert(0);};
         virtual MT operator()(const std::vector< MX >& x) const { assert(0);};
+
+        virtual int getLenght() const ;
+        int getDegree () const ;
+        void setDegree (int degree);
     protected:
         int degree;
     };
@@ -67,14 +63,6 @@ namespace spline {
         ///    std::vector< double > operator()(const std::vector<double, 1>& x) const;
         //   std::vector< std::vector< std::vector<double> > > operator()(const std::vector< std::vector<double> >& x) const;
         //
-        ///        virtual std::shared_ptr<Basis> plus(Basis &other) = 0;
-        //
-        //   int getDegree () const { return degree;}
-        //   void setDegree (int degree);
-        //   void increaseDegree(int d);
-        //
-        //   int getLenght() const ;
-        //
         //   casadi::DM transformation( const Basis &b) const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
@@ -87,6 +75,10 @@ namespace spline {
         virtual Basis operator+ (const BSplineBasis& other) const;
 
         virtual std::string getRepresentation() const ;
+
+        int getLenght() const ;
+        int getDegree () const ;
+        void setDegree (int degree);
     };
 } // namespace spline
 

@@ -27,13 +27,6 @@ namespace spline {
     //         setArguments(argument);
     //         setDimensions(1);
     //     }
-    //  
-    //  
-    //     void Univariatestd::shared_ptr<Basis>::increaseDegree (int d) {
-    //         degree += d;
-    //     }
-    //  
-    //  
     //     std::vector< std::vector<double> > Univariatestd::shared_ptr<Basis>::evalstd::shared_ptr<Basis>(const std::vector<double>& x) const{
     //         std::vector< std::vector<double> > r(x.size(), std::vector<double>(length()));
     //         for (int i = 0; i < x.size(); ++i) {
@@ -58,21 +51,8 @@ namespace spline {
     //         std::shared_ptr<Basis>::setArguments(argumentList);
     //     }
     //  
-    //  
-    //     void Univariatestd::shared_ptr<Basis>::setDegree (int degree) {
-    //         Univariatestd::shared_ptr<Basis>::degree = degree;
-    //     }
-    //  
-    //     int Univariatestd::shared_ptr<Basis>::getLenght () const {
-    //         return size[0];
-    //     }
-    //  
     UnivariateBasisNode* UnivariateBasis::get() const { return static_cast<UnivariateBasisNode*>(SharedObject::get()); };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
-
-    // UnivariateBasis::UnivariateBasis()  {
-    //     assign_node(new UnivariateBasisNode(number));
-    // }
 
     std::string UnivariateBasisNode::getRepresentation() const {
         return "UnivariateBasis object"; 
@@ -106,10 +86,32 @@ namespace spline {
         return UnivariateBasis();
     } 
 
-
-
     std::vector< Basis >  UnivariateBasisNode::getSubBasis () const {
         return std::vector< Basis > {shared_from_this<UnivariateBasis>()} ;
+    }
+
+    int UnivariateBasis::getLenght ( ) const  {
+        return (*this)->getLenght();
+    }
+    
+    int UnivariateBasisNode::getLenght ( ) const {
+         assert(0);
+    }
+    
+    void  UnivariateBasis::setDegree (int degree) {
+        (*this)->setDegree (degree);
+    }
+    
+    void  UnivariateBasisNode::setDegree (int degree) {
+         this->degree = degree;
+    }
+    
+    int  UnivariateBasis::getDegree  ( ) const {
+        return (*this)->getDegree ();
+    }
+    
+    int  UnivariateBasisNode::getDegree  ( ) const {
+         return degree ;
     }
 }  // namespace spline
 
