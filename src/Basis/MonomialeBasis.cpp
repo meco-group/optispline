@@ -28,8 +28,7 @@ namespace spline {
     MonomialeBasisNode* MonomialeBasis::get() const { return static_cast<MonomialeBasisNode*>(SharedObject::get()); };
     MonomialeBasisNode* MonomialeBasis::operator->() const { return get(); }
 
-    // MonomialeBasis::MonomialeBasis(int number)  { assign_node(new MonomialeBasisNode(number)); };
-
+    MonomialeBasis::MonomialeBasis()  { assign_node(new MonomialeBasisNode()); };
 
     Basis MonomialeBasis::operator+ (const Basis& other)const  {
         // return plusBasis(*this, other);

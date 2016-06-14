@@ -10,11 +10,13 @@
 #include "UnivariateBasis.h"
 
 namespace spline{
+
     class BSplineBasis;
 
 #ifndef SWIG
 
     class MonomialeBasisNode : public UnivariateBasisNode {
+
     public:
         MonomialeBasisNode(){}
         //MonomialeBasis(int degree);
@@ -44,9 +46,11 @@ namespace spline{
 #endif // SWIG
 
     class MonomialeBasis : public UnivariateBasis {
+
     public:
+
 #ifndef SWIG
-        MonomialeBasis() { };
+        MonomialeBasis() ;
         MonomialeBasisNode* get() const ;
         MonomialeBasisNode* operator->() const ;
 #endif // SWIG
@@ -67,6 +71,13 @@ namespace spline{
 
         //    virtual std::vector<double> evaluationGrid(void) const;
 
+#ifndef SWIG
+        /// Print a representation of the object to a stream (shorthand)
+        inline friend
+            std::ostream& operator<<(std::ostream &stream, const MonomialeBasis& obj) {
+                return stream << obj.getRepresentation();
+            }
+#endif // SWIG
     };
 }  // namespace spline
 
