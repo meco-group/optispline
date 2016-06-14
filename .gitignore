@@ -56,3 +56,4 @@ swig/*.m
 *.cmake
 
 *.swp
+*.log

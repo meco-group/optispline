@@ -10,7 +10,7 @@ import unittest
 valgrind = int(os.environ.get("VALGRIND",'0'))
 
 import Basis
-
+from casadi import *
 
 #     def test_upper(self):
 #         self.assertEqual('foo'.upper(), 'FOO')
@@ -72,3 +72,9 @@ print list(B.getSubBasis())
 
 print BS1([1])
 print B([1,2])
+
+x = SX.sym("x")
+
+print [x]
+print BS1( [x] )
+
