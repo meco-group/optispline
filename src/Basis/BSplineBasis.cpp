@@ -41,10 +41,44 @@ namespace spline{
         return BSplineBasis();
     }
 
-    DT  BSplineBasisNode::operator()  (const std::vector< double > &  x   ) const {
-        assert(x.size()==1);
-        casadi::DM A(std::vector< double > {1.0, 2.0, 3.0});
-        return DT(A,{3}); 
+    DT  BSplineBasisNode::operator()  (const std::vector< double > &  x_   ) const {
+        assert(x_.size()==1);
+        double x = x_[0];
+        double b;
+        double bottom;
+        double basis[degree+1][knots.size()-1];
+
+        for (int i=0; i<(knots.size()-1); i++){
+            if((i < degree+1) and (knots[0] == knots[i])){
+                basis[0][i] = ((x >= knots[i]) and (x <= knots[i+1]));
+            }else{
+                basis[0][i] = ((x > knots[i]) and (x <= knots[i+1]));
+            }
+        }
+
+        for (int d=1; d<(degree+1); d++){
+            for (int i=0; i < getLenght(); i++){
+                b = 0;
+                bottom = knots[i+d] - knots[i];
+                if (bottom != 0){
+                    b = (x - knots[i])*basis[d-1][i]/bottom;
+                }
+                bottom = knots[i+d+1] - knots[i+1];
+                if (bottom != 0){
+                    b += (knots[i+d+1] - x)*basis[d-1][i+1]/bottom;
+                }
+                basis[d][i] = b;
+            }
+        }
+
+        std::vector<double> r(getLenght());
+
+        for (int i = 0; i < getLenght(); ++i) {
+            r[i] = basis[degree][i];
+        }
+
+        casadi::DM A(r);
+        return DT(A,{getLenght()}); 
     }
 
     ST  BSplineBasisNode::operator()  (const std::vector< SX > &  x   ) const {
