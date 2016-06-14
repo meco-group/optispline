@@ -37,6 +37,8 @@ namespace spline{
         virtual DT operator()(const std::vector< double >& x) const;
         virtual ST operator()(const std::vector< SX >& x) const ;
         virtual MT operator()(const std::vector< MX >& x) const ;
+
+        virtual int getLenght() const ;
     };
 
 #endif // SWIG

@@ -94,10 +94,6 @@ namespace spline{
     //       return r;
     //   }
     //
-    //   int std::make_shared<Basis>::length () const{
-    //       return knots.size() - degree - 1;
-    //   }
-    //
     //   std::vector<bool> std::make_shared<Basis>::indector (int i, double x) {
     //       std::vector<bool> r(knots.size() - 1);
     //
@@ -194,5 +190,8 @@ namespace spline{
     //       return std::make_shared<Basis>(kn, degree);
     //   }
 
+      int BSplineBasisNode::getLenght () const{
+          return knots.size() - degree - 1;
+      }
 
 } // namespace spline

@@ -72,6 +72,11 @@ namespace spline {
         assert(x.size()==1);
         return MT(vertcat(x),{3}); 
     }
+
+    int MonomialeBasisNode::getLenght () const {
+         return getDegree() + 1;
+    }
+    
     //   std::shared_ptr<Basis> Monomialestd::shared_ptr<Basis>::operator* (const BSplinestd::shared_ptr<Basis> &other)const  {
     //       return timesstd::shared_ptr<Basis>(*this, other);
     //   }

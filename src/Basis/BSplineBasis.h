@@ -72,6 +72,17 @@ private:
 //  std::vector<double> knots;
 //
 };
+        virtual int getLenght() const ;
+
+    private:
+
+        //  void initBSplineBasis (const std::vector<double >& knots, int degree, std::string argument);
+        //
+        //  std::vector<bool> indector(int i, double x);
+        //
+         std::vector<double> knots;
+        //
+    };
 
 #endif // SWIG
 
