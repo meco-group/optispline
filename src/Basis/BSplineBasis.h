@@ -10,68 +10,44 @@
 
 namespace spline{
 
-class MonomialeBasis;
+    class MonomialeBasis;
 
 #ifndef SWIG
 
-class BSplineBasisNode : public UnivariateBasisNode{
+    class BSplineBasisNode : public UnivariateBasisNode{
+
+    public:
+        BSplineBasisNode () {};
+        BSplineBasisNode (std::vector<double >& knots, int degree);
+        BSplineBasisNode (std::vector<double >& bounds, int degree, int numberOfIntervals);
 
 
-public:
-    BSplineBasisNode() {};
-//    BSplineBasis (const std::vector<double >& knots, int degree);
-//    BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots);
-//   BSplineBasis (const std::vector<double >& knots, int degree,std::string argument = std::string("__"));
-//   BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots, std::string argument = std::string("__"));
-//
-//   ~BSplineBasis ();
-//
-//   const std::vector<double> &getKnots () const;
-//   void setKnots (const std::vector<double> &knots) ;
-//
-//   //    evalution Basis
-//   virtual std::vector<double> evalBasis(double x) const;
-//
-//   // TODO(jgillis): find out why this is needed to have proper swig interface
-//
-//   virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const { return UnivariateBasis::evalBasis(x); };
-//
-//   int length() const;
+        std::vector<double>& getKnots ();
+        const std::vector<double>& getKnots () const;
+        void setKnots (std::vector<double>& knots) ;
 
-    virtual Basis operator+(const Basis& other) const ;
-    virtual Basis operator+(const MonomialeBasis& other) const ;
-    virtual Basis operator+(const BSplineBasis& other) const ;
+        //   //    evalution Basis
+        //   virtual std::vector<double> evalBasis(double x) const;
+        //
+        virtual Basis operator+(const Basis& other) const ;
+        virtual Basis operator+(const MonomialeBasis& other) const ;
+        virtual Basis operator+(const BSplineBasis& other) const ;
 
-//   BSplineBasis operator*(const MonomialeBasis& other) const ;
-//   BSplineBasis operator*(const BSplineBasis& other) const ;
-//
-//   std::vector<double> greville () const;
-//
-//   virtual std::vector<double> evaluationGrid (void) const;
-//   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
-//
-   /// Return a string with a representation (for SWIG)
-   virtual std::string getRepresentation() const ;
+        //   BSplineBasis operator*(const MonomialeBasis& other) const ;
+        //   BSplineBasis operator*(const BSplineBasis& other) const ;
+        //
+        //   std::vector<double> greville () const;
+        //
+        //   virtual std::vector<double> evaluationGrid (void) const;
+        //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
+        //
+        /// Return a string with a representation (for SWIG)
+        virtual std::string getRepresentation() const ;
 
-
-    /// Print a representation of the object to a stream (shorthand)
-    // inline friend
-    //   std::ostream& operator<<(std::ostream &stream, const BSplineBasis& obj) {
-    //   return stream << obj.getRepresentation();
-    // }
         virtual DT operator()(const std::vector< double >& x) const;
         virtual ST operator()(const std::vector< SX >& x) const ;
         virtual MT operator()(const std::vector< MX >& x) const ;
-private:
 
-//  void initBSplineBasis (const std::vector<double >& knots, int degree, std::string argument);
-//
-//  std::vector<bool> indector(int i, double x);
-//
-//ivate:
-//  std::vector<double> knots;
-//
-};
         virtual int getLenght() const ;
 
     private:
@@ -86,67 +62,57 @@ private:
 
 #endif // SWIG
 
-class BSplineBasis : public UnivariateBasis{
+    class BSplineBasis : public UnivariateBasis{
 
-public:
-    #ifndef SWIG
-    BSplineBasis() ;
-    BSplineBasisNode* get() const ;
-    BSplineBasisNode* operator->() const ;
-
-#endif // SWIG
-//    BSplineBasis (const std::vector<double >& knots, int degree);
-//    BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots);
-//   BSplineBasis (const std::vector<double >& knots, int degree,std::string argument = std::string("__"));
-//   BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfInternalKnots, std::string argument = std::string("__"));
-//
-//   ~BSplineBasis ();
-//
-//   const std::vector<double> &getKnots () const;
-//   void setKnots (const std::vector<double> &knots) ;
-//
-//   //    evalution Basis
-//   virtual std::vector<double> evalBasis(double x) const;
-//
-//   // TODO(jgillis): find out why this is needed to have proper swig interface
-//   virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const { return UnivariateBasis::evalBasis(x); };
-//
-//   int length() const;
-
-    virtual Basis operator+(const Basis& other) const ;
-    virtual Basis operator+(const MonomialeBasis& other) const ;
-    virtual Basis operator+(const BSplineBasis& other) const ;
-
-//   BSplineBasis operator*(const MonomialeBasis& other) const ;
-//   BSplineBasis operator*(const BSplineBasis& other) const ;
-//
-//   std::vector<double> greville () const;
-//
-//   virtual std::vector<double> evaluationGrid (void) const;
-//   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
-//
-   /// Return a string with a representation (for SWIG)
-   virtual std::string getRepresentation() const ;
+    public:
 
 #ifndef SWIG
-    /// Print a representation of the object to a stream (shorthand)
-    inline friend
-      std::ostream& operator<<(std::ostream &stream, const BSplineBasis& obj) {
-      return stream << obj.getRepresentation();
-    }
+        BSplineBasisNode* get() const ;
+        BSplineBasisNode* operator->() const ;
 #endif // SWIG
 
-private:
+        BSplineBasis() ;
+        BSplineBasis (std::vector<double >& knots, int degree);
+        BSplineBasis (std::vector<double >& bounds, int degree, int numberOfIntervals);
 
-//  void initBSplineBasis (const std::vector<double >& knots, int degree, std::string argument);
-//
-//  std::vector<bool> indector(int i, double x);
-//
-//ivate:
-//  std::vector<double> knots;
-//
-};
+//  TODO(jgillis) moet ik de variant met const houden??
+        std::vector<double> &getKnots ();
+        const std::vector<double> &getKnots () const;
+        void setKnots (std::vector<double> &knots) ;
+        //
+        //   // TODO(jgillis): find out why this is needed to have proper swig interface
+        //   virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const { return UnivariateBasis::evalBasis(x); };
+        //
+        virtual Basis operator+(const Basis& other) const ;
+        virtual Basis operator+(const MonomialeBasis& other) const ;
+        virtual Basis operator+(const BSplineBasis& other) const ;
 
+        //   BSplineBasis operator*(const MonomialeBasis& other) const ;
+        //   BSplineBasis operator*(const BSplineBasis& other) const ;
+        //
+        //   std::vector<double> greville () const;
+        //
+        //   virtual std::vector<double> evaluationGrid (void) const;
+        //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
+        //
+        /// Return a string with a representation (for SWIG)
+        virtual std::string getRepresentation() const ;
+
+#ifndef SWIG
+        /// Print a representation of the object to a stream (shorthand)
+        inline friend
+            std::ostream& operator<<(std::ostream &stream, const BSplineBasis& obj) {
+                return stream << obj.getRepresentation();
+            }
+#endif // SWIG
+
+    private:
+
+        //  void initBSplineBasis (const std::vector<double >& knots, int degree, std::string argument);
+        //
+        //  std::vector<bool> indector(int i, double x);
+        //
+    };
 }
 
 #endif //CPP_SPLINE_BSPLINEBASIS_H

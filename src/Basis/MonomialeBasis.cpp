@@ -29,31 +29,21 @@ namespace spline {
 
     MonomialeBasis::MonomialeBasis()  { assign_node(new MonomialeBasisNode()); };
 
-    Basis MonomialeBasis::operator+ (const Basis& other)const  {
-        // return plusBasis(*this, other);
-        return (*this)->operator+(other);
-    }
-
+    Basis MonomialeBasis::operator+ (const Basis& other)const  { return (*this)->operator+(other); } 
     Basis MonomialeBasisNode::operator+ (const Basis& other)const  {
+        // return plusBasis(*this, other);
         return Basis();
     }
 
-    Basis MonomialeBasis::operator+ (const MonomialeBasis& other)const  {
-        return (*this)->operator+(other);
-    }
-
+    Basis MonomialeBasis::operator+ (const MonomialeBasis& other)const  { return (*this)->operator+(other); } 
     Basis MonomialeBasisNode::operator+ (const MonomialeBasis& other)const  {
         return MonomialeBasis();
     }
 
-    Basis MonomialeBasis::operator+ (const BSplineBasis& other)const  {
-        return (*this)->operator+(other);
-    }
-
+    Basis MonomialeBasis::operator+ (const BSplineBasis& other)const  { return (*this)->operator+(other); } 
     Basis MonomialeBasisNode::operator+ (const BSplineBasis& other)const  {
         return Basis();
     }
-
 
     DT  MonomialeBasisNode::operator() (const std::vector< double >& x ) const {
         assert(x.size()==1);
