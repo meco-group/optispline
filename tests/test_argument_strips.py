@@ -21,6 +21,8 @@ from casadi import *
 #
 
 B = Basis.Basis()
+assert B.getRepresentation()== 'Basis'
+
 M = Basis.Basis()
 
 BS1 = Basis.BSplineBasis()
@@ -31,30 +33,22 @@ MO2 = Basis.MonomialeBasis()
 
 BS3 = BS1 + BS2
 
-assert B.getRepresentation()== 'Basis'
-assert BS3.getRepresentation()== 'BSplineBasis object'
-
 a = Basis.Argument()
 b = Basis.Argument("x")
-print 'a is ',
-print a
-print 'b is ',
-print b
-print 'a == a', str(a=="_")
-print 'b == a', str(b==a)
-print "b == 'x'", str(b=='x')
-a = Basis.Argument('erik')
-print 'a is ',
-print a
+assert  (a=="_") == True
+assert  (b==a) == False
+assert  (b=='x') == True
 a.setName('Erik')
-print 'a changed to ' + str( a )
-print  B.getArgument()
+assert  (a=="Erik")
+assert  B.getArgument() == "_"
 B.setArgument('x')
-print  B.getArgument()
+assert  B.getArgument() == "x"
 B.setArgument(a)
-print  B.getArgument()
+assert  B.getArgument() == "Erik"
 a.setName('z')
-print  B.getArgument()
+assert  B.getArgument() == "z"
+
+assert BS3.getRepresentation() == 'BSplineBasis object'
 
 print 'B subBasis',
 print list(B.getSubBasis())
@@ -63,28 +57,34 @@ print list(B.getSubBasis())
 print 'BS3 subBasis',
 print list(BS3.getSubBasis())
 
-B.addBasis(BS1)
+MO1.setDegree(2)
+MO2.setDegree(3)
+
 B.addBasis(BS2)
+B.addBasis(MO2)
 print 'B subBasis',
 print list(B.getSubBasis())
+print list(BS1.getSubBasis())
+print BS2.getLenght()
+print list(BS2.getKnots())
 
-print BS1([1])
+print BS2([1])
 print B([1,2])
 
 x = SX.sym("x")
 
 print [x]
-print BS1( [x] )
+print BS2( [x] )
 
 BS1.setDegree(3)
 print BS1.getDegree()
 
-MO1.setDegree(2)
-MO2.setDegree(3)
+print B([0.5,0.8]).data()
 
 print MO1
 print MO1.getSubBasis()
 print MO1([0.5]).data()
+print MO2([0.5]).data()
 
 M.addBasis(MO1)
 M.addBasis(MO2)

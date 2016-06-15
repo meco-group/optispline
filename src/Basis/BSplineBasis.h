@@ -18,8 +18,8 @@ namespace spline{
 
     public:
         BSplineBasisNode () {};
-        BSplineBasisNode (std::vector<double >& knots, int degree);
-        BSplineBasisNode (std::vector<double >& bounds, int degree, int numberOfIntervals);
+        BSplineBasisNode (const std::vector<double >& knots, int degree);
+        BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 
 
         std::vector<double>& getKnots ();
@@ -72,8 +72,8 @@ namespace spline{
 #endif // SWIG
 
         BSplineBasis() ;
-        BSplineBasis (std::vector<double >& knots, int degree);
-        BSplineBasis (std::vector<double >& bounds, int degree, int numberOfIntervals);
+        BSplineBasis (const std::vector<double >& knots, int degree);
+        BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 
 //  TODO(jgillis) moet ik de variant met const houden??
         std::vector<double> &getKnots ();

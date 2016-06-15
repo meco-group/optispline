@@ -136,14 +136,14 @@ namespace spline{
     //   }
     //
 
-    BSplineBasis::BSplineBasis (std::vector<double >& knots, int degree)  { assign_node(new BSplineBasisNode(knots, degree)); };
-    BSplineBasisNode::BSplineBasisNode (std::vector<double >& knots, int degree) {
-        setKnots(knots);
+    BSplineBasis::BSplineBasis (const std::vector<double >& knots, int degree)  { assign_node(new BSplineBasisNode(knots, degree)); };
+    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree) {
+        setKnots(const_cast<std::vector<double>&>(knots));
         setDegree(degree);
     }
 
-    BSplineBasis::BSplineBasis (std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
-    BSplineBasisNode::BSplineBasisNode (std::vector<double >& bounds, int degree, int numberOfIntervals) {
+    BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
+    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) {
         int numberOfKnots = 2*degree + numberOfIntervals;
         knots.resize(numberOfKnots, 0);
 
