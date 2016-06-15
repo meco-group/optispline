@@ -29,7 +29,7 @@ BS1 = Basis.BSplineBasis()
 BS2 = Basis.BSplineBasis([0.0 ,1.0 ],3,4)
 
 MO1 = Basis.MonomialeBasis()
-MO2 = Basis.MonomialeBasis()
+MO2 = Basis.MonomialeBasis(7)
 
 BS3 = BS1 + BS2
 
@@ -68,7 +68,7 @@ print list(BS1.getSubBasis())
 print BS2.getLenght()
 print list(BS2.getKnots())
 
-print BS2([1])
+print BS2([0.1])
 print B([1,2])
 
 x = SX.sym("x")
