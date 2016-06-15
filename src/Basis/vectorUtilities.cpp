@@ -12,8 +12,9 @@ namespace spline{
         std::vector<double> kn1 = kn1_;
         std::vector<double> kn2 = kn2_;
 
-        std::sort (kn1.begin(),kn1.end());
-        std::sort (kn2.begin(),kn2.end());
+        // assume knots are sorted
+        // std::sort (kn1.begin(),kn1.end());
+        // std::sort (kn2.begin(),kn2.end());
 
         std::vector<double> uniqueKnots(kn1.size() + kn2.size());
         std::vector<double>::iterator it;
@@ -44,8 +45,10 @@ namespace spline{
 
         std::vector<double> knots = knots_;
         std::vector<double> newKnots = newKnots_;
-        std::sort(knots.begin(),knots.end());
-        std::sort (newKnots.begin(),newKnots.end());
+
+        // assume knots are sorted
+        // std::sort(knots.begin(),knots.end());
+        // std::sort (newKnots.begin(),newKnots.end());
 
         std::vector<double> uniqueKnots(knots.size() + newKnots.size());
         std::vector<double>::iterator it;
@@ -71,8 +74,10 @@ namespace spline{
     std::vector<double> addKnotsNotUnique(const std::vector<double> knots_,  const std::vector<double> newKnots_){
         std::vector<double> knots = knots_;
         std::vector<double> newKnots = newKnots_;
-        std::sort(knots.begin(),knots.end());
-        std::sort(newKnots.begin(),newKnots.end());
+
+        // assume knots are sorted
+        // std::sort(knots.begin(),knots.end());
+        // std::sort(newKnots.begin(),newKnots.end());
 
         std::vector<double> returnKnots(knots.size() + newKnots.size());
         std::vector<double>::iterator it;
