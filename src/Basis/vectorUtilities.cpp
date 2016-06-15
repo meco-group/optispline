@@ -88,5 +88,29 @@ namespace spline{
         return returnKnots;
     }
 
+    std::vector<double> increaseMultiplicityKnots(const std::vector<double> knots_,  int increase){
+        if (increase <= 0) { // noting happens
+            return knots_;
+        } else {
+            int newSize = 0; 
+            std::vector<double> returnKnots(knots_.size() * (increase+1));
+
+            for (int i = 0; i < knots_.size() - 1; ++i) {
+                if (knots_[i] == knots_[i+1]) {
+                    returnKnots[newSize] = knots_[i];
+                    newSize++;
+                } else {
+                    for (int j = 0; j < increase + 1; ++j) {
+                        returnKnots[newSize] = knots_[i];
+                        newSize++;
+                    } 
+                } 
+            }
+
+            returnKnots[newSize] = returnKnots[newSize-1];
+            returnKnots.resize(newSize);
+            return returnKnots;
+        }
+    }
 }  // namespace
 
