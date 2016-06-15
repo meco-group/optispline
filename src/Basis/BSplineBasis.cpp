@@ -16,30 +16,18 @@ namespace spline{
     std::string BSplineBasisNode::getRepresentation() const { return "BSplineBasis object"; };
     std::string BSplineBasis::getRepresentation() const { return (*this)->getRepresentation() ;};
 
-    Basis BSplineBasis::operator+ (const Basis& other) const {
-        return (*this)->operator+(other);
-    }
-
+    Basis BSplineBasis::operator+ (const Basis& other) const { return (*this)->operator+(other); } 
     Basis BSplineBasisNode::operator+ (const Basis& other) const {
         return other + shared_from_this<BSplineBasis>();
     }
 
+    Basis BSplineBasis::operator+ (const BSplineBasis& other) const {
+        return plusUnivariateUnivariate (*this, other);
+    } 
+
     Basis BSplineBasis::operator+ (const MonomialeBasis& other) const {
-        return (*this)->operator+(other);
-    }
-
-    Basis BSplineBasisNode::operator+ (const MonomialeBasis& other) const {
-        return Basis();
-    }
-
-    Basis BSplineBasis::operator+ (const BSplineBasis& other) const{
-        return (*this)->operator+(other);
-        //        return plusBasis(*this, other);
-    }
-
-    Basis BSplineBasisNode::operator+ (const BSplineBasis& other) const{
-        return BSplineBasis();
-    }
+        return plusUnivariateUnivariate (*this, other);
+    } 
 
     DT  BSplineBasisNode::operator()  (const std::vector< double > &  x_   ) const {
         assert(x_.size()==1);

@@ -14,7 +14,7 @@ namespace spline{
 
 #ifndef SWIG
 
-    class BSplineBasisNode : public UnivariateBasisNode{
+    class BSplineBasisNode : public UnivariateBasisNode {
 
     public:
         BSplineBasisNode () {};
@@ -29,11 +29,6 @@ namespace spline{
         //   //    evalution Basis
         //   virtual std::vector<double> evalBasis(double x) const;
         //
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator+(const MonomialeBasis& other) const ;
-        virtual Basis operator+(const BSplineBasis& other) const ;
-
-        //   BSplineBasis operator*(const MonomialeBasis& other) const ;
         //   BSplineBasis operator*(const BSplineBasis& other) const ;
         //
         //   std::vector<double> greville () const;
@@ -47,6 +42,8 @@ namespace spline{
         virtual DT operator()(const std::vector< double >& x) const;
         virtual ST operator()(const std::vector< SX >& x) const ;
         virtual MT operator()(const std::vector< MX >& x) const ;
+
+        virtual Basis operator+(const Basis& other) const ;
 
         virtual int getLenght() const ;
 
@@ -62,7 +59,7 @@ namespace spline{
 
 #endif // SWIG
 
-    class BSplineBasis : public UnivariateBasis{
+    class BSplineBasis : public UnivariateBasis {
 
     public:
 

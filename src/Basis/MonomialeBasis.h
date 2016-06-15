@@ -19,16 +19,12 @@ namespace spline{
 
     public:
         MonomialeBasisNode(){}
-        //MonomialeBasis(int degree);
+        // MonomialeBasisNode(int degree) : UnivariateBasisNode(degree) {};
 
         //    evalution Basis
         //   std::vector<double> evalBasis(double x) const;
 
         //    int length() const;
-
-        virtual Basis operator+(const MonomialeBasis& other) const ;
-        virtual Basis operator+(const BSplineBasis& other) const ;
-        virtual Basis operator+(const Basis& other) const ;
 
         virtual std::string getRepresentation() const ;
         //   Basis operator*(const MonomialeBasis& other)const ;
@@ -50,11 +46,11 @@ namespace spline{
     public:
 
 #ifndef SWIG
-        MonomialeBasis() ;
         MonomialeBasisNode* get() const ;
         MonomialeBasisNode* operator->() const ;
 #endif // SWIG
-        //MonomialeBasis(int degree);
+        MonomialeBasis() ;
+        MonomialeBasis(int degree);
 
         //    evalution Basis
         //   std::vector<double> evalBasis(double x) const;
