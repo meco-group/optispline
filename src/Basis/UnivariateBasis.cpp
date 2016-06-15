@@ -54,32 +54,35 @@ namespace spline {
     UnivariateBasisNode* UnivariateBasis::get() const { return static_cast<UnivariateBasisNode*>(SharedObject::get()); };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
 
+    std::string UnivariateBasis::getRepresentation() const { return (*this)->getRepresentation() ; }
     std::string UnivariateBasisNode::getRepresentation() const {
         return "UnivariateBasis object"; 
     }
 
-    std::string UnivariateBasis::getRepresentation() const {
-        return (*this)->getRepresentation() ;
-    }
-
-    Basis UnivariateBasis::operator+ (const Basis& other) const  { 
-        return (*this)->operator+(other);
+    Basis UnivariateBasis::operator+ (const Basis& other) const  {
+         return (*this)->operator+(other);
+        // return univariatePlus(*this,other);
+        // return (*this)->operator+(other); 
     } 
 
     Basis UnivariateBasisNode::operator+ (const Basis& other) const  { 
         return UnivariateBasis();
     } 
 
-    Basis UnivariateBasis::operator+ (const MonomialeBasis &other) const  { 
-        return (*this)->operator+(other);
+    Basis UnivariateBasis::operator+ (const MonomialeBasis &other) const  {
+         return (*this)->operator+(other);
+        // return univariatePlus(*this,other);
+        // return (*this)->operator+(other); 
     } 
 
     Basis UnivariateBasisNode::operator+ (const MonomialeBasis &other) const  { 
         return UnivariateBasis();
     } 
 
-    Basis UnivariateBasis::operator+ (const BSplineBasis &other) const  { 
-        return (*this)->operator+(other);
+    Basis UnivariateBasis::operator+ (const BSplineBasis &other) const  {
+         return (*this)->operator+(other);
+        // return univariatePlus(*this,other);
+        // return (*this)->operator+(other); 
     } 
 
     Basis UnivariateBasisNode::operator+ (const BSplineBasis &other) const  { 
@@ -90,26 +93,17 @@ namespace spline {
         return std::vector< Basis > {shared_from_this<UnivariateBasis>()} ;
     }
 
-    int UnivariateBasis::getLenght ( ) const  {
-        return (*this)->getLenght();
-    }
-    
+    int UnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
     int UnivariateBasisNode::getLenght ( ) const {
          assert(0);
     }
     
-    void  UnivariateBasis::setDegree (int degree) {
-        (*this)->setDegree (degree);
-    }
-    
+    void  UnivariateBasis::setDegree (int degree) { (*this)->setDegree (degree); } 
     void  UnivariateBasisNode::setDegree (int degree) {
          this->degree = degree;
     }
     
-    int  UnivariateBasis::getDegree  ( ) const {
-        return (*this)->getDegree ();
-    }
-    
+    int  UnivariateBasis::getDegree  ( ) const { return (*this)->getDegree (); } 
     int  UnivariateBasisNode::getDegree  ( ) const {
          return degree ;
     }
