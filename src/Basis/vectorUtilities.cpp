@@ -107,7 +107,10 @@ namespace spline{
                 } 
             }
 
-            returnKnots[newSize] = returnKnots[newSize-1];
+            for (int j = 0; j < increase + 1; ++j) {
+                returnKnots[newSize] = knots_[knots_.size()-1];
+                newSize++;
+            } 
             returnKnots.resize(newSize);
             return returnKnots;
         }
