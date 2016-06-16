@@ -25,12 +25,12 @@ option(WITH_COVERAGE "Enable coverage" OFF)
 ######################################################
 ################## compiler options ##################
 ######################################################
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -O2 -fPIC" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -g -fPIC" )
 if(WITH_COVERAGE)
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage" )
 endif()
 
-set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fPIC" )
+set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -fPIC" )
 
 #####################################################
 #################### cpp_splines ####################
