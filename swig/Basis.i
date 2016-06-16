@@ -37,6 +37,15 @@ def _swig_repr(self):
 
 // WORKAROUNDS END
 
+%include "exception.i"
+%exception {
+  try {
+    $action
+   } catch(const std::exception& e) {
+    SWIG_exception(SWIG_RuntimeError, e.what());
+  }
+}
+
 // Renameing PYTHON 
 //{% if false %}
 //%{

@@ -44,7 +44,6 @@ namespace spline{
         MonomialeBasisNode* get() const ;
         MonomialeBasisNode* operator->() const ;
 #endif // SWIG
-        MonomialeBasis() ;
         MonomialeBasis(int degree);
 
         virtual Basis operator+(const MonomialeBasis& other) const ;

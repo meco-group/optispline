@@ -17,7 +17,6 @@ namespace spline{
     class BSplineBasisNode : public UnivariateBasisNode {
 
     public:
-        BSplineBasisNode () {};
         BSplineBasisNode (const std::vector<double >& knots, int degree);
         BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 

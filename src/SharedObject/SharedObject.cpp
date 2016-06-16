@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <casadi/casadi.hpp>
 #include "SharedObject.h"
 
 namespace spline {
@@ -30,9 +30,9 @@ void SharedObject::decref() {
 }
 
 /// Get a const pointer to the node
-SharedObjectNode* SharedObject::get() const { assert(node_!=0); return node_; }
+SharedObjectNode* SharedObject::get() const { if(node_==0){throw std::exception();} return node_; }
 
 /// Access a member function or object
-SharedObjectNode* SharedObject::operator->() const { assert(node_!=0); return node_; }
+SharedObjectNode* SharedObject::operator->() const { if(node_==0){throw std::exception();} return node_; }
 
 } // namespace spline

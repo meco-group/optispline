@@ -11,7 +11,7 @@ namespace spline{
     BSplineBasisNode* BSplineBasis::get() const { return static_cast<BSplineBasisNode*>(SharedObject::get()); };
     BSplineBasisNode* BSplineBasis::operator->() const { return get(); }
 
-    BSplineBasis::BSplineBasis()  { assign_node(new BSplineBasisNode()); };
+    BSplineBasis::BSplineBasis() {};
 
     std::string BSplineBasisNode::getRepresentation() const {
         std::stringstream s;
@@ -135,10 +135,7 @@ namespace spline{
     }
 
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree) 
-    : UnivariateBasisNode(degree), knots(knots){
-        // setKnots(const_cast<std::vector<double>&>(knots));
-        // setDegree(degree);
-    }
+    : UnivariateBasisNode(degree), knots(knots){ }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) {
