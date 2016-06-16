@@ -4,10 +4,15 @@ env:
     
 # works from matplotlib 1.5 onwards
 #    - MPLBACKEND=Agg # Matplotlib backend; must be headless to run on travis
-  
 
+
+# Handle git submodules yourself
+git:
+    submodules: false
 
 before_install:
+  - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+  - git submodule update --init --recursive
   - git clone https://github.com/meco-group/bob.git
   - pushd bob && source setup.sh && popd
   - set -e
