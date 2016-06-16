@@ -68,8 +68,15 @@ namespace std {
    %template(DoubleVector) vector<double>;
 }
 
+%include "exception.i"
 %import "casadi.i"
-
+%exception {
+  try {
+    $action
+   } catch(const std::exception& e) {
+    SWIG_exception(SWIG_RuntimeError, e.what());
+  }
+}
 
 %{
 #include <tensor.hpp>

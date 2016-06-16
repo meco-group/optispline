@@ -1,6 +1,7 @@
 # Simple library that shows how CasADi can be extended
 include_directories(${CASADI_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-tools)
 add_library(Basis SHARED
+            common.h
             Basis/Basis.h Basis/Basis.cpp
             Basis/vectorUtilities.h Basis/vectorUtilities.cpp
             Basis/plus.h Basis/plus.cpp
