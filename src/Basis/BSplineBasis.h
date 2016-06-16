@@ -60,11 +60,11 @@ namespace spline{
     public:
 
 #ifndef SWIG
+        BSplineBasis(){};
         BSplineBasisNode* get() const ;
         BSplineBasisNode* operator->() const ;
 #endif // SWIG
 
-        BSplineBasis() ;
         BSplineBasis (const std::vector<double >& knots, int degree);
         BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 

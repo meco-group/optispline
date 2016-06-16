@@ -30,8 +30,7 @@ namespace spline {
         //   casadi::DM transformation( const Basis &b) const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
-        UnivariateBasisNode() {};
-        UnivariateBasisNode(int degree) : degree(degree){};
+        UnivariateBasisNode(int degree);
         virtual Basis operator+ (const Basis& other) const;
         virtual Basis operator+ (const MonomialeBasis& other) const;
         virtual Basis operator+ (const BSplineBasis& other) const;

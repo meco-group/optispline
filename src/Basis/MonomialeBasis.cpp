@@ -28,8 +28,7 @@ namespace spline {
     MonomialeBasisNode* MonomialeBasis::operator->() const { return get(); }
 
     MonomialeBasis::MonomialeBasis(int degree)  {
-        assign_node(new MonomialeBasisNode());
-        setDegree(degree); 
+        assign_node(new MonomialeBasisNode(degree));
     };
 
     Basis MonomialeBasis::operator+ (const MonomialeBasis& other)const  {

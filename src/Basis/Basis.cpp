@@ -5,11 +5,17 @@ namespace spline {
 
     BasisNode* Basis::get() const { return static_cast<BasisNode*>(SharedObject::get()); };
     BasisNode* Basis::operator->() const { return get(); }
-    Basis::Basis()  {};
-    BasisNode::BasisNode () : argument(*new Argument()) {
-         std::vector< Basis > allSubBasis;
-    };
 
+    Basis::Basis (){
+        assign_node(new BasisNode(std::vector< Basis >{}));
+    }
+
+    Basis::Basis (const std::vector< Basis >& allSubBasis){
+        assign_node(new BasisNode(allSubBasis));
+    }
+
+    BasisNode::BasisNode (const std::vector< Basis >& allSubBasis_) : allSubBasis(allSubBasis_) ,  argument(*new Argument()) {}
+   
     // int Basis::getDimension () const {
     //     return allSubBasis.size();
     // }

@@ -18,8 +18,7 @@ namespace spline{
     class MonomialeBasisNode : public UnivariateBasisNode {
 
     public:
-        MonomialeBasisNode(){}
-        // MonomialeBasisNode(int degree) : UnivariateBasisNode(degree) {};
+        MonomialeBasisNode(int degree) : UnivariateBasisNode(degree) {};
 
         virtual std::string getRepresentation() const ;
         //   Basis operator*(const MonomialeBasis& other)const ;
