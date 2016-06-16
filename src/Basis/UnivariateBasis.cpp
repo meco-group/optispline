@@ -6,36 +6,6 @@
 
 namespace spline {
 
-
-    //     Univariatestd::shared_ptr<Basis>::Univariatestd::shared_ptr<Basis> (int dimension, const std::vector<int> &size, const Argument &argument, int degree)
-    //             : std::shared_ptr<Basis>(dimension, size, argument), degree(degree) {
-    //         setDimension(1);
-    //     }
-    //  
-    //     Univariatestd::shared_ptr<Basis>::Univariatestd::shared_ptr<Basis> (int degree, std::string argument){
-    //         initUnivariatestd::shared_ptr<Basis>(degree, argument);
-    //     }
-    //  
-    //  /    Univariatestd::shared_ptr<Basis>::Univariatestd::shared_ptr<Basis> (int degree) {
-    //  /        //TODO(ErikLambre) make default code for arg
-    //  /        std::string arg = "__";
-    //  /        initUnivariatestd::shared_ptr<Basis>(degree, arg);
-    //  /    }
-    //  
-    //     void Univariatestd::shared_ptr<Basis>::initUnivariatestd::shared_ptr<Basis> (int degree, std::string argument){
-    //         Univariatestd::shared_ptr<Basis>::degree = degree;
-    //         setArguments(argument);
-    //         setDimensions(1);
-    //     }
-    //     std::vector< std::vector<double> > Univariatestd::shared_ptr<Basis>::evalstd::shared_ptr<Basis>(const std::vector<double>& x) const{
-    //         std::vector< std::vector<double> > r(x.size(), std::vector<double>(length()));
-    //         for (int i = 0; i < x.size(); ++i) {
-    //             r[i] = evalstd::shared_ptr<Basis>(x[i]);
-    //         }
-    //         return r;
-    //     }
-    //  
-    //  
     //  /    TODO(ErikLambre) check order
     //     casadi::DM Univariatestd::shared_ptr<Basis>::transformation( const std::shared_ptr<Basis> &b) const {
     //         std::vector<double> grid = evaluationGrid();
@@ -46,11 +16,6 @@ namespace spline {
     //  
     //  
 
-    //     void Univariatestd::shared_ptr<Basis>::setArguments (const std::string& argument){
-    //         std::vector<std::string> argumentList = {argument};
-    //         std::shared_ptr<Basis>::setArguments(argumentList);
-    //     }
-    //  
     UnivariateBasisNode::UnivariateBasisNode(int degree_) : BasisNode(std::vector< Basis > {}) , degree(degree_){ }
     UnivariateBasisNode* UnivariateBasis::get() const { return static_cast<UnivariateBasisNode*>(SharedObject::get()); };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
@@ -63,7 +28,6 @@ namespace spline {
     Basis UnivariateBasis::operator+ (const Basis& other) const  {
          return (*this)->operator+(other);
         // return univariatePlus(*this,other);
-        // return (*this)->operator+(other); 
     } 
 
     Basis UnivariateBasisNode::operator+ (const Basis& other) const  { 

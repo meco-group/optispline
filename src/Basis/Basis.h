@@ -22,12 +22,6 @@ namespace spline {
     class BasisNode : public SharedObjectNode {
     public:
         BasisNode (const std::vector< Basis >& allSubBasis);
-        //Basis (std::vector< Basis> vectorBasis ); 
-        //    Basis (int dimension, const std::vector<int> &size, const Argument &argument);
-
-        //   virtual Tensor operator()(const casadi::DM & x) const;
-        //    virtual std::vector< Tensor > operator()(const std::vector< casadi::DM >& x) const = 0;
-
         // int getDimension () const;
 
         // std::vector<int> getSize () const;
@@ -65,12 +59,6 @@ namespace spline {
         BasisNode* operator->() const ;
 
 #endif // SWIG
-        //Basis (std::vector< Basis> vectorBasis ); 
-        //    Basis (int dimension, const std::vector<int> &size, const Argument &argument);
-
-        //   virtual Tensor operator()(const casadi::DM & x) const;
-        //    virtual std::vector< Tensor > operator()(const std::vector< casadi::DM >& x) const = 0;
-
         // int getDimension () const;
 
         // std::vector<int> getSize () const;

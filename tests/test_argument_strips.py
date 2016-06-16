@@ -21,6 +21,7 @@ from casadi import *
 #
 
 B = Basis.Basis()
+print B.getRepresentation()
 assert B.getRepresentation()== 'Basis'
 
 M = Basis.Basis()

@@ -45,8 +45,6 @@ namespace spline{
 
     private:
 
-        //  void initBSplineBasis (const std::vector<double >& knots, int degree, std::string argument);
-        //
         //  std::vector<bool> indector(int i, double x);
         //
          std::vector<double> knots;
@@ -97,11 +95,7 @@ namespace spline{
 #endif // SWIG
 
     private:
-
-        //  void initBSplineBasis (const std::vector<double >& knots, int degree, std::string argument);
-        //
         //  std::vector<bool> indector(int i, double x);
-        //
     };
 }
 

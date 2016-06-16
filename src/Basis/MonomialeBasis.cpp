@@ -8,14 +8,6 @@
 #include "times.h"
 
 namespace spline {
-    //
-    //   std::vector<double> Monomialestd::shared_ptr<Basis>::evalstd::shared_ptr<Basis> (double x) const {
-
-    //       return evaluation_basis;
-    //   }
-    //
-
-    //   int Monomialestd::shared_ptr<Basis>::length () const{return this->getDegree() + 1; }
     std::string MonomialeBasisNode::getRepresentation() const {
         return "MonomialeBasis";
     }
@@ -29,7 +21,7 @@ namespace spline {
 
     MonomialeBasis::MonomialeBasis(int degree)  {
         assign_node(new MonomialeBasisNode(degree));
-    };
+    }
 
     Basis MonomialeBasis::operator+ (const MonomialeBasis& other)const  {
         return plusUnivariateUnivariate (*this, other);
@@ -69,10 +61,6 @@ namespace spline {
          return getDegree() + 1;
     }
     
-    //   std::shared_ptr<Basis> Monomialestd::shared_ptr<Basis>::operator* (const BSplinestd::shared_ptr<Basis> &other)const  {
-    //       return timesstd::shared_ptr<Basis>(*this, other);
-    //   }
-    //
     /// TODO(ErikLambr) check is grid is valid
     //   std::vector<double> Monomialestd::shared_ptr<Basis>::evaluationGrid () const {
     ///        std::vector<double> grid = casadi::range(length());
