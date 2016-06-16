@@ -25,9 +25,6 @@ namespace spline{
         std::vector<double>& getKnots ();
         const std::vector<double>& getKnots () const;
         void setKnots (std::vector<double>& knots) ;
-
-        //   //    evalution Basis
-        //   virtual std::vector<double> evalBasis(double x) const;
         //
         //   BSplineBasis operator*(const BSplineBasis& other) const ;
         //
@@ -76,10 +73,7 @@ namespace spline{
         std::vector<double> &getKnots ();
         const std::vector<double> &getKnots () const;
         void setKnots (std::vector<double> &knots) ;
-        //
-        //   // TODO(jgillis): find out why this is needed to have proper swig interface
-        //   virtual std::vector< std::vector<double> > evalBasis(const std::vector<double>& x) const { return UnivariateBasis::evalBasis(x); };
-        //
+
         virtual Basis operator+(const Basis& other) const ;
         virtual Basis operator+(const MonomialeBasis& other) const ;
         virtual Basis operator+(const BSplineBasis& other) const ;
