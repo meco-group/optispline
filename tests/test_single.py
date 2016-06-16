@@ -13,5 +13,10 @@ import Basis
 from casadi import *
 
 B = Basis.BSplineBasis([0.0 ,1.0 ],3,4)
-
-print B([0.1]).data()
+B1 = Basis.BSplineBasis([0.0 ,1.0 ],3,4)
+b = B + B1
+print B([0.1])
+print b
+print list( b.getSubBasis() )
+# print b.getKnots()
+print b([0.1])

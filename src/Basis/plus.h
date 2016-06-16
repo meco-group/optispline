@@ -7,8 +7,12 @@
 
 namespace spline{
 
+// #ifndef SWIG
+    Basis plusBasis(const BSplineBasis& b1 , const BSplineBasis& b2);
+    Basis plusBasis(const MonomialeBasis& b1 , const MonomialeBasis& b2);
+    Basis plusBasis(const MonomialeBasis& b1 , const BSplineBasis& b2);
+    Basis plusBasis(const BSplineBasis& b1 , const MonomialeBasis& b2);
 
-#ifndef SWIG
     template< class Basis1, class Basis2 >
         Basis plusUnivariateUnivariate(Basis1 b1, Basis2 b2){
             if(b1.getArgument() == b2.getArgument()){
@@ -22,12 +26,6 @@ namespace spline{
                 return tensor;
             }
         }
-
-    Basis plusBasis(const BSplineBasis& b1 , const BSplineBasis& b2);
-    Basis plusBasis(const MonomialeBasis& b1 , const MonomialeBasis& b2);
-    Basis plusBasis(const MonomialeBasis& b1 , const BSplineBasis& b2);
-    Basis plusBasis(const BSplineBasis& b1 , const MonomialeBasis& b2);
-
-#endif // SWIG
+// #endif // SWIG
 } // namespace spline
 #endif //CPP_SPLINES_PLUS_H

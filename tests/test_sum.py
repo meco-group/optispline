@@ -44,28 +44,29 @@ print 'b3 : ', b3
 print '     ', b3.getArgument()
 print ''
 
-s1 = m1 + m2
+s1 =   m1 + m2
 print 'm1 + m2 : ', s1
 print '          ', s1.getArgument()
-s2 = m1 + m3
+s2 =   m1 + m3
 print 'm1 + m3 : ', s2
 print '          ', s2.getArgument()
-s3 = m1 + b1
+s3 =   m1 + b1
 print 'm1 + b1 : ', s3
 print '          ', s3.getArgument()
-s3_ = b1 + m1
+s3_ =  b1 + m1
 print 'b1 + m1 : ', s3_
 print '          ', s3_.getArgument()
-s4 = m1 + b3
+s4 =   m1 + b3
 print 'm1 + b3 : ', s4
 print '          ', s4.getArgument()
-s5 = m1 + m2
+s5 =   b1 + b2
 print 'b1 + b2 : ', s5
 print '          ', s5.getArgument()
 print ''
 print '(m1 + m2)(x)   : ', s1([ 0.1 ]).data()
 print '(m1 + m3)(x,y)   : ', s2([ 0.1,0.2 ]).data()
-print '(m1 + b1)(x) : ', s3([ 0.1 ]).data()
+# print '(m1 + b1)(x) : ', s3([ 0.1 ]).data()
 # print '(b1 + m1)(x)   : ', s3_([ 0.1 ]).data()
 print '(m1 + b3)(x,y) : ', s4([ 0.1,0.2 ]).data()
-# print '(b1 + b2)(x)   : ', s5([ 0.1 ]).data()
+print 'b1(x)           : ', b1([ 0.1 ]).data()
+print '(b1 + b2)(x)   : ', s5([ 0.1 ]).data()

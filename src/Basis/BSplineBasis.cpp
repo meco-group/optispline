@@ -1,6 +1,6 @@
 #include <math.h>       /* pow */
 #include <numeric>      // std::accumulate -> greville
-
+#include <sstream>
 #include "Basis.h"
 
 #include "plus.h"
@@ -13,10 +13,16 @@ namespace spline{
 
     BSplineBasis::BSplineBasis()  { assign_node(new BSplineBasisNode()); };
 
-    std::string BSplineBasisNode::getRepresentation() const { return "BSplineBasis object"; };
+    std::string BSplineBasisNode::getRepresentation() const {
+        std::stringstream s;
+        s << "BSplineBasis object" << getKnots();
+        return s.str();
+    };
     std::string BSplineBasis::getRepresentation() const { return (*this)->getRepresentation() ;};
 
-    Basis BSplineBasis::operator+ (const Basis& other) const { return (*this)->operator+(other); } 
+    Basis BSplineBasis::operator+ (const Basis& other) const {
+        return (*this)->operator+(other); 
+    } 
     Basis BSplineBasisNode::operator+ (const Basis& other) const {
         return other + shared_from_this<BSplineBasis>();
     }
@@ -124,10 +130,14 @@ namespace spline{
     //   }
     //
 
-    BSplineBasis::BSplineBasis (const std::vector<double >& knots, int degree)  { assign_node(new BSplineBasisNode(knots, degree)); };
-    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree) {
-        setKnots(const_cast<std::vector<double>&>(knots));
-        setDegree(degree);
+    BSplineBasis::BSplineBasis (const std::vector<double >& knots, int degree)  {
+        assign_node(new BSplineBasisNode(knots, degree)); 
+    }
+
+    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree) 
+    : UnivariateBasisNode(degree), knots(knots){
+        // setKnots(const_cast<std::vector<double>&>(knots));
+        // setDegree(degree);
     }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };

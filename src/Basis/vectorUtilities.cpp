@@ -1,14 +1,10 @@
-//
-// Created by erik on 19/04/16.
-//
-
 #include <algorithm>    // std::set_union, std::sort
 #include <vector>       // std::vector
 #include "vectorUtilities.h"
 
 namespace spline{
 
-    std::vector<double> unionKnots(const std::vector<double> kn1_, const std::vector<double> kn2_, int degree, int degree1, int degree2) {
+    const std::vector<double> unionKnots(const std::vector<double> kn1_, const std::vector<double> kn2_, int degree, int degree1, int degree2) {
         std::vector<double> kn1 = kn1_;
         std::vector<double> kn2 = kn2_;
 
@@ -41,7 +37,7 @@ namespace spline{
         return knots;
     }
 
-    std::vector<double> addKnotsUnique(const std::vector<double> knots_,  const std::vector<double> newKnots_) {
+    const std::vector<double> addKnotsUnique(const std::vector<double> knots_,  const std::vector<double> newKnots_) {
 
         std::vector<double> knots = knots_;
         std::vector<double> newKnots = newKnots_;
@@ -71,7 +67,7 @@ namespace spline{
         return returnKnots;
     }
 
-    std::vector<double> addKnotsNotUnique(const std::vector<double> knots_,  const std::vector<double> newKnots_){
+    const std::vector<double> addKnotsNotUnique(const std::vector<double> knots_,  const std::vector<double> newKnots_){
         std::vector<double> knots = knots_;
         std::vector<double> newKnots = newKnots_;
 
@@ -88,7 +84,7 @@ namespace spline{
         return returnKnots;
     }
 
-    std::vector<double> increaseMultiplicityKnots(const std::vector<double> knots_,  int increase){
+    const std::vector<double> increaseMultiplicityKnots(const std::vector<double> knots_,  int increase){
         if (increase <= 0) { // noting happens
             return knots_;
         } else {
