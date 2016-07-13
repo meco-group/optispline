@@ -12,6 +12,7 @@ add_library(Basis SHARED
             Function/Argument.h Function/Argument.cpp
             SharedObject/SharedObject.cpp SharedObject/SharedObjectNode.cpp
             SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
+            Coefficients/Coefficient.h Coefficients/Coefficient.cpp
           )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
 #target_link_libraries(Function ${CASADI_LIBRARIES})

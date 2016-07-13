@@ -89,7 +89,7 @@ namespace std {
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/vectorUtilities.h> // Debug
 
-//#include <src/Coefficients/Coefficients.h>
+#include <src/Coefficients/Coefficient.h>
 
 //#include <src/Function/Function.h>
 
@@ -106,7 +106,7 @@ namespace std {
 %include <src/Basis/BSplineBasis.h>
 %include <src/Basis/vectorUtilities.h> // Debug
 
-//%include <src/Coefficients/Coefficients.h>
+%include <src/Coefficients/Coefficient.h>
 
 //%include <src/Function/Function.h>
 
