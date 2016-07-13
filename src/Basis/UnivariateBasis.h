@@ -31,6 +31,8 @@ namespace spline {
         virtual ST operator()(const std::vector< SX >& x) const { assert(0);};
         virtual MT operator()(const std::vector< MX >& x) const { assert(0);};
 
+//TODO addBasis         
+        virtual void addBasis(Basis basis){}
         virtual int getLenght() const ;
         int getDegree () const ;
         void setDegree (int degree);
