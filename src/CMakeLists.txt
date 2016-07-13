@@ -10,10 +10,10 @@ add_library(Basis SHARED
             Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
             Basis/MonomialeBasis.h Basis/MonomialeBasis.cpp
             Function/Argument.h Function/Argument.cpp
+            Function/Function.h Function/Function.cpp
             SharedObject/SharedObject.cpp SharedObject/SharedObjectNode.cpp
             SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
             Coefficients/Coefficient.h Coefficients/Coefficient.cpp
           )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
-#target_link_libraries(Function ${CASADI_LIBRARIES})
 add_definitions(-DSHARED_LIBRARY)
