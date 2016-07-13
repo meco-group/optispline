@@ -7,10 +7,15 @@
 
 #include <casadi/casadi.hpp>
 #include <string>
-
+#include "../Basis/Basis.h"
+#include "../Coefficients/Coefficient.h"
 namespace spline {
     class Function {
 
+    public :
+        Function( const Basis& basis, const Coefficient& coef) : basis(basis), coef(coef) {} 
+        const Basis& basis;
+        const Coefficient& coef;
 
     };
 } // namespace spline
