@@ -1,38 +1,30 @@
-//
-// Created by erik on 11/04/16.
-//
-
 #ifndef CPP_SPLINE_COEFFICIENTS_COEFFICIENT_H
 #define CPP_SPLINE_COEFFICIENTS_COEFFICIENT_H
 
-#include <casadi/casadi.hpp>
 #include <string>
 #include <vector>
+#include <tensor.hpp>
 
 namespace spline {
+    typedef DT AnyTensor;
     class Coefficient {
-
-
     public:
-        Coefficient ();
-        Coefficient (double d);
-        Coefficient (const std::vector< std::vector< double > > m);
-        Coefficient (const casadi::DM &coef);
+        // Coefficient(){}
+        // template <class D>
+        Coefficient (const AnyTensor& t) : data(t){}
+        // Coefficient (const Tensor<DM> t){}
 
-        void initCoefficient (const casadi::DM &coef);
+        // const std::vector< int > getShape() const;
 
-        const casadi::DM & getCoef () const;
-        void setCoef (const casadi::DM &coef);
-        const std::vector< int > getShape() const;
+        // Coefficient operator+ (Coefficient & other) const;
+        //  o
 
-        Coefficient operator+ (Coefficient & other) const;
-
-    private:
-        casadi::DM coef;
+    // private:
+        const AnyTensor& data;
 
 
 
-    };
+    }; 
 } // namespace spline
 
 #endif //CPP_SPLINE_COEFFICIENTS_COEFFICIENT_H
