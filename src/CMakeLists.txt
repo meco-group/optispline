@@ -9,8 +9,9 @@ add_library(Basis SHARED
             Basis/BSplineBasis.h Basis/BSplineBasis.cpp
             Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
             Basis/MonomialeBasis.h Basis/MonomialeBasis.cpp
-            Function/Argument.h Function/Argument.cpp
             Function/Function.h Function/Function.cpp
+            Function/Polynomial.h Function/Polynomial.cpp
+            Function/Argument.h Function/Argument.cpp
             SharedObject/SharedObject.cpp SharedObject/SharedObjectNode.cpp
             SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
             Coefficients/Coefficient.h Coefficients/Coefficient.cpp

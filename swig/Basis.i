@@ -92,6 +92,7 @@ namespace std {
 #include <src/Coefficients/Coefficient.h>
 
 #include <src/Function/Function.h>
+#include <src/Function/Polynomial.h>
 
 #include <casadi/casadi.hpp>
 %}
@@ -109,6 +110,7 @@ namespace std {
 %include <src/Coefficients/Coefficient.h>
 
 %include <src/Function/Function.h>
+%include <src/Function/Polynomial.h>
 
 %template(BasisVector) std::vector< spline::Basis >;
 %template(DTensor) Tensor<DM>;
