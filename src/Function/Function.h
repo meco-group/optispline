@@ -17,16 +17,17 @@ namespace spline {
 
     public :
         Function( const Basis& basis, const Coefficient& coef) : basis(basis), coef(coef) {} 
-        const Basis& basis;
-        const Coefficient& coef;
 
         // AnyTensor operator()(const std::vector< double >& x) const{
         //     return basis(x)*coef.data;
         // }
     
         AnyTensor operator()(const std::vector< AnyScalar >& x) const{
-            return basis(x)*coef.data;
+            return basis(x).inner(coef.data);
         }
+    protected:
+        const Basis& basis;
+        const Coefficient& coef;
     };
 } // namespace spline
 
