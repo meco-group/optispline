@@ -9,6 +9,7 @@
 #include "Basis.h"
 #include "UnivariateBasis.h"
 
+#include "CommonBasis.h"
 namespace spline{
 
     class BSplineBasis;
@@ -26,11 +27,13 @@ namespace spline{
 
         //    virtual std::vector<double> evaluationGrid(void) const;
 
-        virtual DT operator()(const std::vector< double >& x) const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
         virtual ST operator()(const std::vector< SX >& x) const ;
         virtual MT operator()(const std::vector< MX >& x) const ;
 
         virtual int getLenght() const ;
+    template< class T >
+    AnyTensor BasisEvalution (const std::vector< T >& x ) const ;
     };
 
 #endif // SWIG
@@ -63,6 +66,19 @@ namespace spline{
             }
 #endif // SWIG
     };
+    
+    template< class T >
+    AnyTensor MonomialeBasisNode::BasisEvalution (const std::vector< T >& x ) const {
+        assert(x.size()==1);
+        T x_ = x[0];
+        int lenght  = this->getLenght();
+        std::vector<T> evaluation_basis(lenght);
+        for (int i = 0; i < lenght; ++i) {
+              evaluation_basis[i] = pow(x_,i);
+        }
+        return AnyTensor(evaluation_basis,{lenght});
+    }
+
 }  // namespace spline
 
 

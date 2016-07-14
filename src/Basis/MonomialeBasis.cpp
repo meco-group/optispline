@@ -36,15 +36,13 @@ namespace spline {
         return Basis();
     } 
     
-    DT  MonomialeBasisNode::operator() (const std::vector< double >& x ) const {
-        assert(x.size()==1);
-        double x_ = x[0];
-        std::vector<double> evaluation_basis(this->getLenght());
-        for (int i = 0; i < getLenght(); ++i) {
-              evaluation_basis[i] = pow(x_,i);
+    AnyTensor MonomialeBasisNode::operator() (const std::vector<AnyScalar> & x) const {
+        if( 1 ) {
+        // if( x.isDouble()) {
+            return BasisEvalution<double>(x);
+        } else {
+            return BasisEvalution<AnyScalar>(x);
         }
-        casadi::DM A(evaluation_basis);
-        return DT(A,{getLenght()}); 
     }
 
     ST  MonomialeBasisNode::operator() (const std::vector< SX > &  x   ) const {
