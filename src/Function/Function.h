@@ -10,6 +10,7 @@
 #include "../Basis/Basis.h"
 #include "../Coefficients/Coefficient.h"
 namespace spline {
+    typedef DT AnyTensor;
     class Function {
 
     public :
@@ -17,6 +18,10 @@ namespace spline {
         const Basis& basis;
         const Coefficient& coef;
 
+        template<class T >
+        Tensor< T > operator()(const std::vector< T >& x) const{
+            return basis(x)*coef.data;
+        }
     };
 } // namespace spline
 
