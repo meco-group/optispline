@@ -57,3 +57,7 @@ swig/*.m
 
 *.swp
 *.log
+/CMakeLists.txt.orig
+*.rej
+/tests/Testing/Temporary/CTestCostData.txt
+*.snippets
