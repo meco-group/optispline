@@ -15,9 +15,12 @@ from casadi import *
 
 b1 = Basis.MonomialeBasis(1)
 b2 = Basis.MonomialeBasis(1)
-b =  Basis. Basis()
+
+## Bad synitax
+b = Basis.Basis()
 b.addBasis(b1)
 b.addBasis(b2)
+
 d = DM([[1,2],[3,4]])
 print(d)
 t = Basis.DTensor(DM([[1,2],[3,4]]),[2,2,1,1])
@@ -26,7 +29,7 @@ c = Basis.Coefficient(t)
 print(c)
 f = Basis.Function(b, c)
 print(f)
-print(f.basis)
+# print(f.basis)
 print(f.coef)
 print(f.coef.data)
 r = b([0.5,2])
