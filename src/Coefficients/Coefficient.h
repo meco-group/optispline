@@ -7,19 +7,22 @@
 
 namespace spline {
     typedef DT AnyTensor;
+    typedef double AnyScalar;
     class Coefficient {
     public:
         // Coefficient(){}
         // template <class D>
         Coefficient (const AnyTensor& t) : data(t){}
-        // Coefficient (const Tensor<DM> t){}
+        Coefficient (const std::vector<AnyScalar>& v); 
+
+        //  (const Tensor<DM> t){}
 
         // const std::vector< int > getShape() const;
 
         // Coefficient operator+ (Coefficient & other) const;
         //  o
-
-    // private:
+        const AnyTensor getData(){return data;}
+    public:
         const AnyTensor& data;
 
 
