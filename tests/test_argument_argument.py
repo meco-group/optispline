@@ -13,15 +13,21 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 import Basis
 from casadi import *
 
-f = Basis.Polynomial([1,0,2])
-print(f)
-print(f.basis)
-print(f.coef)
-print(f.coef.data)
-# b = f.getBasis()
-# r = b([2])
-#
-# print(r.data())
-# r = f([2])
-# print(r)
-# print(r.data())
+v = [2,0,1]
+
+d = DM(v)
+t = Basis.DTensor(d,[d.size1(),1,1])
+
+print(v)
+print (d.size1())
+
+a = Basis.Coefficient(t)
+print (a)
+print (a.data)
+print (a.data.data())
+
+
+b = Basis.Coefficient(v)
+print(b)
+print (b.data)
+print (b.data.data())
