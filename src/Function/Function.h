@@ -19,8 +19,8 @@ namespace spline {
         const Basis& getBasis(){return basis;}
         const Coefficient& getCoefficient(){return coef;}
     public:
-        const Basis& basis;
-        const Coefficient& coef;
+        const Basis basis;
+        const Coefficient coef;
     };
 } // namespace spline
 

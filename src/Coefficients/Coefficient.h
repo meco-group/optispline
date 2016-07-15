@@ -15,18 +15,12 @@ namespace spline {
         Coefficient (const AnyTensor& t) : data(t){}
         Coefficient (const std::vector<AnyScalar>& v); 
 
-        //  (const Tensor<DM> t){}
-
         // const std::vector< int > getShape() const;
 
         // Coefficient operator+ (Coefficient & other) const;
-        //  o
         const AnyTensor getData(){return data;}
     public:
-        const AnyTensor& data;
-
-
-
+        const AnyTensor data;
     }; 
 } // namespace spline
 
