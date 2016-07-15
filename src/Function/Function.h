@@ -1,7 +1,3 @@
-//
-// Created by erik on 11/04/16.
-//
-
 #ifndef CPP_SPLINE_FUNCTION_FUNCTION_H
 #define CPP_SPLINE_FUNCTION_FUNCTION_H
 
@@ -18,14 +14,11 @@ namespace spline {
     public :
         Function( const Basis& basis, const Coefficient& coef) : basis(basis), coef(coef) {} 
 
-        // AnyTensor operator()(const std::vector< double >& x) const{
-        //     return basis(x)*coef.data;
-        // }
-    
-        AnyTensor operator()(const std::vector< AnyScalar >& x) const{
-            return basis(x).inner(coef.data);
-        }
-    protected:
+        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+
+        const Basis& getBasis(){return basis;}
+        const Coefficient& getCoefficient(){return coef;}
+    public:
         const Basis& basis;
         const Coefficient& coef;
     };
