@@ -30,3 +30,20 @@ r = b([2])
 r = f([2])
 # print(r)
 assert(r.data()==9)
+
+x = Basis.Argument('x')
+g = Basis.Polynomial([0,2],x)
+h = Basis.Polynomial([1,0,1],'y')
+
+print(g)
+print(h)
+print(h([0]).data())
+print(h([1]).data())
+print(h([2]).data())
+print('--------------')
+s = g + h
+
+print(g([1]).data())
+print(h([2]).data())
+
+print(s([1,2]).data())
