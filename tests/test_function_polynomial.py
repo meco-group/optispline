@@ -34,16 +34,27 @@ assert(r.data()==9)
 x = Basis.Argument('x')
 g = Basis.Polynomial([0,2],x)
 h = Basis.Polynomial([1,0,1],'y')
-
+print(x)
 print(g)
 print(h)
+# print(g.getArgument())
 print(h([0]).data())
 print(h([1]).data())
 print(h([2]).data())
-print('--------------')
+print(h.basis)
+print(h.basis.getArgument())
+print(g.basis.getArgument())
 s = g + h
-
 print(g([1]).data())
 print(h([2]).data())
+print(s)
+print('--------------')
+b = s.basis
+print(b)
+print(list(b.getSubBasis()))
+b_ = g.basis + h.basis
+print(b_)
+print(list(b_.getSubBasis()))
+print(b([1,2]).data())
 
-print(s([1,2]).data())
+# print(s([1,2]).data())
