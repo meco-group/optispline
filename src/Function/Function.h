@@ -18,8 +18,9 @@ namespace spline {
 
         const Function operator+(const Function f) const;
         
-        const Basis& getBasis(){return basis;}
-        const Coefficient& getCoefficient(){return coef;}
+        Basis getBasis() {return basis;}
+        Coefficient getCoefficient() {return coef;}
+        Argument& getArgument ();
     public:
         const Basis basis;
         const Coefficient coef;

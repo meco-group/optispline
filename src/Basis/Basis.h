@@ -30,7 +30,7 @@ namespace spline {
         void setArgument (const Argument& argument);
         void setArgument (const std::string& argumentName);
 
-        Argument& getArgument () const;
+        Argument& getArgument ();
 
         virtual Basis operator+(const Basis& rhs) const;
         virtual Basis operator+(const MonomialeBasis& rhs) const;
@@ -44,7 +44,7 @@ namespace spline {
         virtual ST operator()(const std::vector< SX >& x) const;
         virtual MT operator()(const std::vector< MX >& x) const;
     protected:
-        Argument& argument;
+        Argument argument;
         std::vector< Basis > allSubBasis;
         //    Domain domain;
     };
@@ -68,7 +68,7 @@ namespace spline {
         void setArgument (const Argument& argument);
         void setArgument (const std::string& argumentName);
 
-        Argument& getArgument () const;
+        Argument& getArgument ();
 
         virtual Basis operator+(const Basis& rhs) const;
         virtual Basis operator+(const MonomialeBasis& rhs) const;
