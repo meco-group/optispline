@@ -23,6 +23,10 @@ namespace spline {
         assign_node(new MonomialeBasisNode(degree));
     }
 
+    MonomialeBasis::MonomialeBasis(int degree, Argument argument)  {
+        assign_node(new MonomialeBasisNode(degree, argument));
+    }
+
     Basis MonomialeBasis::operator+ (const MonomialeBasis& other)const  {
         return plusUnivariateUnivariate (*this, other);
     } 

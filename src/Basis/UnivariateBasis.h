@@ -21,6 +21,7 @@ namespace spline {
         //
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
         UnivariateBasisNode(int degree);
+        UnivariateBasisNode(int degree, Argument argument);
         virtual Basis operator+ (const Basis& other) const;
         virtual Basis operator+ (const MonomialeBasis& other) const;
         virtual Basis operator+ (const BSplineBasis& other) const;

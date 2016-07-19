@@ -22,6 +22,7 @@ namespace spline {
     class BasisNode : public SharedObjectNode {
     public:
         BasisNode (const std::vector< Basis >& allSubBasis);
+        BasisNode (const std::vector< Basis >& allSubBasis, Argument argument);
         // int getDimension () const;
 
         // std::vector<int> getSize () const;

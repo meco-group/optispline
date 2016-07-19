@@ -15,7 +15,8 @@ namespace spline {
     }
 
     BasisNode::BasisNode (const std::vector< Basis >& allSubBasis_) : allSubBasis(allSubBasis_) ,  argument(*new Argument()) {}
-   
+    BasisNode::BasisNode (const std::vector< Basis >& allSubBasis_, Argument argument) : allSubBasis(allSubBasis_) ,  argument(argument) {}
+ 
     // int Basis::getDimension () const {
     //     return allSubBasis.size();
     // }
