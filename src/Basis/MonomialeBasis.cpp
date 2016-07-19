@@ -27,6 +27,10 @@ namespace spline {
         assign_node(new MonomialeBasisNode(degree, argument));
     }
 
+    Basis MonomialeBasis::operator+ (const Basis& other) const {
+        return (*this)->operator+(other); 
+    } 
+
     Basis MonomialeBasis::operator+ (const MonomialeBasis& other)const  {
         return plusUnivariateUnivariate (*this, other);
     } 
@@ -35,9 +39,10 @@ namespace spline {
         return plusUnivariateUnivariate (*this, other);
     } 
     
-    Basis MonomialeBasis::operator+ (const Basis& other)const  {
+    Basis MonomialeBasisNode::operator+ (const Basis& other)const  {
+        return other + shared_from_this<BSplineBasis>();
         // return plusUnivariateUnivariate (*this, other);
-        return Basis();
+        // return Basis();
     } 
     
     AnyTensor MonomialeBasisNode::operator() (const std::vector<AnyScalar> & x) const {

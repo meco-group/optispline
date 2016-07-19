@@ -32,6 +32,7 @@ namespace spline{
         virtual ST operator()(const std::vector< SX >& x) const ;
         virtual MT operator()(const std::vector< MX >& x) const ;
 
+        virtual Basis operator+(const Basis& other) const ;
         virtual int getLenght() const ;
     template< class T >
     AnyTensor BasisEvalution (const std::vector< T >& x ) const ;

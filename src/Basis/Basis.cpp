@@ -31,6 +31,11 @@ namespace spline {
         this->argument = Argument(argument);
     }
 
+    const Argument& Basis::getArgument () const { return (*this)->getArgument();} 
+    const Argument& BasisNode::getArgument () const {
+        return argument;
+    }
+
     Argument& Basis::getArgument () { return (*this)->getArgument();} 
     Argument& BasisNode::getArgument () {
         return argument;

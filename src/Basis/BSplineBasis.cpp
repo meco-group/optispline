@@ -21,6 +21,7 @@ namespace spline{
     Basis BSplineBasis::operator+ (const Basis& other) const {
         return (*this)->operator+(other); 
     } 
+
     Basis BSplineBasisNode::operator+ (const Basis& other) const {
         return other + shared_from_this<BSplineBasis>();
     }

@@ -16,14 +16,15 @@ namespace spline {
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        const Function operator+(const Function f) const;
+        Function operator+(const Function f) const;
         
-        Basis getBasis() {return basis;}
+        const Basis& getBasis() const {return basis;}
         Coefficient getCoefficient() {return coef;}
-        Argument& getArgument ();
+        const Argument& getArgument () const{ return getBasis().getArgument();}
+        // Argument& getArgument (){ return getBasis().getArgument();}
     public:
         const Basis basis;
-        const Coefficient coef;
+        Coefficient coef;
     };
 } // namespace spline
 

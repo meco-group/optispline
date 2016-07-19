@@ -31,6 +31,7 @@ namespace spline {
         void setArgument (const std::string& argumentName);
 
         Argument& getArgument ();
+        const Argument& getArgument () const;
 
         virtual Basis operator+(const Basis& rhs) const;
         virtual Basis operator+(const MonomialeBasis& rhs) const;
@@ -69,6 +70,7 @@ namespace spline {
         void setArgument (const std::string& argumentName);
 
         Argument& getArgument ();
+        const Argument& getArgument () const;
 
         virtual Basis operator+(const Basis& rhs) const;
         virtual Basis operator+(const MonomialeBasis& rhs) const;
