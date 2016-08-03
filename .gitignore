@@ -61,3 +61,6 @@ swig/*.m
 *.rej
 /tests/Testing/Temporary/CTestCostData.txt
 *.snippets
+/Testing/Temporary/CTestCostData.txt
+/tests/.gdb_history
+/tests/pdb.py
