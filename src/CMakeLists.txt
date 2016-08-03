@@ -10,7 +10,9 @@ add_library(Basis SHARED
             Basis/BSplineBasis.h Basis/BSplineBasis.cpp
             Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
             Basis/MonomialeBasis.h Basis/MonomialeBasis.cpp
-            Basis/plus.h Basis/plus.cpp
+            Basis/plus.h 
+            Basis/plusUnivariate.h Basis/plusUnivariate.cpp
+            Basis/plusMultivariate.h Basis/plusMultivariate.cpp
             # Basis/times.h Basis/times.cpp
             Basis/vectorUtilities.h Basis/vectorUtilities.cpp
             Basis/CommonBasis.h
