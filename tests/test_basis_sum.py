@@ -24,6 +24,16 @@ basis_z.setArgument('z')
 basis_xy = basis_x + basis_y
 basis_yz = basis_y2 + basis_z
 
-basis_xy + basis_y
-basis_xy + basis_yz
+print(basis_xy)
 
+print(list(basis_xy.getSubBasis()))
+print(basis_xy.getSubBasis(0))
+print(basis_xy.getSubBasis(1))
+basis_xypy = basis_xy + basis_y
+print(basis_xypy)
+print(list(basis_xypy.getSubBasis()))
+
+basis_xypyz = basis_xy + basis_yz
+
+print(basis_xypyz)
+print(list(basis_xypyz.getSubBasis()))
