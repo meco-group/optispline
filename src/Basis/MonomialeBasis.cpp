@@ -28,7 +28,7 @@ namespace spline {
     }
 
     Basis MonomialeBasis::operator+ (const Basis& other) const {
-        return (*this)->operator+(other); 
+        return other + *this; 
     } 
 
     Basis MonomialeBasis::operator+ (const MonomialeBasis& other)const  {

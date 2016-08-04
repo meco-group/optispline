@@ -34,8 +34,8 @@ namespace spline {
         const Argument& getArgument () const;
 
         virtual Basis operator+(const Basis& rhs) const;
-        virtual Basis operator+(const MonomialeBasis& rhs) const;
-        virtual Basis operator+(const BSplineBasis& rhs) const;
+        // virtual Basis operator+(const MonomialeBasis& rhs) const;
+        // virtual Basis operator+(const BSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 
         virtual std::vector< Basis > getSubBasis() const;

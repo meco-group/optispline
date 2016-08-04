@@ -1,12 +1,15 @@
-#ifndef CPP_SPLINES_PLUS_H
-#define CPP_SPLINES_PLUS_H
+#ifndef PLUSUNIVARIATE_H
+#define PLUSUNIVARIATE_H
 
 #include "../Function/Argument.h"
-#include "BSplineBasis.h"
+#include "Basis.h"
 #include "MonomialeBasis.h"
+#include "BSplineBasis.h"
 
 namespace spline{
 
+    // class BSplineBasis;
+    // class MonomialeBasis;
 // #ifndef SWIG
     Basis plusBasis(const BSplineBasis& b1 , const BSplineBasis& b2);
     Basis plusBasis(const MonomialeBasis& b1 , const MonomialeBasis& b2);
@@ -28,4 +31,5 @@ namespace spline{
         }
 // #endif // SWIG
 } // namespace spline
-#endif //CPP_SPLINES_PLUS_H
+
+#endif /* PLUSUNIVARIATE_H */

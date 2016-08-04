@@ -1,7 +1,7 @@
 #include <math.h>       /* pow */
 #include <numeric>      // std::accumulate -> greville
 #include <sstream>
-#include "Basis.h"
+#include "BSplineBasis.h"
 
 #include "plus.h"
 //#include "times.h"
@@ -124,10 +124,6 @@ namespace spline{
     int BSplineBasisNode::getLenght () const{
         return knots.size() - degree - 1;
     }
-
-    //   std::make_shared<Basis>::std::make_shared<Basis> (const std::vector<double> &bounds, int degree, int numberOfIntervals, std::string argument) : Univariatestd::shared_ptr<Basis>(degree,argument) {
-    //   }
-    //
 
     BSplineBasis::BSplineBasis (const std::vector<double >& knots, int degree)  {
         assign_node(new BSplineBasisNode(knots, degree)); 

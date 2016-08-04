@@ -12,18 +12,17 @@ namespace spline {
     class Function {
 
     public :
-        Function( const Basis& basis, const Coefficient& coef) : basis(basis), coef(coef) {} 
+        Function( Basis& basis, const Coefficient& coef) : basis(basis), coef(coef) {} 
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        Function operator+(const Function f) const;
-        
-        const Basis& getBasis() const {return basis;}
+        Function operator+(const Function f);
+        Basis& getBasis() {return basis;}
         Coefficient getCoefficient() {return coef;}
-        const Argument& getArgument () const{ return getBasis().getArgument();}
+        Argument& getArgument (){ return getBasis().getArgument();}
         // Argument& getArgument (){ return getBasis().getArgument();}
     public:
-        const Basis basis;
+        Basis& basis;
         Coefficient coef;
     };
 } // namespace spline

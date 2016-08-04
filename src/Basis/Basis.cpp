@@ -74,20 +74,28 @@ namespace spline {
         return stream << base.getRepresentation();
     }
 
-    Basis Basis::operator+ (const Basis& other) const { return (*this)->operator+(other); } 
-    Basis BasisNode::operator+ (const Basis& other) const {
-        return other + shared_from_this<Basis>();
+    Basis Basis::operator+ (const Basis& other) const { 
+        // return Basis();
+        return plusMultivariateMultivariate (*this, other);
     }
 
-    Basis Basis::operator+ (const MonomialeBasis& other) const { return (*this)->operator+(other); } 
-    Basis BasisNode::operator+ (const MonomialeBasis& other) const {
-        return Basis();
-    }
+    Basis Basis::operator+ (const MonomialeBasis& other) const {
+        return plusMultivariateUnivariate (*this, other);
+    } 
 
-    Basis Basis::operator+ (const BSplineBasis& other) const{ return (*this)->operator+(other); } 
-    Basis BasisNode::operator+ (const BSplineBasis& other) const{
-        return Basis();
-    }
+    Basis Basis::operator+ (const BSplineBasis& other) const {
+        return plusMultivariateUnivariate (*this, other);
+    } 
+
+    // Basis Basis::operator+ (const MonomialeBasis& other) const { return (*this)->operator+(other); } 
+    // Basis BasisNode::operator+ (const MonomialeBasis& other) const {
+    //     return plusMultivariateUnivariate (*this, other);
+    // }
+    //
+    // Basis Basis::operator+ (const BSplineBasis& other) const{ return (*this)->operator+(other); } 
+    // Basis BasisNode::operator+ (const BSplineBasis& other) const{
+    //     return plusMultivariateUnivariate (*this, other);
+    // }
 
     DT  Basis::operator() (const std::vector< double > &  x ) const {
         return (*this)->operator()(x);

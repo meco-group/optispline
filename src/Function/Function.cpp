@@ -7,7 +7,7 @@ namespace spline {
         return basis(x).inner(coef.data);
     }
 
-    Function Function::operator+(Function f) const{
+    Function Function::operator+(Function f){
         // Basis b = getBasis() + f.getBasis();
         Basis b = getBasis() + f.getBasis();
         Coefficient coef = Coefficient(std::vector< double > {});

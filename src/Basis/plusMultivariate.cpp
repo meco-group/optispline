@@ -1,6 +1,4 @@
-#include <vector>
-#include "plusMultivariate.h"
-#include "vectorUtilities.h"
+// #include "plusMultivariate.h"
 
 namespace spline{
 
