@@ -46,6 +46,11 @@ namespace spline {
         return allSubBasis;
     }
 
+    Basis Basis::getSubBasis ( int index ) const { return (*this)->getSubBasis ( index ); } 
+    Basis BasisNode::getSubBasis ( int index ) const {
+        return allSubBasis[index];
+    }
+
     void Basis::addBasis (Basis basis) { (*this)->addBasis (basis);} 
     void BasisNode::addBasis (Basis basis) {
          this->allSubBasis.push_back(basis);
