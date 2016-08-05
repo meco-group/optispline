@@ -115,6 +115,7 @@ namespace std {
 %include <src/Function/Polynomial.h>
 
 %template(BasisVector) std::vector< spline::Basis >;
+%template(ArgumentVector) std::vector< spline::Argument >;
 %template(DTensor) Tensor<DM>;
 %template(STensor) Tensor<SX>;
 %template(MTensor) Tensor<MX>;
