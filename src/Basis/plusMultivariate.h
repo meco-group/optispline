@@ -35,15 +35,16 @@ namespace spline{
             return returnBasis;
         }
 
-        Basis plusMultivariateMultivariate (const Basis& b1, const Basis& b2){
-            Basis returnBasis = b1;
-
-            for (Basis & subBasis : b2.getSubBasis()) {
-                returnBasis = returnBasis + subBasis;
-            }
-
-            return returnBasis;
-        }
+        Basis plusMultivariateMultivariate2 (const Basis& b1, const Basis& b2);
+        // inline Basis plusMultivariateMultivariate (const Basis& b1, const Basis& b2){
+        //     Basis returnBasis = b1;
+        //
+        //     for (Basis & subBasis : b2.getSubBasis()) {
+        //         returnBasis = returnBasis + subBasis;
+        //     }
+        //
+        //     return returnBasis;
+        // }
     // #endif // SWIG
 } // namespace spline
 #endif //

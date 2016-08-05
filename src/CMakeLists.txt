@@ -16,9 +16,11 @@ add_library(Basis SHARED
             # Basis/times.h Basis/times.cpp
             Basis/vectorUtilities.h Basis/vectorUtilities.cpp
             Basis/CommonBasis.h
+
             Function/Function.h Function/Function.cpp
             Function/Polynomial.h Function/Polynomial.cpp
             Function/Argument.h Function/Argument.cpp
+
             Coefficients/Coefficient.h Coefficients/Coefficient.cpp
           )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
