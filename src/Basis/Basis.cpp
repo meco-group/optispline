@@ -51,6 +51,20 @@ namespace spline {
         return allSubBasis[index];
     }
 
+    std::vector< Argument > Basis::getSubArgument () const { return (*this)->getSubArgument (); } 
+    std::vector< Argument > BasisNode::getSubArgument () const {
+        std::vector< Argument > returnArgumentList;
+        for (auto subBasis : this->getSubBasis()) {
+           returnArgumentList.push_back( subBasis.getArgument() );
+        }
+        return returnArgumentList;
+    }
+
+    Argument Basis::getSubArgument ( int index ) const { return (*this)->getSubArgument ( index ); } 
+    Argument BasisNode::getSubArgument ( int index ) const {
+        return allSubBasis[index].getArgument();
+    }
+
     void Basis::addBasis (Basis basis) { (*this)->addBasis (basis);} 
     void BasisNode::addBasis (Basis basis) {
          this->allSubBasis.push_back(basis);

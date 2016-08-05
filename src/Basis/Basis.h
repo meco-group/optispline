@@ -40,6 +40,9 @@ namespace spline {
 
         virtual std::vector< Basis > getSubBasis() const;
         virtual Basis getSubBasis( int index ) const;
+
+        virtual std::vector< Argument > getSubArgument() const;
+        virtual Argument getSubArgument( int index ) const;
         void addBasis(Basis basis);
 
         virtual DT operator()(const std::vector< double >& x) const;
@@ -80,6 +83,10 @@ namespace spline {
 
         std::vector< Basis > getSubBasis() const;
         Basis getSubBasis( int index ) const;
+
+        std::vector< Argument > getSubArgument ()const;
+        Argument getSubArgument ( int index ) const;
+
         void addBasis(Basis basis);
         DT operator()(const std::vector< double >& x) const;
         ST operator()(const std::vector< SX >& x) const;
