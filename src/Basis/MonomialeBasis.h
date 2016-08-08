@@ -45,6 +45,7 @@ namespace spline{
     public:
 
 #ifndef SWIG
+        MonomialeBasis(){}
         MonomialeBasisNode* get() const ;
         MonomialeBasisNode* operator->() const ;
 #endif // SWIG
