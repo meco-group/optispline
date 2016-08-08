@@ -89,27 +89,19 @@ namespace spline {
     }
 
     Basis Basis::operator+ (const Basis& other) const { 
-        return Basis();
-        // return plusMultivariateMultivariate (*this, other);
+        // return Basis();
+        return plusMultivariate(*this, other);
     }
 
     Basis Basis::operator+ (const MonomialeBasis& other) const {
-        return plusMultivariateUnivariate (*this, other);
+        return plusMultivariate(*this, other);
     } 
 
     Basis Basis::operator+ (const BSplineBasis& other) const {
-        return plusMultivariateUnivariate (*this, other);
+        return plusMultivariate(*this, other);
     } 
 
-    // Basis Basis::operator+ (const MonomialeBasis& other) const { return (*this)->operator+(other); } 
-    // Basis BasisNode::operator+ (const MonomialeBasis& other) const {
-    //     return plusMultivariateUnivariate (*this, other);
-    // }
-    //
-    // Basis Basis::operator+ (const BSplineBasis& other) const{ return (*this)->operator+(other); } 
-    // Basis BasisNode::operator+ (const BSplineBasis& other) const{
-    //     return plusMultivariateUnivariate (*this, other);
-    // }
+
 
     DT  Basis::operator() (const std::vector< double > &  x ) const {
         return (*this)->operator()(x);
