@@ -100,8 +100,6 @@ namespace spline {
         return plusMultivariate(*this, other);
     } 
 
-
-
     DT  Basis::operator() (const std::vector< double > &  x ) const {
         return (*this)->operator()(x);
     }
