@@ -4,8 +4,7 @@
 
 #include "MonomialeBasis.h"
 
-#include "plus.h"
-#include "times.h"
+#include "operationsBasis.h"
 
 namespace spline {
     std::string MonomialeBasisNode::getRepresentation() const {

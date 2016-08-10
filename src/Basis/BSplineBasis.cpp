@@ -3,8 +3,7 @@
 #include <sstream>
 #include "BSplineBasis.h"
 
-#include "plus.h"
-//#include "times.h"
+#include "operationsBasis.h"
 
 namespace spline{
 

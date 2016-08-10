@@ -1,5 +1,5 @@
 #include "Basis.h"
-#include "plus.h"
+#include "operationsBasis.h"
 
 namespace spline {
 
