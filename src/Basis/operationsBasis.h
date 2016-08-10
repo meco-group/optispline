@@ -2,13 +2,7 @@
 #define OPERATIONSBASISG
 
 #include "operations/plus.h"
-
-
-namespace spline {
-
-
-
-}// namespace spline
+#include "operations/times.h"
 
 
 #endif //  OPERATIONSBASISG

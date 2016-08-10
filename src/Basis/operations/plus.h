@@ -2,6 +2,6 @@
 #define CPP_SPLINES_PLUS_H
 
 #include "plusUnivariate.h"
-#include "plusMultivariate.h"
+#include "operationsMultivariate.h"
 
 #endif //CPP_SPLINES_PLUS_H
