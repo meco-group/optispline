@@ -3,6 +3,7 @@
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
+#include "operationsBasis.h"
 
 namespace spline {
 
@@ -27,33 +28,31 @@ namespace spline {
     }
 
     Basis UnivariateBasis::operator+ (const Basis& other) const  {
-         return (*this)->operator+(other);
-        // return univariatePlus(*this,other);
+        assert(false); //  Univariate is "abstract"
+        return Basis();
     } 
 
-    Basis UnivariateBasisNode::operator+ (const Basis& other) const  { 
-        return UnivariateBasis();
-    } 
+    // Basis UnivariateBasisNode::operator+ (const Basis& other) const  { 
+    //     return UnivariateBasis();
+    // } 
 
     Basis UnivariateBasis::operator+ (const MonomialeBasis &other) const  {
-         return (*this)->operator+(other);
-        // return univariatePlus(*this,other);
-        // return (*this)->operator+(other); 
+        assert(false); //  Univariate is "abstract"
+        return Basis();
     } 
 
-    Basis UnivariateBasisNode::operator+ (const MonomialeBasis &other) const  { 
-        return UnivariateBasis();
-    } 
+    // Basis UnivariateBasisNode::operator+ (const MonomialeBasis &other) const  { 
+    //     return UnivariateBasis();
+    // } 
 
     Basis UnivariateBasis::operator+ (const BSplineBasis &other) const  {
-         return (*this)->operator+(other);
-        // return univariatePlus(*this,other);
-        // return (*this)->operator+(other); 
+        assert(false); //  Univariate is "abstract"
+        return Basis();
     } 
 
-    Basis UnivariateBasisNode::operator+ (const BSplineBasis &other) const  { 
-        return UnivariateBasis();
-    } 
+    // Basis UnivariateBasisNode::operator+ (const BSplineBasis &other) const  { 
+    //     return UnivariateBasis();
+    // } 
 
     std::vector< Basis >  UnivariateBasisNode::getSubBasis () const {
         return std::vector< Basis > {shared_from_this<UnivariateBasis>()} ;
