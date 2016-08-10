@@ -12,8 +12,10 @@ add_library(Basis SHARED
             Basis/MonomialeBasis.h Basis/MonomialeBasis.cpp
             Basis/operationsBasis.h
             Basis/operations/plus.h 
+            Basis/operations/operationsUnivariate.h 
+            Basis/operations/operationsMultivariate.h Basis/operations/operationsMultivariate.cpp
             Basis/operations/plusUnivariate.h Basis/operations/plusUnivariate.cpp
-            Basis/operations/plusMultivariate.h Basis/operations/plusMultivariate.cpp
+            Basis/operations/timesUnivariate.h Basis/operations/timesUnivariate.cpp
             # Basis/times.h Basis/times.cpp
             Basis/vectorUtilities.h Basis/vectorUtilities.cpp
             Basis/CommonBasis.h
