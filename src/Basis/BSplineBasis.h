@@ -40,7 +40,7 @@ namespace spline{
         virtual MT operator()(const std::vector< MX >& x) const ;
 
         virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator.(const Basis& other) const ;
+        virtual Basis operator*(const Basis& other) const ;
 
 
         virtual int getLenght() const ;
