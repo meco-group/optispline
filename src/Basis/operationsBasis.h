@@ -1,8 +1,8 @@
 #ifndef OPERATIONSBASISG
 #define OPERATIONSBASISG
 
-#include "operations/plus.h"
-#include "operations/times.h"
-
+#include "operations/operationsMultivariate.h"
+#include "operations/operationsUnivariate.h"
 
 #endif //  OPERATIONSBASISG
+

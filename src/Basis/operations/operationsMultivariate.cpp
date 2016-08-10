@@ -1,4 +1,4 @@
-#include "plusMultivariate.h"
+#include "operationsMultivariate.h"
 
 namespace spline{
 
