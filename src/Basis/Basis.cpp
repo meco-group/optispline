@@ -89,7 +89,6 @@ namespace spline {
     }
 
     Basis Basis::operator+ (const Basis& other) const { 
-        // return Basis();
         return plusMultivariate(*this, other);
     }
 
