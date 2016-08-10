@@ -33,6 +33,22 @@ namespace spline{
         return plusUnivariateUnivariate (*this, other);
     } 
 
+    Basis BSplineBasis::operator* (const Basis& other) const {
+        return (*this)->operator*(other); 
+    } 
+
+    Basis BSplineBasisNode::operator* (const Basis& other) const {
+        return other + shared_from_this<BSplineBasis>();
+    }
+
+    Basis BSplineBasis::operator* (const BSplineBasis& other) const {
+        return timesUnivariateUnivariate (*this, other);
+    } 
+
+    Basis BSplineBasis::operator* (const MonomialeBasis& other) const {
+        return timesUnivariateUnivariate (*this, other);
+    } 
+
     DT  BSplineBasisNode::operator()  (const std::vector< double > &  x_   ) const {
         assert(x_.size()==1);
         double x = x_[0];

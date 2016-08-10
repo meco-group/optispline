@@ -76,6 +76,9 @@ namespace spline {
         virtual Basis operator+(const Basis& rhs) const;
         virtual Basis operator+(const MonomialeBasis& rhs) const;
         virtual Basis operator+(const BSplineBasis& rhs) const;
+        virtual Basis operator*(const Basis& rhs) const;
+        virtual Basis operator*(const MonomialeBasis& rhs) const;
+        virtual Basis operator*(const BSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 
         std::vector< Basis > getSubBasis() const;

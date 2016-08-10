@@ -42,6 +42,21 @@ namespace spline {
         return Basis();
     } 
 
+    Basis UnivariateBasis::operator* (const Basis& other) const  {
+        assert(false); //  Univariate is "abstract"
+        return Basis();
+    } 
+
+    Basis UnivariateBasis::operator* (const MonomialeBasis &other) const  {
+        assert(false); //  Univariate is "abstract"
+        return Basis();
+    } 
+
+    Basis UnivariateBasis::operator* (const BSplineBasis &other) const  {
+        assert(false); //  Univariate is "abstract"
+        return Basis();
+    } 
+
     std::vector< Basis >  UnivariateBasisNode::getSubBasis () const {
         return std::vector< Basis > {shared_from_this<UnivariateBasis>()} ;
     }

@@ -100,6 +100,18 @@ namespace spline {
         return plusMultivariate(*this, other);
     } 
 
+    Basis Basis::operator* (const Basis& other) const { 
+        return timesMultivariate(*this, other);
+    }
+
+    Basis Basis::operator* (const MonomialeBasis& other) const {
+        return timesMultivariate(*this, other);
+    } 
+
+    Basis Basis::operator* (const BSplineBasis& other) const {
+        return timesMultivariate(*this, other);
+    } 
+
     DT  Basis::operator() (const std::vector< double > &  x ) const {
         return (*this)->operator()(x);
     }

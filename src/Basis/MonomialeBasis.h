@@ -23,9 +23,6 @@ namespace spline{
         MonomialeBasisNode(int degree, Argument argument) : UnivariateBasisNode(degree, argument) {};
 
         virtual std::string getRepresentation() const ;
-        //   Basis operator*(const MonomialeBasis& other)const ;
-        //   Basis operator*(const BSplineBasis& other)const ;
-
         //    virtual std::vector<double> evaluationGrid(void) const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
@@ -33,6 +30,7 @@ namespace spline{
         virtual MT operator()(const std::vector< MX >& x) const ;
 
         virtual Basis operator+(const Basis& other) const ;
+        virtual Basis operator*(const Basis& other) const ;
         virtual int getLenght() const ;
     template< class T >
     AnyTensor BasisEvalution (const std::vector< T >& x ) const ;
@@ -55,6 +53,10 @@ namespace spline{
         virtual Basis operator+(const MonomialeBasis& other) const ;
         virtual Basis operator+(const BSplineBasis& other) const ;
         virtual Basis operator+(const Basis& other) const ;
+
+        virtual Basis operator*(const MonomialeBasis& other) const ;
+        virtual Basis operator*(const BSplineBasis& other) const ;
+        virtual Basis operator*(const Basis& other) const ;
 
         virtual std::string getRepresentation() const ;
         //   Basis operator*(const MonomialeBasis& other)const ;
