@@ -151,7 +151,7 @@ namespace spline {
         return ret;
     }
 
-     int Basis::indexArgument(Argument a) { return (*this)->(indexArgument(Argument a)); } 
+     int Basis::indexArgument(Argument a) { return (*this)->indexArgument(a); } 
      int BasisNode::indexArgument(Argument a) {
          assert(false);
          return -1;
