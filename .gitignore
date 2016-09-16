@@ -64,3 +64,4 @@ swig/*.m
 /Testing/Temporary/CTestCostData.txt
 /tests/.gdb_history
 /tests/pdb.py
+/run.sh
