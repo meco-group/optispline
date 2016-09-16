@@ -9,7 +9,6 @@
 #include "../SharedObject/SharedObjectNode.h"
 
 #include "../Function/Argument.h"
-#include "SubBasis.h"
 #include <tensor.hpp>
 //#include "../Math/Domain.h"
 
@@ -22,19 +21,22 @@ namespace spline {
 
     class BasisNode : public SharedObjectNode {
     public:
-        BasisNode (const std::vector< SubBasis >& allSubBasis);
+        BasisNode (const std::vector< Basis >& allSubBasis);
+        BasisNode (const std::vector< Basis >& allSubBasis, Argument argument);
         // int getDimension () const;
 
         // std::vector<int> getSize () const;
 
+        void setArgument (const Argument& argument);
+        void setArgument (const std::string& argumentName);
 
         Argument& getArgument ();
         const Argument& getArgument () const;
 
         virtual std::string getRepresentation() const ;
 
-        virtual std::vector< SubBasis > getSubBasis() const;
-        virtual SubBasis getSubBasis( int index ) const;
+        virtual std::vector< Basis > getSubBasis() const;
+        virtual Basis getSubBasis( int index ) const;
 
         virtual std::vector< Argument > getSubArgument() const;
         virtual Argument getSubArgument( int index ) const;
@@ -46,7 +48,8 @@ namespace spline {
 
         int indexArgument(Argument a);
     protected:
-        std::vector< SubBasis > allSubBasis;
+        Argument argument;
+        std::vector< Basis > allSubBasis;
         //    Domain domain;
     };
 
@@ -65,7 +68,7 @@ namespace spline {
 
         // std::vector<int> getSize () const;
         Basis ();
-        Basis (const std::vector< SubBasis >& allSubBasis);
+        Basis (const std::vector< Basis >& allSubBasis);
         void setArgument (const Argument& argument);
         void setArgument (const std::string& argumentName);
 
@@ -73,11 +76,15 @@ namespace spline {
         const Argument& getArgument () const;
 
         virtual Basis operator+(const Basis& rhs) const;
+        virtual Basis operator+(const MonomialeBasis& rhs) const;
+        virtual Basis operator+(const BSplineBasis& rhs) const;
         virtual Basis operator*(const Basis& rhs) const;
+        virtual Basis operator*(const MonomialeBasis& rhs) const;
+        virtual Basis operator*(const BSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 
-        std::vector< SubBasis > getSubBasis() const;
-        SubBasis getSubBasis( int index ) const;
+        std::vector< Basis > getSubBasis() const;
+        Basis getSubBasis( int index ) const;
 
         std::vector< Argument > getSubArgument ()const;
         Argument getSubArgument ( int index ) const;
