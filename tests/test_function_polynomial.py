@@ -38,3 +38,9 @@ y2 =  Basis.Polynomial([0,0,1],'y')
 
 print(y2([2]).data())
 print(y2([3]).data())
+
+x = Basis.Polynomial([0,1],'x')
+y = Basis.Polynomial([0,1],'y')
+x2y_ = x*x*y
+print(x2y_([1,2]).data())
+print(x2y_([2,1]).data())

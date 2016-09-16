@@ -45,6 +45,8 @@ namespace spline {
         virtual DT operator()(const std::vector< double >& x) const;
         virtual ST operator()(const std::vector< SX >& x) const;
         virtual MT operator()(const std::vector< MX >& x) const;
+
+        int indexArgument(Argument a);
     protected:
         Argument argument;
         std::vector< Basis > allSubBasis;
@@ -91,8 +93,8 @@ namespace spline {
         DT operator()(const std::vector< double >& x) const;
         ST operator()(const std::vector< SX >& x) const;
         MT operator()(const std::vector< MX >& x) const;
-    protected:
-        //    Domain domain;
+
+        int indexArgument(Argument a);
     };
 }
 #endif  // BASIS_H_
