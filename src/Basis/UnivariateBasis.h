@@ -21,7 +21,6 @@ namespace spline {
         //
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
         UnivariateBasisNode(int degree);
-        UnivariateBasisNode(int degree, Argument argument);
 
         virtual std::string getRepresentation() const ;
 
@@ -35,7 +34,6 @@ namespace spline {
         int getDegree () const ;
         void setDegree (int degree);
     protected:
-        int degree;
     };
 
 #endif // SWIG
@@ -48,13 +46,6 @@ namespace spline {
         UnivariateBasisNode* get() const ;
         UnivariateBasisNode* operator->() const ;
 #endif // SWIG
-        virtual Basis operator+ (const Basis& other) const;
-        virtual Basis operator+ (const MonomialeBasis& other) const;
-        virtual Basis operator+ (const BSplineBasis& other) const;
-
-        virtual Basis operator* (const Basis& other) const;
-        virtual Basis operator* (const MonomialeBasis& other) const;
-        virtual Basis operator* (const BSplineBasis& other) const;
 
         virtual std::string getRepresentation() const ;
 

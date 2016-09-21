@@ -49,7 +49,6 @@ namespace spline{
 
         //  std::vector<bool> indector(int i, double x);
         //
-         std::vector<double> knots;
         //
     };
 

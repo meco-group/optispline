@@ -3,7 +3,7 @@
 #include <sstream>
 #include "BSplineBasis.h"
 
-#include "operationsBasis.h"
+#include "operations/operationsBasis.h"
 
 namespace spline{
 
@@ -50,42 +50,7 @@ namespace spline{
     } 
 
     DT  BSplineBasisNode::operator()  (const std::vector< double > &  x_   ) const {
-        assert(x_.size()==1);
-        double x = x_[0];
-        double b;
-        double bottom;
-        double basis[degree+1][knots.size()-1];
-
-        for (int i=0; i<(knots.size()-1); i++){
-            if((i < degree+1) and (knots[0] == knots[i])){
-                basis[0][i] = ((x >= knots[i]) and (x <= knots[i+1]));
-            }else{
-                basis[0][i] = ((x > knots[i]) and (x <= knots[i+1]));
-            }
-        }
-
-        for (int d=1; d<(degree+1); d++){
-            for (int i=0; i < getLenght(); i++){
-                b = 0;
-                bottom = knots[i+d] - knots[i];
-                if (bottom != 0){
-                    b = (x - knots[i])*basis[d-1][i]/bottom;
-                }
-                bottom = knots[i+d+1] - knots[i+1];
-                if (bottom != 0){
-                    b += (knots[i+d+1] - x)*basis[d-1][i+1]/bottom;
-                }
-                basis[d][i] = b;
-            }
-        }
-
-        std::vector<double> r(getLenght());
-
-        for (int i = 0; i < getLenght(); ++i) {
-            r[i] = basis[degree][i];
-        }
-
-        casadi::DM A(r);
+        casadi::DM A(1);
         return DT(A,{getLenght()}); 
     }
 
@@ -137,7 +102,7 @@ namespace spline{
     //   }
 
     int BSplineBasisNode::getLenght () const{
-        return knots.size() - degree - 1;
+        return  - 1;
     }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& knots, int degree)  {
@@ -145,37 +110,21 @@ namespace spline{
     }
 
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree) 
-    : UnivariateBasisNode(degree), knots(knots){ }
+    : UnivariateBasisNode(degree) { }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) : UnivariateBasisNode(degree) {
-        int numberOfKnots = 2*degree + numberOfIntervals;
-        knots.resize(numberOfKnots, 0);
-
-        for (int i = 0; i < degree; ++i) {
-            knots[i] = bounds[0];
-            knots[numberOfKnots - i - 1] = bounds[1];
-        }
-
-        for (int i = 0; i < numberOfIntervals; ++i) {
-            knots[degree + i] = bounds[0] + (bounds[1] - bounds[0]) * (double)i/(numberOfIntervals-1);
-        }
-
-        setKnots(knots);
-    }
+            }
 
     std::vector< double >& BSplineBasis::getKnots () { return (*this)->getKnots(); } 
     std::vector< double >& BSplineBasisNode::getKnots () {
-        return knots;
     }
 
     const std::vector< double >& BSplineBasis::getKnots () const { return (*this)->getKnots(); } 
     const std::vector< double >& BSplineBasisNode::getKnots () const {
-        return knots;
     }
 
     void BSplineBasis::setKnots (std::vector< double >& knots) { return (*this)->setKnots (knots); } 
     void BSplineBasisNode::setKnots (std::vector< double >& knots) {
-        knots = knots;
     }
 } // namespace spline

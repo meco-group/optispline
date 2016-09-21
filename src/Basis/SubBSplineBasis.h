@@ -17,8 +17,8 @@ namespace spline{
     class SubBSplineBasisNode : public SubUnivariateBasisNode {
 
     public:
-        BSplineBasisNode (const std::vector<double >& knots, int degree);
-        BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals);
+        SubBSplineBasisNode (const std::vector<double >& knots, int degree);
+        SubBSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 
 
         std::vector<double>& getKnots ();
@@ -39,8 +39,8 @@ namespace spline{
         virtual ST operator()(const std::vector< SX >& x) const ;
         virtual MT operator()(const std::vector< MX >& x) const ;
 
-        virtual Basis operator+(const SubBasis& other) const ;
-        virtual Basis operator*(const SubBasis& other) const ;
+        virtual SubBasis operator+(const SubBasis& other) const ;
+        virtual SubBasis operator*(const SubBasis& other) const ;
 
 
         virtual int getLenght() const ;

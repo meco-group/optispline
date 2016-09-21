@@ -1,5 +1,5 @@
-#ifndef SUBMONOMIALBASIS_H_
-#define SUBMONOMIALBASIS_H_
+#ifndef MONOMIALBASIS_H_
+#define MONOMIALBASIS_H_
 
 #include <vector>
 
@@ -20,17 +20,11 @@ namespace spline{
 
     public:
         MonomialeBasisNode(int degree) : UnivariateBasisNode(degree) {};
-        MonomialeBasisNode(int degree, Argument argument) : UnivariateBasisNode(degree, argument) {};
 
         virtual std::string getRepresentation() const ;
         //    virtual std::vector<double> evaluationGrid(void) const;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        virtual ST operator()(const std::vector< SX >& x) const ;
-        virtual MT operator()(const std::vector< MX >& x) const ;
 
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator*(const Basis& other) const ;
         virtual int getLenght() const ;
     template< class T >
     AnyTensor BasisEvalution (const std::vector< T >& x ) const ;
@@ -48,15 +42,7 @@ namespace spline{
         MonomialeBasisNode* operator->() const ;
 #endif // SWIG
         MonomialeBasis(int degree);
-        MonomialeBasis(int degree, Argument argument);
 
-        virtual Basis operator+(const MonomialeBasis& other) const ;
-        virtual Basis operator+(const BSplineBasis& other) const ;
-        virtual Basis operator+(const Basis& other) const ;
-
-        virtual Basis operator*(const MonomialeBasis& other) const ;
-        virtual Basis operator*(const BSplineBasis& other) const ;
-        virtual Basis operator*(const Basis& other) const ;
 
         virtual std::string getRepresentation() const ;
         //   Basis operator*(const MonomialeBasis& other)const ;
@@ -88,4 +74,4 @@ namespace spline{
 }  // namespace spline
 
 
-#endif  // SUBMONOMIALBASIS_H_
+#endif  // MONOMIALBASIS_H_

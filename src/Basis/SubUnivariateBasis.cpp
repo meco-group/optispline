@@ -56,18 +56,18 @@ namespace spline {
         return SubBasis();
     } 
 
-    int UnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
-    int UnivariateBasisNode::getLenght ( ) const {
+    int SubUnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
+    int SubUnivariateBasisNode::getLenght ( ) const {
          assert(0);
     }
     
-    void  UnivariateBasis::setDegree (int degree) { (*this)->setDegree (degree); } 
-    void  UnivariateBasisNode::setDegree (int degree) {
+    void  SubUnivariateBasis::setDegree (int degree) { (*this)->setDegree (degree); } 
+    void  SubUnivariateBasisNode::setDegree (int degree) {
          this->degree = degree;
     }
     
-    int  UnivariateBasis::getDegree  ( ) const { return (*this)->getDegree (); } 
-    int  UnivariateBasisNode::getDegree  ( ) const {
+    int  SubUnivariateBasis::getDegree  ( ) const { return (*this)->getDegree (); } 
+    int  SubUnivariateBasisNode::getDegree  ( ) const {
          return degree ;
     }
 }  // namespace spline

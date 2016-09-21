@@ -2,82 +2,94 @@
 
 #include <casadi/casadi.hpp> // range
 
-#include "MonomialeBasis.h"
+#include "SubMonomialeBasis.h"
 
 #include "operations/operationsBasis.h"
 
 namespace spline {
-    std::string MonomialeBasisNode::getRepresentation() const {
-        return "MonomialeBasis";
+    std::string SubMonomialeBasisNode::getRepresentation() const {
+        return "SubMonomialeBasis";
     }
 
-    std::string MonomialeBasis::getRepresentation() const {
+    std::string SubMonomialeBasis::getRepresentation() const {
         return (*this)->getRepresentation() ;
     }
 
-    MonomialeBasisNode* MonomialeBasis::get() const { return static_cast<MonomialeBasisNode*>(SharedObject::get()); };
-    MonomialeBasisNode* MonomialeBasis::operator->() const { return get(); }
+    SubMonomialeBasisNode* SubMonomialeBasis::get() const { return static_cast<SubMonomialeBasisNode*>(SharedObject::get()); };
+    SubMonomialeBasisNode* SubMonomialeBasis::operator->() const { return get(); }
 
-    MonomialeBasis::MonomialeBasis(int degree)  {
-        assign_node(new MonomialeBasisNode(degree));
+    SubMonomialeBasis::SubMonomialeBasis(int degree)  {
+        assign_node(new SubMonomialeBasisNode(degree));
     }
 
-    MonomialeBasis::MonomialeBasis(int degree, Argument argument)  {
-        assign_node(new MonomialeBasisNode(degree, argument));
-    }
-
-    Basis MonomialeBasis::operator+ (const Basis& other) const {
-        return other + *this; 
+    SubBasis SubMonomialeBasis::operator+ (const SubBasis& other) const {
+        assert(false);
+	return SubBasis();
+	// return other + *this; 
     } 
 
-    Basis MonomialeBasis::operator+ (const MonomialeBasis& other)const  {
-        return plusUnivariateUnivariate (*this, other);
+    SubBasis SubMonomialeBasis::operator+ (const SubMonomialeBasis& other)const  {
+        assert(false);
+	return SubBasis();
+	// return plusUnivariateUnivariate (*this, other);
     } 
     
-    Basis MonomialeBasis::operator+ (const BSplineBasis& other)const  {
-        return plusUnivariateUnivariate (*this, other);
+    SubBasis SubMonomialeBasis::operator+ (const SubBSplineBasis& other)const  {
+        assert(false);
+	return SubBasis();
+	// return plusUnivariateUnivariate (*this, other);
     } 
 
-    Basis MonomialeBasis::operator* (const Basis& other) const {
-        return other * *this; 
+    SubBasis SubMonomialeBasis::operator* (const SubBasis& other) const {
+        assert(false);
+	return SubBasis();
+	// return other * *this; 
     } 
 
-    Basis MonomialeBasis::operator* (const MonomialeBasis& other)const  {
-        return timesUnivariateUnivariate (*this, other);
+    SubBasis SubMonomialeBasis::operator* (const SubMonomialeBasis& other)const  {
+        assert(false);
+	return SubBasis();
+	// return timesUnivariateUnivariate (*this, other);
     } 
     
-    Basis MonomialeBasis::operator* (const BSplineBasis& other)const  {
-        return timesUnivariateUnivariate (*this, other);
+    SubBasis SubMonomialeBasis::operator* (const SubBSplineBasis& other)const  {
+        assert(false);
+	return SubBasis();
+	// return timesUnivariateUnivariate (*this, other);
     } 
     
-    Basis MonomialeBasisNode::operator+ (const Basis& other)const  {
-        return other + shared_from_this<BSplineBasis>();
+    SubBasis SubMonomialeBasisNode::operator+ (const SubBasis& other)const  {
+        assert(false);
+	return SubBasis();
+	// return other + shared_from_this<BSplineBasis>();
     } 
 
-    Basis MonomialeBasisNode::operator* (const Basis& other)const  {
-        return other * shared_from_this<BSplineBasis>();
+    SubBasis SubMonomialeBasisNode::operator* (const SubBasis& other)const  {
+        assert(false);
+	return SubBasis();
+	// return other * shared_from_this<BSplineBasis>();
     } 
     
-    AnyTensor MonomialeBasisNode::operator() (const std::vector<AnyScalar> & x) const {
+    AnyTensor SubMonomialeBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         if( 1 ) {
         // if( x.isDouble()) {
-            return BasisEvalution<double>(x);
+            return SubBasisEvalution<double>(x);
         } else {
-            return BasisEvalution<AnyScalar>(x);
+            return SubBasisEvalution<AnyScalar>(x);
         }
     }
 
-    ST  MonomialeBasisNode::operator() (const std::vector< SX > &  x   ) const {
+    ST  SubMonomialeBasisNode::operator() (const std::vector< SX > &  x   ) const {
         assert(x.size()==1);
         return ST(vertcat(x),{3}); 
     }
 
-    MT  MonomialeBasisNode::operator() (const std::vector< MX > &  x   ) const {
+    MT  SubMonomialeBasisNode::operator() (const std::vector< MX > &  x   ) const {
         assert(x.size()==1);
         return MT(vertcat(x),{3}); 
     }
 
-    int MonomialeBasisNode::getLenght () const {
+    int SubMonomialeBasisNode::getLenght () const {
          return getDegree() + 1;
     }
     

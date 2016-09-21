@@ -1,26 +1,25 @@
-#ifndef MONOMIALBASIS_H_
-#define MONOMIALBASIS_H_
+#ifndef SUBMONOMIALBASIS_H_
+#define SUBMONOMIALBASIS_H_
 
 #include <vector>
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
-#include "Basis.h"
-#include "UnivariateBasis.h"
+#include "SubBasis.h"
+#include "SubUnivariateBasis.h"
 
 #include "utils/CommonBasis.h"
 namespace spline{
 
-    class BSplineBasis;
+    class SubBSplineBasis;
 
 #ifndef SWIG
 
-    class MonomialeBasisNode : public UnivariateBasisNode {
+    class SubMonomialeBasisNode : public SubUnivariateBasisNode {
 
     public:
-        MonomialeBasisNode(int degree) : UnivariateBasisNode(degree) {};
-        MonomialeBasisNode(int degree, Argument argument) : UnivariateBasisNode(degree, argument) {};
+        SubMonomialeBasisNode(int degree) : SubUnivariateBasisNode(degree) {};
 
         virtual std::string getRepresentation() const ;
         //    virtual std::vector<double> evaluationGrid(void) const;
@@ -29,34 +28,33 @@ namespace spline{
         virtual ST operator()(const std::vector< SX >& x) const ;
         virtual MT operator()(const std::vector< MX >& x) const ;
 
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator*(const Basis& other) const ;
+        virtual SubBasis operator+(const SubBasis& other) const ;
+        virtual SubBasis operator*(const SubBasis& other) const ;
         virtual int getLenght() const ;
     template< class T >
-    AnyTensor BasisEvalution (const std::vector< T >& x ) const ;
+    AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
     };
 
 #endif // SWIG
 
-    class MonomialeBasis : public UnivariateBasis {
+    class SubMonomialeBasis : public SubUnivariateBasis {
 
     public:
 
 #ifndef SWIG
-        MonomialeBasis(){}
-        MonomialeBasisNode* get() const ;
-        MonomialeBasisNode* operator->() const ;
+        SubMonomialeBasis(){}
+        SubMonomialeBasisNode* get() const ;
+        SubMonomialeBasisNode* operator->() const ;
 #endif // SWIG
-        MonomialeBasis(int degree);
-        MonomialeBasis(int degree, Argument argument);
+        SubMonomialeBasis(int degree);
 
-        virtual Basis operator+(const MonomialeBasis& other) const ;
-        virtual Basis operator+(const BSplineBasis& other) const ;
-        virtual Basis operator+(const Basis& other) const ;
+        virtual SubBasis operator+(const SubMonomialeBasis& other) const ;
+        virtual SubBasis operator+(const SubBSplineBasis& other) const ;
+        virtual SubBasis operator+(const SubBasis& other) const ;
 
-        virtual Basis operator*(const MonomialeBasis& other) const ;
-        virtual Basis operator*(const BSplineBasis& other) const ;
-        virtual Basis operator*(const Basis& other) const ;
+        virtual SubBasis operator*(const SubMonomialeBasis& other) const ;
+        virtual SubBasis operator*(const SubBSplineBasis& other) const ;
+        virtual SubBasis operator*(const SubBasis& other) const ;
 
         virtual std::string getRepresentation() const ;
         //   Basis operator*(const MonomialeBasis& other)const ;
@@ -67,14 +65,14 @@ namespace spline{
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)
         inline friend
-            std::ostream& operator<<(std::ostream &stream, const MonomialeBasis& obj) {
+            std::ostream& operator<<(std::ostream &stream, const SubMonomialeBasis& obj) {
                 return stream << obj.getRepresentation();
             }
 #endif // SWIG
     };
     
     template< class T >
-    AnyTensor MonomialeBasisNode::BasisEvalution (const std::vector< T >& x ) const {
+    AnyTensor SubMonomialeBasisNode::SubBasisEvalution (const std::vector< T >& x ) const {
         assert(x.size()==1);
         T x_ = x[0];
         int lenght  = this->getLenght();
@@ -88,4 +86,4 @@ namespace spline{
 }  // namespace spline
 
 
-#endif  // MONOMIALBASIS_H_
+#endif  // SUBMONOMIALBASIS_H_

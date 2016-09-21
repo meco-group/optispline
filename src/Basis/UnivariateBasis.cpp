@@ -3,7 +3,7 @@
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
-#include "operationsBasis.h"
+#include "operations/operationsBasis.h"
 
 namespace spline {
 
@@ -17,8 +17,7 @@ namespace spline {
     //  
     //  
 
-    UnivariateBasisNode::UnivariateBasisNode(int degree_) : BasisNode(std::vector< Basis > {}) , degree(degree_){ }
-    UnivariateBasisNode::UnivariateBasisNode(int degree_, Argument argument) : BasisNode(std::vector< Basis > {}, argument) , degree(degree_){ }
+    UnivariateBasisNode::UnivariateBasisNode(int degree_) : BasisNode(std::vector< SubBasis > {}) { }
     UnivariateBasisNode* UnivariateBasis::get() const { return static_cast<UnivariateBasisNode*>(SharedObject::get()); };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
 
@@ -27,39 +26,6 @@ namespace spline {
         return "UnivariateBasis object"; 
     }
 
-    Basis UnivariateBasis::operator+ (const Basis& other) const  {
-        assert(false); //  Univariate is "abstract"
-        return Basis();
-    } 
-
-    Basis UnivariateBasis::operator+ (const MonomialeBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return Basis();
-    } 
-
-    Basis UnivariateBasis::operator+ (const BSplineBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return Basis();
-    } 
-
-    Basis UnivariateBasis::operator* (const Basis& other) const  {
-        assert(false); //  Univariate is "abstract"
-        return Basis();
-    } 
-
-    Basis UnivariateBasis::operator* (const MonomialeBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return Basis();
-    } 
-
-    Basis UnivariateBasis::operator* (const BSplineBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return Basis();
-    } 
-
-    std::vector< Basis >  UnivariateBasisNode::getSubBasis () const {
-        return std::vector< Basis > {shared_from_this<UnivariateBasis>()} ;
-    }
 
     int UnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
     int UnivariateBasisNode::getLenght ( ) const {
@@ -68,12 +34,12 @@ namespace spline {
     
     void  UnivariateBasis::setDegree (int degree) { (*this)->setDegree (degree); } 
     void  UnivariateBasisNode::setDegree (int degree) {
-         this->degree = degree;
+         // this->degree = degree;
     }
     
     int  UnivariateBasis::getDegree  ( ) const { return (*this)->getDegree (); } 
     int  UnivariateBasisNode::getDegree  ( ) const {
-         return degree ;
+         return 0 ;
     }
 }  // namespace spline
 
