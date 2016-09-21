@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '../swig')
+sys.path.insert( 0, '/home/erik/Documents/cpp_splines/swig')
 sys.path.insert(0, '/home/erik/Documents/casadi3.0')
 import os
 import unittest

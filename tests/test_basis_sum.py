@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
-sys.path.insert(0, '../swig')
+# sys.path.insert( 0, '/home/erik/Documents/cpp_splines/swig')
+sys.path.insert( 0, '../swig')
 sys.path.insert(0, '/home/erik/Documents/casadi3.0')
 import os
 
@@ -41,3 +42,4 @@ print(basis_xypyz)
 print(list(basis_xypyz.getSubBasis()))
 print(list(basis_xypyz.getSubArgument()))
 
+b = basis_xypyz.getSubBasis()
