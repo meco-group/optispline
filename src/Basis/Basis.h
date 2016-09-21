@@ -8,8 +8,8 @@
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
-#include "../Function/Argument.h"
 #include "SubBasis.h"
+#include "../Function/Argument.h"
 #include <tensor.hpp>
 
 namespace spline {
@@ -26,13 +26,15 @@ namespace spline {
 
         // std::vector<int> getSize () const;
 
-
         Argument& getArgument ();
         const Argument& getArgument () const;
+        void setArgument (const Argument& argument);
+
+        int indexArgument(Argument a);
 
         virtual std::string getRepresentation() const ;
 
-        // virtual std::vector< SubBasis > getSubBasis() const;
+        virtual std::vector< SubBasis > getSubBasis() const;
         virtual Basis getSubBasis( int index ) const;
 
         // virtual std::vector< Argument > getSubArgument() const;
@@ -44,9 +46,9 @@ namespace spline {
         virtual ST operator()(const std::vector< SX >& x) const;
         virtual MT operator()(const std::vector< MX >& x) const;
 
-        int indexArgument(Argument a);
     protected:
         std::vector< SubBasis > allSubBasis;
+        std::vector< Argument > allArguments;
     };
 
 #endif // SWIG

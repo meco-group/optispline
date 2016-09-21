@@ -7,42 +7,38 @@ namespace spline {
     BasisNode* Basis::operator->() const { return get(); }
 
     Basis::Basis (){
-        assign_node(new BasisNode(std::vector< Basis >{}));
+        assign_node(new BasisNode(std::vector< SubBasis >{}));
     }
 
-    Basis::Basis (const std::vector< Basis >& allSubBasis){
+    Basis::Basis (const std::vector< SubBasis >& allSubBasis){
         assign_node(new BasisNode(allSubBasis));
     }
 
-    BasisNode::BasisNode (const std::vector< Basis >& allSubBasis_) : allSubBasis(allSubBasis_) ,  argument(*new Argument()) {}
-    BasisNode::BasisNode (const std::vector< Basis >& allSubBasis_, Argument argument) : allSubBasis(allSubBasis_) ,  argument(argument) {}
- 
+    BasisNode::BasisNode (const std::vector< SubBasis >& allSubBasis_) : allSubBasis(allSubBasis_), allArguments(std::vector<Argument>{}){}
     // int Basis::getDimension () const {
     //     return allSubBasis.size();
     // }
 
     void Basis::setArgument (const Argument& argument) { (*this)->setArgument(argument); } 
     void BasisNode::setArgument (const Argument& argument) {
-        this->argument = argument;
+        return;
     }
 
-    void Basis::setArgument (const std::string& argument) { (*this)->setArgument(argument); } 
-    void BasisNode::setArgument (const std::string& argument) {
-        this->argument = Argument(argument);
-    }
+    void Basis::setArgument (const std::string& argument) { (*this)->setArgument(*new Argument ( argument )); } 
+    
 
     const Argument& Basis::getArgument () const { return (*this)->getArgument();} 
     const Argument& BasisNode::getArgument () const {
-        return argument;
+        return *new Argument();
     }
 
     Argument& Basis::getArgument () { return (*this)->getArgument();} 
     Argument& BasisNode::getArgument () {
-        return argument;
+        return *new Argument();
     }
 
-    std::vector< Basis > Basis::getSubBasis () const { return (*this)->getSubBasis (); } 
-    std::vector< Basis > BasisNode::getSubBasis () const {
+    std::vector< SubBasis > Basis::getSubBasis () const { return (*this)->getSubBasis (); } 
+    std::vector< SubBasis > BasisNode::getSubBasis () const {
         return allSubBasis;
     }
 
