@@ -44,25 +44,26 @@ namespace spline {
 
     Basis Basis::getSubBasis ( int index ) const { return (*this)->getSubBasis ( index ); } 
     Basis BasisNode::getSubBasis ( int index ) const {
-        return allSubBasis[index];
+        return Basis(std::vector<SubBasis> {allSubBasis[index]});
     }
 
     std::vector< Argument > Basis::getSubArgument () const { return (*this)->getSubArgument (); } 
     std::vector< Argument > BasisNode::getSubArgument () const {
-        std::vector< Argument > returnArgumentList;
-        for (auto subBasis : this->getSubBasis()) {
-           returnArgumentList.push_back( subBasis.getArgument() );
-        }
-        return returnArgumentList;
+        return allArguments;
     }
 
     Argument Basis::getSubArgument ( int index ) const { return (*this)->getSubArgument ( index ); } 
     Argument BasisNode::getSubArgument ( int index ) const {
-        return allSubBasis[index].getArgument();
+        return allArguments[index];
     }
 
     void Basis::addBasis (Basis basis) { (*this)->addBasis (basis);} 
     void BasisNode::addBasis (Basis basis) {
+         this->allSubBasis.push_back(basis.getSubBasis()[0]);
+    }
+
+    void Basis::addBasis (SubBasis basis) { (*this)->addBasis (basis);} 
+    void BasisNode::addBasis (SubBasis basis) {
          this->allSubBasis.push_back(basis);
     }
     // std::vector<int> Basis::getSize () const {
@@ -84,29 +85,29 @@ namespace spline {
         return stream << base.getRepresentation();
     }
 
-    Basis Basis::operator+ (const Basis& other) const { 
-        return plusMultivariate(*this, other);
-    }
-
-    Basis Basis::operator+ (const MonomialeBasis& other) const {
-        return plusMultivariate(*this, other);
-    } 
-
-    Basis Basis::operator+ (const BSplineBasis& other) const {
-        return plusMultivariate(*this, other);
-    } 
-
-    Basis Basis::operator* (const Basis& other) const { 
-        return timesMultivariate(*this, other);
-    }
-
-    Basis Basis::operator* (const MonomialeBasis& other) const {
-        return timesMultivariate(*this, other);
-    } 
-
-    Basis Basis::operator* (const BSplineBasis& other) const {
-        return timesMultivariate(*this, other);
-    } 
+    // Basis Basis::operator+ (const Basis& other) const { 
+    //     return plusMultivariate(*this, other);
+    // }
+    //
+    // Basis Basis::operator+ (const MonomialeBasis& other) const {
+    //     return plusMultivariate(*this, other);
+    // } 
+    //
+    // Basis Basis::operator+ (const BSplineBasis& other) const {
+    //     return plusMultivariate(*this, other);
+    // } 
+    //
+    // Basis Basis::operator* (const Basis& other) const { 
+    //     return timesMultivariate(*this, other);
+    // }
+    //
+    // Basis Basis::operator* (const MonomialeBasis& other) const {
+    //     return timesMultivariate(*this, other);
+    // } 
+    //
+    // Basis Basis::operator* (const BSplineBasis& other) const {
+    //     return timesMultivariate(*this, other);
+    // } 
 
     DT  Basis::operator() (const std::vector< double > &  x ) const {
         return (*this)->operator()(x);

@@ -37,8 +37,8 @@ namespace spline {
         virtual std::vector< SubBasis > getSubBasis() const;
         virtual Basis getSubBasis( int index ) const;
 
-        // virtual std::vector< Argument > getSubArgument() const;
-        // virtual Argument getSubArgument( int index ) const;
+        virtual std::vector< Argument > getSubArgument() const;
+        virtual Argument getSubArgument( int index ) const;
         void addBasis(Basis basis);
         void addBasis(SubBasis basis);
 
@@ -78,10 +78,10 @@ namespace spline {
         virtual std::string getRepresentation() const ;
 
         std::vector< SubBasis > getSubBasis() const;
-        SubBasis getSubBasis( int index ) const;
+        Basis getSubBasis( int index ) const;
 
-        // std::vector< Argument > getSubArgument ()const;
-        // Argument getSubArgument ( int index ) const;
+        std::vector< Argument > getSubArgument ()const;
+        Argument getSubArgument ( int index ) const;
 
         void addBasis(Basis basis);
         void addBasis(SubBasis basis);
