@@ -18,35 +18,51 @@ namespace spline{
     std::string BSplineBasis::getRepresentation() const { return (*this)->getRepresentation() ;};
 
     Basis BSplineBasis::operator+ (const Basis& other) const {
-        return (*this)->operator+(other); 
+        assert(false);
+	return Basis();
+	// return (*this)->operator+(other); 
     } 
 
     Basis BSplineBasisNode::operator+ (const Basis& other) const {
-        return other + shared_from_this<BSplineBasis>();
+        assert(false);
+	return Basis();
+	// return other + shared_from_this<BSplineBasis>();
     }
 
     Basis BSplineBasis::operator+ (const BSplineBasis& other) const {
-        return plusUnivariateUnivariate (*this, other);
+        assert(false);
+	return Basis();
+	// return plusUnivariateUnivariate (*this, other);
     } 
 
     Basis BSplineBasis::operator+ (const MonomialeBasis& other) const {
-        return plusUnivariateUnivariate (*this, other);
+        assert(false);
+	return Basis();
+	// return plusUnivariateUnivariate (*this, other);
     } 
 
     Basis BSplineBasis::operator* (const Basis& other) const {
-        return (*this)->operator*(other); 
+        assert(false);
+	return Basis();
+	// return (*this)->operator*(other); 
     } 
 
     Basis BSplineBasisNode::operator* (const Basis& other) const {
-        return other + shared_from_this<BSplineBasis>();
+        assert(false);
+	return Basis();
+	// return other + shared_from_this<BSplineBasis>();
     }
 
     Basis BSplineBasis::operator* (const BSplineBasis& other) const {
-        return timesUnivariateUnivariate (*this, other);
+        assert(false);
+	return Basis();
+	// return timesUnivariateUnivariate (*this, other);
     } 
 
     Basis BSplineBasis::operator* (const MonomialeBasis& other) const {
-        return timesUnivariateUnivariate (*this, other);
+        assert(false);
+	return Basis();
+	// return timesUnivariateUnivariate (*this, other);
     } 
 
     DT  BSplineBasisNode::operator()  (const std::vector< double > &  x_   ) const {

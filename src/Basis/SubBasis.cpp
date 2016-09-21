@@ -61,21 +61,21 @@ namespace spline {
         return ret;
     }
    
-    ST  Basis::operator()  (const std::vector< SX > &  x   ) const {
+    ST  SubBasis::operator()  (const std::vector< SX > &  x   ) const {
         return (*this)->operator() (x);
     }
 
-    ST  BasisNode::operator()  (const std::vector< SX > &  x   ) const {
+    ST  SubBasisNode::operator()  (const std::vector< SX > &  x   ) const {
         ST ret(1,{});
 	assert(false);		//Abstract
         return ret;
     }
    
-    MT  Basis::operator()  (const std::vector< MX > &  x   ) const {
+    MT  SubBasis::operator()  (const std::vector< MX > &  x   ) const {
         return (*this)->operator() (x);
     }
 
-    MT  BasisNode::operator()  (const std::vector< MX > &  x   ) const {
+    MT  SubBasisNode::operator()  (const std::vector< MX > &  x   ) const {
         MT ret(1,{});
 	assert(false);		//Abstract
         return ret;
