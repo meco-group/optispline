@@ -11,7 +11,6 @@
 #include "../Function/Argument.h"
 #include "SubBasis.h"
 #include <tensor.hpp>
-//#include "../Math/Domain.h"
 
 namespace spline {
     class Basis;
@@ -33,12 +32,13 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
-        virtual std::vector< SubBasis > getSubBasis() const;
-        virtual SubBasis getSubBasis( int index ) const;
+        // virtual std::vector< SubBasis > getSubBasis() const;
+        virtual Basis getSubBasis( int index ) const;
 
-        virtual std::vector< Argument > getSubArgument() const;
-        virtual Argument getSubArgument( int index ) const;
+        // virtual std::vector< Argument > getSubArgument() const;
+        // virtual Argument getSubArgument( int index ) const;
         void addBasis(Basis basis);
+        void addBasis(SubBasis basis);
 
         virtual DT operator()(const std::vector< double >& x) const;
         virtual ST operator()(const std::vector< SX >& x) const;
@@ -47,7 +47,6 @@ namespace spline {
         int indexArgument(Argument a);
     protected:
         std::vector< SubBasis > allSubBasis;
-        //    Domain domain;
     };
 
 #endif // SWIG
@@ -79,10 +78,12 @@ namespace spline {
         std::vector< SubBasis > getSubBasis() const;
         SubBasis getSubBasis( int index ) const;
 
-        std::vector< Argument > getSubArgument ()const;
-        Argument getSubArgument ( int index ) const;
+        // std::vector< Argument > getSubArgument ()const;
+        // Argument getSubArgument ( int index ) const;
 
         void addBasis(Basis basis);
+        void addBasis(SubBasis basis);
+
         DT operator()(const std::vector< double >& x) const;
         ST operator()(const std::vector< SX >& x) const;
         MT operator()(const std::vector< MX >& x) const;

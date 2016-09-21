@@ -9,7 +9,7 @@
 #include "Basis.h"
 #include "UnivariateBasis.h"
 
-#include "CommonBasis.h"
+#include "utils/CommonBasis.h"
 namespace spline{
 
     class BSplineBasis;
