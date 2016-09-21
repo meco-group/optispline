@@ -83,7 +83,8 @@ namespace std {
 #include <src/SharedObject/SharedObject.h>
 #include <src/SharedObject/SharedObjectNode.h>
 #include <src/Function/Argument.h>
-#include <src/Basis/CommonBasis.h>
+#include <src/Basis/utils/CommonBasis.h>
+#include <src/Basis/SubBasis.h>
 #include <src/Basis/Basis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialeBasis.h>
@@ -102,7 +103,8 @@ namespace std {
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
 %include <src/Function/Argument.h>
-%include <src/Basis/CommonBasis.h>
+%include <src/Basis/utils/CommonBasis.h>
+%include <src/Basis/SubBasis.h>
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialeBasis.h>
