@@ -5,20 +5,26 @@ add_library(Basis SHARED
 
             SharedObject/SharedObject.cpp SharedObject/SharedObjectNode.cpp
             SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
-
+ 	    
+	    Basis/SubBasis.h Basis/SubBasis.cpp
+	    Basis/SubBSplineBasis.h Basis/SubBSplineBasis.cpp
+	    Basis/SubUnivariateBasis.h Basis/SubUnivariateBasis.cpp
+	    Basis/SubMonomialeBasis.h Basis/SubMonomialeBasis.cpp
             Basis/Basis.h Basis/Basis.cpp
             Basis/BSplineBasis.h Basis/BSplineBasis.cpp
             Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
             Basis/MonomialeBasis.h Basis/MonomialeBasis.cpp
-            Basis/operationsBasis.h
+	   
+            Basis/operations/operationsBasis.h
             Basis/operations/plus.h 
             Basis/operations/operationsUnivariate.h 
             Basis/operations/operationsMultivariate.h Basis/operations/operationsMultivariate.cpp
             Basis/operations/plusUnivariate.h Basis/operations/plusUnivariate.cpp
             Basis/operations/timesUnivariate.h Basis/operations/timesUnivariate.cpp
             # Basis/times.h Basis/times.cpp
-            Basis/vectorUtilities.h Basis/vectorUtilities.cpp
-            Basis/CommonBasis.h
+	    
+            Basis/utils/vectorUtilities.h Basis/utils/vectorUtilities.cpp
+            Basis/utils/CommonBasis.h
 
             Function/Function.h Function/Function.cpp
             Function/Polynomial.h Function/Polynomial.cpp

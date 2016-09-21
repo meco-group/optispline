@@ -88,7 +88,7 @@ namespace std {
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialeBasis.h>
 #include <src/Basis/BSplineBasis.h>
-#include <src/Basis/vectorUtilities.h> // Debug
+#include <src/Basis/utils/vectorUtilities.h> // Debug
 
 #include <src/Coefficients/Coefficient.h>
 
@@ -107,7 +107,7 @@ namespace std {
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialeBasis.h>
 %include <src/Basis/BSplineBasis.h>
-%include <src/Basis/vectorUtilities.h> // Debug
+%include <src/Basis/utils/vectorUtilities.h> // Debug
 
 %include <src/Coefficients/Coefficient.h>
 
