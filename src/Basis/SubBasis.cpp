@@ -17,26 +17,38 @@ namespace spline {
     }
 
     SubBasis SubBasis::operator+ (const SubBasis& other) const { 
-        return plusMultivariate(*this, other);
+	assert(false);
+	return SubBasis();
+        // return plusMultivariate(*this, other);
     }
 
     SubBasis SubBasis::operator+ (const SubMonomialeBasis& other) const {
-        return plusMultivariate(*this, other);
+	assert(false);
+	return SubBasis();
+        // return plusMultivariate(*this, other);
     } 
-    SubSubBasis SubBasis::operator+ (const SubBSplineBasis& other) const {
-        return plusMultivariate(*this, other);
+    SubBasis SubBasis::operator+ (const SubBSplineBasis& other) const {
+	assert(false);
+	return SubBasis();
+        // return plusMultivariate(*this, other);
     } 
 
-    SubSubBasis Basis::operator* (const SubBasis& other) const { 
-        return timesMultivariate(*this, other);
+    SubBasis SubBasis::operator* (const SubBasis& other) const { 
+	assert(false);
+	return SubBasis();
+        // return timesMultivariate(*this, other);
     }
 
     SubBasis SubBasis::operator* (const SubMonomialeBasis& other) const {
-        return timesMultivariate(*this, other);
+	assert(false);
+	return SubBasis();
+        // return timesMultivariate(*this, other);
     } 
 
     SubBasis SubBasis::operator* (const SubBSplineBasis& other) const {
-        return timesMultivariate(*this, other);
+	assert(false);
+	return SubBasis();
+        // return timesMultivariate(*this, other);
     } 
 
     DT  SubBasis::operator() (const std::vector< double > &  x ) const {
@@ -45,7 +57,7 @@ namespace spline {
 
     DT  SubBasisNode::operator() (const std::vector< double > &  x   ) const {
         DT ret(1,{});
-	assurt(false);		//Abstract
+	assert(false);		//Abstract
         return ret;
     }
    
@@ -55,7 +67,7 @@ namespace spline {
 
     ST  BasisNode::operator()  (const std::vector< SX > &  x   ) const {
         ST ret(1,{});
-	assurt(false);		//Abstract
+	assert(false);		//Abstract
         return ret;
     }
    
@@ -65,7 +77,7 @@ namespace spline {
 
     MT  BasisNode::operator()  (const std::vector< MX > &  x   ) const {
         MT ret(1,{});
-	assurt(false);		//Abstract
+	assert(false);		//Abstract
         return ret;
     }
 

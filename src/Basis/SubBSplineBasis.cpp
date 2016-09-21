@@ -3,7 +3,7 @@
 #include <sstream>
 #include "BSplineBasis.h"
 
-#include "operationsBasis.h"
+#include "operations/operationsBasis.h"
 
 namespace spline{
 

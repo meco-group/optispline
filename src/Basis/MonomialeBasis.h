@@ -1,5 +1,5 @@
-#ifndef MONOMIALBASIS_H_
-#define MONOMIALBASIS_H_
+#ifndef SUBMONOMIALBASIS_H_
+#define SUBMONOMIALBASIS_H_
 
 #include <vector>
 
@@ -88,4 +88,4 @@ namespace spline{
 }  // namespace spline
 
 
-#endif  // MONOMIALBASIS_H_
+#endif  // SUBMONOMIALBASIS_H_

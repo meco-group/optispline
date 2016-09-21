@@ -9,7 +9,6 @@
 #include "../SharedObject/SharedObjectNode.h"
 
 #include <tensor.hpp>
-//#include "../Math/Domain.h"
 
 namespace spline {
     class SubBasis;
@@ -25,7 +24,6 @@ namespace spline {
         virtual DT operator()(const std::vector< double >& x) const;
         virtual ST operator()(const std::vector< SX >& x) const;
         virtual MT operator()(const std::vector< MX >& x) const;
-
     };
 
 #endif // SWIG
@@ -45,7 +43,11 @@ namespace spline {
         SubBasis ();
 
         virtual SubBasis operator+(const SubBasis& rhs) const;
+        virtual SubBasis operator+(const SubMonomialeBasis& rhs) const;
+        virtual SubBasis operator+(const SubBSplineBasis& rhs) const;
         virtual SubBasis operator*(const SubBasis& rhs) const;
+        virtual SubBasis operator*(const SubMonomialeBasis& rhs) const;
+        virtual SubBasis operator*(const SubBSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 
         DT operator()(const std::vector< double >& x) const;

@@ -1,9 +1,9 @@
 #include <vector>
-#include "UnivariateBasis.h"
+#include "SubUnivariateBasis.h"
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
-#include "operationsBasis.h"
+#include "operations/operationsBasis.h"
 
 namespace spline {
 
@@ -17,49 +17,44 @@ namespace spline {
     //  
     //  
 
-    UnivariateBasisNode::UnivariateBasisNode(int degree_) : BasisNode(std::vector< Basis > {}) , degree(degree_){ }
-    UnivariateBasisNode::UnivariateBasisNode(int degree_, Argument argument) : BasisNode(std::vector< Basis > {}, argument) , degree(degree_){ }
-    UnivariateBasisNode* UnivariateBasis::get() const { return static_cast<UnivariateBasisNode*>(SharedObject::get()); };
-    UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
+    SubUnivariateBasisNode::SubUnivariateBasisNode(int degree_) :degree(degree_){ }
+    SubUnivariateBasisNode* SubUnivariateBasis::get() const { return static_cast<SubUnivariateBasisNode*>(SharedObject::get()); };
+    SubUnivariateBasisNode* SubUnivariateBasis::operator->() const { return get(); }
 
-    std::string UnivariateBasis::getRepresentation() const { return (*this)->getRepresentation() ; }
-    std::string UnivariateBasisNode::getRepresentation() const {
-        return "UnivariateBasis object"; 
+    std::string SubUnivariateBasis::getRepresentation() const { return (*this)->getRepresentation() ; }
+    std::string SubUnivariateBasisNode::getRepresentation() const {
+        return "SubUnivariateBasis object"; 
     }
 
-    Basis UnivariateBasis::operator+ (const Basis& other) const  {
+    SubBasis SubUnivariateBasis::operator+ (const SubBasis& other) const  {
         assert(false); //  Univariate is "abstract"
-        return Basis();
+        return SubBasis();
     } 
 
-    Basis UnivariateBasis::operator+ (const MonomialeBasis &other) const  {
+    SubBasis SubUnivariateBasis::operator+ (const SubMonomialeBasis &other) const  {
         assert(false); //  Univariate is "abstract"
-        return Basis();
+        return SubBasis();
     } 
 
-    Basis UnivariateBasis::operator+ (const BSplineBasis &other) const  {
+    SubBasis SubUnivariateBasis::operator+ (const SubBSplineBasis &other) const  {
         assert(false); //  Univariate is "abstract"
-        return Basis();
+        return SubBasis();
     } 
 
-    Basis UnivariateBasis::operator* (const Basis& other) const  {
+    SubBasis SubUnivariateBasis::operator* (const SubBasis& other) const  {
         assert(false); //  Univariate is "abstract"
-        return Basis();
+        return SubBasis();
     } 
 
-    Basis UnivariateBasis::operator* (const MonomialeBasis &other) const  {
+    SubBasis SubUnivariateBasis::operator* (const SubMonomialeBasis &other) const  {
         assert(false); //  Univariate is "abstract"
-        return Basis();
+        return SubBasis();
     } 
 
-    Basis UnivariateBasis::operator* (const BSplineBasis &other) const  {
+    SubBasis SubUnivariateBasis::operator* (const SubBSplineBasis &other) const  {
         assert(false); //  Univariate is "abstract"
-        return Basis();
+        return SubBasis();
     } 
-
-    std::vector< Basis >  UnivariateBasisNode::getSubBasis () const {
-        return std::vector< Basis > {shared_from_this<UnivariateBasis>()} ;
-    }
 
     int UnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
     int UnivariateBasisNode::getLenght ( ) const {

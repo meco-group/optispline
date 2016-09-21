@@ -1,37 +1,34 @@
-#ifndef CPP_SPLINE_UNIVARIATEBASIS_H
-#define CPP_SPLINE_UNIVARIATEBASIS_H
+#ifndef CPP_SPLINE_SUBUNIVARIATEBASIS_H
+#define CPP_SPLINE_SUBUNIVARIATEBASIS_H
 
 #include <casadi/casadi.hpp>
 #include <string>
 
-#include "Basis.h"
+#include "SubBasis.h"
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
 namespace spline {
 
-    class MonomialeBasis;
-    class BSplineBasis;
+    class SubMonomialeBasis;
+    class SubBSplineBasis;
 
 #ifndef SWIG
 
-    class UnivariateBasisNode : public BasisNode {
+    class SubUnivariateBasisNode : public SubBasisNode {
     public:
         //   casadi::DM transformation( const Basis &b) const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
-        UnivariateBasisNode(int degree);
-        UnivariateBasisNode(int degree, Argument argument);
+        SubUnivariateBasisNode(int degree);
 
         virtual std::string getRepresentation() const ;
 
-        virtual std::vector< Basis > getSubBasis() const;
         virtual DT operator()(const std::vector< double >& x) const { assert(0);};
         virtual ST operator()(const std::vector< SX >& x) const { assert(0);};
         virtual MT operator()(const std::vector< MX >& x) const { assert(0);};
 
 //TODO addBasis         
-        virtual void addBasis(Basis basis){}
         virtual int getLenght() const ;
         int getDegree () const ;
         void setDegree (int degree);
@@ -41,21 +38,21 @@ namespace spline {
 
 #endif // SWIG
 
-    class UnivariateBasis : public Basis {
+    class SubUnivariateBasis : public SubBasis {
     public:
 #ifndef SWIG
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
-        UnivariateBasis() { };
-        UnivariateBasisNode* get() const ;
-        UnivariateBasisNode* operator->() const ;
+        SubUnivariateBasis() { };
+        SubUnivariateBasisNode* get() const ;
+        SubUnivariateBasisNode* operator->() const ;
 #endif // SWIG
-        virtual Basis operator+ (const Basis& other) const;
-        virtual Basis operator+ (const MonomialeBasis& other) const;
-        virtual Basis operator+ (const BSplineBasis& other) const;
+        virtual SubBasis operator+ (const SubBasis& other) const;
+        virtual SubBasis operator+ (const SubMonomialeBasis& other) const;
+        virtual SubBasis operator+ (const SubBSplineBasis& other) const;
 
-        virtual Basis operator* (const Basis& other) const;
-        virtual Basis operator* (const MonomialeBasis& other) const;
-        virtual Basis operator* (const BSplineBasis& other) const;
+        virtual SubBasis operator* (const SubBasis& other) const;
+        virtual SubBasis operator* (const SubMonomialeBasis& other) const;
+        virtual SubBasis operator* (const SubBSplineBasis& other) const;
 
         virtual std::string getRepresentation() const ;
 
@@ -65,4 +62,4 @@ namespace spline {
     };
 } // namespace spline
 
-#endif //CPP_SPLINE_UNIVARIATEBASIS_H
+#endif //CPP_SPLINE_SUBUNIVARIATEBASIS_H

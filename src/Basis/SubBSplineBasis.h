@@ -1,20 +1,20 @@
-#ifndef CPP_SPLINE_BSPLINEBASIS_H
-#define CPP_SPLINE_BSPLINEBASIS_H
+#ifndef CPP_SPLINE_SUBBSPLINEBASIS_H
+#define CPP_SPLINE_SUBBSPLINEBASIS_H
 
 #include <vector>
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
-#include "UnivariateBasis.h"
+#include "SubUnivariateBasis.h"
 
 namespace spline{
 
-    class MonomialeBasis;
+    class SubMonomialeBasis;
 
 #ifndef SWIG
 
-    class BSplineBasisNode : public UnivariateBasisNode {
+    class SubBSplineBasisNode : public SubUnivariateBasisNode {
 
     public:
         BSplineBasisNode (const std::vector<double >& knots, int degree);
@@ -39,8 +39,8 @@ namespace spline{
         virtual ST operator()(const std::vector< SX >& x) const ;
         virtual MT operator()(const std::vector< MX >& x) const ;
 
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator*(const Basis& other) const ;
+        virtual Basis operator+(const SubBasis& other) const ;
+        virtual Basis operator*(const SubBasis& other) const ;
 
 
         virtual int getLenght() const ;
@@ -55,31 +55,31 @@ namespace spline{
 
 #endif // SWIG
 
-    class BSplineBasis : public UnivariateBasis {
+    class SubBSplineBasis : public SubUnivariateBasis {
 
     public:
 
 #ifndef SWIG
-        BSplineBasis(){};
-        BSplineBasisNode* get() const ;
-        BSplineBasisNode* operator->() const ;
+        SubBSplineBasis(){};
+        SubBSplineBasisNode* get() const ;
+        SubBSplineBasisNode* operator->() const ;
 #endif // SWIG
 
-        BSplineBasis (const std::vector<double >& knots, int degree);
-        BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals);
+        SubBSplineBasis (const std::vector<double >& knots, int degree);
+        SubBSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 
 //  TODO(jgillis) moet ik de variant met const houden??
         std::vector<double> &getKnots ();
         const std::vector<double> &getKnots () const;
         void setKnots (std::vector<double> &knots) ;
 
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator+(const MonomialeBasis& other) const ;
-        virtual Basis operator+(const BSplineBasis& other) const ;
+        virtual SubBasis operator+(const SubBasis& other) const ;
+        virtual SubBasis operator+(const SubMonomialeBasis& other) const ;
+        virtual SubBasis operator+(const SubBSplineBasis& other) const ;
 
-        virtual Basis operator*(const Basis& other) const ;
-        virtual Basis operator*(const MonomialeBasis& other) const ;
-        virtual Basis operator*(const BSplineBasis& other) const ;
+        virtual SubBasis operator*(const SubBasis& other) const ;
+        virtual SubBasis operator*(const SubMonomialeBasis& other) const ;
+        virtual SubBasis operator*(const SubBSplineBasis& other) const ;
 
         //   BSplineBasis operator*(const MonomialeBasis& other) const ;
         //   BSplineBasis operator*(const BSplineBasis& other) const ;
@@ -92,17 +92,9 @@ namespace spline{
         /// Return a string with a representation (for SWIG)
         virtual std::string getRepresentation() const ;
 
-#ifndef SWIG
-        /// Print a representation of the object to a stream (shorthand)
-        inline friend
-            std::ostream& operator<<(std::ostream &stream, const BSplineBasis& obj) {
-                return stream << obj.getRepresentation();
-            }
-#endif // SWIG
-
     private:
         //  std::vector<bool> indector(int i, double x);
     };
 }
 
-#endif //CPP_SPLINE_BSPLINEBASIS_H
+#endif //CPP_SPLINE_SUBBSPLINEBASIS_H
