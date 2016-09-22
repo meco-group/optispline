@@ -128,9 +128,7 @@ namespace spline{
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree) 
     : UnivariateBasisNode(degree) { }
 
-    BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
-    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) : UnivariateBasisNode(degree) {
-            }
+    BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(generateKnots(bounds,degree,numberOfIntervals), degree)); };
 
     std::vector< double >& BSplineBasis::getKnots () { return (*this)->getKnots(); } 
     std::vector< double >& BSplineBasisNode::getKnots () {
@@ -142,5 +140,25 @@ namespace spline{
 
     void BSplineBasis::setKnots (std::vector< double >& knots) { return (*this)->setKnots (knots); } 
     void BSplineBasisNode::setKnots (std::vector< double >& knots) {
+    }
+    BSplineBasis BSplineBasis::castBSpline() const{ return (*this)->castBSpline (); } 
+    BSplineBasis BSplineBasisNode::castBSpline() const {
+    assert(false);
+    }
+
+
+    std::vector<double> generateKnots(const std::vector<double >& bounds, int degree, int numberOfIntervals){
+        int numberOfKnots = 2*degree + numberOfIntervals;
+	std::vector<double> knots(numberOfKnots, 0.0);
+        for (int i = 0; i < degree; ++i) {
+            knots[i] = bounds[0];
+            knots[numberOfKnots - i - 1] = bounds[1];
+        }
+
+        for (int i = 0; i < numberOfIntervals; ++i) {
+            knots[degree + i] = bounds[0] + (bounds[1] - bounds[0]) * (double)i/(numberOfIntervals-1);
+        }
+
+	return knots;
     }
 } // namespace spline

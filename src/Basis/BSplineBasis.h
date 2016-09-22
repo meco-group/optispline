@@ -18,8 +18,6 @@ namespace spline{
 
     public:
         BSplineBasisNode (const std::vector<double >& knots, int degree);
-        BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals);
-
 
         std::vector<double>& getKnots ();
         const std::vector<double>& getKnots () const;
@@ -104,4 +102,5 @@ namespace spline{
     };
 }
 
+    std::vector<double> generateKnots(const std::vector<double >& bounds, int degree, int numberOfIntervals);
 #endif //CPP_SPLINE_BSPLINEBASIS_H
