@@ -17,68 +17,6 @@ namespace spline{
     };
     std::string BSplineBasis::getRepresentation() const { return (*this)->getRepresentation() ;};
 
-    Basis BSplineBasis::operator+ (const Basis& other) const {
-        assert(false);
-	return Basis();
-	// return (*this)->operator+(other); 
-    } 
-
-    Basis BSplineBasisNode::operator+ (const Basis& other) const {
-        assert(false);
-	return Basis();
-	// return other + shared_from_this<BSplineBasis>();
-    }
-
-    Basis BSplineBasis::operator+ (const BSplineBasis& other) const {
-        assert(false);
-	return Basis();
-	// return plusUnivariateUnivariate (*this, other);
-    } 
-
-    Basis BSplineBasis::operator+ (const MonomialeBasis& other) const {
-        assert(false);
-	return Basis();
-	// return plusUnivariateUnivariate (*this, other);
-    } 
-
-    Basis BSplineBasis::operator* (const Basis& other) const {
-        assert(false);
-	return Basis();
-	// return (*this)->operator*(other); 
-    } 
-
-    Basis BSplineBasisNode::operator* (const Basis& other) const {
-        assert(false);
-	return Basis();
-	// return other + shared_from_this<BSplineBasis>();
-    }
-
-    Basis BSplineBasis::operator* (const BSplineBasis& other) const {
-        assert(false);
-	return Basis();
-	// return timesUnivariateUnivariate (*this, other);
-    } 
-
-    Basis BSplineBasis::operator* (const MonomialeBasis& other) const {
-        assert(false);
-	return Basis();
-	// return timesUnivariateUnivariate (*this, other);
-    } 
-
-    DT  BSplineBasisNode::operator()  (const std::vector< double > &  x_   ) const {
-        casadi::DM A(1);
-        return DT(A,{getLenght()}); 
-    }
-
-    ST  BSplineBasisNode::operator()  (const std::vector< SX > &  x   ) const {
-        assert(x.size()==1);
-        return ST(vertcat(x),{3}); 
-    }
-
-    MT  BSplineBasisNode::operator()  (const std::vector< MX > &  x   ) const {
-        assert(x.size()==1);
-        return MT(vertcat(x),{3}); 
-    }
     //   std::make_shared<Basis>::operator* (const Monomialestd::shared_ptr<Basis> &other) const {
     //       return timesstd::shared_ptr<Basis>(*this, other);
     //   }
@@ -141,6 +79,7 @@ namespace spline{
     void BSplineBasis::setKnots (std::vector< double >& knots) { return (*this)->setKnots (knots); } 
     void BSplineBasisNode::setKnots (std::vector< double >& knots) {
     }
+    
     BSplineBasis BSplineBasis::castBSpline() const{ return (*this)->castBSpline (); } 
     BSplineBasis BSplineBasisNode::castBSpline() const {
     assert(false);

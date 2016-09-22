@@ -63,15 +63,7 @@ namespace spline{
         std::vector<double> &getKnots ();
         const std::vector<double> &getKnots () const;
         void setKnots (std::vector<double> &knots) ;
-
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator+(const MonomialeBasis& other) const ;
-        virtual Basis operator+(const BSplineBasis& other) const ;
-
-        virtual Basis operator*(const Basis& other) const ;
-        virtual Basis operator*(const MonomialeBasis& other) const ;
-        virtual Basis operator*(const BSplineBasis& other) const ;
-
+	
         //   BSplineBasis operator*(const MonomialeBasis& other) const ;
         //   BSplineBasis operator*(const BSplineBasis& other) const ;
         //
