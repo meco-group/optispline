@@ -33,16 +33,10 @@ namespace spline{
         /// Return a string with a representation (for SWIG)
         virtual std::string getRepresentation() const ;
 
-        virtual DT operator()(const std::vector< double >& x) const;
-        virtual ST operator()(const std::vector< SX >& x) const ;
-        virtual MT operator()(const std::vector< MX >& x) const ;
-
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator*(const Basis& other) const ;
-
-
         virtual int getLenght() const ;
 
+	virtual BSplineBasis castBSpline() const;
+	
     private:
 
         //  std::vector<bool> indector(int i, double x);
@@ -89,6 +83,7 @@ namespace spline{
         /// Return a string with a representation (for SWIG)
         virtual std::string getRepresentation() const ;
 
+	virtual BSplineBasis castBSpline() const;
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)
         inline friend
