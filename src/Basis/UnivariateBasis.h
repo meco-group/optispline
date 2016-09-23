@@ -46,6 +46,11 @@ namespace spline {
         int getLenght() const ;
         int getDegree () const ;
         void setDegree (int degree);
+
+#ifndef SWIG
+        void assertUnivariatBasis() const;
+        SubBasis getUnivariatSubBasis() const;
+#endif
     };
 } // namespace spline
 

@@ -41,5 +41,12 @@ namespace spline {
     int  UnivariateBasisNode::getDegree  ( ) const {
          return 0 ;
     }
+
+    void UnivariateBasis::assertUnivariateBasis  ( ) const {assert(getDimesion()==1);} 
+
+    SubBasis UnivariateBasis::getUnivariatSubBasis() const{
+        assertUnivariateBasis();
+        return getSubBasis()[0];
+    }
 }  // namespace spline
 
