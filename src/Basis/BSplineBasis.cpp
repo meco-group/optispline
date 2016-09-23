@@ -68,6 +68,8 @@ namespace spline{
 
     std::vector< double >& BSplineBasis::getKnots () { return (*this)->getKnots(); } 
     std::vector< double >& BSplineBasisNode::getKnots () {
+        assertUnivariateBasis();
+        return getSubBasis()[0].getKnots();
     }
 
     const std::vector< double >& BSplineBasis::getKnots () const { return (*this)->getKnots(); } 
