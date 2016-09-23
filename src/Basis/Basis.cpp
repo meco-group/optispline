@@ -16,9 +16,11 @@ namespace spline {
     }
 
     BasisNode::BasisNode (const std::vector< SubBasis >& allSubBasis_) : allSubBasis(allSubBasis_), allArguments(std::vector<Argument>{}){}
-    // int Basis::getDimension () const {
-    //     return allSubBasis.size();
-    // }
+
+    int Basis::getDimension () const { (*this)->getDimension(); } 
+    int BasisNode::getDimension () const {
+        return allSubBasis.size();
+    }
 
     void Basis::setArgument (const Argument& argument) { (*this)->setArgument(argument); } 
     void BasisNode::setArgument (const Argument& argument) {
