@@ -20,16 +20,10 @@ namespace spline {
         //   casadi::DM transformation( const Basis &b) const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
-        UnivariateBasisNode(int degree);
+        UnivariateBasisNode(SubBasis subbasis);
 
         virtual std::string getRepresentation() const ;
 
-        virtual DT operator()(const std::vector< double >& x) const { assert(0);};
-        virtual ST operator()(const std::vector< SX >& x) const { assert(0);};
-        virtual MT operator()(const std::vector< MX >& x) const { assert(0);};
-
-//TODO addBasis         
-        virtual void addBasis(Basis basis){}
         virtual int getLenght() const ;
         int getDegree () const ;
         void setDegree (int degree);
