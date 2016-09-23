@@ -19,7 +19,7 @@ namespace spline {
     MonomialeBasisNode* MonomialeBasis::get() const { return static_cast<MonomialeBasisNode*>(SharedObject::get()); };
     MonomialeBasisNode* MonomialeBasis::operator->() const { return get(); }
 
-    MonomialeBasisNode::MonomialeBasisNode(int degree) : UnivariateBasisNode(SubMonomialeBasis(degree)) {};
+    MonomialeBasisNode::MonomialeBasisNode(int degree) : UnivariatBasisNode(SubMonomialeBasis(degree)) {};
     MonomialeBasis::MonomialeBasis(int degree)  {
         assign_node(new MonomialeBasisNode(degree));
     }

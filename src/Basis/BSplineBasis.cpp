@@ -62,13 +62,13 @@ namespace spline{
     }
 
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree) 
-    : UnivariateBasisNode(SubBSplineBasis(knots, degree)) { }
+    : UnivariatBasisNode(SubBSplineBasis(knots, degree)) { }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(generateKnots(bounds,degree,numberOfIntervals), degree)); };
 
     std::vector< double >& BSplineBasis::getKnots () { return (*this)->getKnots(); } 
     std::vector< double >& BSplineBasisNode::getKnots () {
-        assertUnivariateBasis();
+        assertUnivariatBasis();
         return getSubBasis()[0].getKnots();
     }
 

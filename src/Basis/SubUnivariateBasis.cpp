@@ -1,5 +1,5 @@
 #include <vector>
-#include "SubUnivariateBasis.h"
+#include "SubUnivariatBasis.h"
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
@@ -17,57 +17,57 @@ namespace spline {
     //  
     //  
 
-    SubUnivariateBasisNode::SubUnivariateBasisNode(int degree_) :degree(degree_){ }
-    SubUnivariateBasisNode* SubUnivariateBasis::get() const { return static_cast<SubUnivariateBasisNode*>(SharedObject::get()); };
-    SubUnivariateBasisNode* SubUnivariateBasis::operator->() const { return get(); }
+    SubUnivariatBasisNode::SubUnivariatBasisNode(int degree_) :degree(degree_){ }
+    SubUnivariatBasisNode* SubUnivariatBasis::get() const { return static_cast<SubUnivariatBasisNode*>(SharedObject::get()); };
+    SubUnivariatBasisNode* SubUnivariatBasis::operator->() const { return get(); }
 
-    std::string SubUnivariateBasis::getRepresentation() const { return (*this)->getRepresentation() ; }
-    std::string SubUnivariateBasisNode::getRepresentation() const {
-        return "SubUnivariateBasis object"; 
+    std::string SubUnivariatBasis::getRepresentation() const { return (*this)->getRepresentation() ; }
+    std::string SubUnivariatBasisNode::getRepresentation() const {
+        return "SubUnivariatBasis object"; 
     }
 
-    SubBasis SubUnivariateBasis::operator+ (const SubBasis& other) const  {
+    SubBasis SubUnivariatBasis::operator+ (const SubBasis& other) const  {
         assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
 
-    SubBasis SubUnivariateBasis::operator+ (const SubMonomialeBasis &other) const  {
+    SubBasis SubUnivariatBasis::operator+ (const SubMonomialeBasis &other) const  {
         assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
 
-    SubBasis SubUnivariateBasis::operator+ (const SubBSplineBasis &other) const  {
+    SubBasis SubUnivariatBasis::operator+ (const SubBSplineBasis &other) const  {
         assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
 
-    SubBasis SubUnivariateBasis::operator* (const SubBasis& other) const  {
+    SubBasis SubUnivariatBasis::operator* (const SubBasis& other) const  {
         assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
 
-    SubBasis SubUnivariateBasis::operator* (const SubMonomialeBasis &other) const  {
+    SubBasis SubUnivariatBasis::operator* (const SubMonomialeBasis &other) const  {
         assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
 
-    SubBasis SubUnivariateBasis::operator* (const SubBSplineBasis &other) const  {
+    SubBasis SubUnivariatBasis::operator* (const SubBSplineBasis &other) const  {
         assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
 
-    int SubUnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
-    int SubUnivariateBasisNode::getLenght ( ) const {
+    int SubUnivariatBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
+    int SubUnivariatBasisNode::getLenght ( ) const {
          assert(0);
     }
     
-    void  SubUnivariateBasis::setDegree (int degree) { (*this)->setDegree (degree); } 
-    void  SubUnivariateBasisNode::setDegree (int degree) {
+    void  SubUnivariatBasis::setDegree (int degree) { (*this)->setDegree (degree); } 
+    void  SubUnivariatBasisNode::setDegree (int degree) {
          this->degree = degree;
     }
     
-    int  SubUnivariateBasis::getDegree  ( ) const { return (*this)->getDegree (); } 
-    int  SubUnivariateBasisNode::getDegree  ( ) const {
+    int  SubUnivariatBasis::getDegree  ( ) const { return (*this)->getDegree (); } 
+    int  SubUnivariatBasisNode::getDegree  ( ) const {
          return degree ;
     }
 }  // namespace spline

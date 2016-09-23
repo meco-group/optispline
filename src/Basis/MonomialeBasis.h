@@ -7,7 +7,7 @@
 #include "../SharedObject/SharedObjectNode.h"
 
 #include "Basis.h"
-#include "UnivariateBasis.h"
+#include "UnivariatBasis.h"
 
 #include "utils/CommonBasis.h"
 namespace spline{
@@ -16,7 +16,7 @@ namespace spline{
 
 #ifndef SWIG
 
-    class MonomialeBasisNode : public UnivariateBasisNode {
+    class MonomialeBasisNode : public UnivariatBasisNode {
     public:
         MonomialeBasisNode(int degree) ;
 
@@ -24,7 +24,7 @@ namespace spline{
     };
 #endif // SWIG
 
-    class MonomialeBasis : public UnivariateBasis {
+    class MonomialeBasis : public UnivariatBasis {
     public:
 
 #ifndef SWIG

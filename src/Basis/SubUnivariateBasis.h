@@ -15,12 +15,12 @@ namespace spline {
 
 #ifndef SWIG
 
-    class SubUnivariateBasisNode : public SubBasisNode {
+    class SubUnivariatBasisNode : public SubBasisNode {
     public:
         //   casadi::DM transformation( const Basis &b) const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
-        SubUnivariateBasisNode(int degree);
+        SubUnivariatBasisNode(int degree);
 
         virtual std::string getRepresentation() const ;
 
@@ -38,13 +38,13 @@ namespace spline {
 
 #endif // SWIG
 
-    class SubUnivariateBasis : public SubBasis {
+    class SubUnivariatBasis : public SubBasis {
     public:
 #ifndef SWIG
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
-        SubUnivariateBasis() { };
-        SubUnivariateBasisNode* get() const ;
-        SubUnivariateBasisNode* operator->() const ;
+        SubUnivariatBasis() { };
+        SubUnivariatBasisNode* get() const ;
+        SubUnivariatBasisNode* operator->() const ;
 #endif // SWIG
         virtual SubBasis operator+ (const SubBasis& other) const;
         virtual SubBasis operator+ (const SubMonomialeBasis& other) const;
