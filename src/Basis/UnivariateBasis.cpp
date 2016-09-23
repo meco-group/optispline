@@ -17,7 +17,7 @@ namespace spline {
     //  
     //  
 
-    UnivariateBasisNode::UnivariateBasisNode(int degree_) : BasisNode(std::vector< SubBasis > {}) { }
+    UnivariateBasisNode::UnivariateBasisNode(SubBasis subbasis) : BasisNode(std::vector< SubBasis > {subbasis}) { }
     UnivariateBasisNode* UnivariateBasis::get() const { return static_cast<UnivariateBasisNode*>(SharedObject::get()); };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
 

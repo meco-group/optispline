@@ -2,6 +2,7 @@
 #include <numeric>      // std::accumulate -> greville
 #include <sstream>
 #include "BSplineBasis.h"
+#include "SubBSplineBasis.h"
 
 #include "operations/operationsBasis.h"
 
@@ -55,16 +56,13 @@ namespace spline{
     //       return std::make_shared<Basis>(kn, degree);
     //   }
 
-    int BSplineBasisNode::getLenght () const{
-        return  - 1;
-    }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& knots, int degree)  {
         assign_node(new BSplineBasisNode(knots, degree)); 
     }
 
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree) 
-    : UnivariateBasisNode(degree) { }
+    : UnivariateBasisNode(SubBSplineBasis(knots, degree)) { }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(generateKnots(bounds,degree,numberOfIntervals), degree)); };
 
