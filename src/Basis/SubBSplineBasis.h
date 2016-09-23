@@ -42,15 +42,12 @@ namespace spline{
         virtual SubBasis operator+(const SubBasis& other) const ;
         virtual SubBasis operator*(const SubBasis& other) const ;
 
-
         virtual int getLenght() const ;
 
     private:
 
         //  std::vector<bool> indector(int i, double x);
-        //
          std::vector<double> knots;
-        //
     };
 
 #endif // SWIG

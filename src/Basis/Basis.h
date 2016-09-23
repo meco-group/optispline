@@ -77,8 +77,8 @@ namespace spline {
         Argument getSubArgument ( int index ) const;
         int indexArgument(Argument a);
 
-        virtual Basis operator+(const Basis& rhs) const;
-        virtual Basis operator*(const Basis& rhs) const;
+        // virtual Basis operator+(const Basis& rhs) const;
+        // virtual Basis operator*(const Basis& rhs) const;
         virtual std::string getRepresentation() const ;
 
         std::vector< SubBasis > getSubBasis() const;

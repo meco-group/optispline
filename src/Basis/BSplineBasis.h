@@ -23,8 +23,6 @@ namespace spline{
         const std::vector<double>& getKnots () const;
         void setKnots (std::vector<double>& knots) ;
         //
-        //   BSplineBasis operator*(const BSplineBasis& other) const ;
-        //
         //   std::vector<double> greville () const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const;
@@ -33,15 +31,10 @@ namespace spline{
         /// Return a string with a representation (for SWIG)
         virtual std::string getRepresentation() const ;
 
-        virtual int getLenght() const ;
-
 	virtual BSplineBasis castBSpline() const;
 	
     private:
 
-        //  std::vector<bool> indector(int i, double x);
-        //
-        //
     };
 
 #endif // SWIG
@@ -64,9 +57,6 @@ namespace spline{
         const std::vector<double> &getKnots () const;
         void setKnots (std::vector<double> &knots) ;
 	
-        //   BSplineBasis operator*(const MonomialeBasis& other) const ;
-        //   BSplineBasis operator*(const BSplineBasis& other) const ;
-        //
         //   std::vector<double> greville () const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const;
@@ -85,9 +75,8 @@ namespace spline{
 #endif // SWIG
 
     private:
-        //  std::vector<bool> indector(int i, double x);
     };
+    std::vector<double> generateKnots(const std::vector<double >& bounds, int degree, int numberOfIntervals);
 }
 
-    std::vector<double> generateKnots(const std::vector<double >& bounds, int degree, int numberOfIntervals);
 #endif //CPP_SPLINE_BSPLINEBASIS_H
