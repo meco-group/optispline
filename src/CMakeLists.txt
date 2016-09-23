@@ -9,11 +9,11 @@ add_library(Basis SHARED
 	    Basis/SubBasis.h Basis/SubBasis.cpp
 	    Basis/SubBSplineBasis.h Basis/SubBSplineBasis.cpp
 	    Basis/SubUnivariatBasis.h Basis/SubUnivariatBasis.cpp
-	    Basis/SubMonomialeBasis.h Basis/SubMonomialeBasis.cpp
+	    Basis/SubMonomialBasis.h Basis/SubMonomialBasis.cpp
             Basis/Basis.h Basis/Basis.cpp
             Basis/BSplineBasis.h Basis/BSplineBasis.cpp
             Basis/UnivariatBasis.h Basis/UnivariatBasis.cpp
-            Basis/MonomialeBasis.h Basis/MonomialeBasis.cpp
+            Basis/MonomialBasis.h Basis/MonomialBasis.cpp
 	   
             Basis/operations/operationsBasis.h
             # Basis/operations/plus.h 

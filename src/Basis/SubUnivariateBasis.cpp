@@ -31,7 +31,7 @@ namespace spline {
         return SubBasis();
     } 
 
-    SubBasis SubUnivariatBasis::operator+ (const SubMonomialeBasis &other) const  {
+    SubBasis SubUnivariatBasis::operator+ (const SubMonomialBasis &other) const  {
         assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
@@ -46,7 +46,7 @@ namespace spline {
         return SubBasis();
     } 
 
-    SubBasis SubUnivariatBasis::operator* (const SubMonomialeBasis &other) const  {
+    SubBasis SubUnivariatBasis::operator* (const SubMonomialBasis &other) const  {
         assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 

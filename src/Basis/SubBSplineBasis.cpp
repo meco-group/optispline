@@ -35,7 +35,7 @@ namespace spline{
 	// return plusUnivariateUnivariate (*this, other);
     } 
 
-    SubBasis SubBSplineBasis::operator+ (const SubMonomialeBasis& other) const {
+    SubBasis SubBSplineBasis::operator+ (const SubMonomialBasis& other) const {
         assert(false);
 	return SubBasis();
 	// return plusUnivariateUnivariate (*this, other);
@@ -59,7 +59,7 @@ namespace spline{
 	// return timesUnivariateUnivariate (*this, other);
     } 
 
-    SubBasis SubBSplineBasis::operator* (const SubMonomialeBasis& other) const {
+    SubBasis SubBSplineBasis::operator* (const SubMonomialBasis& other) const {
         assert(false);
 	return SubBasis();
 	// return timesUnivariateUnivariate (*this, other);

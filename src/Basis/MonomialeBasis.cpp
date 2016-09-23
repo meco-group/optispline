@@ -2,26 +2,26 @@
 
 #include <casadi/casadi.hpp> // range
 
-#include "MonomialeBasis.h"
-#include "SubMonomialeBasis.h"
+#include "MonomialBasis.h"
+#include "SubMonomialBasis.h"
 
 #include "operations/operationsBasis.h"
 
 namespace spline {
-    std::string MonomialeBasisNode::getRepresentation() const {
-        return "MonomialeBasis";
+    std::string MonomialBasisNode::getRepresentation() const {
+        return "MonomialBasis";
     }
 
-    std::string MonomialeBasis::getRepresentation() const {
+    std::string MonomialBasis::getRepresentation() const {
         return (*this)->getRepresentation() ;
     }
 
-    MonomialeBasisNode* MonomialeBasis::get() const { return static_cast<MonomialeBasisNode*>(SharedObject::get()); };
-    MonomialeBasisNode* MonomialeBasis::operator->() const { return get(); }
+    MonomialBasisNode* MonomialBasis::get() const { return static_cast<MonomialBasisNode*>(SharedObject::get()); };
+    MonomialBasisNode* MonomialBasis::operator->() const { return get(); }
 
-    MonomialeBasisNode::MonomialeBasisNode(int degree) : UnivariatBasisNode(SubMonomialeBasis(degree)) {};
-    MonomialeBasis::MonomialeBasis(int degree)  {
-        assign_node(new MonomialeBasisNode(degree));
+    MonomialBasisNode::MonomialBasisNode(int degree) : UnivariatBasisNode(SubMonomialBasis(degree)) {};
+    MonomialBasis::MonomialBasis(int degree)  {
+        assign_node(new MonomialBasisNode(degree));
     }
 
 } // namespace spline

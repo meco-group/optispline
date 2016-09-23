@@ -13,7 +13,7 @@
 namespace spline {
     class SubBasis;
     class SubBSplineBasis;
-    class SubMonomialeBasis;
+    class SubMonomialBasis;
 
 #ifndef SWIG
 
@@ -43,10 +43,10 @@ namespace spline {
         SubBasis ();
 
         virtual SubBasis operator+(const SubBasis& rhs) const;
-        virtual SubBasis operator+(const SubMonomialeBasis& rhs) const;
+        virtual SubBasis operator+(const SubMonomialBasis& rhs) const;
         virtual SubBasis operator+(const SubBSplineBasis& rhs) const;
         virtual SubBasis operator*(const SubBasis& rhs) const;
-        virtual SubBasis operator*(const SubMonomialeBasis& rhs) const;
+        virtual SubBasis operator*(const SubMonomialBasis& rhs) const;
         virtual SubBasis operator*(const SubBSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 

@@ -16,10 +16,10 @@ namespace spline{
 
 #ifndef SWIG
 
-    class SubMonomialeBasisNode : public SubUnivariatBasisNode {
+    class SubMonomialBasisNode : public SubUnivariatBasisNode {
 
     public:
-        SubMonomialeBasisNode(int degree) : SubUnivariatBasisNode(degree) {};
+        SubMonomialBasisNode(int degree) : SubUnivariatBasisNode(degree) {};
 
         virtual std::string getRepresentation() const ;
         //    virtual std::vector<double> evaluationGrid(void) const;
@@ -37,27 +37,27 @@ namespace spline{
 
 #endif // SWIG
 
-    class SubMonomialeBasis : public SubUnivariatBasis {
+    class SubMonomialBasis : public SubUnivariatBasis {
 
     public:
 
 #ifndef SWIG
-        SubMonomialeBasis(){}
-        SubMonomialeBasisNode* get() const ;
-        SubMonomialeBasisNode* operator->() const ;
+        SubMonomialBasis(){}
+        SubMonomialBasisNode* get() const ;
+        SubMonomialBasisNode* operator->() const ;
 #endif // SWIG
-        SubMonomialeBasis(int degree);
+        SubMonomialBasis(int degree);
 
-        virtual SubBasis operator+(const SubMonomialeBasis& other) const ;
+        virtual SubBasis operator+(const SubMonomialBasis& other) const ;
         virtual SubBasis operator+(const SubBSplineBasis& other) const ;
         virtual SubBasis operator+(const SubBasis& other) const ;
 
-        virtual SubBasis operator*(const SubMonomialeBasis& other) const ;
+        virtual SubBasis operator*(const SubMonomialBasis& other) const ;
         virtual SubBasis operator*(const SubBSplineBasis& other) const ;
         virtual SubBasis operator*(const SubBasis& other) const ;
 
         virtual std::string getRepresentation() const ;
-        //   Basis operator*(const MonomialeBasis& other)const ;
+        //   Basis operator*(const MonomialBasis& other)const ;
         //   Basis operator*(const BSplineBasis& other)const ;
 
         //    virtual std::vector<double> evaluationGrid(void) const;
@@ -65,14 +65,14 @@ namespace spline{
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)
         inline friend
-            std::ostream& operator<<(std::ostream &stream, const SubMonomialeBasis& obj) {
+            std::ostream& operator<<(std::ostream &stream, const SubMonomialBasis& obj) {
                 return stream << obj.getRepresentation();
             }
 #endif // SWIG
     };
     
     template< class T >
-    AnyTensor SubMonomialeBasisNode::SubBasisEvalution (const std::vector< T >& x ) const {
+    AnyTensor SubMonomialBasisNode::SubBasisEvalution (const std::vector< T >& x ) const {
         assert(x.size()==1);
         T x_ = x[0];
         int lenght  = this->getLenght();

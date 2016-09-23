@@ -92,7 +92,7 @@ namespace spline {
     //     return plusMultivariate(*this, other);
     // }
     //
-    // Basis Basis::operator+ (const MonomialeBasis& other) const {
+    // Basis Basis::operator+ (const MonomialBasis& other) const {
     //     return plusMultivariate(*this, other);
     // } 
     //
@@ -104,7 +104,7 @@ namespace spline {
     //     return timesMultivariate(*this, other);
     // }
     //
-    // Basis Basis::operator* (const MonomialeBasis& other) const {
+    // Basis Basis::operator* (const MonomialBasis& other) const {
     //     return timesMultivariate(*this, other);
     // } 
     //

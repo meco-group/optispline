@@ -22,7 +22,7 @@ namespace spline {
         // return plusMultivariate(*this, other);
     }
 
-    SubBasis SubBasis::operator+ (const SubMonomialeBasis& other) const {
+    SubBasis SubBasis::operator+ (const SubMonomialBasis& other) const {
 	assert(false);
 	return SubBasis();
         // return plusMultivariate(*this, other);
@@ -39,7 +39,7 @@ namespace spline {
         // return timesMultivariate(*this, other);
     }
 
-    SubBasis SubBasis::operator* (const SubMonomialeBasis& other) const {
+    SubBasis SubBasis::operator* (const SubMonomialBasis& other) const {
 	assert(false);
 	return SubBasis();
         // return timesMultivariate(*this, other);

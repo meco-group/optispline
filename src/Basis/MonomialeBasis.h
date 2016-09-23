@@ -16,30 +16,30 @@ namespace spline{
 
 #ifndef SWIG
 
-    class MonomialeBasisNode : public UnivariatBasisNode {
+    class MonomialBasisNode : public UnivariatBasisNode {
     public:
-        MonomialeBasisNode(int degree) ;
+        MonomialBasisNode(int degree) ;
 
         virtual std::string getRepresentation() const ;
     };
 #endif // SWIG
 
-    class MonomialeBasis : public UnivariatBasis {
+    class MonomialBasis : public UnivariatBasis {
     public:
 
 #ifndef SWIG
-        MonomialeBasis(){}
-        MonomialeBasisNode* get() const ;
-        MonomialeBasisNode* operator->() const ;
+        MonomialBasis(){}
+        MonomialBasisNode* get() const ;
+        MonomialBasisNode* operator->() const ;
 #endif // SWIG
-        MonomialeBasis(int degree);
+        MonomialBasis(int degree);
 
         virtual std::string getRepresentation() const ;
 
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)
         inline friend
-            std::ostream& operator<<(std::ostream &stream, const MonomialeBasis& obj) {
+            std::ostream& operator<<(std::ostream &stream, const MonomialBasis& obj) {
                 return stream << obj.getRepresentation();
             }
 #endif // SWIG

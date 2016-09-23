@@ -4,7 +4,7 @@
 #include "../Function/Argument.h"
 #include "Basis.h"
 #include "BSplineBasis.h"
-#include "MonomialeBasis.h"
+#include "MonomialBasis.h"
 // #include "plusUnivariate.h"
 namespace spline{
 
@@ -57,8 +57,8 @@ namespace spline{
         Basis casted_plus_univariate(const BasisT b1, const Basis& b2){
             BasisNode* w = b2.get();
             Basis sum;
-            if(dynamic_cast<MonomialeBasisNode*>(w)){
-                sum = b1 + w->shared_from_this<MonomialeBasis>();
+            if(dynamic_cast<MonomialBasisNode*>(w)){
+                sum = b1 + w->shared_from_this<MonomialBasis>();
             }
             if(dynamic_cast<BSplineBasisNode*>(w)){
                 sum = b1 + w->shared_from_this<BSplineBasis>();
@@ -70,8 +70,8 @@ namespace spline{
         Basis casted_times_univariate(const BasisT b1, const Basis& b2){
             BasisNode* w = b2.get();
             Basis product;
-            if(dynamic_cast<MonomialeBasisNode*>(w)){
-                product = b1 + w->shared_from_this<MonomialeBasis>();
+            if(dynamic_cast<MonomialBasisNode*>(w)){
+                product = b1 + w->shared_from_this<MonomialBasis>();
             }
             if(dynamic_cast<BSplineBasisNode*>(w)){
                 product = b1 + w->shared_from_this<BSplineBasis>();

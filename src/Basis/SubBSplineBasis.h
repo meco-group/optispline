@@ -10,7 +10,7 @@
 
 namespace spline{
 
-    class SubMonomialeBasis;
+    class SubMonomialBasis;
 
 #ifndef SWIG
 
@@ -71,14 +71,14 @@ namespace spline{
         void setKnots (std::vector<double> &knots) ;
 
         virtual SubBasis operator+(const SubBasis& other) const ;
-        virtual SubBasis operator+(const SubMonomialeBasis& other) const ;
+        virtual SubBasis operator+(const SubMonomialBasis& other) const ;
         virtual SubBasis operator+(const SubBSplineBasis& other) const ;
 
         virtual SubBasis operator*(const SubBasis& other) const ;
-        virtual SubBasis operator*(const SubMonomialeBasis& other) const ;
+        virtual SubBasis operator*(const SubMonomialBasis& other) const ;
         virtual SubBasis operator*(const SubBSplineBasis& other) const ;
 
-        //   BSplineBasis operator*(const MonomialeBasis& other) const ;
+        //   BSplineBasis operator*(const MonomialBasis& other) const ;
         //   BSplineBasis operator*(const BSplineBasis& other) const ;
         //
         //   std::vector<double> greville () const;
