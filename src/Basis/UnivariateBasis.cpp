@@ -42,9 +42,10 @@ namespace spline {
          return 0 ;
     }
 
-    void UnivariateBasis::assertUnivariateBasis  ( ) const {assert(getDimesion()==1);} 
+    void UnivariateBasisNode::assertUnivariateBasis  ( ) const {assert(getDimension()==1);} 
+    void UnivariateBasis::assertUnivariateBasis  ( ) const {assert(getDimension()==1);} 
 
-    SubBasis UnivariateBasis::getUnivariatSubBasis() const{
+    SubBasis UnivariateBasis::getSubUnivariateBasis() const{
         assertUnivariateBasis();
         return getSubBasis()[0];
     }

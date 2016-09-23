@@ -28,6 +28,9 @@ namespace spline {
         int getDegree () const ;
         void setDegree (int degree);
     protected:
+#ifndef SWIG
+        void assertUnivariateBasis() const;
+#endif
     };
 
 #endif // SWIG
@@ -49,7 +52,7 @@ namespace spline {
 
 #ifndef SWIG
         void assertUnivariateBasis() const;
-        SubBasis getUnivariatSubBasis() const;
+        SubBasis getSubUnivariateBasis() const;
 #endif
     };
 } // namespace spline
