@@ -86,7 +86,7 @@ namespace std {
 #include <src/Basis/utils/CommonBasis.h>
 #include <src/Basis/SubBasis.h>
 #include <src/Basis/Basis.h>
-#include <src/Basis/UnivariatBasis.h>
+#include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/utils/vectorUtilities.h> // Debug
@@ -106,7 +106,7 @@ namespace std {
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/SubBasis.h>
 %include <src/Basis/Basis.h>
-%include <src/Basis/UnivariatBasis.h>
+%include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>
 %include <src/Basis/utils/vectorUtilities.h> // Debug

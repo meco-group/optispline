@@ -7,7 +7,7 @@
 #include "../SharedObject/SharedObjectNode.h"
 
 #include "SubBasis.h"
-#include "SubUnivariatBasis.h"
+#include "SubUnivariateBasis.h"
 
 #include "utils/CommonBasis.h"
 namespace spline{
@@ -16,10 +16,10 @@ namespace spline{
 
 #ifndef SWIG
 
-    class SubMonomialBasisNode : public SubUnivariatBasisNode {
+    class SubMonomialBasisNode : public SubUnivariateBasisNode {
 
     public:
-        SubMonomialBasisNode(int degree) : SubUnivariatBasisNode(degree) {};
+        SubMonomialBasisNode(int degree) : SubUnivariateBasisNode(degree) {};
 
         virtual std::string getRepresentation() const ;
         //    virtual std::vector<double> evaluationGrid(void) const;
@@ -37,7 +37,7 @@ namespace spline{
 
 #endif // SWIG
 
-    class SubMonomialBasis : public SubUnivariatBasis {
+    class SubMonomialBasis : public SubUnivariateBasis {
 
     public:
 

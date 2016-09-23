@@ -6,7 +6,7 @@
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
-#include "UnivariatBasis.h"
+#include "UnivariateBasis.h"
 
 namespace spline{
 
@@ -14,7 +14,7 @@ namespace spline{
 
 #ifndef SWIG
 
-    class BSplineBasisNode : public UnivariatBasisNode {
+    class BSplineBasisNode : public UnivariateBasisNode {
 
     public:
         BSplineBasisNode (const std::vector<double >& knots, int degree);
@@ -39,7 +39,7 @@ namespace spline{
 
 #endif // SWIG
 
-    class BSplineBasis : public UnivariatBasis {
+    class BSplineBasis : public UnivariateBasis {
 
     public:
 

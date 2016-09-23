@@ -161,10 +161,10 @@ namespace spline{
     }
 
     SubBSplineBasisNode::SubBSplineBasisNode (const std::vector<double >& knots, int degree) 
-    : SubUnivariatBasisNode(degree), knots(knots){ }
+    : SubUnivariateBasisNode(degree), knots(knots){ }
 
     SubBSplineBasis::SubBSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new SubBSplineBasisNode(bounds, degree, numberOfIntervals)); };
-    SubBSplineBasisNode::SubBSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) : SubUnivariatBasisNode(degree) {
+    SubBSplineBasisNode::SubBSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) : SubUnivariateBasisNode(degree) {
         int numberOfKnots = 2*degree + numberOfIntervals;
         knots.resize(numberOfKnots, 0);
 
