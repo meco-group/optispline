@@ -12,9 +12,9 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 import Basis
 from casadi import *
 
-basis_x =  Basis.MonomialeBasis(2)
+basis_x =  Basis.MonomialBasis(2)
 basis_x.setArgument('x')
-basis_y =  Basis.MonomialeBasis(1)
+basis_y =  Basis.MonomialBasis(1)
 basis_y.setArgument('y')
 
 basis_xy = basis_x + basis_y

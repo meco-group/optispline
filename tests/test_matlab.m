@@ -3,7 +3,7 @@ addpath('../swig');
 
 import Basis.*;
 
-b = Basis.MonomialeBasis(4);
+b = Basis.MonomialBasis(4);
 
 disp(b.getDegree());
 

@@ -15,8 +15,8 @@ from casadi import *
 
 # x = Basis.Argument('x')
 
-b =  Basis.MonomialeBasis(2)
-c =  Basis.MonomialeBasis(1)
+b =  Basis.MonomialBasis(2)
+c =  Basis.MonomialBasis(1)
 c.setArgument('x')
 # d = c + b
 # print(d)

@@ -30,8 +30,8 @@ BS1 = Basis.BSplineBasis([0.0 ,1.0 ],3,4)
 print list( BS1.getKnots() )
 BS2 = Basis.BSplineBasis([0.0 ,1.0 ],3,4)
 
-MO1 = Basis.MonomialeBasis(3)
-MO2 = Basis.MonomialeBasis(7)
+MO1 = Basis.MonomialBasis(3)
+MO2 = Basis.MonomialBasis(7)
 
 BS3 = BS1 + BS2
 

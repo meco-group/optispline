@@ -13,9 +13,9 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 import Basis
 from casadi import *
 
-m1 = Basis.MonomialeBasis(2)
-m2 = Basis.MonomialeBasis(3)
-m3 = Basis.MonomialeBasis(4)
+m1 = Basis.MonomialBasis(2)
+m2 = Basis.MonomialBasis(3)
+m3 = Basis.MonomialBasis(4)
 b1 = Basis.BSplineBasis([0.0 ,1.0 ],5,3)
 b2 = Basis.BSplineBasis([0.0 ,1.0 ],3,3)
 b3 = Basis.BSplineBasis([0.0 ,1.0 ],4,3)

@@ -13,8 +13,8 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 import Basis
 from casadi import *
 
-b1 = Basis.MonomialeBasis(1)
-b2 = Basis.MonomialeBasis(1)
+b1 = Basis.MonomialBasis(1)
+b2 = Basis.MonomialBasis(1)
 
 ## Bad synitax
 b = Basis.Basis()
