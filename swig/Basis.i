@@ -85,6 +85,9 @@ namespace std {
 #include <src/Function/Argument.h>
 #include <src/Basis/utils/CommonBasis.h>
 #include <src/Basis/SubBasis.h>
+#include <src/Basis/SubUnivariateBasis.h>
+#include <src/Basis/SubMonomialBasis.h>
+#include <src/Basis/SubBSplineBasis.h>
 #include <src/Basis/Basis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
@@ -105,6 +108,9 @@ namespace std {
 %include <src/Function/Argument.h>
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/SubBasis.h>
+%include <src/Basis/SubUnivariateBasis.h>
+%include <src/Basis/SubMonomialBasis.h>
+%include <src/Basis/SubBSplineBasis.h>
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
