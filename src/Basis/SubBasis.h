@@ -25,7 +25,12 @@ namespace spline {
         virtual ST operator()(const std::vector< SX >& x) const;
         virtual MT operator()(const std::vector< MX >& x) const;
         virtual int getDimension() const {return 0;};
+
+        template< class T >
+            void assertVectorLenghtCorrect( const std::vector< T >& x) const;
+        
     };
+
 
 #endif // SWIG
 
@@ -57,5 +62,14 @@ namespace spline {
         int getDimension() const;
 
     };
-}
+
+
+ 
+
+        template< class T >
+        void SubBasisNode::assertVectorLenghtCorrect( const std::vector< T >& x) const{
+            assert(x.size() == getDimension());  // imput vector has wrong dimention
+        }
+
+}  
 #endif  // SUBBASIS_H_
