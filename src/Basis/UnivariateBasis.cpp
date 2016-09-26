@@ -29,7 +29,7 @@ namespace spline {
 
     int UnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
     int UnivariateBasisNode::getLenght ( ) const {
-         assert(0);
+        return getSubBasis().size();
     }
     
     void  UnivariateBasis::setDegree (int degree) { (*this)->setDegree (degree); } 

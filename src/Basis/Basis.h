@@ -24,7 +24,7 @@ namespace spline {
         BasisNode (const std::vector< SubBasis >& allSubBasis);
         int getDimension () const;
 
-        // std::vector<int> getSize () const;
+        std::vector<int> getSize () const;
 
         Argument& getArgument ();
         const Argument& getArgument () const;
@@ -41,6 +41,9 @@ namespace spline {
         virtual Argument getSubArgument( int index ) const;
         void addBasis(Basis basis);
         void addBasis(SubBasis basis);
+
+        // virtual Basis operator+(const Basis& rhs) const;
+        // virtual Basis operator*(const Basis& rhs) const;
 
         virtual DT operator()(const std::vector< double >& x) const;
         virtual ST operator()(const std::vector< SX >& x) const;
@@ -65,7 +68,7 @@ namespace spline {
 #endif // SWIG
         int getDimension () const;
 
-        // std::vector<int> getSize () const;
+        std::vector<int> getSize () const;
         Basis ();
         Basis (const std::vector< SubBasis >& allSubBasis);
 
@@ -77,8 +80,6 @@ namespace spline {
         Argument getSubArgument ( int index ) const;
         int indexArgument(Argument a);
 
-        // virtual Basis operator+(const Basis& rhs) const;
-        // virtual Basis operator*(const Basis& rhs) const;
         virtual std::string getRepresentation() const ;
 
         std::vector< SubBasis > getSubBasis() const;
@@ -87,6 +88,9 @@ namespace spline {
 
         void addBasis(Basis basis);
         void addBasis(SubBasis basis);
+
+        // virtual Basis operator+(const Basis& rhs) const;
+        // virtual Basis operator*(const Basis& rhs) const;
 
         DT operator()(const std::vector< double >& x) const;
         ST operator()(const std::vector< SX >& x) const;
