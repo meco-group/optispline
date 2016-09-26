@@ -32,6 +32,8 @@ namespace spline {
         virtual int getLenght() const ;
         int getDegree () const ;
         void setDegree (int degree);
+        int getDimension() const;
+
     protected:
         int degree;
     };

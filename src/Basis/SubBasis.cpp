@@ -81,4 +81,5 @@ namespace spline {
         return ret;
     }
 
+    int SubBasis::getDimension() const{(*this)->getDimension();}
 } // namespace spline

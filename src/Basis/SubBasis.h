@@ -24,6 +24,7 @@ namespace spline {
         virtual DT operator()(const std::vector< double >& x) const;
         virtual ST operator()(const std::vector< SX >& x) const;
         virtual MT operator()(const std::vector< MX >& x) const;
+        virtual int getDimension() const {return 0;};
     };
 
 #endif // SWIG
@@ -53,6 +54,7 @@ namespace spline {
         DT operator()(const std::vector< double >& x) const;
         ST operator()(const std::vector< SX >& x) const;
         MT operator()(const std::vector< MX >& x) const;
+        int getDimension() const;
 
     };
 }
