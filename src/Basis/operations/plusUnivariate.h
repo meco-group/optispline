@@ -1,18 +1,17 @@
 #ifndef PLUSUNIVARIATE_H
 #define PLUSUNIVARIATE_H
 
-#include "../Function/Argument.h"
-#include "Basis.h"
-#include "MonomialBasis.h"
-#include "BSplineBasis.h"
+#include "SubBasis.h"
+#include "SubMonomialBasis.h"
+#include "SubBSplineBasis.h"
 
 namespace spline{
-
+//TODO specify return type
 // #ifndef SWIG
-    Basis plusBasis(const BSplineBasis& b1 , const BSplineBasis& b2);
-    Basis plusBasis(const MonomialBasis& b1 , const MonomialBasis& b2);
-    Basis plusBasis(const MonomialBasis& b1 , const BSplineBasis& b2);
-    Basis plusBasis(const BSplineBasis& b1 , const MonomialBasis& b2);
+    SubBasis plusBasis(const SubBSplineBasis& b1 , const SubBSplineBasis& b2);
+    SubBasis plusBasis(const SubMonomialBasis& b1 , const SubMonomialBasis& b2);
+    SubBasis plusBasis(const SubMonomialBasis& b1 , const SubBSplineBasis& b2);
+    SubBasis plusBasis(const SubBSplineBasis& b1 , const SubMonomialBasis& b2);
 
 // #endif // SWIG
 } // namespace spline

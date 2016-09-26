@@ -2,7 +2,5 @@
 #define CPP_SPLINES_TIMES_H
 
 #include "timesUnivariate.h"
-#include "operationsMultivariate.h"
-#include "operationsUnivariate.h"
 
 #endif //CPP_SPLINES_TIMES_H
