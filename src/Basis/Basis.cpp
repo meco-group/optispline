@@ -48,6 +48,11 @@ namespace spline {
         return allArguments.size() > 0;
     }
 
+    bool Basis::hasValidNumberOfArguments() const{ return (*this)->hasArguments();}
+    bool BasisNode::hasValidNumberOfArguments() const{
+        return allArguments.size() == allSubBasis.size();
+    }
+
     std::vector< SubBasis > Basis::getSubBasis () const { return (*this)->getSubBasis (); } 
     std::vector< SubBasis > BasisNode::getSubBasis () const {
         return allSubBasis;
