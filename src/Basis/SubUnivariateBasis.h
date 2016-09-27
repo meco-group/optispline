@@ -24,9 +24,9 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
-        virtual DT operator()(const std::vector< double >& x) const { assert(0);};
-        virtual ST operator()(const std::vector< SX >& x) const { assert(0);};
-        virtual MT operator()(const std::vector< MX >& x) const { assert(0);};
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const {assert(0);};
+        // virtual ST operator()(const std::vector< SX >& x) const { assert(0);};
+        // virtual MT operator()(const std::vector< MX >& x) const { assert(0);};
 
 //TODO addBasis         
         virtual int getLenght() const ;

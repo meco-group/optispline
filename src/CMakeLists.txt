@@ -29,6 +29,10 @@ add_library(Basis SHARED
             Function/Argument.h Function/Argument.cpp
 
             Coefficients/Coefficient.h Coefficients/Coefficient.cpp
+
+	    ../tensor-tools/any_tensor.cpp
+	    ../tensor-tools/any_tensor.hpp
+	    ../tensor-tools/tensor.hpp
           )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
 add_definitions(-DSHARED_LIBRARY)

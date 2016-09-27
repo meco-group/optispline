@@ -11,13 +11,23 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 from Basis import *
 from casadi import *
 
+import pdb
+
 class Test_Basis_SubBasis(unittest.TestCase):
 
     def assertEqualTensor(self, a, b):
-        self.assertTrue(list(a.data().full())==b)
+        try:
+          a = a.data()
+        except:
+          pass
+        self.assertTrue(list(a.full())==b)
 
     def assertNotEqualTensor(self, a, b):
-        self.assertFalse(list(a.data().full())==b)
+        try:
+          a = a.data()
+        except:
+          pass
+        self.assertFalse(list(a.full())==b)
 
     def test_getLenght(self):
         s = SubMonomialBasis(3)
@@ -48,9 +58,20 @@ class Test_Basis_SubBasis(unittest.TestCase):
 
     def test_evaluationMX1(self):
         s = SubMonomialBasis(3)
-        x = MX()
-        r = s([2.0])
-        self.assertNotEqualTensor(r,[1,2,4,7])
+        x = MX.sym("x")
+        r = s([x])
+        self.assertTrue(isinstance(r.data(),MX))
+        f = Function("f",[x],[r.data()])
+        
+        self.assertEqualTensor(f(2.0),[1,2,4,8])
 
+    def test_evaluationSX1(self):
+        s = SubMonomialBasis(3)
+        x = SX.sym("x")
+        r = s([x])
+        self.assertTrue(isinstance(r.data(),SX))
+        f = Function("f",[x],[r.data()])
+        
+        self.assertEqualTensor(f(2.0),[1,2,4,8])
 if __name__ == '__main__':
     unittest.main()
