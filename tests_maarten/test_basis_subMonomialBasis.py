@@ -33,7 +33,7 @@ class Test_Basis_SubBasis(unittest.TestCase):
 
     def test_evaluation1(self):
         s = SubMonomialBasis(3)
-        r = s([AnyScalar(2.0)]).data()
+        r = s([2.0]).data()
         self.assertEqual(r.size(1),s.getLenght())
 
     def test_evaluation2(self):
