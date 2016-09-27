@@ -10,6 +10,7 @@
 #include "SubUnivariateBasis.h"
 
 #include "utils/CommonBasis.h"
+
 namespace spline{
 
     class SubBSplineBasis;
