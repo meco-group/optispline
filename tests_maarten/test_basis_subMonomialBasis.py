@@ -16,7 +16,8 @@ from Basis import *
 from casadi import *
 
 class Test_Basis_SubBasis(unittest.TestCase):
-    def assertEqualTensor(a, b):
+
+    def assertEqualTensor(self, a, b):
         self.assertTrue(list(a.data().full())==b)
 
     def assertNotEqualTensor(self, a, b):
@@ -41,13 +42,19 @@ class Test_Basis_SubBasis(unittest.TestCase):
 
     def test_evaluation2(self):
         s = SubMonomialBasis(3)
-        r = s([2.0]).data()
-        assertEqualTensor(r,[1,2,4,8])
+        r = s([2.0])
+        self.assertEqualTensor(r,[1,2,4,8])
 
     def test_evaluation3(self):
         s = SubMonomialBasis(3)
-        r = s([2.0]).data()
-        assertNotEqualTensor(r,[1,2,4,7])
+        r = s([2.0])
+        self.assertNotEqualTensor(r,[1,2,4,7])
+
+    def test_evaluation4(self):
+        s = SubMonomialBasis(3)
+        x = MX()
+        r = s([2.0])
+        self.assertNotEqualTensor(r,[1,2,4,7])
 
     def test_isupper(self):
         self.assertTrue('FOO'.isupper())
