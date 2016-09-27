@@ -43,6 +43,11 @@ namespace spline {
         return -1;
     }
 
+    bool Basis::hasArguments() const{ return (*this)->hasArguments();}
+    bool BasisNode::hasArguments() const{
+        return allArguments.size() > 0;
+    }
+
     std::vector< SubBasis > Basis::getSubBasis () const { return (*this)->getSubBasis (); } 
     std::vector< SubBasis > BasisNode::getSubBasis () const {
         return allSubBasis;

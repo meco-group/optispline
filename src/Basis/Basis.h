@@ -32,6 +32,8 @@ namespace spline {
         Argument getSubArgument( int index ) const;
         int indexArgument(Argument a);
 
+        bool hasArguments() const;
+
         virtual std::string getRepresentation() const ;
 
         virtual std::vector< SubBasis > getSubBasis() const;
@@ -75,6 +77,8 @@ namespace spline {
 
         Argument getSubArgument( int index ) const;
         int indexArgument(Argument a);
+
+        bool hasArguments() const;
 
         virtual std::string getRepresentation() const ;
 
