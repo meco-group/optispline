@@ -41,5 +41,13 @@ class Test_Basis_SubBasis(unittest.TestCase):
         a.setName("a")
         self.assertEqual(a, "a")
 
+    def test_getName1(self):
+        a = Argument()
+        self.assertEqual(a.getName(), "_")
+
+    def test_getName2(self):
+        b = Argument("b")
+        self.assertEqual(b.getName(), "b")
+
 if __name__ == '__main__':
     unittest.main()
