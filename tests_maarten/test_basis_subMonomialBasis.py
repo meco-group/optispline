@@ -68,6 +68,5 @@ class Test_Basis_SubBasis(unittest.TestCase):
             s.split(2)
 
 if __name__ == '__main__':
-    s = SubMonomialBasis(3)
     print s
     unittest.main()
