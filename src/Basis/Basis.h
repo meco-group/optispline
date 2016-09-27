@@ -26,10 +26,10 @@ namespace spline {
 
         std::vector<int> getSize () const;
 
-        Argument& getArgument ();
-        const Argument& getArgument () const;
-        void setArgument (const Argument& argument);
+        void setArguments (std::vector< Argument > argument);
+        std::vector< Argument > getArguments() const;
 
+        Argument getSubArgument( int index ) const;
         int indexArgument(Argument a);
 
         virtual std::string getRepresentation() const ;
@@ -37,8 +37,6 @@ namespace spline {
         virtual std::vector< SubBasis > getSubBasis() const;
         virtual Basis getSubBasis( int index ) const;
 
-        virtual std::vector< Argument > getSubArgument() const;
-        virtual Argument getSubArgument( int index ) const;
         void addBasis(Basis basis);
         void addBasis(SubBasis basis);
 
@@ -72,12 +70,10 @@ namespace spline {
         Basis ();
         Basis (const std::vector< SubBasis >& allSubBasis);
 
-        void setArgument (const Argument& argument);
-        void setArgument (const std::string& argumentName);
-        Argument& getArgument ();
-        const Argument& getArgument () const;
-        std::vector< Argument > getSubArgument ()const;
-        Argument getSubArgument ( int index ) const;
+        void setArguments (std::vector< Argument > argument);
+        std::vector< Argument > getArguments() const;
+
+        Argument getSubArgument( int index ) const;
         int indexArgument(Argument a);
 
         virtual std::string getRepresentation() const ;

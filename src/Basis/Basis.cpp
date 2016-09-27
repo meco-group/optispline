@@ -22,22 +22,25 @@ namespace spline {
         return allSubBasis.size();
     }
 
-    void Basis::setArgument (const Argument& argument) { (*this)->setArgument(argument); } 
-    void BasisNode::setArgument (const Argument& argument) {
-        return;
+    void Basis::setArguments (std::vector< Argument > args ) { return (*this)->setArguments(args);} 
+    void BasisNode::setArguments (std::vector< Argument > args) {
+        allArguments = args;
     }
 
-    void Basis::setArgument (const std::string& argument) { (*this)->setArgument(*new Argument ( argument )); } 
-    
-
-    const Argument& Basis::getArgument () const { return (*this)->getArgument();} 
-    const Argument& BasisNode::getArgument () const {
-        return *new Argument();
+    std::vector< Argument > Basis::getArguments () const { return (*this)->getArguments();} 
+    std::vector< Argument > BasisNode::getArguments () const {
+        return allArguments;
     }
 
-    Argument& Basis::getArgument () { return (*this)->getArgument();} 
-    Argument& BasisNode::getArgument () {
-        return *new Argument();
+    Argument Basis::getSubArgument ( int index ) const { return (*this)->getSubArgument ( index ); } 
+    Argument BasisNode::getSubArgument ( int index ) const {
+        return allArguments[index];
+    }
+
+    int Basis::indexArgument(Argument a) { return (*this)->indexArgument(a); } 
+    int BasisNode::indexArgument(Argument a) {
+        assert(false);
+        return -1;
     }
 
     std::vector< SubBasis > Basis::getSubBasis () const { return (*this)->getSubBasis (); } 
@@ -50,24 +53,14 @@ namespace spline {
         return Basis(std::vector<SubBasis> {allSubBasis[index]});
     }
 
-    std::vector< Argument > Basis::getSubArgument () const { return (*this)->getSubArgument (); } 
-    std::vector< Argument > BasisNode::getSubArgument () const {
-        return allArguments;
-    }
-
-    Argument Basis::getSubArgument ( int index ) const { return (*this)->getSubArgument ( index ); } 
-    Argument BasisNode::getSubArgument ( int index ) const {
-        return allArguments[index];
-    }
-
     void Basis::addBasis (Basis basis) { (*this)->addBasis (basis);} 
     void BasisNode::addBasis (Basis basis) {
-         this->allSubBasis.push_back(basis.getSubBasis()[0]);
+        this->allSubBasis.push_back(basis.getSubBasis()[0]);
     }
 
     void Basis::addBasis (SubBasis basis) { (*this)->addBasis (basis);} 
     void BasisNode::addBasis (SubBasis basis) {
-         this->allSubBasis.push_back(basis);
+        this->allSubBasis.push_back(basis);
     }
 
     std::vector<int> Basis::getSize () const { (*this)->getSize ();} 
@@ -126,7 +119,7 @@ namespace spline {
         }
         return ret;
     }
-   
+
     ST  Basis::operator()  (const std::vector< SX > &  x   ) const {
         return (*this)->operator() (x);
     }
@@ -139,7 +132,7 @@ namespace spline {
         }
         return ret;
     }
-   
+
     MT  Basis::operator()  (const std::vector< MX > &  x   ) const {
         return (*this)->operator() (x);
     }
@@ -151,13 +144,6 @@ namespace spline {
             ret = ret.outer_product(allSubBasis[i](std::vector< MX >{x[i]}));
         }
         return ret;
-    }
-
-     int Basis::indexArgument(Argument a) { return (*this)->indexArgument(a); } 
-     int BasisNode::indexArgument(Argument a) {
-         assert(false);
-         return -1;
-
     }
 
     BSplineBasis Basis::castBSpline() const{return (*this)->castBSpline();}
