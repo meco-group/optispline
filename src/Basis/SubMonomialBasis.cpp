@@ -72,21 +72,20 @@ namespace spline {
     
     AnyTensor SubMonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         if( 1 ) {
-        // if( x.isDouble()) {
-            return SubBasisEvalution<double>(x);
+        if( x.isDouble()) {
+            return SubBasisEvalution<double,DM>(x);
         } else {
             return SubBasisEvalution<AnyScalar>(x);
         }
     }
 
     ST  SubMonomialBasisNode::operator() (const std::vector< SX > &  x   ) const {
-        assert(x.size()==1);
-        return ST(vertcat(x),{3}); 
+        
+        // return SubBasisEvalution<SX,SX>(x);
     }
 
     MT  SubMonomialBasisNode::operator() (const std::vector< MX > &  x   ) const {
-        assert(x.size()==1);
-        return MT(vertcat(x),{3}); 
+        return SubBasisEvalution<MX,MX>(x);
     }
 
     int SubMonomialBasisNode::getLenght () const {

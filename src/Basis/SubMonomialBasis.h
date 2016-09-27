@@ -31,8 +31,8 @@ namespace spline{
         virtual SubBasis operator+(const SubBasis& other) const ;
         virtual SubBasis operator*(const SubBasis& other) const ;
         virtual int getLenght() const ;
-    template< class T >
-    AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
+    template< class T ,class R >
+    Tensor<R> SubBasisEvalution (const std::vector< T >& x ) const ;
     };
 
 #endif // SWIG
@@ -71,16 +71,16 @@ namespace spline{
 #endif // SWIG
     };
     
-    template< class T >
-    AnyTensor SubMonomialBasisNode::SubBasisEvalution (const std::vector< T >& x ) const {
-        assert(x.size()==1);
+    template< class T, class R >
+    Tensor<R> SubMonomialBasisNode::SubBasisEvalution (const std::vector< T >& x ) const {
+        assertVectorLenghtCorrect(x);
         T x_ = x[0];
         int lenght  = this->getLenght();
-        std::vector<T> evaluation_basis(lenght);
+        std::vector<R> evaluation_basis(lenght);
         for (int i = 0; i < lenght; ++i) {
               evaluation_basis[i] = pow(x_,i);
         }
-        return AnyTensor(evaluation_basis,{lenght});
+        return Tensor<R>(evaluation_basis,{lenght});
     }
 
 }  // namespace spline
