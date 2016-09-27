@@ -1,0 +1,45 @@
+import unittest
+
+#!/usr/bin/env python
+import sys
+# sys.path.insert( 0, '/home/erik/Documents/cpp_splines/swig')
+import os
+
+# Boolean flag to indicate if we run in valgrind
+# To speed up valgrind, you may choose to put
+# expensive computations within 'if not valgrind'
+valgrind = int(os.environ.get("VALGRIND",'0'))
+
+from Basis import *
+from casadi import *
+
+class Test_Basis_SubBasis(unittest.TestCase):
+
+    def test_representation1(self):
+        a = Argument()
+        self.assertEqual(a.getRepresentation(), "Argument _")
+
+    def test_equal1(self):
+        a = Argument()
+        self.assertEqual(a, "_")
+
+    def test_equal2(self):
+        b = Argument("b")
+        self.assertEqual(b, "b")
+
+    def test_equal3(self):
+        a = Argument()
+        b = Argument("b")
+        self.assertNotEqual(a, b)
+
+    def test_equal4(self):
+        a = Argument()
+        self.assertEqual(a, a)
+
+    def test_setName1(self):
+        a = Argument()
+        a.setName("a")
+        self.assertEqual(a, "a")
+
+if __name__ == '__main__':
+    unittest.main()
