@@ -1,10 +1,6 @@
-import unittest
-
 #!/usr/bin/env python
-import sys
-# sys.path.insert( 0, '/home/erik/Documents/cpp_splines/swig')
-sys.path.insert( 0, '../swig')
-sys.path.insert(0, '/home/erik/Documents/casadi3.0')
+
+import unittest
 import os
 
 # Boolean flag to indicate if we run in valgrind
@@ -55,7 +51,7 @@ class Test_Basis_SubBasis(unittest.TestCase):
         b.addBasis(s1)
         x = [0.1]
         r = b(x)
-        # self.assertEqual(s1(x), r)
+        self.assertEqual(s1(x), r)
 
     def test_getEvaluation2(self):
         s1 = SubMonomialBasis(2)
@@ -79,12 +75,4 @@ class Test_Basis_SubBasis(unittest.TestCase):
         self.assertTrue((np.array([[1,2,4,8],[0.1,0.2,0.4,0.8],[0.01,0.02,0.04,0.08]])==r).any())
         
 if __name__ == '__main__':        
-    s1 = SubMonomialBasis(2)
-    s2 = SubMonomialBasis(3)
-    b = Basis()
-    b.addBasis(s1)
-    b.addBasis(s2)
-    x = [0.1,2]
-    r = b(x).data().full()
-    print(r)
     unittest.main()

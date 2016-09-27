@@ -1,8 +1,6 @@
-import unittest
-
 #!/usr/bin/env python
-import sys
-# sys.path.insert( 0, '/home/erik/Documents/cpp_splines/swig')
+
+import unittest
 import os
 
 # Boolean flag to indicate if we run in valgrind

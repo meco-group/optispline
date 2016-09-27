@@ -1,10 +1,6 @@
-import unittest
-
 #!/usr/bin/env python
-import sys
-# sys.path.insert( 0, '/home/erik/Documents/cpp_splines/swig')
-sys.path.insert( 0, '../swig')
-sys.path.insert(0, '/home/erik/Documents/casadi3.0')
+
+import unittest
 import os
 
 # Boolean flag to indicate if we run in valgrind
@@ -56,17 +52,5 @@ class Test_Basis_SubBasis(unittest.TestCase):
         r = s([2.0])
         self.assertNotEqualTensor(r,[1,2,4,7])
 
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
-
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
-
 if __name__ == '__main__':
-    print s
     unittest.main()
