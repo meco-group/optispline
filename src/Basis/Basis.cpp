@@ -22,22 +22,22 @@ namespace spline {
         return allSubBasis.size();
     }
 
-    void Basis::setArguments (std::vector< Argument > args ) { return (*this)->setArguments(args);} 
-    void BasisNode::setArguments (std::vector< Argument > args) {
+    void Basis::setArguments (const std::vector< spline::Argument >& args) { return (*this)->setArguments(args);} 
+    void BasisNode::setArguments (const std::vector< Argument >& args) {
         allArguments = args;
     }
 
-    std::vector< Argument > Basis::getArguments () const { return (*this)->getArguments();} 
+    std::vector< spline::Argument > Basis::getArguments () const { return (*this)->getArguments();} 
     std::vector< Argument > BasisNode::getArguments () const {
         return allArguments;
     }
 
-    Argument Basis::getSubArgument ( int index ) const { return (*this)->getSubArgument ( index ); } 
+    spline::Argument Basis::getSubArgument ( int index ) const { return (*this)->getSubArgument ( index ); } 
     Argument BasisNode::getSubArgument ( int index ) const {
         return allArguments[index];
     }
 
-    int Basis::indexArgument(Argument a) { return (*this)->indexArgument(a); } 
+    int Basis::indexArgument(spline::Argument a) { return (*this)->indexArgument(a); } 
     int BasisNode::indexArgument(Argument a) {
         assert(false);
         return -1;

@@ -82,7 +82,7 @@ namespace std {
 #include <tensor.hpp>
 #include <src/SharedObject/SharedObject.h>
 #include <src/SharedObject/SharedObjectNode.h>
-#include <src/Function/Argument.h>
+
 #include <src/Basis/utils/CommonBasis.h>
 #include <src/Basis/SubBasis.h>
 #include <src/Basis/SubUnivariateBasis.h>
@@ -98,14 +98,18 @@ namespace std {
 
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
+#include <src/Function/Argument.h>
 
 #include <casadi/casadi.hpp>
 %}
 
+%include <src/Function/Argument.h>
+%template(ArgumentVector) std::vector< spline::Argument >;
+
 %include <tensor.hpp>
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
-%include <src/Function/Argument.h>
+
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/SubBasis.h>
 %include <src/Basis/SubUnivariateBasis.h>
@@ -122,9 +126,9 @@ namespace std {
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
 
-%template(SubBasisVector) std::vector< spline::SubBasis >;
 %template(BasisVector) std::vector< spline::Basis >;
-%template(ArgumentVector) std::vector< spline::Argument >;
+%template(SubBasisVector) std::vector< spline::SubBasis >;
+
 %template(DTensor) Tensor<DM>;
 %template(STensor) Tensor<SX>;
 %template(MTensor) Tensor<MX>;

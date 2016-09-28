@@ -26,7 +26,7 @@ namespace spline {
 
         std::vector<int> getSize () const;
 
-        void setArguments (std::vector< Argument > argument);
+        void setArguments (const std::vector< Argument >& argument);
         std::vector< Argument > getArguments() const;
 
         Argument getSubArgument( int index ) const;
@@ -73,11 +73,11 @@ namespace spline {
         Basis ();
         Basis (const std::vector< SubBasis >& allSubBasis);
 
-        void setArguments (std::vector< Argument > argument);
-        std::vector< Argument > getArguments() const;
+        void setArguments (const std::vector< spline::Argument >& argument);
+        std::vector< spline::Argument > getArguments() const;
 
-        Argument getSubArgument( int index ) const;
-        int indexArgument(Argument a);
+        spline::Argument getSubArgument( int index ) const;
+        int indexArgument(spline::Argument a);
 
         bool hasArguments() const;
         bool hasValidNumberOfArguments() const;
