@@ -10,7 +10,8 @@
 
 #include "SubBasis.h"
 #include "../Function/Argument.h"
-#include <tensor.hpp>
+// #include <tensor.hpp>
+#include <any_tensor.hpp>
 
 namespace spline {
     class Basis;
@@ -46,9 +47,9 @@ namespace spline {
         // virtual Basis operator+(const Basis& rhs) const;
         // virtual Basis operator*(const Basis& rhs) const;
 
-        virtual DT operator()(const std::vector< double >& x) const;
-        virtual ST operator()(const std::vector< SX >& x) const;
-        virtual MT operator()(const std::vector< MX >& x) const;
+        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        // virtual ST operator()(const std::vector< SX >& x) const;
+        // virtual MT operator()(const std::vector< MX >& x) const;
 
         virtual BSplineBasis castBSpline() const;
     protected:
@@ -94,9 +95,9 @@ namespace spline {
         // virtual Basis operator+(const Basis& rhs) const;
         // virtual Basis operator*(const Basis& rhs) const;
 
-        DT operator()(const std::vector< double >& x) const;
-        ST operator()(const std::vector< SX >& x) const;
-        MT operator()(const std::vector< MX >& x) const;
+        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        // ST operator()(const std::vector< SX >& x) const;
+        // MT operator()(const std::vector< MX >& x) const;
 
         virtual BSplineBasis castBSpline() const;
     };

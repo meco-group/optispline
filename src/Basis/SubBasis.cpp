@@ -51,35 +51,33 @@ namespace spline {
         // return timesMultivariate(*this, other);
     } 
 
-    DT  SubBasis::operator() (const std::vector< double > &  x ) const {
+    AnyTensor  SubBasis::operator() (const std::vector< AnyScalar > &  x ) const {
         return (*this)->operator()(x);
     }
 
-    DT  SubBasisNode::operator() (const std::vector< double > &  x   ) const {
-        DT ret(1,{});
+    AnyTensor  SubBasisNode::operator() (const std::vector< AnyScalar > &  x   ) const {
 	assert(false);		//Abstract
-        return ret;
     }
    
-    ST  SubBasis::operator()  (const std::vector< SX > &  x   ) const {
-        return (*this)->operator() (x);
-    }
-
-    ST  SubBasisNode::operator()  (const std::vector< SX > &  x   ) const {
-        ST ret(1,{});
-	assert(false);		//Abstract
-        return ret;
-    }
-   
-    MT  SubBasis::operator()  (const std::vector< MX > &  x   ) const {
-        return (*this)->operator() (x);
-    }
-
-    MT  SubBasisNode::operator()  (const std::vector< MX > &  x   ) const {
-        MT ret(1,{});
-	assert(false);		//Abstract
-        return ret;
-    }
+    // ST  SubBasis::operator()  (const std::vector< SX > &  x   ) const {
+    //     return (*this)->operator() (x);
+    // }
+    //
+    // ST  SubBasisNode::operator()  (const std::vector< SX > &  x   ) const {
+    //     ST ret(1,{});
+	// assert(false);		//Abstract
+    //     return ret;
+    // }
+    //
+    // MT  SubBasis::operator()  (const std::vector< MX > &  x   ) const {
+    //     return (*this)->operator() (x);
+    // }
+    //
+    // MT  SubBasisNode::operator()  (const std::vector< MX > &  x   ) const {
+    //     MT ret(1,{});
+	// assert(false);		//Abstract
+    //     return ret;
+    // }
 
     int SubBasis::getDimension() const{(*this)->getDimension();}
 } // namespace spline
