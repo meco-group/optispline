@@ -103,18 +103,22 @@ namespace std {
 #include <casadi/casadi.hpp>
 %}
 
+%include <src/SharedObject/SharedObject.h>
+%include <src/SharedObject/SharedObjectNode.h>
+
 %include <src/Function/Argument.h>
 %template(ArgumentVector) std::vector< spline::Argument >;
 
 %include <tensor.hpp>
-%include <src/SharedObject/SharedObject.h>
-%include <src/SharedObject/SharedObjectNode.h>
 
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/SubBasis.h>
 %include <src/Basis/SubUnivariateBasis.h>
 %include <src/Basis/SubMonomialBasis.h>
 %include <src/Basis/SubBSplineBasis.h>
+
+%template(SubBasisVector) std::vector< spline::SubBasis >;
+
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
@@ -127,7 +131,6 @@ namespace std {
 %include <src/Function/Polynomial.h>
 
 %template(BasisVector) std::vector< spline::Basis >;
-%template(SubBasisVector) std::vector< spline::SubBasis >;
 
 %template(DTensor) Tensor<DM>;
 %template(STensor) Tensor<SX>;
