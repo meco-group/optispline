@@ -66,3 +66,4 @@ swig/*.m
 /tests/pdb.py
 /run.sh
 /tests/pdb/pdb.py
+/tests_maarten/.gdb_history
