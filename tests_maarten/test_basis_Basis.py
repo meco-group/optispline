@@ -84,6 +84,41 @@ class Test_Basis_SubBasis(unittest.TestCase):
         b.setArguments([a,a])
         self.assertTrue(b.hasArguments())
         
+    def test_hasValidNumberOfArguments1(self):
+        b = Basis()
+        self.assertTrue(b.hasValidNumberOfArguments())
+        
+    def test_hasValidNumberOfArguments2(self):
+        b = Basis()
+        a = Argument()
+        b.setArguments([a,a])
+        self.assertFalse(b.hasValidNumberOfArguments())
+        
+    def test_hasValidNumberOfArguments3(self):
+        s = SubBasis()
+        b = Basis()
+        b.addBasis(s)
+        b.addBasis(s)
+        self.assertFalse(b.hasValidNumberOfArguments())
+
+    def test_hasValidNumberOfArguments4(self):
+        s = SubBasis()
+        b = Basis()
+        b.addBasis(s)
+        b.addBasis(s)
+        a = Argument()
+        b.setArguments([a,a])
+        self.assertTrue(b.hasValidNumberOfArguments())
+
+# TODO constructor
+    # def test_getEvaluation1(self):
+    # def test_getEvaluation2(self):
+
 if __name__ == '__main__':        
+    b = Basis()
+    a = Argument()
+    b.setArguments([a,a])
+    print b.getSubBasis()
+    print b.getArguments()
     unittest.main()
 
