@@ -172,6 +172,23 @@ namespace std {
     }
 
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m) {
+      // MX already?
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(DT*), 0))) {
+        return true;
+      }
+
+      // Try converting to a temporary ST
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(ST*), 0))) {
+        return true;
+      }
+
+      // Try converting to a temporary MT
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(MT*), 0))) {
+        return true;
+      }
       return false;
     }
     
