@@ -74,7 +74,15 @@ class Test_Basis_SubBasis(unittest.TestCase):
         r = b(x).data().full()
         self.assertTrue((np.array([[1,2,4,8],[0.1,0.2,0.4,0.8],[0.01,0.02,0.04,0.08]])==r).any())
         
-
+    def test_hasArgument1(self):
+        b = Basis()
+        self.assertFalse(b.hasArguments())
+        
+    def test_hasArgument2(self):
+        a = Argument()
+        b = Basis()
+        b.setArguments([a,a])
+        self.assertTrue(b.hasArguments())
 # TODO hasArgument
         
 if __name__ == '__main__':        
