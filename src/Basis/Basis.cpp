@@ -50,7 +50,7 @@ namespace spline {
 
     bool Basis::hasValidNumberOfArguments() const{ return (*this)->hasArguments();}
     bool BasisNode::hasValidNumberOfArguments() const{
-        return allArguments.size() == allSubBasis.size();
+        return (allArguments.size() == allSubBasis.size());
     }
 
     std::vector< SubBasis > Basis::getSubBasis () const { return (*this)->getSubBasis (); } 
@@ -87,7 +87,7 @@ namespace spline {
     }
 
 
-    std::string BasisNode::getRepresentation() const {return "Basis";};
+    std::string BasisNode::getRepresentation() const {return "Basis"  + std::to_string(allArguments.size()) + std::to_string(allSubBasis.size());};
     std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
     std::ostream& operator<<(std::ostream &stream, const Basis& base){
         return stream << base.getRepresentation();

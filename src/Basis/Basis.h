@@ -51,7 +51,7 @@ namespace spline {
         virtual MT operator()(const std::vector< MX >& x) const;
 
         virtual BSplineBasis castBSpline() const;
-    protected:
+    // protected:
         std::vector< SubBasis > allSubBasis;
         std::vector< Argument > allArguments;
     };
