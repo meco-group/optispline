@@ -3,17 +3,16 @@
 
 #include <string>
 #include <vector>
-#include <tensor.hpp>
+#include <any_tensor.hpp>
 
 namespace spline {
-    typedef DT AnyTensor;
-    typedef double AnyScalar;
+
     class Coefficient {
     public:
         // Coefficient(){}
         // template <class D>
         Coefficient (const AnyTensor& t) : data(t){}
-        Coefficient (const std::vector<AnyScalar>& v); 
+        // Coefficient (const std::vector<AnyScalar>& v); 
 
         // const std::vector< int > getShape() const;
 

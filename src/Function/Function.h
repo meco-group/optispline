@@ -5,10 +5,8 @@
 #include <string>
 #include "../Basis/Basis.h"
 #include "../Coefficients/Coefficient.h"
-#include <tensor.hpp>
+#include <any_tensor.hpp>
 namespace spline {
-    typedef DT AnyTensor;
-    typedef double AnyScalar;
     class Function {
 
     public :
