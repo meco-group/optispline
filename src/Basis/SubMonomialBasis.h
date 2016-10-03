@@ -72,7 +72,6 @@ namespace spline{
     
     template<class T>
     AnyTensor SubMonomialBasisNode::SubBasisEvalution (const std::vector< T >& x ) const {
-        assert(x.size()==1);
         T x_ = x[0];
         int lenght  = this->getLenght();
         std::vector<T> evaluation_basis(lenght);
