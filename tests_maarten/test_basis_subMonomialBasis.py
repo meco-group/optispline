@@ -53,8 +53,8 @@ class Test_Basis_SubBasis(unittest.TestCase):
 
     def test_evaluation3(self):
         s = SubMonomialBasis(3)
-        r = s([2.0])
-        self.assertNotEqualTensor(r,[1,2,4,7])
+        r = s([0.0])
+        self.assertNotTensor(r,[1,0,0,0])
 
     def test_evaluationMX1(self):
         s = SubMonomialBasis(3)
