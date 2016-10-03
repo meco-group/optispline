@@ -105,15 +105,6 @@ namespace spline{
         return DT(A,{getLenght()}); 
     }
 
-    ST  SubBSplineBasisNode::operator()  (const std::vector< SX > &  x   ) const {
-        assert(x.size()==1);
-        return ST(vertcat(x),{3}); 
-    }
-
-    MT  SubBSplineBasisNode::operator()  (const std::vector< MX > &  x   ) const {
-        assert(x.size()==1);
-        return MT(vertcat(x),{3}); 
-    }
     //   std::make_shared<Basis>::operator* (const Monomialestd::shared_ptr<Basis> &other) const {
     //       return timesstd::shared_ptr<Basis>(*this, other);
     //   }

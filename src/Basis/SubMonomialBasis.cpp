@@ -78,15 +78,6 @@ namespace spline {
         }
     }
 
-    // ST  SubMonomialBasisNode::operator() (const std::vector< SX > &  x   ) const {
-    //     
-    //     // return SubBasisEvalution<SX,SX>(x);
-    // }
-    //
-    // MT  SubMonomialBasisNode::operator() (const std::vector< MX > &  x   ) const {
-    //     // return SubBasisEvalution<MX,MX>(x);
-    // }
-    //
     int SubMonomialBasisNode::getLenght () const {
          return getDegree() + 1;
     }

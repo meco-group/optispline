@@ -26,8 +26,6 @@ namespace spline{
         //    virtual std::vector<double> evaluationGrid(void) const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        // virtual ST operator()(const std::vector< SX >& x) const ;
-        // virtual MT operator()(const std::vector< MX >& x) const ;
 
         virtual SubBasis operator+(const SubBasis& other) const ;
         virtual SubBasis operator*(const SubBasis& other) const ;

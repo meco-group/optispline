@@ -35,9 +35,7 @@ namespace spline{
         /// Return a string with a representation (for SWIG)
         virtual std::string getRepresentation() const ;
 
-        virtual DT operator()(const std::vector< double >& x) const;
-        virtual ST operator()(const std::vector< SX >& x) const ;
-        virtual MT operator()(const std::vector< MX >& x) const ;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         virtual SubBasis operator+(const SubBasis& other) const ;
         virtual SubBasis operator*(const SubBasis& other) const ;
