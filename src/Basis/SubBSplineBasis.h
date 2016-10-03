@@ -97,7 +97,7 @@ namespace spline{
     AnyTensor SubBSplineBasisNode::SubBasisEvalution (const std::vector< T > & x_) const {
         T x = x_[0];
         T b;
-        T bottom;
+        double bottom;
         T basis[degree+1][knots.size()-1];
 
         for (int i=0; i<(knots.size()-1); i++){
