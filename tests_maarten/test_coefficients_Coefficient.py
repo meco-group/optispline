@@ -23,17 +23,27 @@ class Test_Basis_SubBasis(unittest.TestCase):
     def assertNotEqualTensor(self, a, b):
         self.assertFalse(list(a.data().full())==b)
 
+    def test_argument_construction_1(self):
+        a_ = [2,0,0,1]
+        a = DTensor(a_, [4,1,1])
+        a = Coefficient(a)
+        self.assertTrue( all(a.getData().data().full()[:,0] == [2,0,0,1]))
+        self.assertFalse(all(a.getData().data().full()[:,0] == [2,0,0,2]))
 
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
+    def test_argument_construction_2(self):
+        a_ = SX.sym('a',3 + 1,1)
+        a = STensor(a_, [3 + 1,1,1])
+        a = Coefficient(a)
+        # print list(a.getData().data() == a_)
+        # print(any(False == ( a.getData().data() == a_)))
+        # self.assertTrue( all(a.getData().data() == a_))
 
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
-
+    def test_argument_tensor_1(self):
+        a = [[1,1],[0,2]]
+        a = DM(a)
+        a_ = DTensor(a, [2,2,1,1])
+        a_ = Coefficient(a_)
+        print all(a_.getData().data() == a)
+     
 if __name__ == '__main__':
     unittest.main()

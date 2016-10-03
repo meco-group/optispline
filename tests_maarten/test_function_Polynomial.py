@@ -32,10 +32,11 @@ class Test_Basis_SubBasis(unittest.TestCase):
             s.split(2)
 
 if __name__ == '__main__':
-    a = [2,1,0]
-    p = Polynomial(a)
-    print p
-    print p([1]).data()
-    print p([3]).data()
+    # a = [2,1,0]
+    # p = Polynomial(a)
+    # print p
+    # print p([1]).data()
+    # print p([3]).data()
+    
     
     unittest.main()
