@@ -2,6 +2,7 @@
 
 import unittest
 import os
+import random
 
 # Boolean flag to indicate if we run in valgrind
 # To speed up valgrind, you may choose to put
@@ -50,8 +51,10 @@ class Test_Basis_SubBasis(unittest.TestCase):
         b = Basis()
         b.addBasis(s1)
         x = [0.1]
-        r = b(x)
-        # self.assertEqual(s1(x), r)
+        for _ in range(10):
+            x = [random.random()]
+            r = b(x)
+            self.assertTrue(all((r.data() == s1(x).data()).full()))
 
     def test_getEvaluation2(self):
         s1 = SubMonomialBasis(2)
@@ -60,9 +63,8 @@ class Test_Basis_SubBasis(unittest.TestCase):
         b.addBasis(s1)
         b.addBasis(s2)
         x = [0.1]
-        # with self.assertRaises(TypeError):
-        #     # r = b(x)
-        #     pass
+        with self.assertRaises(Exception):
+            b(x)
 
     def test_getEvaluation3(self):
         s1 = SubMonomialBasis(2)
@@ -115,10 +117,5 @@ class Test_Basis_SubBasis(unittest.TestCase):
     # def test_getEvaluation2(self):
 
 if __name__ == '__main__':        
-    b = Basis()
-    a = Argument()
-    b.setArguments([a,a])
-    print b.getSubBasis()
-    print b.getArguments()
     unittest.main()
 
