@@ -6,7 +6,10 @@
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
+#include "SubBasis.h"
 #include "SubUnivariateBasis.h"
+
+#include "utils/CommonBasis.h"
 
 namespace spline{
 
@@ -25,14 +28,11 @@ namespace spline{
         const std::vector<double>& getKnots () const;
         void setKnots (std::vector<double>& knots) ;
         //
-        //   BSplineBasis operator*(const BSplineBasis& other) const ;
-        //
         //   std::vector<double> greville () const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const;
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
-        /// Return a string with a representation (for SWIG)
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
@@ -41,6 +41,8 @@ namespace spline{
         virtual SubBasis operator*(const SubBasis& other) const ;
 
         virtual int getLenght() const ;
+        template<class T>
+        AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
 
     private:
 
@@ -90,6 +92,46 @@ namespace spline{
     private:
         //  std::vector<bool> indector(int i, double x);
     };
+
+    template<class T>
+    AnyTensor SubBSplineBasisNode::SubBasisEvalution (const std::vector< T > & x_) const {
+        T x = x_[0];
+        T b;
+        T bottom;
+        T basis[degree+1][knots.size()-1];
+
+        for (int i=0; i<(knots.size()-1); i++){
+            if((i < degree+1) and (knots[0] == knots[i])){
+                basis[0][i] = ((x >= knots[i]) and (x <= knots[i+1]));
+            }else{
+                basis[0][i] = ((x > knots[i]) and (x <= knots[i+1]));
+            }
+        }
+
+        for (int d=1; d<(degree+1); d++){
+            for (int i=0; i < getLenght(); i++){
+                b = 0;
+                bottom = knots[i+d] - knots[i];
+                if (bottom != 0){
+                    b = (x - knots[i])*basis[d-1][i]/bottom;
+                }
+                bottom = knots[i+d+1] - knots[i+1];
+                if (bottom != 0){
+                    b += (knots[i+d+1] - x)*basis[d-1][i+1]/bottom;
+                }
+                basis[d][i] = b;
+            }
+        }
+
+        std::vector<T> r(getLenght());
+
+        for (int i = 0; i < getLenght(); ++i) {
+            r[i] = basis[degree][i];
+        }
+
+        return AnyTensor(vertcat(r));
+    }
+
 }
 
 #endif //CPP_SPLINE_SUBBSPLINEBASIS_H
