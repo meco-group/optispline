@@ -124,7 +124,6 @@ namespace std {
 }
 
 %include <tensor.hpp>
-%include <any_tensor.hpp>
 
 
 %fragment("tensortools_anyscalar", "header", fragment="casadi_aux") {
