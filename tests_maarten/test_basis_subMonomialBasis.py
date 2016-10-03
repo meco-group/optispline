@@ -61,17 +61,12 @@ class Test_Basis_SubBasis(unittest.TestCase):
         x = MX.sym("x")
         r = s([x])
         self.assertTrue(isinstance(r.data(),MX))
-        f = Function("f",[x],[r.data()])
-        
-        self.assertEqualTensor(f(2.0),[1,2,4,8])
 
     def test_evaluationSX1(self):
         s = SubMonomialBasis(3)
         x = SX.sym("x")
         r = s([x])
         self.assertTrue(isinstance(r.data(),SX))
-        f = Function("f",[x],[r.data()])
-        
-        self.assertEqualTensor(f(2.0),[1,2,4,8])
+
 if __name__ == '__main__':
     unittest.main()
