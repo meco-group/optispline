@@ -1,6 +1,7 @@
 #include "Basis.h"
 #include "BSplineBasis.h"
 #include "operations/operationsBasis.h"
+#include "../common.h"
 
 namespace spline {
 
@@ -122,7 +123,7 @@ namespace spline {
     }
 
     AnyTensor  BasisNode::operator() (const std::vector< AnyScalar > &  x   ) const {
-        assert(x.size()==allSubBasis.size());
+        spline_assert(x.size()==allSubBasis.size());
         AnyTensor ret = AnyTensor::unity();
         for (int i = 0; i < x.size(); ++i) {
             ret = ret.outer_product(allSubBasis[i](std::vector< AnyScalar >{x[i]}));
