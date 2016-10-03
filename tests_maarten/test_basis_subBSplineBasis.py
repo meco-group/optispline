@@ -13,6 +13,16 @@ from casadi import *
 
 import pdb
 
+def wrap(s, casadiType):
+    def eval(a):
+        x = [casadiType.sym('x') for i in a]
+        print x
+        temp = Function('temp',x,[s(x).data()])
+        print temp
+        print temp(a)
+        return DTensor(temp(a),[s.getLenght()])
+    return eval
+
 class Test_Basis_SubBasis(unittest.TestCase):
 
     def assertEqualTensor(self, a, b):
@@ -47,25 +57,16 @@ class Test_Basis_SubBasis(unittest.TestCase):
         self.assertEqual(r.size(1),s.getLenght())
 
     def test_evaluation2(self):
-        s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
-        r = s([0.0])
-        self.assertEqualTensor(r,[1,0,0,0])
-        r = s([0.5])
-        self.assertEqualTensor(r,[0,0.5,0.5,0])
-        r = s([1.0])
-        self.assertEqualTensor(r,[0,0,0,1])
+        S = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
 
-    def test_evaluationMX1(self):
-        s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
-        x = MX.sym("x")
-        r = s([x])
-        self.assertTrue(isinstance(r.data(),MX))
+        for s in [S, wrap(S,SX), wrap(S,MX)]:
+            for arg, check in [
+                ([0.0], [1,0,0,0]),
+                ([0.5], [0,0.5,0.5,0]),
+                ([1.0], [0,0,0,1])
+                ]:
+                self.assertEqualTensor(s(arg),check)
 
-    def test_evaluationSX1(self):
-        s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
-        x = SX.sym("x")
-        r = s([x])
-        self.assertTrue(isinstance(r.data(),SX))
 
 if __name__ == '__main__':
     unittest.main()
