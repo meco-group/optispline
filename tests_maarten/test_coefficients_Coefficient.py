@@ -23,13 +23,13 @@ class Test_Basis_SubBasis(unittest.TestCase):
     def assertNotEqualTensor(self, a, b):
         self.assertFalse(list(a.data().full())==b)
 
-    def test_argument_construction_1(self):
+    def test_coefficients_construction_1(self):
         a_ = [2,0,0,1]
         a = DTensor(a_, [4,1,1])
         a = Coefficient(a)
         self.assertTrue( all(a.getData().data().full()[:,0] == [2,0,0,1]))
 
-    def test_argument_construction_2(self):
+    def test_coefficients_construction_2(self):
         a_ = SX.sym('a',3 + 1,1)
         a = STensor(a_, [3 + 1,1,1])
         a = Coefficient(a)

@@ -16,10 +16,7 @@ import pdb
 def wrap(s, casadiType):
     def eval(a):
         x = [casadiType.sym('x') for i in a]
-        print x
         temp = Function('temp',x,[s(x).data()])
-        print temp
-        print temp(a)
         return DTensor(temp(a),[s.getLenght()])
     return eval
 
