@@ -97,12 +97,6 @@ namespace std {
 %}
 
 #ifdef SWIGPYTHON
-#define GUESTOBJECT PyObject
-#elif defined(SWIGMATLAB)
-#define GUESTOBJECT mxArray
-#else
-#define GUESTOBJECT void
-#endif
 %header %{
   namespace casadi {
     bool to_ptr(PyObject *p, AnyScalar** m);
@@ -114,6 +108,20 @@ namespace std {
     PyObject *from_ptr(const MT *a);
   }
 %}
+#elif defined(SWIGMATLAB)
+%header %{
+  namespace casadi {
+    bool to_ptr(mxArray *p, AnyScalar** m);
+    bool to_ptr(mxArray *p, AnyTensor** m);
+    mxArray * from_ptr(const AnyScalar *a);
+    mxArray * from_ptr(const AnyTensor *a);
+    mxArray *from_ptr(const DT *a);
+    mxArray *from_ptr(const ST *a);
+    mxArray *from_ptr(const MT *a);
+  }
+%}
+#endif
+
 %import "casadi.i"
 %exception {
   try {
