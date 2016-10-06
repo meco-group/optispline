@@ -94,29 +94,13 @@ namespace spline {
         return stream << base.getRepresentation();
     }
 
-    // Basis Basis::operator+ (const Basis& other) const { 
-    //     return plusMultivariate(*this, other);
-    // }
-    //
-    // Basis Basis::operator+ (const MonomialBasis& other) const {
-    //     return plusMultivariate(*this, other);
-    // } 
-    //
-    // Basis Basis::operator+ (const BSplineBasis& other) const {
-    //     return plusMultivariate(*this, other);
-    // } 
-    //
-    // Basis Basis::operator* (const Basis& other) const { 
-    //     return timesMultivariate(*this, other);
-    // }
-    //
-    // Basis Basis::operator* (const MonomialBasis& other) const {
-    //     return timesMultivariate(*this, other);
-    // } 
-    //
-    // Basis Basis::operator* (const BSplineBasis& other) const {
-    //     return timesMultivariate(*this, other);
-    // } 
+    Basis Basis::operator+ (const Basis& other) const { 
+        return plusMultivariate(*this, other);
+    }
+
+    Basis Basis::operator* (const Basis& other) const { 
+        return timesMultivariate(*this, other);
+    }
 
     AnyTensor  Basis::operator() (const std::vector< AnyScalar > &  x ) const {
         return (*this)->operator()(x);

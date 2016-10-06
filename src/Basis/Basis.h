@@ -44,8 +44,8 @@ namespace spline {
         void addBasis(Basis basis);
         void addBasis(SubBasis basis);
 
-        // virtual Basis operator+(const Basis& rhs) const;
-        // virtual Basis operator*(const Basis& rhs) const;
+        Basis operator+(const Basis& rhs) const;
+        Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
@@ -90,8 +90,8 @@ namespace spline {
         void addBasis(Basis basis);
         void addBasis(SubBasis basis);
 
-        // virtual Basis operator+(const Basis& rhs) const;
-        // virtual Basis operator*(const Basis& rhs) const;
+        Basis operator+(const Basis& rhs) const;
+        Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
