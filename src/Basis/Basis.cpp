@@ -117,6 +117,6 @@ namespace spline {
 
     BSplineBasis Basis::castBSpline() const{return (*this)->castBSpline();}
     BSplineBasis BasisNode::castBSpline() const{
-        assert(false); // not inmplemented
+        spline_assert(false); // not inmplemented
     }
 } // namespace spline
