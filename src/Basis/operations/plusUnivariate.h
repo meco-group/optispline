@@ -8,10 +8,10 @@
 namespace spline{
 //TODO specify return type
 // #ifndef SWIG
-    SubBasis plusBasis(const SubBSplineBasis& b1 , const SubBSplineBasis& b2);
-    SubBasis plusBasis(const SubMonomialBasis& b1 , const SubMonomialBasis& b2);
-    SubBasis plusBasis(const SubMonomialBasis& b1 , const SubBSplineBasis& b2);
-    SubBasis plusBasis(const SubBSplineBasis& b1 , const SubMonomialBasis& b2);
+    SubBasis plusSubBasis(const SubBSplineBasis& b1 , const SubBSplineBasis& b2);
+    SubBasis plusSubBasis(const SubMonomialBasis& b1 , const SubMonomialBasis& b2);
+    SubBasis plusSubBasis(const SubMonomialBasis& b1 , const SubBSplineBasis& b2);
+    SubBasis plusSubBasis(const SubBSplineBasis& b1 , const SubMonomialBasis& b2);
 
 // #endif // SWIG
 } // namespace spline
