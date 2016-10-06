@@ -22,6 +22,7 @@ namespace spline {
 
     class BasisNode : public SharedObjectNode {
     public:
+        BasisNode (const std::vector< Basis >& allBasis);
         BasisNode (const std::vector< SubBasis >& allSubBasis);
         int getDimension () const;
 
@@ -45,7 +46,7 @@ namespace spline {
         void addBasis(SubBasis basis);
 
         Basis operator+(const Basis& rhs) const;
-        Basis operator*(const Basis& rhs) const;
+        // Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
@@ -71,6 +72,7 @@ namespace spline {
         std::vector<int> getSize () const;
         Basis ();
         Basis (const std::vector< SubBasis >& allSubBasis);
+        Basis (const std::vector< Basis >& allBasis);
 
         void setArguments (const std::vector< spline::Argument >& argument);
         std::vector< spline::Argument > getArguments() const;
@@ -91,7 +93,7 @@ namespace spline {
         void addBasis(SubBasis basis);
 
         Basis operator+(const Basis& rhs) const;
-        Basis operator*(const Basis& rhs) const;
+        // Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 

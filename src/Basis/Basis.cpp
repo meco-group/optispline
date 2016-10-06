@@ -12,6 +12,16 @@ namespace spline {
         assign_node(new BasisNode(std::vector< SubBasis >{}));
     }
 
+    Basis::Basis (const std::vector< Basis >& allBasis){
+        std::vector< SubBasis > allSubBasis {};
+        for ( auto &basis : allBasis ) {
+            for ( auto &subBasis : basis.getSubBasis() ) {
+                allSubBasis.push_back(subBasis);
+            }
+        }
+        assign_node(new BasisNode(allSubBasis));
+    }
+
     Basis::Basis (const std::vector< SubBasis >& allSubBasis){
         assign_node(new BasisNode(allSubBasis));
     }
