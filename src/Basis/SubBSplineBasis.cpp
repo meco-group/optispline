@@ -17,53 +17,50 @@ namespace spline{
     };
     std::string SubBSplineBasis::getRepresentation() const { return (*this)->getRepresentation() ;};
 
-    SubBasis SubBSplineBasis::operator+ (const SubBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return (*this)->operator+(other); 
-    } 
-
+    SubBasis SubBSplineBasis::operator+ (const SubBasis& other) const {(*this)->operator+(other);}
     SubBasis SubBSplineBasisNode::operator+ (const SubBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return other + shared_from_this<BSplineBasis>();
-    }
-
-    SubBasis SubBSplineBasis::operator+ (const SubBSplineBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return plusUnivariateUnivariate (*this, other);
+        return other + shared_from_this<SubBSplineBasis>();
     } 
 
-    SubBasis SubBSplineBasis::operator+ (const SubMonomialBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return plusUnivariateUnivariate (*this, other);
+    // SubBasis SubBSplineBasisNode::operator+ (const SubBasis& other) const {
+    //     assert(false);
+	// return SubBasis();
+	// // return other + shared_from_this<BSplineBasis>();
+    // }
+
+    SubBasis SubBSplineBasis::operator+ (const SubBSplineBasis& other) const {(*this)->operator+(other);}
+    SubBasis SubBSplineBasisNode::operator+ (const SubBSplineBasis& other) const {
+        return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
     } 
 
-    SubBasis SubBSplineBasis::operator* (const SubBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return (*this)->operator*(other); 
+    SubBasis SubBSplineBasis::operator+ (const SubMonomialBasis& other) const {(*this)->operator+(other);}
+    SubBasis SubBSplineBasisNode::operator+ (const SubMonomialBasis& other) const {
+        return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
     } 
 
-    SubBasis SubBSplineBasisNode::operator* (const SubBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return other + shared_from_this<BSplineBasis>();
-    }
-
-    SubBasis SubBSplineBasis::operator* (const SubBSplineBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return timesUnivariateUnivariate (*this, other);
-    } 
-
-    SubBasis SubBSplineBasis::operator* (const SubMonomialBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return timesUnivariateUnivariate (*this, other);
-    } 
+    // SubBasis SubBSplineBasis::operator* (const SubBasis& other) const {
+    //     assert(false);
+	// return SubBasis();
+	// // return (*this)->operator*(other); 
+    // } 
+    //
+    // SubBasis SubBSplineBasisNode::operator* (const SubBasis& other) const {
+    //     assert(false);
+	// return SubBasis();
+	// // return other + shared_from_this<BSplineBasis>();
+    // }
+    //
+    // SubBasis SubBSplineBasis::operator* (const SubBSplineBasis& other) const {
+    //     assert(false);
+	// return SubBasis();
+	// // return timesUnivariateUnivariate (*this, other);
+    // } 
+    //
+    // SubBasis SubBSplineBasis::operator* (const SubMonomialBasis& other) const {
+    //     assert(false);
+	// return SubBasis();
+	// // return timesUnivariateUnivariate (*this, other);
+    // } 
 
 
     //   std::make_shared<Basis>::operator* (const Monomialestd::shared_ptr<Basis> &other) const {

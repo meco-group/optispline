@@ -1,5 +1,6 @@
 #include "SubBasis.h"
 #include "operations/operationsBasis.h"
+#include "../common.h"	
 
 namespace spline {
 
@@ -16,40 +17,39 @@ namespace spline {
         return stream << base.getRepresentation();
     }
 
-    SubBasis SubBasis::operator+ (const SubBasis& other) const { 
-	assert(false);
-	return SubBasis();
-        // return plusMultivariate(*this, other);
+    
+    SubBasis SubBasis::operator+ (const SubBasis& other) const { (*this)->operator+(other);}
+    SubBasis SubBasisNode::operator+ (const SubBasis& other) const { 
+        spline_assert(false);
     }
 
-    SubBasis SubBasis::operator+ (const SubMonomialBasis& other) const {
-	assert(false);
-	return SubBasis();
-        // return plusMultivariate(*this, other);
-    } 
-    SubBasis SubBasis::operator+ (const SubBSplineBasis& other) const {
-	assert(false);
-	return SubBasis();
-        // return plusMultivariate(*this, other);
+    SubBasis SubBasis::operator+ (const SubMonomialBasis& other) const {(*this)->operator+(other);}
+    SubBasis SubBasisNode::operator+ (const SubMonomialBasis& other) const {
+        spline_assert(false);
     } 
 
-    SubBasis SubBasis::operator* (const SubBasis& other) const { 
-	assert(false);
-	return SubBasis();
-        // return timesMultivariate(*this, other);
-    }
-
-    SubBasis SubBasis::operator* (const SubMonomialBasis& other) const {
-	assert(false);
-	return SubBasis();
-        // return timesMultivariate(*this, other);
+    SubBasis SubBasis::operator+ (const SubBSplineBasis& other) const {(*this)->operator+(other);}
+    SubBasis SubBasisNode::operator+ (const SubBSplineBasis& other) const {
+        spline_assert(false);
     } 
 
-    SubBasis SubBasis::operator* (const SubBSplineBasis& other) const {
-	assert(false);
-	return SubBasis();
-        // return timesMultivariate(*this, other);
-    } 
+    // SubBasis SubBasis::operator* (const SubBasis& other) const { 
+	// assert(false);
+	// return SubBasis();
+    //     // return timesMultivariate(*this, other);
+    // }
+    //
+    // SubBasis SubBasis::operator* (const SubMonomialBasis& other) const {
+	// assert(false);
+	// return SubBasis();
+    //     // return timesMultivariate(*this, other);
+    // } 
+    //
+    // SubBasis SubBasis::operator* (const SubBSplineBasis& other) const {
+	// assert(false);
+	// return SubBasis();
+    //     // return timesMultivariate(*this, other);
+    // } 
 
     AnyTensor  SubBasis::operator() (const std::vector< AnyScalar > &  x ) const {
         return (*this)->operator()(x);

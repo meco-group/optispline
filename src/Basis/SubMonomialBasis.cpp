@@ -22,53 +22,51 @@ namespace spline {
         assign_node(new SubMonomialBasisNode(degree));
     }
 
-    SubBasis SubMonomialBasis::operator+ (const SubBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return other + *this; 
+    SubBasis SubMonomialBasis::operator+ (const SubBasis& other) const {(*this)->operator+(other);}
+    SubBasis SubMonomialBasisNode::operator+ (const SubBasis& other) const {
+        return other + shared_from_this<SubMonomialBasis>();
     } 
 
-    SubBasis SubMonomialBasis::operator+ (const SubMonomialBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return plusUnivariateUnivariate (*this, other);
+    SubBasis SubMonomialBasis::operator+ (const SubBSplineBasis& other) const {(*this)->operator+(other);}
+    SubBasis SubMonomialBasisNode::operator+ (const SubBSplineBasis& other) const {
+        return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
     } 
+
+    SubBasis SubMonomialBasis::operator+ (const SubMonomialBasis& other) const {(*this)->operator+(other);}
+    SubBasis SubMonomialBasisNode::operator+ (const SubMonomialBasis& other) const {
+        return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
+    } 
+
+
+    // SubBasis SubMonomialBasis::operator* (const SubBasis& other) const {
+    //     assert(false);
+	// return SubBasis();
+	// // return other * *this; 
+    // } 
+    //
+    // SubBasis SubMonomialBasis::operator* (const SubMonomialBasis& other)const  {
+    //     assert(false);
+	// return SubBasis();
+	// // return timesUnivariateUnivariate (*this, other);
+
+    //
+    // SubBasis SubMonomialBasis::operator* (const SubBSplineBasis& other)const  {
+    //     assert(false);
+	// return SubBasis();
+	// // return timesUnivariateUnivariate (*this, other);
+    // } 
     
-    SubBasis SubMonomialBasis::operator+ (const SubBSplineBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return plusUnivariateUnivariate (*this, other);
-    } 
-
-    SubBasis SubMonomialBasis::operator* (const SubBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return other * *this; 
-    } 
-
-    SubBasis SubMonomialBasis::operator* (const SubMonomialBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return timesUnivariateUnivariate (*this, other);
-    } 
-    
-    SubBasis SubMonomialBasis::operator* (const SubBSplineBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return timesUnivariateUnivariate (*this, other);
-    } 
-    
-    SubBasis SubMonomialBasisNode::operator+ (const SubBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return other + shared_from_this<BSplineBasis>();
-    } 
-
-    SubBasis SubMonomialBasisNode::operator* (const SubBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return other * shared_from_this<BSplineBasis>();
-    } 
+    // SubBasis SubMonomialBasisNode::operator+ (const SubBasis& other)const  {
+    //     assert(false);
+	// return SubBasis();
+	// // return other + shared_from_this<BSplineBasis>();
+    // } 
+    //
+    // SubBasis SubMonomialBasisNode::operator* (const SubBasis& other)const  {
+    //     assert(false);
+	// return SubBasis();
+	// // return other * shared_from_this<BSplineBasis>();
+    // } 
     
     AnyTensor SubMonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         assert(x.size()==getDimension()); 

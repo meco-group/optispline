@@ -4,6 +4,7 @@
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 #include "operations/operationsBasis.h"
+#include "../common.h"
 
 namespace spline {
 
@@ -26,36 +27,36 @@ namespace spline {
         return "SubUnivariateBasis object"; 
     }
 
-    SubBasis SubUnivariateBasis::operator+ (const SubBasis& other) const  {
-        assert(false); //  Univariate is "abstract"
-        return SubBasis();
+    SubBasis SubUnivariateBasis::operator+ (const SubBasis& other) const  {(*this)->operator+(other);}
+    SubBasis SubUnivariateBasisNode::operator+ (const SubBasis& other) const  {
+        spline_assert(false); //  Univariate is "abstract"
     } 
 
-    SubBasis SubUnivariateBasis::operator+ (const SubMonomialBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return SubBasis();
+    SubBasis SubUnivariateBasis::operator+ (const SubMonomialBasis &other) const  {(*this)->operator+(other);}
+    SubBasis SubUnivariateBasisNode::operator+ (const SubMonomialBasis &other) const  {
+        spline_assert(false); //  Univariate is "abstract"
     } 
 
-    SubBasis SubUnivariateBasis::operator+ (const SubBSplineBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return SubBasis();
+    SubBasis SubUnivariateBasis::operator+ (const SubBSplineBasis &other) const  {(*this)->operator+(other);}
+    SubBasis SubUnivariateBasisNode::operator+ (const SubBSplineBasis &other) const  {
+        spline_assert(false); //  Univariate is "abstract"
     } 
 
-    SubBasis SubUnivariateBasis::operator* (const SubBasis& other) const  {
-        assert(false); //  Univariate is "abstract"
-        return SubBasis();
-    } 
-
-    SubBasis SubUnivariateBasis::operator* (const SubMonomialBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return SubBasis();
-    } 
-
-    SubBasis SubUnivariateBasis::operator* (const SubBSplineBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return SubBasis();
-    } 
-
+    // SubBasis SubUnivariateBasis::operator* (const SubBasis& other) const  {
+    //     assert(false); //  Univariate is "abstract"
+    //     return SubBasis();
+    // } 
+    //
+    // SubBasis SubUnivariateBasis::operator* (const SubMonomialBasis &other) const  {
+    //     assert(false); //  Univariate is "abstract"
+    //     return SubBasis();
+    // } 
+    //
+    // SubBasis SubUnivariateBasis::operator* (const SubBSplineBasis &other) const  {
+    //     assert(false); //  Univariate is "abstract"
+    //     return SubBasis();
+    // } 
+    //
     int SubUnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
     int SubUnivariateBasisNode::getLenght ( ) const {
          assert(0);

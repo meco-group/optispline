@@ -22,13 +22,17 @@ namespace spline{
     public:
         SubMonomialBasisNode(int degree) : SubUnivariateBasisNode(degree) {};
 
+        virtual SubBasis operator+(const SubMonomialBasis& other) const ;
+        virtual SubBasis operator+(const SubBSplineBasis& other) const ;
+        virtual SubBasis operator+(const SubBasis& other) const ;
+
         virtual std::string getRepresentation() const ;
         //    virtual std::vector<double> evaluationGrid(void) const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        virtual SubBasis operator+(const SubBasis& other) const ;
-        virtual SubBasis operator*(const SubBasis& other) const ;
+        // virtual SubBasis operator+(const SubBasis& other) const ;
+        // virtual SubBasis operator*(const SubBasis& other) const ;
         virtual int getLenght() const ;
         template<class T>
         AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
@@ -51,9 +55,9 @@ namespace spline{
         virtual SubBasis operator+(const SubBSplineBasis& other) const ;
         virtual SubBasis operator+(const SubBasis& other) const ;
 
-        virtual SubBasis operator*(const SubMonomialBasis& other) const ;
-        virtual SubBasis operator*(const SubBSplineBasis& other) const ;
-        virtual SubBasis operator*(const SubBasis& other) const ;
+        // virtual SubBasis operator*(const SubMonomialBasis& other) const ;
+        // virtual SubBasis operator*(const SubBSplineBasis& other) const ;
+        // virtual SubBasis operator*(const SubBasis& other) const ;
 
         virtual std::string getRepresentation() const ;
         //   Basis operator*(const MonomialBasis& other)const ;
