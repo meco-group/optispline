@@ -48,8 +48,6 @@ namespace spline {
         // virtual Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        // virtual ST operator()(const std::vector< SX >& x) const;
-        // virtual MT operator()(const std::vector< MX >& x) const;
 
         virtual BSplineBasis castBSpline() const;
     // protected:
@@ -96,8 +94,6 @@ namespace spline {
         // virtual Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        // ST operator()(const std::vector< SX >& x) const;
-        // MT operator()(const std::vector< MX >& x) const;
 
         virtual BSplineBasis castBSpline() const;
     };

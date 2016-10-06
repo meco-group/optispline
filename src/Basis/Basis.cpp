@@ -131,32 +131,6 @@ namespace spline {
         return ret;
     }
 
-    // ST  Basis::operator()  (const std::vector< SX > &  x   ) const {
-    //     return (*this)->operator() (x);
-    // }
-    //
-    // ST  BasisNode::operator()  (const std::vector< SX > &  x   ) const {
-    //     assert(x.size()==allSubBasis.size());
-    //     ST ret(1,{});
-    //     for (int i = 0; i < x.size(); ++i) {
-    //         ret = ret.outer_product(allSubBasis[i](std::vector< SX >{x[i]}));
-    //     }
-    //     return ret;
-    // }
-    //
-    // MT  Basis::operator()  (const std::vector< MX > &  x   ) const {
-    //     return (*this)->operator() (x);
-    // }
-    //
-    // MT  BasisNode::operator()  (const std::vector< MX > &  x   ) const {
-    //     assert(x.size()==allSubBasis.size());
-    //     MT ret(1,{});
-    //     for (int i = 0; i < x.size(); ++i) {
-    //         ret = ret.outer_product(allSubBasis[i](std::vector< MX >{x[i]}));
-    //     }
-    //     return ret;
-    // }
-
     BSplineBasis Basis::castBSpline() const{return (*this)->castBSpline();}
     BSplineBasis BasisNode::castBSpline() const{
         assert(false); // not inmplemented
