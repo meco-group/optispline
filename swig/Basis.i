@@ -22,9 +22,7 @@ import_array();
 #endif
 %}
 
-#ifdef SWIGMATLAB
-%rename(disp) getRepresentation;
-#endif
+
 
 #ifdef SWIGPYTHON
 %pythoncode %{
@@ -395,6 +393,18 @@ namespace std {
 %include <src/Function/Polynomial.h>
 
 %template(BasisVector) std::vector< spline::Basis >;
+
+#ifdef SWIGMATLAB
+namespace Spline {
+%extend SharedObject {
+  %matlabcode %{
+    function disp(self)
+      disp(self.getRepresentation())
+    end
+  %}
+ }
+}
+#endif
 
 %template(DTensor) Tensor<DM>;
 %template(STensor) Tensor<SX>;
