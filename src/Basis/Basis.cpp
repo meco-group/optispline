@@ -48,10 +48,9 @@ namespace spline {
         return allArguments[index];
     }
 
-    int Basis::indexArgument(spline::Argument a) { return (*this)->indexArgument(a); } 
-    int BasisNode::indexArgument(Argument a) {
-        assert(false);
-        return -1;
+    int Basis::indexArgument(Argument a) const { return (*this)->indexArgument(a); } 
+    int BasisNode::indexArgument(Argument a) const {
+        return find(allArguments.begin(), allArguments.end(), a) - allArguments.begin();
     }
 
     bool Basis::hasArguments() const{ return (*this)->hasArguments();}
@@ -62,6 +61,16 @@ namespace spline {
     std::vector< SubBasis > Basis::getSubBasis () const { return (*this)->getSubBasis (); } 
     std::vector< SubBasis > BasisNode::getSubBasis () const {
         return allSubBasis;
+    }
+
+    SubBasis Basis::getSubBasis ( Argument a) const { return (*this)->getSubBasis ( a ); } 
+    SubBasis BasisNode::getSubBasis ( Argument a ) const {
+        int index = indexArgument(a);
+        if(index == allSubBasis.size()){
+            return SubBasis();
+        } else {
+            return allSubBasis[index];
+        }
     }
 
     Basis Basis::getSubBasis ( int index ) const { return (*this)->getSubBasis ( index ); } 
