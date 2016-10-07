@@ -395,7 +395,7 @@ namespace std {
 %template(BasisVector) std::vector< spline::Basis >;
 
 #ifdef SWIGMATLAB
-namespace Spline {
+namespace spline {
 %extend SharedObject {
   %matlabcode %{
     function [] = disp(self)
