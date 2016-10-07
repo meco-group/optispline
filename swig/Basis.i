@@ -398,7 +398,7 @@ namespace std {
 namespace Spline {
 %extend SharedObject {
   %matlabcode %{
-    function disp(self)
+    function [] = disp(self)
       disp(self.getRepresentation())
     end
   %}
