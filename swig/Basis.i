@@ -370,6 +370,7 @@ namespace std {
 %include <src/Basis/SubBSplineBasis.h>
 
 %template(SubBasisVector) std::vector< spline::SubBasis >;
+%template(BasisVector) std::vector< spline::Basis >;
 
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
@@ -382,7 +383,6 @@ namespace std {
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
 
-%template(BasisVector) std::vector< spline::Basis >;
 
 %template(DTensor) Tensor<DM>;
 %template(STensor) Tensor<SX>;

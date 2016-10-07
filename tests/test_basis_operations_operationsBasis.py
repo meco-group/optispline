@@ -34,9 +34,9 @@ class Test_Basis_SubBasis(unittest.TestCase):
         b = b1 + b2
 
 if __name__ == '__main__':
-    s1 = SubMonomialBasis(2)
-    s2 = SubMonomialBasis(3)
-    s3 = SubBSplineBasis([0,1],2,2)
+    s1 = MonomialBasis(2)
+    s2 = MonomialBasis(3)
+    s3 = BSplineBasis([0,1],2,2)
 
     b1 = Basis([s1,s2])
     b2 = Basis([s2,s3])
