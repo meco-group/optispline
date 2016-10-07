@@ -12,6 +12,7 @@ namespace spline{
 
     SubBasis plusSubBasis (const SubBSplineBasis &b1, const SubMonomialBasis &b2) {
         //    TODO experimantal implementation
+        std::cout << "plusSubBasis subBSpline + SubMono" << std::endl;
         int newDegree = std::max(b1.getDegree(), b2.getDegree());
         const std::vector<double> v = increaseMultiplicityKnots(b1.getKnots(), newDegree - b1.getDegree());
         return SubBSplineBasis(v, newDegree);
@@ -23,6 +24,7 @@ namespace spline{
 
     SubBasis plusSubBasis (const SubMonomialBasis &b1, const SubMonomialBasis &b2) {
         int newDegree = std::max(b1.getDegree(), b2.getDegree());
+        std::cout << "plusSubBasis subMono + SubMono" << std::endl;
         return SubMonomialBasis(newDegree);
     }
 
