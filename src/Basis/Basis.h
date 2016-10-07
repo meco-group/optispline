@@ -35,7 +35,6 @@ namespace spline {
         int indexArgument(Argument a);
 
         bool hasArguments() const;
-        bool hasValidNumberOfArguments() const;
 
         virtual std::string getRepresentation() const ;
 
@@ -81,7 +80,6 @@ namespace spline {
         int indexArgument(spline::Argument a);
 
         bool hasArguments() const;
-        bool hasValidNumberOfArguments() const;
 
         virtual std::string getRepresentation() const ;
 
