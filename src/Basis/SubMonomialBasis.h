@@ -51,10 +51,6 @@ namespace spline{
 #endif // SWIG
         SubMonomialBasis(int degree);
 
-        virtual SubBasis operator+(const SubMonomialBasis& other) const ;
-        virtual SubBasis operator+(const SubBSplineBasis& other) const ;
-        virtual SubBasis operator+(const SubBasis& other) const ;
-
         // virtual SubBasis operator*(const SubMonomialBasis& other) const ;
         // virtual SubBasis operator*(const SubBSplineBasis& other) const ;
         // virtual SubBasis operator*(const SubBasis& other) const ;

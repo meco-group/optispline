@@ -22,25 +22,17 @@ namespace spline {
         assign_node(new SubMonomialBasisNode(degree));
     }
 
-    SubBasis SubMonomialBasis::operator+ (const SubBasis& other) const {(*this)->operator+(other);}
     SubBasis SubMonomialBasisNode::operator+ (const SubBasis& other) const {
-        std::cout << "subMono + sub " << getRepresentation() << " " << other.getRepresentation() << std::endl;  
         return other + shared_from_this<SubMonomialBasis>();
     } 
 
-    SubBasis SubMonomialBasis::operator+ (const SubBSplineBasis& other) const {(*this)->operator+(other);}
     SubBasis SubMonomialBasisNode::operator+ (const SubBSplineBasis& other) const {
-        return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
+        return plusSubBasis (shared_from_this<SubMonomialBasis>(), other);
     } 
 
-    SubBasis SubMonomialBasis::operator+ (const SubMonomialBasis& other) const {
-        std::cout << "subMono + subMono " << getRepresentation() << " " << other.getRepresentation() << std::endl;  
-        return plusSubBasis(*this, other);
-    }
-
     SubBasis SubMonomialBasisNode::operator+ (const SubMonomialBasis& other) const {
-        std::cout << "subMonoNode + subMonoNode " << getRepresentation() << " " << other.getRepresentation() << std::endl;  
-        return plusSubBasis (shared_from_this<SubMonomialBasis>(), other);
+        SubBasis r = plusSubBasis (shared_from_this<SubMonomialBasis>(), other);
+        return r;
     } 
 
 

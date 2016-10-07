@@ -15,7 +15,6 @@ namespace spline{
                 SubBasis subBasis1 = b1.getSubBasis()[i];
                 SubBasis subBasis2 = b2.getSubBasis()[i];
                 SubBasis sum = subBasis1 + subBasis2;
-                std::cout << sum.getRepresentation() << std::endl;
                 returnBasis.addBasis(sum);
             }
         }
