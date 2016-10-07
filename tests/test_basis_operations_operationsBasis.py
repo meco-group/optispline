@@ -19,18 +19,6 @@ class Test_Basis_SubBasis(unittest.TestCase):
     def assertNotEqualTensor(self, a, b):
         self.assertFalse(list(a.data().full())==b)
 
-
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
-
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
-
 if __name__ == '__main__':
     s1 = SubMonomialBasis(2)
     s2 = SubMonomialBasis(3)
@@ -44,6 +32,6 @@ if __name__ == '__main__':
 
     b = b1 + b2
 
-    print b
-    print b.getSubBasis()
+    print "b : ", str(b)
+    print b.getSubBasis(0)
     unittest.main()
