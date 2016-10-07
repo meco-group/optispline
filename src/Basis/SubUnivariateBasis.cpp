@@ -29,14 +29,17 @@ namespace spline {
 
     SubBasis SubUnivariateBasisNode::operator+ (const SubBasis& other) const  {
         spline_assert(false); //  Univariate is "abstract"
+        return SubBasis();
     } 
 
     SubBasis SubUnivariateBasisNode::operator+ (const SubMonomialBasis &other) const  {
         spline_assert(false); //  Univariate is "abstract"
+        return SubBasis();
     } 
 
     SubBasis SubUnivariateBasisNode::operator+ (const SubBSplineBasis &other) const  {
         spline_assert(false); //  Univariate is "abstract"
+        return SubBasis();
     } 
 
     // SubBasis SubUnivariateBasis::operator* (const SubBasis& other) const  {
