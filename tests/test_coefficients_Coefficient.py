@@ -23,6 +23,14 @@ class Test_Basis_SubBasis(unittest.TestCase):
     def assertNotEqualTensor(self, a, b):
         self.assertFalse(list(a.data().full())==b)
 
+    def assertEqualArray(self, a, b,tol=0):
+        a = np.array(a)
+        if(len(a.shape) == 2):
+            if(a.shape[1] == 1):
+                a = a[:,0]
+        print np.array(a),np.array(b),np.linalg.norm(np.array(a)-np.array(b))
+        self.assertTrue(np.linalg.norm(np.array(a)-np.array(b))<=tol)
+
     def test_coefficients_construction_1(self):
         a_ = [2,0,0,1]
         a = DTensor(a_, [4,1,1])
@@ -35,9 +43,9 @@ class Test_Basis_SubBasis(unittest.TestCase):
         a = Coefficient(a)
         # print list(a.getData().data() == a_)
         # print(any(False == ( a.getData().data() == a_)))
-        testfun = Function('testfun',[a_],[a.getData().data])
-
-        self.assertTrue( all(testfun([0.1,0.3,1.3,1.7]).full()==np.array([0.1,0.3,1.3,1.7])))
+        testfun = Function('testfun',[a_],[a.getData().data()])
+        v = [0.1,0.2,0.3,0.4]
+        self.assertEqualArray(testfun(v),v)
 
     def test_argument_tensor_1(self):
         a = [[1,1],[0,2]]
