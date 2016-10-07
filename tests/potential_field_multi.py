@@ -62,7 +62,7 @@ x_ = -r
 while (x_ < r):
     y_ = -r
     while (y_ < r):
-        obj = obj + (potential_field([x_,y_]).data())*dx*dy/(4.*r*r)
+        obj = obj + (potential_field([x_,y_]).data())*dx*dy/(4.*r*r) # divide by the area to get a non-dimensional measure
         y_ = y_ + dy    
     x_ = x_ + dx
 _stop_integration = time.time()
