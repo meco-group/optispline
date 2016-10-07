@@ -22,6 +22,10 @@ import_array();
 #endif
 %}
 
+#ifdef SWIGMATLAB
+%rename(disp) getRepresentation;
+#endif
+
 #ifdef SWIGPYTHON
 %pythoncode %{
 
