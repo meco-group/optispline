@@ -33,9 +33,13 @@ namespace spline {
         return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
     } 
 
-    SubBasis SubMonomialBasis::operator+ (const SubMonomialBasis& other) const {(*this)->operator+(other);}
-    SubBasis SubMonomialBasisNode::operator+ (const SubMonomialBasis& other) const {
+    SubBasis SubMonomialBasis::operator+ (const SubMonomialBasis& other) const {
         std::cout << "subMono + subMono " << getRepresentation() << " " << other.getRepresentation() << std::endl;  
+        return plusSubBasis(*this, other);
+    }
+
+    SubBasis SubMonomialBasisNode::operator+ (const SubMonomialBasis& other) const {
+        std::cout << "subMonoNode + subMonoNode " << getRepresentation() << " " << other.getRepresentation() << std::endl;  
         return plusSubBasis (shared_from_this<SubMonomialBasis>(), other);
     } 
 

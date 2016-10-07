@@ -27,11 +27,16 @@ if __name__ == '__main__':
     b1 = Basis([s1,s2])
     b2 = Basis([s2,s3])
 
-    print b1.getDimension()
-    print b2.getDimension()
+    S1 = s1 + s2
+    S2 = s2 + s3
+
+    print S1
+    print S2
 
     b = b1 + b2
 
     print "b : ", str(b)
-    print b.getSubBasis(0)
+    print b1.getSubBasis()
+    print b([2.0,10.0])
+    print b.getSubBasis()
     unittest.main()
