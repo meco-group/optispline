@@ -71,7 +71,9 @@ namespace spline {
 
     void Basis::addBasis (Basis basis) { (*this)->addBasis (basis);} 
     void BasisNode::addBasis (Basis basis) {
-        this->allSubBasis.push_back(basis.getSubBasis()[0]);
+        for ( auto &subBasis : basis.getSubBasis() ) {
+            allSubBasis.push_back(subBasis);
+        }
     }
 
     void Basis::addBasis (SubBasis basis) { (*this)->addBasis (basis);} 
