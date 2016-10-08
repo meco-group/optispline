@@ -10,6 +10,7 @@ add_library(Basis SHARED
             SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
  	    
 	    Basis/SubBasis.h Basis/SubBasis.cpp
+	    Basis/SubBasisDummy.h Basis/SubBasisDummy.cpp
 	    Basis/SubBSplineBasis.h Basis/SubBSplineBasis.cpp
 	    Basis/SubUnivariateBasis.h Basis/SubUnivariateBasis.cpp
 	    Basis/SubMonomialBasis.h Basis/SubMonomialBasis.cpp
