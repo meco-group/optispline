@@ -15,6 +15,7 @@ before_install:
   - git submodule update --init --recursive
   - git clone https://github.com/meco-group/bob.git
   - pushd bob && source setup.sh && popd
+  - git clone https://github.com/casadi/testbot.git && pushd testbot && git checkout merged && source shellhelpers && popd
   - set -e
   - set -o pipefail  # otherwise, piping with grep discards exit statuses
   
@@ -25,7 +26,7 @@ matrix:
   include:
     - sudo: required
       dist: trusty
-      language: generic
+      language: minimal
       script:
         - ctest -V -R python
       install:
@@ -59,7 +60,7 @@ matrix:
         - TARGET=LINUX-PYTHON
       sudo: required
       dist: trusty
-      language: generic
+      language: minimal
       script:
         - ctest -V -R python
         - ctest -V -R valgrind
@@ -98,13 +99,11 @@ matrix:
         - MATLABRELEASE=R2014a
         - MATLAB_ROOT=$HOME/matlab
       sudo: required
+      dist: trusty
+      language: minimal
       script:
-        - ctest -V -R matlab
+        - #ctest -V -R matlab
       install:
-        - sudo add-apt-repository ppa:umn-claoit-rce/compute-packages -y
-        - sudo add-apt-repository ppa:baltix-members/ppa -y #  for libslicot-dev
-        - sudo apt-get update -qq
-        # Not available on 12.04: libslicot-dev
         - sudo apt-get install -y binutils gcc g++ gfortran git cmake liblapack-dev ipython python-dev python-numpy python-scipy python-matplotlib libmumps-seq-dev libblas-dev liblapack-dev libxml2-dev
         - sudo apt-get install fakeroot rpm alien moreutils
         
@@ -154,6 +153,7 @@ matrix:
         - MATLAB_ROOT=$HOME/matlab
       sudo: required
       dist: trusty
+      language: minimal
       script:
         - echo "all fine"
       install:
@@ -172,23 +172,7 @@ matrix:
         
         - sudo apt-get update
         - sudo apt-get install -y binutils gcc g++ gfortran git cmake cmake-data liblapack-dev ipython python-dev libxml2-dev
-        - sudo apt-get remove -qq -y mingw32
-        - |
-          cat <<EOF | sudo tee --append  /etc/apt/sources.list
-          deb-src http://archive.ubuntu.com/ubuntu vivid main restricted universe multiverse
-          deb http://archive.ubuntu.com/ubuntu vivid main restricted universe multiverse
-        - |
-          cat <<EOF | sudo tee /etc/apt/preferences.d/mytest
-          Package: *
-          Pin: release n=trusty
-          Pin-priority: 700
-          Package: *
-          Pin: release n=vivid
-          Pin-priority: 600
-        - tail /etc/apt/sources.list
-        - tail /etc/apt/preferences.d/mytest
-        - sudo apt-get update
-        - sudo apt-get install -q -y -t vivid mingw-w64
+        - mingw_setup
 
         - export swig_matlab_file=swig_matlab
         - bob_get ${swig_matlab_file}.tar.gz && mkdir $HOME/swig && tar -xf ${swig_matlab_file}.tar.gz -C $HOME/swig
@@ -255,22 +239,22 @@ matrix:
         - EXTRA_FLAGS=""
         - WINEENV=py27
       sudo: required
+      dist: trusty
+      language: minimal
       script:
         - echo "all fine"
       install:
 
-
-        - sudo add-apt-repository ppa:umn-claoit-rce/compute-packages -y
-        - sudo add-apt-repository ppa:baltix-members/ppa -y #  for libslicot-dev
-        - sudo add-apt-repository ppa:tkelman/mingw-backport -y
-        - sudo apt-get update -qq
         - sudo apt-get install -y binutils gcc g++ gfortran git cmake liblapack-dev ipython python-dev python-numpy python-scipy python-matplotlib coinor-libipopt-dev libmumps-seq-dev libblas-dev liblapack-dev libslicot-dev libxml2-dev
-        - sudo apt-get remove -qq -y mingw32
-        - sudo apt-get install -q -y mingw-w64 g++-mingw-w64 gcc-mingw-w64 gfortran-mingw-w64
+
+        - sudo dpkg --add-architecture i386
+        - sudo apt-get update
+        - sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 -y
         - wget https://raw.githubusercontent.com/casadi/python-lib-template/master/.travis-setup.sh && chmod +x .travis-setup.sh
         - "./.travis-setup.sh"
         - wget -O numpy.exe https://github.com/casadi/testbot/releases/download/perpetual/numpy-$NUMPYVERSION-sse2.exe
         - /opt/wine-staging/bin/wine C:/Python27/Scripts/easy_install.exe numpy.exe && rm numpy.exe
+        - mingw_setup
         
         - |
           cat <<EOF >toolchain.cmake
