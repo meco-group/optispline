@@ -22,6 +22,12 @@ namespace spline {
     SubBasis SubBasisNode::operator+ (const SubBasis& other) const { 
         spline_assert(false);
         return SubBasis();
+    }    
+
+    SubBasis SubBasis::operator+ (const SubBasisDummy& other) const { return (*this)->operator+(other);}
+    SubBasis SubBasisNode::operator+ (const SubBasisDummy& other) const { 
+        spline_assert(false);
+        return SubBasis();
     }
 
     SubBasis SubBasis::operator+ (const SubMonomialBasis& other) const { return (*this)->operator+(other); }

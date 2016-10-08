@@ -21,6 +21,10 @@ namespace spline{
         return other + shared_from_this<SubBSplineBasis>();
     } 
 
+    SubBasis SubBSplineBasisNode::operator+ (const SubBasisDummy& other) const {
+        return shared_from_this<SubBSplineBasis>();
+    } 
+
     SubBasis SubBSplineBasisNode::operator+ (const SubBSplineBasis& other) const {
         return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
     } 

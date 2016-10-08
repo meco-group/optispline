@@ -26,6 +26,10 @@ namespace spline {
         return other + shared_from_this<SubMonomialBasis>();
     } 
 
+    SubBasis SubMonomialBasisNode::operator+ (const SubBasisDummy& other) const {
+        return shared_from_this<SubMonomialBasis>();
+    } 
+
     SubBasis SubMonomialBasisNode::operator+ (const SubBSplineBasis& other) const {
         return plusSubBasis (shared_from_this<SubMonomialBasis>(), other);
     } 
@@ -46,6 +50,7 @@ namespace spline {
     //     assert(false);
 	// return SubBasis();
 	// // return timesUnivariateUnivariate (*this, other);
+    // }
 
     //
     // SubBasis SubMonomialBasis::operator* (const SubBSplineBasis& other)const  {

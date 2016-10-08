@@ -13,6 +13,7 @@
 
 namespace spline {
     class SubBasis;
+    class SubBasisDummy;
     class SubBSplineBasis;
     class SubMonomialBasis;
 
@@ -21,6 +22,7 @@ namespace spline {
     class SubBasisNode : public SharedObjectNode {
     public:
         virtual SubBasis operator+(const SubBasis& rhs) const;
+        virtual SubBasis operator+(const SubBasisDummy& rhs) const;
         virtual SubBasis operator+(const SubMonomialBasis& rhs) const;
         virtual SubBasis operator+(const SubBSplineBasis& rhs) const;
 
@@ -54,6 +56,7 @@ namespace spline {
         SubBasis ();
 
         virtual SubBasis operator+(const SubBasis& rhs) const;
+        virtual SubBasis operator+(const SubBasisDummy& rhs) const;
         virtual SubBasis operator+(const SubMonomialBasis& rhs) const;
         virtual SubBasis operator+(const SubBSplineBasis& rhs) const;
         // virtual SubBasis operator*(const SubBasis& rhs) const;

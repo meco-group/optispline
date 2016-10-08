@@ -1,4 +1,5 @@
 #include "Basis.h"
+#include "SubBasisDummy.h"
 #include "BSplineBasis.h"
 #include "operations/operationsBasis.h"
 #include "../common.h"
@@ -67,7 +68,7 @@ namespace spline {
     SubBasis BasisNode::getSubBasis ( Argument a ) const {
         int index = indexArgument(a);
         if(index == allSubBasis.size()){
-            return SubBasis();
+            return SubBasisDummy();
         } else {
             return allSubBasis[index];
         }
