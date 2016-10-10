@@ -31,6 +31,8 @@ namespace spline{
         std::vector<double>& getKnots ();
         const std::vector<double>& getKnots () const;
         void setKnots (std::vector<double>& knots) ;
+
+        std::vector<double> greville () const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
@@ -79,6 +81,7 @@ namespace spline{
         const std::vector<double> &getKnots () const;
         void setKnots (std::vector<double> &knots) ;
 
+        std::vector<double> greville () const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //

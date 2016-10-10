@@ -31,7 +31,20 @@ namespace spline{
         return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
     } 
 
+    std::vector<double> SubBSplineBasis::greville () const {return (*this)->greville();}
+    std::vector<double> SubBSplineBasisNode::greville () const {
+        int degree = getDegree();
+        if(degree == 0){
+            degree = 1;
+        }
 
+        std::vector<double> grevillePoints (getLength());
+        for (int i = 0; i < getLength(); ++i) {
+            grevillePoints[i] = std::accumulate(knots.begin()+i+1,knots.begin()+i+degree+1, 0.0) / degree;
+        }
+
+        return grevillePoints;
+    }
 
     //   std::vector<double> std::make_shared<Basis>::evaluationGrid (void) const {
     //       return greville();
