@@ -51,6 +51,10 @@ namespace spline {
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         virtual BSplineBasis castBSpline() const;
+        
+        
+        std::vector< std::vector < double > > getEvaluationGrid() const;
+        std::vector< AnyTensor > evaluateEvaluationGrid(std::vector< std::vector < double > > grid, std::vector< Argument > argumentList) const;
     // protected:
         std::vector< SubBasis > allSubBasis;
         std::vector< Argument > allArguments;
@@ -96,6 +100,9 @@ namespace spline {
         // Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+
+        std::vector< std::vector < double > > getEvaluationGrid() const;
+        std::vector< AnyTensor > evaluateEvaluationGrid(std::vector< std::vector < double > > grid, std::vector< Argument > argumentList) const;
 
         virtual BSplineBasis castBSpline() const;
     };

@@ -42,6 +42,8 @@ namespace spline{
 >>>>>>> 07a69b5... basis length typo #33 getLenght() -> getLength()
         template<class T>
         AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
+
+        virtual std::vector< std::vector < double > > getEvaluationGrid() const;
     };
 
 #endif // SWIG

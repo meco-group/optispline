@@ -35,6 +35,7 @@ namespace spline {
         void setDegree (int degree);
         int getDimension() const;
 
+        virtual std::vector< std::vector < double > > getEvaluationGrid() const;
     protected:
         int degree;
     };

@@ -57,4 +57,13 @@ namespace spline {
     //           grid.push_back( (double)i );
     //       return grid;
     //   }
+
+
+    std::vector< std::vector < double > > SubMonomialBasisNode::getEvaluationGrid() const {
+         std::vector< std::vector < double > > grid = {};
+         for(int i = 0; i < getLength(); i++){
+            grid.push_back(std::vector<double> {(double) i});
+         }
+         return grid;
+    }
 } // namespace spline

@@ -11,6 +11,7 @@ namespace spline {
         // Basis b = getBasis() + f.getBasis();
         Basis b = getBasis();
         // Coefficient coef = Coefficient(std::vector< double > {});
+        std::vector< std::vector < double > > evaluationGrid = b.getEvaluationGrid();
         // return Function(b,coef);
     }
 

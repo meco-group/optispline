@@ -100,4 +100,12 @@ namespace spline{
             return SubBasisEvalution<AnyScalar>(x);
         }
     }
+
+    std::vector< std::vector < double > > SubBSplineBasisNode::getEvaluationGrid() const {
+         std::vector< std::vector < double > > grid = {};
+         for(double const& point : greville()){
+            grid.push_back(std::vector<double> {point});
+         }
+         return grid;
+    }
 } // namespace spline

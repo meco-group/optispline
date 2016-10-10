@@ -132,6 +132,14 @@ namespace spline {
         return ret;
     }
 
+    std::vector< std::vector < double > > Basis::getEvaluationGrid() const {(*this)->getEvaluationGrid();}
+    std::vector< std::vector < double > > BasisNode::getEvaluationGrid() const {
+
+    }
+
+    std::vector< AnyTensor > Basis::evaluateEvaluationGrid(std::vector< std::vector < double > > grid, std::vector< Argument > argumentList) const {(*this)->evaluateEvaluationGrid(grid, argumentList);}
+    std::vector< AnyTensor > BasisNode::evaluateEvaluationGrid(std::vector< std::vector < double > > grid, std::vector< Argument > argumentList) const {}
+
     BSplineBasis Basis::castBSpline() const{return (*this)->castBSpline();}
     BSplineBasis BasisNode::castBSpline() const{
         spline_assert(false); // not inmplemented
