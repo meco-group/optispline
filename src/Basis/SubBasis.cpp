@@ -42,23 +42,6 @@ namespace spline {
         return SubBasis();
     } 
 
-    // SubBasis SubBasis::operator* (const SubBasis& other) const { 
-	// assert(false);
-	// return SubBasis();
-    //     // return timesMultivariate(*this, other);
-    // }
-    //
-    // SubBasis SubBasis::operator* (const SubMonomialBasis& other) const {
-	// assert(false);
-	// return SubBasis();
-    //     // return timesMultivariate(*this, other);
-    // } 
-    //
-    // SubBasis SubBasis::operator* (const SubBSplineBasis& other) const {
-	// assert(false);
-	// return SubBasis();
-    //     // return timesMultivariate(*this, other);
-    // } 
 
     AnyTensor  SubBasis::operator() (const std::vector< AnyScalar > &  x ) const {
         return (*this)->operator()(x);
@@ -68,26 +51,6 @@ namespace spline {
         assert(false);		//Abstract
         return AnyTensor();
     }
-   
-    // ST  SubBasis::operator()  (const std::vector< SX > &  x   ) const {
-    //     return (*this)->operator() (x);
-    // }
-    //
-    // ST  SubBasisNode::operator()  (const std::vector< SX > &  x   ) const {
-    //     ST ret(1,{});
-	// assert(false);		//Abstract
-    //     return ret;
-    // }
-    //
-    // MT  SubBasis::operator()  (const std::vector< MX > &  x   ) const {
-    //     return (*this)->operator() (x);
-    // }
-    //
-    // MT  SubBasisNode::operator()  (const std::vector< MX > &  x   ) const {
-    //     MT ret(1,{});
-	// assert(false);		//Abstract
-    //     return ret;
-    // }
 
     int SubBasis::getDimension() const{ return (*this)->getDimension();}
 } // namespace spline

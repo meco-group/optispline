@@ -1,5 +1,3 @@
-#include <casadi/casadi.hpp> // range
-
 #include "SubMonomialBasis.h"
 
 #include "operations/operationsBasis.h"
@@ -48,16 +46,6 @@ namespace spline {
     int SubMonomialBasisNode::getLength () const {
          return getDegree() + 1;
     }
-    
-    /// TODO(ErikLambr) check is grid is valid
-    //   std::vector<double> Monomialestd::shared_ptr<Basis>::evaluationGrid () const {
-    ///        std::vector<double> grid = casadi::range(length());
-    //       std::vector<double> grid;
-    //       for( int i = 0; i < length(); i++ )
-    //           grid.push_back( (double)i );
-    //       return grid;
-    //   }
-
 
     std::vector< std::vector < double > > SubMonomialBasisNode::getEvaluationGrid() const {
          std::vector< std::vector < double > > grid = {};
