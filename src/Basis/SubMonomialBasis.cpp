@@ -1,5 +1,3 @@
-#include <math.h>       /* pow */
-
 #include <casadi/casadi.hpp> // range
 
 #include "SubMonomialBasis.h"
@@ -35,41 +33,8 @@ namespace spline {
     } 
 
     SubBasis SubMonomialBasisNode::operator+ (const SubMonomialBasis& other) const {
-        SubBasis r = plusSubBasis (shared_from_this<SubMonomialBasis>(), other);
-        return r;
+        return plusSubBasis (shared_from_this<SubMonomialBasis>(), other);
     } 
-
-
-    // SubBasis SubMonomialBasis::operator* (const SubBasis& other) const {
-    //     assert(false);
-	// return SubBasis();
-	// // return other * *this; 
-    // } 
-    //
-    // SubBasis SubMonomialBasis::operator* (const SubMonomialBasis& other)const  {
-    //     assert(false);
-	// return SubBasis();
-	// // return timesUnivariateUnivariate (*this, other);
-    // }
-
-    //
-    // SubBasis SubMonomialBasis::operator* (const SubBSplineBasis& other)const  {
-    //     assert(false);
-	// return SubBasis();
-	// // return timesUnivariateUnivariate (*this, other);
-    // } 
-    
-    // SubBasis SubMonomialBasisNode::operator+ (const SubBasis& other)const  {
-    //     assert(false);
-	// return SubBasis();
-	// // return other + shared_from_this<BSplineBasis>();
-    // } 
-    //
-    // SubBasis SubMonomialBasisNode::operator* (const SubBasis& other)const  {
-    //     assert(false);
-	// return SubBasis();
-	// // return other * shared_from_this<BSplineBasis>();
-    // } 
     
     AnyTensor SubMonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         assert(x.size()==getDimension()); 

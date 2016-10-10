@@ -1,5 +1,3 @@
-#include <math.h>       /* pow */
-#include <numeric>      // std::accumulate -> greville
 #include <sstream>
 #include "SubBSplineBasis.h"
 
@@ -33,54 +31,8 @@ namespace spline{
         return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
     } 
 
-    // SubBasis SubBSplineBasis::operator* (const SubBasis& other) const {
-    //     assert(false);
-	// return SubBasis();
-	// // return (*this)->operator*(other); 
-    // } 
-    //
-    // SubBasis SubBSplineBasisNode::operator* (const SubBasis& other) const {
-    //     assert(false);
-	// return SubBasis();
-	// // return other + shared_from_this<BSplineBasis>();
-    // }
-    //
-    // SubBasis SubBSplineBasis::operator* (const SubBSplineBasis& other) const {
-    //     assert(false);
-	// return SubBasis();
-	// // return timesUnivariateUnivariate (*this, other);
-    // } 
-    //
-    // SubBasis SubBSplineBasis::operator* (const SubMonomialBasis& other) const {
-    //     assert(false);
-	// return SubBasis();
-	// // return timesUnivariateUnivariate (*this, other);
-    // } 
 
 
-    //   std::make_shared<Basis>::operator* (const Monomialestd::shared_ptr<Basis> &other) const {
-    //       return timesstd::shared_ptr<Basis>(*this, other);
-    //   }
-    //
-    //   std::make_shared<Basis>::operator* (const std::make_shared<Basis> &other) const{
-    //       return timesstd::shared_ptr<Basis>(*this, other);
-    //   }
-    //
-    //   std::vector<double> std::make_shared<Basis>::greville () const {
-    //       int d = degree;
-    //       if(d == 1){
-    //           d =1;
-    //       }
-    //
-    //       std::vector<double> g (length());
-    //       double s;
-    //       for (int i = 0; i < length(); ++i) {
-    //           g[i] = std::accumulate(knots.begin()+i+1,knots.begin()+i+d+1, 0.0) / (d);
-    //       }
-    //
-    //       return g;
-    //   }
-    //
     //   std::vector<double> std::make_shared<Basis>::evaluationGrid (void) const {
     //       return greville();
     //   }

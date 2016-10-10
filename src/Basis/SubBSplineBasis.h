@@ -32,9 +32,6 @@ namespace spline{
         const std::vector<double>& getKnots () const;
         void setKnots (std::vector<double>& knots) ;
         //
-        //   std::vector<double> greville () const;
-        //
-        //   virtual std::vector<double> evaluationGrid (void) const;
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
         virtual std::string getRepresentation() const ;
@@ -81,16 +78,7 @@ namespace spline{
         const std::vector<double> &getKnots () const;
         void setKnots (std::vector<double> &knots) ;
 
-        // virtual SubBasis operator*(const SubBasis& other) const ;
-        // virtual SubBasis operator*(const SubMonomialBasis& other) const ;
-        // virtual SubBasis operator*(const SubBSplineBasis& other) const ;
-
-        //   BSplineBasis operator*(const MonomialBasis& other) const ;
-        //   BSplineBasis operator*(const BSplineBasis& other) const ;
         //
-        //   std::vector<double> greville () const;
-        //
-        //   virtual std::vector<double> evaluationGrid (void) const;
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
         /// Return a string with a representation (for SWIG)

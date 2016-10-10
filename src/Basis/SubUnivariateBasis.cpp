@@ -1,8 +1,6 @@
 #include <vector>
 #include "SubUnivariateBasis.h"
 
-#include "../SharedObject/SharedObject.h"
-#include "../SharedObject/SharedObjectNode.h"
 #include "operations/operationsBasis.h"
 #include "../common.h"
 

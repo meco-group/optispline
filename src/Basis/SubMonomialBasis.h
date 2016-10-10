@@ -28,7 +28,6 @@ namespace spline{
         virtual SubBasis operator+(const SubBasisDummy& other) const ;
 
         virtual std::string getRepresentation() const ;
-        //    virtual std::vector<double> evaluationGrid(void) const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
@@ -58,15 +57,7 @@ namespace spline{
 #endif // SWIG
         SubMonomialBasis(int degree);
 
-        // virtual SubBasis operator*(const SubMonomialBasis& other) const ;
-        // virtual SubBasis operator*(const SubBSplineBasis& other) const ;
-        // virtual SubBasis operator*(const SubBasis& other) const ;
-
         virtual std::string getRepresentation() const ;
-        //   Basis operator*(const MonomialBasis& other)const ;
-        //   Basis operator*(const BSplineBasis& other)const ;
-
-        //    virtual std::vector<double> evaluationGrid(void) const;
 
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)
