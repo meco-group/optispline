@@ -17,7 +17,7 @@ def wrap(s, casadiType):
     def eval(a):
         x = [casadiType.sym('x') for i in a]
         temp = Function('temp',x,[s(x).data()])
-        return DTensor(temp(a),[s.getLenght()])
+        return DTensor(temp(a),[s.getLength()])
     return eval
 
 class Test_Basis_SubBasis(unittest.TestCase):
@@ -36,9 +36,9 @@ class Test_Basis_SubBasis(unittest.TestCase):
           pass
         self.assertFalse(list(a.full())==b)
 
-    def test_getLenght(self):
+    def test_getLength(self):
         s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
-        self.assertEqual(s.getLenght(), 4)
+        self.assertEqual(s.getLength(), 4)
 
     def test_getDimension(self):
         s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
@@ -51,7 +51,7 @@ class Test_Basis_SubBasis(unittest.TestCase):
     def test_evaluation1(self):
         s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
         r = s([0.1]).data()
-        self.assertEqual(r.size(1),s.getLenght())
+        self.assertEqual(r.size(1),s.getLength())
 
     def test_evaluation2(self):
         S = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)

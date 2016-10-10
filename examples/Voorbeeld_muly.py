@@ -61,14 +61,14 @@ b = Basis([m,m])
 
 
 V = ca_tools.struct_symSX([
-    ca_tools.entry('a',shape = [m.getLenght(),m.getLenght()]),
+    ca_tools.entry('a',shape = [m.getLength(),m.getLength()]),
     ca_tools.entry('bound')
 ])
 
 a_ = V["a"]
 bound = V["bound"]
 
-a = STensor(a_, [m.getLenght(),m.getLenght(),1,1])
+a = STensor(a_, [m.getLength(),m.getLength(),1,1])
 a = Coefficient(a)
 est_function = Function(b,a)
 con = []
@@ -95,7 +95,7 @@ r = solver(lbg = con_lower, ubg = con_upper)
 sol = V(r['x'])
 
 a = ca.DM(sol['a'].full())
-a = DTensor(a, [m.getLenght(),m.getLenght(),1,1])
+a = DTensor(a, [m.getLength(),m.getLength(),1,1])
 
 a = Coefficient(a)
 est_function = Function(b,a)
@@ -158,8 +158,8 @@ b_path = Basis([m_path])
 
 
 V = ca_tools.struct_symSX([
-    ca_tools.entry('ax',shape = [m_path.getLenght(),1]),
-    ca_tools.entry('ay',shape = [m_path.getLenght(),1]),
+    ca_tools.entry('ax',shape = [m_path.getLength(),1]),
+    ca_tools.entry('ay',shape = [m_path.getLength(),1]),
     ca_tools.entry('t'),
     ca_tools.entry('max_path')
 ])
@@ -169,11 +169,11 @@ ay_ = V["ay"]
 t = V["t"]
 max_path = V["max_path"]
 
-ax = STensor(ax_, [m_path.getLenght(),1,1])
+ax = STensor(ax_, [m_path.getLength(),1,1])
 ax = Coefficient(ax)
 x_path = Function(b_path,ax)
 
-ay = STensor(ay_, [m_path.getLenght(),1,1])
+ay = STensor(ay_, [m_path.getLength(),1,1])
 ay = Coefficient(ay)
 y_path = Function(b_path,ay)
 
@@ -205,7 +205,7 @@ obj = max_path
                
 con.append(x_path.getCoefficient().getData().data())
 con.append(y_path.getCoefficient().getData().data())
-for _ in range(m_path.getLenght()):
+for _ in range(m_path.getLength()):
     con_lower.append(0)
     con_lower.append(0)
     con_upper.append(1)
@@ -228,8 +228,8 @@ con_upper.append(y_1)
 
 
 x0 = V(0.0)
-x0["ax"] = np.linspace(x_0,x_1,m_path.getLenght())
-x0["ay"] = np.linspace(y_0,y_1,m_path.getLenght())
+x0["ax"] = np.linspace(x_0,x_1,m_path.getLength())
+x0["ay"] = np.linspace(y_0,y_1,m_path.getLength())
 x0["t"] = 0.5
 
       
@@ -250,12 +250,12 @@ sol = V(r['x'])
 # In[9]:
 
 ax = ca.DM(sol['ax'].full())
-ax = DTensor(ax, [m_path.getLenght(),1,1])
+ax = DTensor(ax, [m_path.getLength(),1,1])
 ax = Coefficient(ax)
 x_path = Function(b_path,ax)
 
 ay = ca.DM(sol['ay'].full())
-ay = DTensor(ay, [m_path.getLenght(),1,1])
+ay = DTensor(ay, [m_path.getLength(),1,1])
 ay = Coefficient(ay)
 y_path = Function(b_path,ay)
 
@@ -304,8 +304,8 @@ b_path = Basis([m_path])
 
 
 V = ca_tools.struct_symSX([
-    ca_tools.entry('ax',shape = [m_path.getLenght(),1]),
-    ca_tools.entry('ay',shape = [m_path.getLenght(),1]),
+    ca_tools.entry('ax',shape = [m_path.getLength(),1]),
+    ca_tools.entry('ay',shape = [m_path.getLength(),1]),
     ca_tools.entry('t'),
     ca_tools.entry('max_path')
 ])
@@ -315,11 +315,11 @@ ay_ = V["ay"]
 t = V["t"]
 max_path = V["max_path"]
 
-ax = STensor(ax_, [m_path.getLenght(),1,1])
+ax = STensor(ax_, [m_path.getLength(),1,1])
 ax = Coefficient(ax)
 x_path = Function(b_path,ax)
 
-ay = STensor(ay_, [m_path.getLenght(),1,1])
+ay = STensor(ay_, [m_path.getLength(),1,1])
 ay = Coefficient(ay)
 y_path = Function(b_path,ay)
 
@@ -367,7 +367,7 @@ for t_ in np.linspace(0.,1.,n):
                
 con.append(x_path.getCoefficient().getData().data())
 con.append(y_path.getCoefficient().getData().data())
-for _ in range(m_path.getLenght()):
+for _ in range(m_path.getLength()):
     con_lower.append(0)
     con_lower.append(0)
     con_upper.append(1)
@@ -390,8 +390,8 @@ con_upper.append(y_1)
 
 
 x0 = V(0.0)
-x0["ax"] = np.linspace(x_0,x_1,m_path.getLenght())
-x0["ay"] = np.linspace(y_0,y_1,m_path.getLenght())
+x0["ax"] = np.linspace(x_0,x_1,m_path.getLength())
+x0["ay"] = np.linspace(y_0,y_1,m_path.getLength())
 x0["t"] = 0.5
 
       
@@ -411,12 +411,12 @@ sol = V(r['x'])
 
 
 ax = ca.DM(sol['ax'].full())
-ax = DTensor(ax, [m_path.getLenght(),1,1])
+ax = DTensor(ax, [m_path.getLength(),1,1])
 ax = Coefficient(ax)
 x_path = Function(b_path,ax)
 
 ay = ca.DM(sol['ay'].full())
-ay = DTensor(ay, [m_path.getLenght(),1,1])
+ay = DTensor(ay, [m_path.getLength(),1,1])
 ay = Coefficient(ay)
 y_path = Function(b_path,ay)
 

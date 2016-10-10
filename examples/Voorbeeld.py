@@ -222,8 +222,8 @@ plt.plot(interval,middel,'r')
 degree = 2
 m = SubBSplineBasis([0,0,0,0.5,1,1,1],degree)
 b = Basis([m])
-a_ = ca.SX.sym('a',m.getLenght(),1)
-a = STensor(a_, [m.getLenght(),1,1])
+a_ = ca.SX.sym('a',m.getLength(),1)
+a = STensor(a_, [m.getLength(),1,1])
 a = Coefficient(a)
 est_function = Function(b,a)
 con = []

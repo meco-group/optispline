@@ -56,8 +56,8 @@ namespace spline {
         return SubBasis();
     } 
 
-    int SubUnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
-    int SubUnivariateBasisNode::getLenght ( ) const {
+    int SubUnivariateBasis::getLength ( ) const  { return (*this)->getLength(); } 
+    int SubUnivariateBasisNode::getLength ( ) const {
          assert(0);
     }
     

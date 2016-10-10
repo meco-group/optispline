@@ -79,7 +79,7 @@ namespace spline {
         }
     }
 
-    int SubMonomialBasisNode::getLenght () const {
+    int SubMonomialBasisNode::getLength () const {
          return getDegree() + 1;
     }
     

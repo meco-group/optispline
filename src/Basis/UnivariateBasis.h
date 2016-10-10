@@ -24,7 +24,7 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
-        virtual int getLenght() const ;
+        virtual int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
     protected:
@@ -46,7 +46,7 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
-        int getLenght() const ;
+        int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
 
