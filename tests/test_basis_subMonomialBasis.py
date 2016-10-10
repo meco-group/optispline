@@ -29,9 +29,9 @@ class Test_Basis_SubBasis(unittest.TestCase):
           pass
         self.assertFalse(list(a.full())==b)
 
-    def test_getLenght(self):
+    def test_getLength(self):
         s = SubMonomialBasis(3)
-        self.assertEqual(s.getLenght(), 4)
+        self.assertEqual(s.getLength(), 4)
 
     def test_getDimension(self):
         s = SubMonomialBasis(3)
@@ -44,7 +44,7 @@ class Test_Basis_SubBasis(unittest.TestCase):
     def test_evaluation1(self):
         s = SubMonomialBasis(3)
         r = s([2.0]).data()
-        self.assertEqual(r.size(1),s.getLenght())
+        self.assertEqual(r.size(1),s.getLength())
 
     def test_evaluation2(self):
         s = SubMonomialBasis(3)

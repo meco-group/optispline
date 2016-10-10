@@ -47,6 +47,7 @@ namespace spline {
         return SubBasis();
     } 
 
+<<<<<<< HEAD
     // SubBasis SubUnivariateBasis::operator* (const SubBasis& other) const  {
     //     assert(false); //  Univariate is "abstract"
     //     return SubBasis();
@@ -64,6 +65,10 @@ namespace spline {
     //
     int SubUnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
     int SubUnivariateBasisNode::getLenght ( ) const {
+=======
+    int SubUnivariateBasis::getLength ( ) const  { return (*this)->getLength(); } 
+    int SubUnivariateBasisNode::getLength ( ) const {
+>>>>>>> 07a69b5... basis length typo #33 getLenght() -> getLength()
          assert(0);
     }
     

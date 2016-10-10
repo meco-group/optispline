@@ -96,7 +96,7 @@ namespace spline{
     //       return std::make_shared<Basis>(kn, degree);
     //   }
 
-    int SubBSplineBasisNode::getLenght () const{
+    int SubBSplineBasisNode::getLength () const{
         return knots.size() - degree - 1;
     }
 

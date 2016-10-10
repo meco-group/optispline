@@ -33,7 +33,7 @@ namespace spline {
         // virtual MT operator()(const std::vector< MX >& x) const { assert(0);};
 
 //TODO addBasis         
-        virtual int getLenght() const ;
+        virtual int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
         int getDimension() const;
@@ -55,7 +55,7 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
-        int getLenght() const ;
+        int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
     };

@@ -41,10 +41,17 @@ namespace spline{
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
+<<<<<<< HEAD
         // virtual SubBasis operator+(const SubBasis& other) const ;
         // virtual SubBasis operator*(const SubBasis& other) const ;
         //
         virtual int getLenght() const ;
+=======
+        virtual SubBasis operator+(const SubBasis& other) const ;
+        virtual SubBasis operator*(const SubBasis& other) const ;
+
+        virtual int getLength() const ;
+>>>>>>> 07a69b5... basis length typo #33 getLenght() -> getLength()
         template<class T>
         AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
 
@@ -109,7 +116,7 @@ namespace spline{
         }
 
         for (int d=1; d<(degree+1); d++){
-            for (int i=0; i < getLenght(); i++){
+            for (int i=0; i < getLength(); i++){
                 b = 0;
                 bottom = knots[i+d] - knots[i];
                 if (bottom != 0){
@@ -123,9 +130,9 @@ namespace spline{
             }
         }
 
-        std::vector<T> r(getLenght());
+        std::vector<T> r(getLength());
 
-        for (int i = 0; i < getLenght(); ++i) {
+        for (int i = 0; i < getLength(); ++i) {
             r[i] = basis[degree][i];
         }
 

@@ -27,8 +27,8 @@ namespace spline {
     }
 
 
-    int UnivariateBasis::getLenght ( ) const  { return (*this)->getLenght(); } 
-    int UnivariateBasisNode::getLenght ( ) const {
+    int UnivariateBasis::getLength ( ) const  { return (*this)->getLength(); } 
+    int UnivariateBasisNode::getLength ( ) const {
         return getSubBasis().size();
     }
     
