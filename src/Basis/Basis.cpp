@@ -132,20 +132,6 @@ namespace spline {
         return ret;
     }
 
-    EvaluationGrid Basis::getEvaluationGrid() const {(*this)->getEvaluationGrid();}
-    EvaluationGrid BasisNode::getEvaluationGrid() const {
-        EvaluationGrid evaluationGrid = EvaluationGrid();
-
-        for(auto const& basis : allSubBasis){
-            evaluationGrid.append( basis.getEvaluationGrid());
-        }
-        evaluationGrid.setArguments(allArguments);
-        return evaluationGrid;
-    }
-
-    std::vector< AnyTensor > Basis::evaluateEvaluationGrid(EvaluationGrid grid, std::vector< Argument > argumentList) const {(*this)->evaluateEvaluationGrid(grid, argumentList);}
-    std::vector< AnyTensor > BasisNode::evaluateEvaluationGrid(EvaluationGrid grid, std::vector< Argument > argumentList) const {}
-
     BSplineBasis Basis::castBSpline() const{return (*this)->castBSpline();}
     BSplineBasis BasisNode::castBSpline() const{
         spline_assert(false); // not inmplemented

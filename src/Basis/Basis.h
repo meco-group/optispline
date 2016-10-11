@@ -11,7 +11,6 @@
 
 #include "SubBasis.h"
 #include "../Function/Argument.h"
-#include "utils/EvaluationGrid.h"
 
 namespace spline {
     class Basis;
@@ -38,7 +37,7 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
-        virtual std::vector< SubBasis > getSubBasis() const;
+        std::vector< SubBasis > getSubBasis() const;
         Basis getSubBasis( int index ) const;
         SubBasis getSubBasis( Argument a) const;
 
@@ -52,9 +51,6 @@ namespace spline {
 
         virtual BSplineBasis castBSpline() const;
 
-
-        EvaluationGrid getEvaluationGrid() const;
-        std::vector< AnyTensor > evaluateEvaluationGrid(EvaluationGrid grid, std::vector< Argument > argumentList) const;
     // protected:
         std::vector< SubBasis > allSubBasis;
         std::vector< Argument > allArguments;
@@ -100,9 +96,6 @@ namespace spline {
         // Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-
-        EvaluationGrid getEvaluationGrid() const;
-        std::vector< AnyTensor > evaluateEvaluationGrid(EvaluationGrid grid, std::vector< Argument > argumentList) const;
 
         virtual BSplineBasis castBSpline() const;
     };
