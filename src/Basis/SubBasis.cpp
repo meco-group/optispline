@@ -16,7 +16,6 @@ namespace spline {
     std::ostream& operator<<(std::ostream &stream, const SubBasis& base){
         return stream << base.getRepresentation();
     }
-
     
     SubBasis SubBasis::operator+ (const SubBasis& other) const { return (*this)->operator+(other);}
     SubBasis SubBasisNode::operator+ (const SubBasis& other) const { 
@@ -49,4 +48,9 @@ namespace spline {
     }
 
     int SubBasis::getDimension() const{ return (*this)->getDimension();}
+
+    std::vector< std::vector < double > > SubBasis::getEvaluationGrid() const {(*this)->getEvaluationGrid();}
+    std::vector< std::vector < double > > SubBasisNode::getEvaluationGrid() const {
+    }
+
 } // namespace spline
