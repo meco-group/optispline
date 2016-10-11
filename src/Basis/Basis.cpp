@@ -119,10 +119,7 @@ namespace spline {
     //     return timesBasis(this, other);
     // }
 
-    AnyTensor  Basis::operator() (const std::vector< AnyScalar > &  x ) const {
-        return (*this)->operator()(x);
-    }
-
+    AnyTensor  Basis::operator() (const std::vector< AnyScalar > &  x ) const { return (*this)->operator()(x); }
     AnyTensor  BasisNode::operator() (const std::vector< AnyScalar > &  x   ) const {
         spline_assert(x.size()==allSubBasis.size());
         AnyTensor ret = AnyTensor::unity();
