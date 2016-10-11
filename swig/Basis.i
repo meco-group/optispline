@@ -83,6 +83,7 @@ namespace std {
 #include <src/Basis/SubUnivariateBasis.h>
 #include <src/Basis/SubMonomialBasis.h>
 #include <src/Basis/SubBSplineBasis.h>
+#include <src/Basis/utils/EvaluationGrid.h> // Debug
 #include <src/Basis/Basis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
@@ -382,6 +383,7 @@ namespace std {
 %template(SubBasisVector) std::vector< spline::SubBasis >;
 %template(BasisVector) std::vector< spline::Basis >;
 
+%include <src/Basis/utils/EvaluationGrid.h> // Debug
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
