@@ -42,12 +42,8 @@ namespace spline {
         return SubBasis();
     } 
 
-
-    AnyTensor  SubBasis::operator() (const std::vector< AnyScalar > &  x ) const {
-        return (*this)->operator()(x);
-    }
-
-    AnyTensor  SubBasisNode::operator() (const std::vector< AnyScalar > &  x   ) const {
+    AnyTensor SubBasis::operator() (const std::vector< AnyScalar > & x) const { return (*this)->operator()(x); }
+    AnyTensor SubBasisNode::operator() (const std::vector< AnyScalar > & x) const {
         assert(false);		//Abstract
         return AnyTensor();
     }

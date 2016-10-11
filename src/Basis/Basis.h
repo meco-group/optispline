@@ -4,14 +4,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <any_tensor.hpp>
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
 #include "SubBasis.h"
 #include "../Function/Argument.h"
-// #include <tensor.hpp>
-#include <any_tensor.hpp>
 #include "utils/EvaluationGrid.h"
 
 namespace spline {
@@ -52,8 +51,8 @@ namespace spline {
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         virtual BSplineBasis castBSpline() const;
-        
-        
+
+
         EvaluationGrid getEvaluationGrid() const;
         std::vector< AnyTensor > evaluateEvaluationGrid(EvaluationGrid grid, std::vector< Argument > argumentList) const;
     // protected:

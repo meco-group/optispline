@@ -209,7 +209,7 @@ namespace std {
       }
       return false;
     }
-    
+
     GUESTOBJECT * from_ptr(const AnyScalar *a) {
       //if (a->is_double()) return from_ref(static_cast<double>(*a));
       //if (a->is_SX()) return from_ref(static_cast<SX>(*a));
@@ -229,7 +229,7 @@ namespace std {
 #endif // SWIGPYTHON
       return 0;
     }
-    
+
     GUESTOBJECT* from_ptr(const DT *a) {
       return SWIG_NewPointerObj(new DT(*a), $descriptor(Tensor< casadi::Matrix<double> > *), SWIG_POINTER_OWN);
     }
@@ -241,7 +241,7 @@ namespace std {
     GUESTOBJECT* from_ptr(const MT *a) {
       return SWIG_NewPointerObj(new MT(*a), $descriptor(Tensor< casadi::MX > *), SWIG_POINTER_OWN);
     }
-    
+
   } // namespace casadi
  }
 
