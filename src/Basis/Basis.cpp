@@ -132,13 +132,19 @@ namespace spline {
         return ret;
     }
 
-    std::vector< std::vector < double > > Basis::getEvaluationGrid() const {(*this)->getEvaluationGrid();}
-    std::vector< std::vector < double > > BasisNode::getEvaluationGrid() const {
+    EvaluationGrid Basis::getEvaluationGrid() const {(*this)->getEvaluationGrid();}
+    EvaluationGrid BasisNode::getEvaluationGrid() const {
+        EvaluationGrid evaluationGrid = EvaluationGrid();
 
+        for(auto const& basis : allSubBasis){
+            evaluationGrid.append( basis.getEvaluationGrid());
+        }
+        evaluationGrid.setArguments(allArguments);
+        return evaluationGrid;
     }
 
-    std::vector< AnyTensor > Basis::evaluateEvaluationGrid(std::vector< std::vector < double > > grid, std::vector< Argument > argumentList) const {(*this)->evaluateEvaluationGrid(grid, argumentList);}
-    std::vector< AnyTensor > BasisNode::evaluateEvaluationGrid(std::vector< std::vector < double > > grid, std::vector< Argument > argumentList) const {}
+    std::vector< AnyTensor > Basis::evaluateEvaluationGrid(EvaluationGrid grid, std::vector< Argument > argumentList) const {(*this)->evaluateEvaluationGrid(grid, argumentList);}
+    std::vector< AnyTensor > BasisNode::evaluateEvaluationGrid(EvaluationGrid grid, std::vector< Argument > argumentList) const {}
 
     BSplineBasis Basis::castBSpline() const{return (*this)->castBSpline();}
     BSplineBasis BasisNode::castBSpline() const{
