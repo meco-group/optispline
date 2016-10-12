@@ -74,12 +74,12 @@ namespace spline {
     };
 
 
- 
+
 
         template< class T >
         void SubBasisNode::assertVectorLenghtCorrect( const std::vector< T >& x) const{
             assert(x.size() == getDimension());  // imput vector has wrong dimention
         }
 
-}  
+}
 #endif  // SUBBASIS_H_

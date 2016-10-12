@@ -17,19 +17,19 @@ namespace spline{
 
     SubBasis SubBSplineBasisNode::operator+ (const SubBasis& other) const {
         return other + shared_from_this<SubBSplineBasis>();
-    } 
+    }
 
     SubBasis SubBSplineBasisNode::operator+ (const SubBasisDummy& other) const {
         return shared_from_this<SubBSplineBasis>();
-    } 
+    }
 
     SubBasis SubBSplineBasisNode::operator+ (const SubBSplineBasis& other) const {
         return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
-    } 
+    }
 
     SubBasis SubBSplineBasisNode::operator+ (const SubMonomialBasis& other) const {
         return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
-    } 
+    }
 
     std::vector<double> SubBSplineBasis::greville () const {return (*this)->greville();}
     std::vector<double> SubBSplineBasisNode::greville () const {
@@ -66,10 +66,10 @@ namespace spline{
     }
 
     SubBSplineBasis::SubBSplineBasis (const std::vector<double >& knots, int degree)  {
-        assign_node(new SubBSplineBasisNode(knots, degree)); 
+        assign_node(new SubBSplineBasisNode(knots, degree));
     }
 
-    SubBSplineBasisNode::SubBSplineBasisNode (const std::vector<double >& knots, int degree) 
+    SubBSplineBasisNode::SubBSplineBasisNode (const std::vector<double >& knots, int degree)
     : SubUnivariateBasisNode(degree), knots(knots){ }
 
     SubBSplineBasis::SubBSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new SubBSplineBasisNode(bounds, degree, numberOfIntervals)); };
@@ -89,22 +89,22 @@ namespace spline{
         setKnots(knots);
     }
 
-    std::vector< double >& SubBSplineBasis::getKnots () { return (*this)->getKnots(); } 
+    std::vector< double >& SubBSplineBasis::getKnots () { return (*this)->getKnots(); }
     std::vector< double >& SubBSplineBasisNode::getKnots () {
         return knots;
     }
 
-    const std::vector< double >& SubBSplineBasis::getKnots () const { return (*this)->getKnots(); } 
+    const std::vector< double >& SubBSplineBasis::getKnots () const { return (*this)->getKnots(); }
     const std::vector< double >& SubBSplineBasisNode::getKnots () const {
         return knots;
     }
 
-    void SubBSplineBasis::setKnots (std::vector< double >& knots) { return (*this)->setKnots (knots); } 
+    void SubBSplineBasis::setKnots (std::vector< double >& knots) { return (*this)->setKnots (knots); }
     void SubBSplineBasisNode::setKnots (std::vector< double >& knots) {
         knots = knots;
     }
 
-    
+
     AnyTensor SubBSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         assert(x.size()==getDimension());
         if(AnyScalar::is_double(x)) {

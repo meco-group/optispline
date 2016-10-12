@@ -61,7 +61,7 @@ namespace spline{
             }
 #endif // SWIG
     };
-    
+
     template<class T>
     AnyTensor SubMonomialBasisNode::SubBasisEvalution (const std::vector< T >& x ) const {
         T x_ = x[0];

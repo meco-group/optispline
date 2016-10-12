@@ -6,7 +6,6 @@ namespace spline{
     EvaluationGridNode* EvaluationGrid::operator->() const { return get(); }
 
     EvaluationGrid::EvaluationGrid (Basis basis){
-        // assign_node(new EvaluationGridNode(std::vector< SubEvaluationGrid >{}));
         assign_node(new EvaluationGridNode(basis));
     }
 
