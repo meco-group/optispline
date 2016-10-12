@@ -1,5 +1,6 @@
 #include "EvaluationGrid.h"
 #include "../SubBasis.h"
+#include "../../common.h"
 
 namespace spline{
     EvaluationGridNode* EvaluationGrid::get() const { return static_cast<EvaluationGridNode*>(SharedObject::get()); };
@@ -15,8 +16,8 @@ namespace spline{
 
     EvaluationGridNode::EvaluationGridNode(Basis basis) : griddedBasis(basis) {}
 
-    void EvaluationGrid::evaluateEvaluationGrid(std::vector< AnyTensor > returnVector) const {return (*this)->evaluateEvaluationGrid(returnVector);}
-    void EvaluationGridNode::evaluateEvaluationGrid(std::vector< AnyTensor > returnVector) const {
+    void EvaluationGrid::evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector) const {return (*this)->evaluateEvaluationGrid(returnVector);}
+    void EvaluationGridNode::evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector) const {
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
         std::vector< AnyTensor > postStep { AnyTensor::unity() };
 
@@ -31,24 +32,22 @@ namespace spline{
             }
             preStep = postStep;
         }
-        returnVector = preStep;
+        *returnVector = preStep;
     }
 
 
-    void EvaluationGrid::evaluateEvaluationGrid(std::vector< AnyTensor > returnVector, Function f) const {return (*this)->evaluateEvaluationGrid(returnVector, f);}
-    void EvaluationGridNode::evaluateEvaluationGrid(std::vector< AnyTensor > returnVector, Function f) const {
+    void EvaluationGrid::evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector, Function f) const {return (*this)->evaluateEvaluationGrid(returnVector, f);}
+    void EvaluationGridNode::evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector, Function f) const {
         Basis basis = f.getBasis();
         std::vector< int > indexPermutation;
         getPermutation(&indexPermutation, basis);
 
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
         std::vector< AnyTensor > postStep { AnyTensor::unity() };
-        // for(SubBasis b : griddedBasis.getSubBasis()){
 
-        for(int i = 0; i < basis.getDimension()){
-
-            SubBasis subBasis = basis.getSubBasis()[i]
-            SubBasis correspondingSubBasis = griddedBasis.getSubBasis()[indexPermutation[i]]
+        for(int i = 0; i < basis.getDimension(); i++){
+            SubBasis subBasis = basis.getSubBasis()[i];
+            SubBasis correspondingSubBasis = griddedBasis.getSubBasis()[indexPermutation[i]];
             std::vector< std::vector< AnyScalar > > evaluationGrid;
             correspondingSubBasis.getEvaluationGrid(&evaluationGrid);
             for(auto const & subPoint : evaluationGrid){
@@ -60,26 +59,27 @@ namespace spline{
             preStep = postStep;
         }
 
-        returnVector = {};
+        postStep.clear();
         for( AnyTensor pre : preStep){
-            returnVector.push_back(pre.inner(f.getData());
+            postStep.push_back(pre.inner(f.getCoefficient().getData()));
         }
-        returnVector = preStep;
+
+        *returnVector = postStep;
     }
 
     void EvaluationGridNode::getPermutation(std::vector< int > * indexPermutation, Basis basis) const{
         std::vector< int > index;
         if(griddedBasis.hasArguments() && basis.hasArguments()){
-            for(auto & a : basis.getArguments){
+            for(auto & a : basis.getArguments()){
                 index.push_back(griddedBasis.indexArgument(a));
             }
         }else{
             spline_assert(griddedBasis.getDimension() == basis.getDimension());
-            for(int i = 0; i < basis.getDimension()){
+            for(int i = 0; i < basis.getDimension(); i++){
                 index.push_back(i);
             }
         }
-        indexPermutation = index;
+        *indexPermutation = index;
     }
 
     // void EvaluationGridNode::evaluateEvaluationGridWithArguments(std::vector< AnyTensor > returnVector, Function f) const {
