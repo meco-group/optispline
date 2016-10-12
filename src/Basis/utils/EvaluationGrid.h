@@ -8,24 +8,23 @@
 #include "../SharedObject/SharedObjectNode.h"
 
 #include "../Function/Argument.h"
+#include "../Function/Function.h"
 #include "../Basis.h"
 namespace spline{
 
 #ifndef SWIG
 
     class EvaluationGridNode : public SharedObjectNode {
-        public:
-
+    public:
+        std::string getRepresentation() const ;
 
         EvaluationGridNode(Basis basis);
-        // EvaluationGridNode() : listedGrid(std::vector< std::vector< std::vector< AnyScalar {}),
-                               // argumentList(std::vector< Argument > {}) {}
-        // void append( std::vector< std::vector< double > > subGrid );
-        // void append( std::vector< std::vector< double > > subGrid, Argument argument);
-        // void setArguments( std::vector< Argument > argumentList );
-        std::vector< AnyTensor > evaluateEvaluationGrid() const;
-        std::vector< AnyTensor > evaluateEvaluationGrid(Function f) const;
+        void evaluateEvaluationGrid(std::vector< AnyTensor > returnVector) const;
+        void evaluateEvaluationGrid(std::vector< AnyTensor > returnVector, spline::Function f) const;
+        // void evaluateEvaluationGridWithArguments(std::vector< AnyTensor > returnVector, spline::Function f) const;
+        // void evaluateEvaluationGridWithNoArguments(std::vector< AnyTensor > returnVector, spline::Function f) const;
 
+        void getPermutation(std::vector< int > indexPermutation, Basis basis) const;
     private:
         Basis griddedBasis;
     };
@@ -34,20 +33,22 @@ namespace spline{
 
     class EvaluationGrid : public SharedObject {
     public:
-
+        std::string getRepresentation() const ;
+        // EvaluationGrid();
         EvaluationGrid(Basis basis);
+
 #ifndef SWIG
 
         EvaluationGridNode* get() const ;
         EvaluationGridNode* operator->() const ;
 
+        inline friend
+            std::ostream& operator<<(std::ostream &stream, const EvaluationGrid& obj) {
+                return stream << obj.getRepresentation();
+            }
 #endif // SWIG
-        // void append( std::vector< std::vector< double > > subGrid );
-        // void append( std::vector< std::vector< double > > subGrid, Argument argument);
-        //
-        // void setArguments( std::vector< Argument > argumentList );
-        std::vector< AnyTensor > evaluateEvaluationGrid() const;
-        std::vector< AnyTensor > evaluateEvaluationGrid(Function f) const;
+        void evaluateEvaluationGrid(std::vector< AnyTensor > returnVector) const;
+        void evaluateEvaluationGrid(std::vector< AnyTensor > returnVector, Function f) const;
     };
 } // namespace spline
 

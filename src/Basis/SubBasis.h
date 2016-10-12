@@ -34,7 +34,7 @@ namespace spline {
         template< class T >
             void assertVectorLenghtCorrect( const std::vector< T >& x) const;
 
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     };
 
 
@@ -66,7 +66,7 @@ namespace spline {
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
         int getDimension() const;
 
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     };
 
 

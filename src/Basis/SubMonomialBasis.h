@@ -32,7 +32,7 @@ namespace spline{
         template<class T>
         AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
 
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     };
 
 #endif // SWIG
