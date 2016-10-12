@@ -29,8 +29,6 @@ namespace spline {
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        // virtual ST operator()(const std::vector< SX >& x) const;
-        // virtual MT operator()(const std::vector< MX >& x) const;
         virtual int getDimension() const {return 0;};
 
         template< class T >
@@ -66,8 +64,6 @@ namespace spline {
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        // ST operator()(const std::vector< SX >& x) const;
-        // MT operator()(const std::vector< MX >& x) const;
         int getDimension() const;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
