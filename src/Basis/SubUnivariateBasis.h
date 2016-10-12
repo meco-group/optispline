@@ -5,8 +5,6 @@
 #include <string>
 
 #include "SubBasis.h"
-#include "../SharedObject/SharedObject.h"
-#include "../SharedObject/SharedObjectNode.h"
 
 namespace spline {
 

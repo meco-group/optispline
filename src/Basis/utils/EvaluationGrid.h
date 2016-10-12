@@ -28,9 +28,6 @@ namespace spline{
 
     private:
         Basis griddedBasis;
-        // std::vector< std::vector< std::vector< AnyScalar > > > listedGrid;
-        // std::vector< Argument > argumentList;
-
     };
 
 #endif // SWIG

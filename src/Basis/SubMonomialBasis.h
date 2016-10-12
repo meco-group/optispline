@@ -3,9 +3,6 @@
 
 #include <vector>
 
-#include "../SharedObject/SharedObject.h"
-#include "../SharedObject/SharedObjectNode.h"
-
 #include "SubBasis.h"
 #include "SubUnivariateBasis.h"
 

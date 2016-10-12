@@ -5,6 +5,10 @@ namespace spline{
     EvaluationGridNode* EvaluationGrid::get() const { return static_cast<EvaluationGridNode*>(SharedObject::get()); };
     EvaluationGridNode* EvaluationGrid::operator->() const { return get(); }
 
+    // EvaluationGrid::EvaluationGrid (){
+    //     assign_node(new EvaluationGridNode(Basis()));
+    // }
+    //
     EvaluationGrid::EvaluationGrid (Basis basis){
         assign_node(new EvaluationGridNode(basis));
     }

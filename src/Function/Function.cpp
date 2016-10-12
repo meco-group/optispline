@@ -9,9 +9,7 @@ namespace spline {
     }
 
     Function Function::operator+(Function f){
-        // Basis b = getBasis() + f.getBasis();
         Basis b = getBasis();
-        // Coefficient coef = Coefficient(std::vector< double > {});
         EvaluationGrid evaluationGrid = EvaluationGrid(b);
         // return Function(b,coef);
     }
