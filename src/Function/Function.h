@@ -18,7 +18,6 @@ namespace spline {
         Basis& getBasis() {return basis;}
         Coefficient getCoefficient() {return coef;}
         // Argument& getArgument (){ return getBasis().getArgument();}
-        // Argument& getArgument (){ return getBasis().getArgument();}
     public:
         Basis& basis;
         Coefficient coef;

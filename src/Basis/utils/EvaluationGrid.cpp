@@ -82,63 +82,6 @@ namespace spline{
         *indexPermutation = index;
     }
 
-    // void EvaluationGridNode::evaluateEvaluationGridWithArguments(std::vector< AnyTensor > returnVector, Function f) const {
-    //     std::vector< AnyTensor > preStep { AnyTensor::unity() };
-    //     std::vector< AnyTensor > postStep { AnyTensor::unity() };
-    //
-    //     Basis basis = f.getBasis();
-    //
-    //     // for(SubBasis b : griddedBasis.getSubBasis()){
-    //     for(int i = 0; i < griddedBasis.getDimension(); i++){
-    //
-    //         std::vector< std::vector< AnyScalar > > evaluationGrid;
-    //         b.getEvaluationGrid(&evaluationGrid);
-    //         for(auto const & subPoint : evaluationGrid){
-    //             AnyTensor subEvaluation = b(subPoint);
-    //             for( AnyTensor pre : preStep){
-    //                 postStep.push_back(pre.outer_product( subEvaluation ));
-    //             }
-    //         }
-    //         preStep = postStep;
-    //     }
-    //     for( AnyTensor pre : preStep){
-    //         postStep.push_back(pre.outer_product( subEvaluation ));
-    //     }
-    //     returnVector = preStep;
-    //
-    //
-    // }
-    //
-    // void EvaluationGridNode::evaluateEvaluationGridWithNoArguments(std::vector< AnyTensor > returnVector, Function f) const {
-    //     Basis basis = f.getBasis();
-    //     spline_assert(griddedBasis.getDimension() == basis.getDimension());
-    //
-    //     std::vector< AnyTensor > preStep { AnyTensor::unity() };
-    //     std::vector< AnyTensor > postStep { AnyTensor::unity() };
-    //     // for(SubBasis b : griddedBasis.getSubBasis()){
-    //     for(int i = 0; i < griddedBasis.getDimension(); i++){
-    //
-    //
-    //
-    //
-    //         std::vector< std::vector< AnyScalar > > evaluationGrid;
-    //         b.getEvaluationGrid(&evaluationGrid);
-    //         for(auto const & subPoint : evaluationGrid){
-    //             AnyTensor subEvaluation = b(subPoint);
-    //             for( AnyTensor pre : preStep){
-    //                 postStep.push_back(pre.outer_product( subEvaluation ));
-    //             }
-    //         }
-    //         preStep = postStep;
-    //     }
-    //     for( AnyTensor pre : preStep){
-    //         postStep.push_back(pre.outer_product( subEvaluation ));
-    //     }
-    //     returnVector = preStep;
-    //
-    //
-    // }
-    //
     std::string EvaluationGridNode::getRepresentation() const {
         std::stringstream s;
         // s << "EvaluationGrid" << std::endl;
@@ -159,7 +102,4 @@ namespace spline{
     };
 
     std::string EvaluationGrid::getRepresentation() const { return (*this)->getRepresentation() ;};
-    // std::ostream& operator<<(std::ostream &stream, const EvaluationGrid& eg){
-    //     return stream << eg.getRepresentation();
-    // }
-    }
+}
