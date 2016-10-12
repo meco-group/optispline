@@ -18,8 +18,8 @@ namespace spline{
 
 
         EvaluationGridNode(Basis basis);
-        EvaluationGridNode() : listedGrid(std::vector< std::vector< std::vector< double > > > {}),
-                               argumentList(std::vector< Argument > {}) {}
+        // EvaluationGridNode() : listedGrid(std::vector< std::vector< std::vector< AnyScalar {}),
+                               // argumentList(std::vector< Argument > {}) {}
         // void append( std::vector< std::vector< double > > subGrid );
         // void append( std::vector< std::vector< double > > subGrid, Argument argument);
         // void setArguments( std::vector< Argument > argumentList );
@@ -27,9 +27,9 @@ namespace spline{
         std::vector< AnyTensor > evaluateEvaluationGrid(Function f) const;
 
     private:
-
-        std::vector< std::vector< std::vector< double > > > listedGrid;
-        std::vector< Argument > argumentList;
+        Basis griddedBasis;
+        // std::vector< std::vector< std::vector< AnyScalar > > > listedGrid;
+        // std::vector< Argument > argumentList;
 
     };
 

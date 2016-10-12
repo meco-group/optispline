@@ -9,11 +9,13 @@ namespace spline{
         assign_node(new EvaluationGridNode(basis));
     }
 
-    EvaluationGridNode::EvaluationGridNode(Basis basis){
-       for(SubBasis b : basis.getSubBasis()){
-           listedGrid.push_back( b.getEvaluationGrid());
-        }
-        argumentList = basis.getArguments();
+    EvaluationGridNode::EvaluationGridNode(Basis basis) : griddedBasis(basis) {
+       // griddedBasis = basis;
+       // for(SubBasis b : basis.getSubBasis()){
+       //     listedGrid.push_back( b.getEvaluationGrid());
+       //  }
+       // std::cout << listedGrid << std::endl;
+        // argumentList = basis.getArguments();
     }
 
     // void EvaluationGrid::append( std::vector< std::vector< double > > subGrid ){(*this)->append(subGrid);}
@@ -35,9 +37,20 @@ namespace spline{
 
     std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid() const {return (*this)->evaluateEvaluationGrid();}
     std::vector< AnyTensor > EvaluationGridNode::evaluateEvaluationGrid() const {
+        std::vector< AnyTensor > preStep { AnyTensor::unity() };
+        std::vector< AnyTensor > postStep { AnyTensor::unity() };
 
-
-
+        for(SubBasis b : griddedBasis.getSubBasis()){
+            std::vector< std::vector< AnyScalar > > evalutionGrid = b.getEvaluationGrid();
+            for(auto const & subPoint : evalutionGrid){
+                AnyTensor subEvaluation = b(subPoint);
+                for( AnyTensor pre : preStep){
+                    postStep.push_back(pre.outer_product( subEvaluation ));
+                }
+            }
+            preStep = postStep;
+        }
+        return preStep;
     }
 
 
