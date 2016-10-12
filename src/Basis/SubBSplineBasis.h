@@ -45,7 +45,7 @@ namespace spline{
         template<class T>
         AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
 
-        virtual std::vector< std::vector < double > > getEvaluationGrid() const;
+        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
     private:
 
         //  std::vector<bool> indector(int i, double x);

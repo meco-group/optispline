@@ -47,10 +47,10 @@ namespace spline {
          return getDegree() + 1;
     }
 
-    std::vector< std::vector < double > > SubMonomialBasisNode::getEvaluationGrid() const {
-         std::vector< std::vector < double > > grid = {};
+    std::vector< std::vector < AnyScalar > > SubMonomialBasisNode::getEvaluationGrid() const {
+         std::vector< std::vector < AnyScalar > > grid = {};
          for(int i = 0; i < getLength(); i++){
-            grid.push_back(std::vector<double> {(double) i});
+            grid.push_back(std::vector<AnyScalar> {(double) i});
          }
          return grid;
     }

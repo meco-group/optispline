@@ -35,8 +35,8 @@ namespace spline {
 
         template< class T >
             void assertVectorLenghtCorrect( const std::vector< T >& x) const;
-        
-        virtual std::vector< std::vector < double > > getEvaluationGrid() const;
+
+        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
     };
 
 
@@ -70,7 +70,7 @@ namespace spline {
         // MT operator()(const std::vector< MX >& x) const;
         int getDimension() const;
 
-        virtual std::vector< std::vector < double > > getEvaluationGrid() const;
+        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
     };
 
 

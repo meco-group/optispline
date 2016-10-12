@@ -382,6 +382,7 @@ namespace std {
 
 %template(SubBasisVector) std::vector< spline::SubBasis >;
 %template(BasisVector) std::vector< spline::Basis >;
+%template(AnyScalarVectorVector) std::vector< std::vector< AnyScalar > >; // Debug
 
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
