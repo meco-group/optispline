@@ -30,12 +30,6 @@ class Test_Basis_SubBasis(unittest.TestCase):
         # check that s.split fails when the separator is not a string
         with self.assertRaises(TypeError):
             s.split(2)
-
-def getGrid(basis):
-    subBasis = list(basis.getSubBasis())
-    print subBasis
-    # print subBasis[0].getEvaluationGrid()
-    # return [sB.getEvaluationGrid() for sB in subBasis]
     #
 if __name__ == '__main__':
     b1 = MonomialBasis(2)
@@ -44,5 +38,4 @@ if __name__ == '__main__':
 
     eg1 = EvaluationGrid(b1)
     print eg1
-    print(getGrid(b1))
     unittest.main()

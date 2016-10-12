@@ -28,7 +28,6 @@ class Test_Basis_SubBasis(unittest.TestCase):
         if(len(a.shape) == 2):
             if(a.shape[1] == 1):
                 a = a[:,0]
-        print np.array(a),np.array(b),np.linalg.norm(np.array(a)-np.array(b))
         self.assertTrue(np.linalg.norm(np.array(a)-np.array(b))<=tol)
 
     def test_coefficients_construction_1(self):
@@ -53,6 +52,6 @@ class Test_Basis_SubBasis(unittest.TestCase):
         a_ = DTensor(a, [2,2,1,1])
         a_ = Coefficient(a_)
         # print all(a_.getData().data() == a)
-     
+
 if __name__ == '__main__':
     unittest.main()
