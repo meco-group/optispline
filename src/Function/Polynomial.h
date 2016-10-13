@@ -9,7 +9,7 @@ namespace spline{
 
 class Polynomial : public Function {
 public:
-    // Polynomial(const std::vector< double >& coef);
+    Polynomial(const std::vector< double >& coef);
     // virtual std::string getRepresentation() const ;
 };
 } // namespace spline
