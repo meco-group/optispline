@@ -134,8 +134,9 @@ namespace std {
   }
 }
 
-%include <tensor.hpp>
+%rename(__getitem__) index;
 
+%include <tensor.hpp>
 
 %fragment("tensortools_anyscalar", "header", fragment="casadi_aux") {
   namespace casadi {
