@@ -9,7 +9,7 @@ namespace spline {
     }
 
     Function Function::operator+(Function f){
-        Basis b = getBasis();
+        Basis b = getBasis() + f.getBasis();
         EvaluationGrid evaluationGrid = EvaluationGrid(b);
         std::vector< AnyTensor > basisEvaluated;
         std::vector< AnyTensor > thisFunctionEvaluated;
@@ -24,17 +24,20 @@ namespace spline {
             sumFunctionEvaluated.push_back(thisFunctionEvaluated[i] + otherFunctionEvaluated[i]);
         }
 
+        std::vector< int > shape;
+
+
+        AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
+        AnyTensor B = AnyTensor::pack(sumFunctionEvaluated, 0);
+
+        AnyTensor C = AnyTensor::solve(A,B);
+
+        return Function(b,C);
 
 
 
-            // return Function(b,coef);
-            //
-            //     casadi::DM Univariatestd::shared_ptr<Basis>::transformation( const std::shared_ptr<Basis> &b) const {
-            //         std::vector<double> grid = evaluationGrid();
-            //         casadi::DM A(evalstd::shared_ptr<Basis>(grid));
-            //         casadi::DM B(b.evalstd::shared_ptr<Basis>(grid));
-            //         return casadi::DM::solve(A, B);
-            //     }
+
+            // casadi::DM::solve(A, B);
     }
 
 }  // namespace spline
