@@ -134,9 +134,43 @@ namespace std {
   }
 }
 
-%rename(__getitem__) index;
+
+#ifdef SWIGPYTHON
+%define %tensor_helpers()
+%pythoncode %{
+    def __getitem__(self, s):
+          ind = []
+          for i in s:
+            if isinstance(i, slice):
+              assert i.step is None and i.stop is None and i.start is None
+              ind.append(-1)
+            else:
+              ind.append(i)
+          return self.index(ind)
+%}
+%enddef
+#else
+%define %tensor_helpers()
+    function varargout = subsref(self,s)
+      if numel(s)==1 & s.type=='()'
+        [varargout{1:nargout}]= paren(self, s.subs{:});
+      else
+        [varargout{1:nargout}] = builtin('subsref',self,s);
+      end
+   end
+%enddef
+#endif
 
 %include <tensor.hpp>
+
+
+%template(DTensor) Tensor<DM>;
+%template(STensor) Tensor<SX>;
+%template(MTensor) Tensor<MX>;
+
+%template(DTensorVector) std::vector< Tensor<DM> >;
+%template(STensorVector) std::vector< Tensor<SX> >;
+%template(MTensorVector) std::vector< Tensor<MX> >;
 
 %fragment("tensortools_anyscalar", "header", fragment="casadi_aux") {
   namespace casadi {
@@ -410,6 +444,14 @@ namespace spline {
 }
 #endif
 
-%template(DTensor) Tensor<DM>;
-%template(STensor) Tensor<SX>;
-%template(MTensor) Tensor<MX>;
+%extend Tensor<DM> {
+  %tensor_helpers()
+}
+%extend Tensor<SX> {
+  %tensor_helpers()
+}
+%extend Tensor<MX> {
+  %tensor_helpers()
+}
+
+
