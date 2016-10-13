@@ -12,7 +12,7 @@ namespace spline {
         // Coefficient(){}
         // template <class D>
         Coefficient (const AnyTensor& t) : data(t){}
-        Coefficient (const std::vector<AnyScalar>& v);
+        Coefficient (const std::vector< double >& v);
 
         // const std::vector< int > getShape() const;
 
