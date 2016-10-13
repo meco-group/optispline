@@ -1,5 +1,6 @@
 #include "SubBasis.h"
 #include "operations/operationsBasis.h"
+#include "../common.h"
 
 namespace spline {
 
@@ -9,75 +10,46 @@ namespace spline {
     SubBasis::SubBasis (){
         assign_node(new SubBasisNode());
     }
- 
+
     std::string SubBasisNode::getRepresentation() const {return "SubBasis";};
     std::string SubBasis::getRepresentation() const { return (*this)->getRepresentation() ;};
     std::ostream& operator<<(std::ostream &stream, const SubBasis& base){
         return stream << base.getRepresentation();
     }
 
-    SubBasis SubBasis::operator+ (const SubBasis& other) const { 
-	assert(false);
-	return SubBasis();
-        // return plusMultivariate(*this, other);
+    SubBasis SubBasis::operator+ (const SubBasis& other) const { return (*this)->operator+(other);}
+    SubBasis SubBasisNode::operator+ (const SubBasis& other) const {
+        spline_assert(false);
+        return SubBasis();
     }
 
-    SubBasis SubBasis::operator+ (const SubMonomialBasis& other) const {
-	assert(false);
-	return SubBasis();
-        // return plusMultivariate(*this, other);
-    } 
-    SubBasis SubBasis::operator+ (const SubBSplineBasis& other) const {
-	assert(false);
-	return SubBasis();
-        // return plusMultivariate(*this, other);
-    } 
-
-    SubBasis SubBasis::operator* (const SubBasis& other) const { 
-	assert(false);
-	return SubBasis();
-        // return timesMultivariate(*this, other);
+    SubBasis SubBasis::operator+ (const SubBasisDummy& other) const { return (*this)->operator+(other);}
+    SubBasis SubBasisNode::operator+ (const SubBasisDummy& other) const {
+        spline_assert(false);
+        return SubBasis();
     }
 
-    SubBasis SubBasis::operator* (const SubMonomialBasis& other) const {
-	assert(false);
-	return SubBasis();
-        // return timesMultivariate(*this, other);
-    } 
-
-    SubBasis SubBasis::operator* (const SubBSplineBasis& other) const {
-	assert(false);
-	return SubBasis();
-        // return timesMultivariate(*this, other);
-    } 
-
-    AnyTensor  SubBasis::operator() (const std::vector< AnyScalar > &  x ) const {
-        return (*this)->operator()(x);
+    SubBasis SubBasis::operator+ (const SubMonomialBasis& other) const { return (*this)->operator+(other); }
+    SubBasis SubBasisNode::operator+ (const SubMonomialBasis& other) const {
+        spline_assert(false);
+        return SubBasis();
     }
 
-    AnyTensor  SubBasisNode::operator() (const std::vector< AnyScalar > &  x   ) const {
-	assert(false);		//Abstract
+    SubBasis SubBasis::operator+ (const SubBSplineBasis& other) const {return (*this)->operator+(other);}
+    SubBasis SubBasisNode::operator+ (const SubBSplineBasis& other) const {
+        spline_assert(false);
+        return SubBasis();
     }
-   
-    // ST  SubBasis::operator()  (const std::vector< SX > &  x   ) const {
-    //     return (*this)->operator() (x);
-    // }
-    //
-    // ST  SubBasisNode::operator()  (const std::vector< SX > &  x   ) const {
-    //     ST ret(1,{});
-	// assert(false);		//Abstract
-    //     return ret;
-    // }
-    //
-    // MT  SubBasis::operator()  (const std::vector< MX > &  x   ) const {
-    //     return (*this)->operator() (x);
-    // }
-    //
-    // MT  SubBasisNode::operator()  (const std::vector< MX > &  x   ) const {
-    //     MT ret(1,{});
-	// assert(false);		//Abstract
-    //     return ret;
-    // }
 
-    int SubBasis::getDimension() const{(*this)->getDimension();}
+    AnyTensor SubBasis::operator() (const std::vector< AnyScalar > & x) const { return (*this)->operator()(x); }
+    AnyTensor SubBasisNode::operator() (const std::vector< AnyScalar > & x) const {
+        assert(false);		//Abstract
+        return AnyTensor();
+    }
+
+    int SubBasis::getDimension() const{ return (*this)->getDimension();}
+
+    void SubBasis::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const{(*this)->getEvaluationGrid(eg);}
+    void SubBasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const{}
+
 } // namespace spline

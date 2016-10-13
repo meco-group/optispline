@@ -1,38 +1,44 @@
 # Simple library that shows how CasADi can be extended
 include_directories(${CASADI_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-tools)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-sign-compare")
+
 add_library(Basis SHARED
-            common.h
+    common.h
 
-            SharedObject/SharedObject.cpp SharedObject/SharedObjectNode.cpp
-            SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
- 	    
-	    Basis/SubBasis.h Basis/SubBasis.cpp
-	    Basis/SubBSplineBasis.h Basis/SubBSplineBasis.cpp
-	    Basis/SubUnivariateBasis.h Basis/SubUnivariateBasis.cpp
-	    Basis/SubMonomialBasis.h Basis/SubMonomialBasis.cpp
-            Basis/Basis.h Basis/Basis.cpp
-            Basis/BSplineBasis.h Basis/BSplineBasis.cpp
-            Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
-            Basis/MonomialBasis.h Basis/MonomialBasis.cpp
-	   
-            Basis/operations/operationsBasis.h
-            Basis/operations/plus.h 
-            Basis/operations/plusUnivariate.h Basis/operations/plusUnivariate.cpp
-            Basis/operations/times.h
-	    Basis/operations/timesUnivariate.h Basis/operations/timesUnivariate.cpp
-            
-            Basis/utils/vectorUtilities.h Basis/utils/vectorUtilities.cpp
-            Basis/utils/CommonBasis.h
+    SharedObject/SharedObject.cpp SharedObject/SharedObjectNode.cpp
+    SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
 
-            Function/Function.h Function/Function.cpp
-            Function/Polynomial.h Function/Polynomial.cpp
-            Function/Argument.h Function/Argument.cpp
+    Basis/utils/vectorUtilities.h Basis/utils/vectorUtilities.cpp
+    Basis/utils/CommonBasis.h
 
-            Coefficients/Coefficient.h Coefficients/Coefficient.cpp
+    Basis/SubBasis.h Basis/SubBasis.cpp
+    Basis/SubBasisDummy.h Basis/SubBasisDummy.cpp
+    Basis/SubBSplineBasis.h Basis/SubBSplineBasis.cpp
+    Basis/SubUnivariateBasis.h Basis/SubUnivariateBasis.cpp
+    Basis/SubMonomialBasis.h Basis/SubMonomialBasis.cpp
+    Basis/Basis.h Basis/Basis.cpp
+    Basis/BSplineBasis.h Basis/BSplineBasis.cpp
+    Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
+    Basis/MonomialBasis.h Basis/MonomialBasis.cpp
 
-	    ../tensor-tools/any_tensor.cpp
-	    ../tensor-tools/any_tensor.hpp
-	    ../tensor-tools/tensor.hpp
-          )
+    Basis/utils/EvaluationGrid.h Basis/utils/EvaluationGrid.cpp
+
+    Basis/operations/operationsBasis.h Basis/operations/operationsBasis.cpp
+    Basis/operations/plus.h
+    Basis/operations/plusUnivariate.h Basis/operations/plusUnivariate.cpp
+    Basis/operations/times.h
+    Basis/operations/timesUnivariate.h Basis/operations/timesUnivariate.cpp
+
+    Function/Function.h Function/Function.cpp
+    Function/Polynomial.h Function/Polynomial.cpp
+    Function/Argument.h Function/Argument.cpp
+
+    Coefficients/Coefficient.h Coefficients/Coefficient.cpp
+
+    ../tensor-tools/any_tensor.cpp
+    ../tensor-tools/any_tensor.hpp
+    ../tensor-tools/tensor.hpp
+    )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
 add_definitions(-DSHARED_LIBRARY)

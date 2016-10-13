@@ -1,7 +1,3 @@
-#include <math.h>       /* pow */
-
-#include <casadi/casadi.hpp> // range
-
 #include "SubMonomialBasis.h"
 
 #include "operations/operationsBasis.h"
@@ -22,56 +18,24 @@ namespace spline {
         assign_node(new SubMonomialBasisNode(degree));
     }
 
-    SubBasis SubMonomialBasis::operator+ (const SubBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return other + *this; 
-    } 
+    SubBasis SubMonomialBasisNode::operator+ (const SubBasis& other) const {
+        return other + shared_from_this<SubMonomialBasis>();
+    }
 
-    SubBasis SubMonomialBasis::operator+ (const SubMonomialBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return plusUnivariateUnivariate (*this, other);
-    } 
-    
-    SubBasis SubMonomialBasis::operator+ (const SubBSplineBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return plusUnivariateUnivariate (*this, other);
-    } 
+    SubBasis SubMonomialBasisNode::operator+ (const SubBasisDummy& other) const {
+        return shared_from_this<SubMonomialBasis>();
+    }
 
-    SubBasis SubMonomialBasis::operator* (const SubBasis& other) const {
-        assert(false);
-	return SubBasis();
-	// return other * *this; 
-    } 
+    SubBasis SubMonomialBasisNode::operator+ (const SubBSplineBasis& other) const {
+        return plusSubBasis (shared_from_this<SubMonomialBasis>(), other);
+    }
 
-    SubBasis SubMonomialBasis::operator* (const SubMonomialBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return timesUnivariateUnivariate (*this, other);
-    } 
-    
-    SubBasis SubMonomialBasis::operator* (const SubBSplineBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return timesUnivariateUnivariate (*this, other);
-    } 
-    
-    SubBasis SubMonomialBasisNode::operator+ (const SubBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return other + shared_from_this<BSplineBasis>();
-    } 
+    SubBasis SubMonomialBasisNode::operator+ (const SubMonomialBasis& other) const {
+        return plusSubBasis (shared_from_this<SubMonomialBasis>(), other);
+    }
 
-    SubBasis SubMonomialBasisNode::operator* (const SubBasis& other)const  {
-        assert(false);
-	return SubBasis();
-	// return other * shared_from_this<BSplineBasis>();
-    } 
-    
     AnyTensor SubMonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
-        assert(x.size()==getDimension()); 
+        assert(x.size()==getDimension());
         if(AnyScalar::is_double(x)) {
             return SubBasisEvalution<double>(AnyScalar::vector_double(x));
         } else {
@@ -82,13 +46,12 @@ namespace spline {
     int SubMonomialBasisNode::getLength () const {
          return getDegree() + 1;
     }
-    
-    /// TODO(ErikLambr) check is grid is valid
-    //   std::vector<double> Monomialestd::shared_ptr<Basis>::evaluationGrid () const {
-    ///        std::vector<double> grid = casadi::range(length());
-    //       std::vector<double> grid;
-    //       for( int i = 0; i < length(); i++ )
-    //           grid.push_back( (double)i );
-    //       return grid;
-    //   }
+
+    void SubMonomialBasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * grid) const{
+        std::cout << "gird size " << grid->size() << std::endl;
+        for(int i = 0; i < getLength(); i++){
+            grid->push_back(std::vector<AnyScalar> {(double) i});
+        }
+        std::cout << "gird size " << grid->size() << std::endl;
+    }
 } // namespace spline

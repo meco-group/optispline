@@ -88,6 +88,7 @@ namespace std {
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/utils/vectorUtilities.h> // Debug
+#include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 #include <src/Coefficients/Coefficient.h>
 
@@ -209,7 +210,7 @@ namespace std {
       }
       return false;
     }
-    
+
     GUESTOBJECT * from_ptr(const AnyScalar *a) {
       //if (a->is_double()) return from_ref(static_cast<double>(*a));
       //if (a->is_SX()) return from_ref(static_cast<SX>(*a));
@@ -229,7 +230,7 @@ namespace std {
 #endif // SWIGPYTHON
       return 0;
     }
-    
+
     GUESTOBJECT* from_ptr(const DT *a) {
       return SWIG_NewPointerObj(new DT(*a), $descriptor(Tensor< casadi::Matrix<double> > *), SWIG_POINTER_OWN);
     }
@@ -241,7 +242,7 @@ namespace std {
     GUESTOBJECT* from_ptr(const MT *a) {
       return SWIG_NewPointerObj(new MT(*a), $descriptor(Tensor< casadi::MX > *), SWIG_POINTER_OWN);
     }
-    
+
   } // namespace casadi
  }
 
@@ -380,19 +381,21 @@ namespace std {
 %include <src/Basis/SubBSplineBasis.h>
 
 %template(SubBasisVector) std::vector< spline::SubBasis >;
+%template(BasisVector) std::vector< spline::Basis >;
+%template(AnyScalarVectorVector) std::vector< std::vector< AnyScalar > >; // Debug
 
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>
 %include <src/Basis/utils/vectorUtilities.h> // Debug
+%include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 %include <src/Coefficients/Coefficient.h>
 
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
 
-%template(BasisVector) std::vector< spline::Basis >;
 
 #ifdef SWIGMATLAB
 namespace spline {

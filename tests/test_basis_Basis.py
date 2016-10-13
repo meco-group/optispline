@@ -89,6 +89,7 @@ class Test_Basis_SubBasis(unittest.TestCase):
 # TODO constructor
     # def test_getEvaluation1(self):
     # def test_getEvaluation2(self):
+    # new constructor
 
 if __name__ == '__main__':        
     unittest.main()

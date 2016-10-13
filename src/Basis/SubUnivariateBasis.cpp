@@ -1,9 +1,8 @@
 #include <vector>
 #include "SubUnivariateBasis.h"
 
-#include "../SharedObject/SharedObject.h"
-#include "../SharedObject/SharedObjectNode.h"
 #include "operations/operationsBasis.h"
+#include "../common.h"
 
 namespace spline {
 
@@ -26,33 +25,23 @@ namespace spline {
         return "SubUnivariateBasis object"; 
     }
 
-    SubBasis SubUnivariateBasis::operator+ (const SubBasis& other) const  {
-        assert(false); //  Univariate is "abstract"
+    SubBasis SubUnivariateBasisNode::operator+ (const SubBasis& other) const  {
+        spline_assert(false); //  Univariate is "abstract"
+        return SubBasis();
+    } 
+    
+    SubBasis SubUnivariateBasisNode::operator+ (const SubBasisDummy& other) const  {
+        spline_assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
 
-    SubBasis SubUnivariateBasis::operator+ (const SubMonomialBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
+    SubBasis SubUnivariateBasisNode::operator+ (const SubMonomialBasis &other) const  {
+        spline_assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
 
-    SubBasis SubUnivariateBasis::operator+ (const SubBSplineBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return SubBasis();
-    } 
-
-    SubBasis SubUnivariateBasis::operator* (const SubBasis& other) const  {
-        assert(false); //  Univariate is "abstract"
-        return SubBasis();
-    } 
-
-    SubBasis SubUnivariateBasis::operator* (const SubMonomialBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
-        return SubBasis();
-    } 
-
-    SubBasis SubUnivariateBasis::operator* (const SubBSplineBasis &other) const  {
-        assert(false); //  Univariate is "abstract"
+    SubBasis SubUnivariateBasisNode::operator+ (const SubBSplineBasis &other) const  {
+        spline_assert(false); //  Univariate is "abstract"
         return SubBasis();
     } 
 

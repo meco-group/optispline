@@ -5,8 +5,6 @@
 #include <string>
 
 #include "SubBasis.h"
-#include "../SharedObject/SharedObject.h"
-#include "../SharedObject/SharedObjectNode.h"
 
 namespace spline {
 
@@ -17,6 +15,10 @@ namespace spline {
 
     class SubUnivariateBasisNode : public SubBasisNode {
     public:
+        virtual SubBasis operator+(const SubMonomialBasis& other) const ;
+        virtual SubBasis operator+(const SubBSplineBasis& other) const ;
+        virtual SubBasis operator+(const SubBasis& other) const ;
+        virtual SubBasis operator+(const SubBasisDummy& other) const ;
         //   casadi::DM transformation( const Basis &b) const;
         //
         //   virtual std::vector<double> evaluationGrid (void) const = 0;
@@ -25,15 +27,13 @@ namespace spline {
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const {assert(0);};
-        // virtual ST operator()(const std::vector< SX >& x) const { assert(0);};
-        // virtual MT operator()(const std::vector< MX >& x) const { assert(0);};
 
-//TODO addBasis         
         virtual int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
         int getDimension() const;
 
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {assert(0);};
     protected:
         int degree;
     };
@@ -48,13 +48,6 @@ namespace spline {
         SubUnivariateBasisNode* get() const ;
         SubUnivariateBasisNode* operator->() const ;
 #endif // SWIG
-        virtual SubBasis operator+ (const SubBasis& other) const;
-        virtual SubBasis operator+ (const SubMonomialBasis& other) const;
-        virtual SubBasis operator+ (const SubBSplineBasis& other) const;
-
-        virtual SubBasis operator* (const SubBasis& other) const;
-        virtual SubBasis operator* (const SubMonomialBasis& other) const;
-        virtual SubBasis operator* (const SubBSplineBasis& other) const;
 
         virtual std::string getRepresentation() const ;
 

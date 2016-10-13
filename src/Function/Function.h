@@ -10,14 +10,13 @@ namespace spline {
     class Function {
 
     public :
-        Function( Basis& basis, const Coefficient& coef) : basis(basis), coef(coef) {} 
+        Function( Basis& basis, const Coefficient& coef) : basis(basis), coef(coef) {}
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         Function operator+(const Function f);
         Basis& getBasis() {return basis;}
         Coefficient getCoefficient() {return coef;}
-        // Argument& getArgument (){ return getBasis().getArgument();}
         // Argument& getArgument (){ return getBasis().getArgument();}
     public:
         Basis& basis;

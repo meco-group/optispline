@@ -1,4 +1,5 @@
 #include "Basis.h"
+#include "SubBasisDummy.h"
 #include "BSplineBasis.h"
 #include "operations/operationsBasis.h"
 #include "../common.h"
@@ -12,36 +13,45 @@ namespace spline {
         assign_node(new BasisNode(std::vector< SubBasis >{}));
     }
 
+    Basis::Basis (const std::vector< Basis >& allBasis){
+        std::vector< SubBasis > allSubBasis {};
+        for ( auto &basis : allBasis ) {
+            for ( auto &subBasis : basis.getSubBasis() ) {
+                allSubBasis.push_back(subBasis);
+            }
+        }
+        assign_node(new BasisNode(allSubBasis));
+    }
+
     Basis::Basis (const std::vector< SubBasis >& allSubBasis){
         assign_node(new BasisNode(allSubBasis));
     }
 
     BasisNode::BasisNode (const std::vector< SubBasis >& allSubBasis_) : allSubBasis(allSubBasis_), allArguments(std::vector<Argument>{}){}
 
-    int Basis::getDimension () const { (*this)->getDimension(); } 
+    int Basis::getDimension () const { return (*this)->getDimension(); }
     int BasisNode::getDimension () const {
         return allSubBasis.size();
     }
 
-    void Basis::setArguments (const std::vector< spline::Argument >& args) { return (*this)->setArguments(args);} 
+    void Basis::setArguments (const std::vector< spline::Argument >& args) { return (*this)->setArguments(args);}
     void BasisNode::setArguments (const std::vector< Argument >& args) {
         allArguments = args;
     }
 
-    std::vector< spline::Argument > Basis::getArguments () const { return (*this)->getArguments();} 
+    std::vector< spline::Argument > Basis::getArguments () const { return (*this)->getArguments();}
     std::vector< Argument > BasisNode::getArguments () const {
         return allArguments;
     }
 
-    spline::Argument Basis::getSubArgument ( int index ) const { return (*this)->getSubArgument ( index ); } 
+    spline::Argument Basis::getSubArgument ( int index ) const { return (*this)->getSubArgument ( index ); }
     Argument BasisNode::getSubArgument ( int index ) const {
         return allArguments[index];
     }
 
-    int Basis::indexArgument(spline::Argument a) { return (*this)->indexArgument(a); } 
-    int BasisNode::indexArgument(Argument a) {
-        assert(false);
-        return -1;
+    int Basis::indexArgument(Argument a) const { return (*this)->indexArgument(a); }
+    int BasisNode::indexArgument(Argument a) const {
+        return find(allArguments.begin(), allArguments.end(), a) - allArguments.begin();
     }
 
     bool Basis::hasArguments() const{ return (*this)->hasArguments();}
@@ -49,32 +59,44 @@ namespace spline {
         return allArguments.size() > 0;
     }
 
-    std::vector< SubBasis > Basis::getSubBasis () const { return (*this)->getSubBasis (); } 
+    std::vector< SubBasis > Basis::getSubBasis () const { return (*this)->getSubBasis (); }
     std::vector< SubBasis > BasisNode::getSubBasis () const {
         return allSubBasis;
     }
 
-    Basis Basis::getSubBasis ( int index ) const { return (*this)->getSubBasis ( index ); } 
+    SubBasis Basis::getSubBasis ( Argument a) const { return (*this)->getSubBasis ( a ); }
+    SubBasis BasisNode::getSubBasis ( Argument a ) const {
+        int index = indexArgument(a);
+        if(index == allSubBasis.size()){
+            return SubBasisDummy();
+        } else {
+            return allSubBasis[index];
+        }
+    }
+
+    Basis Basis::getSubBasis ( int index ) const { return (*this)->getSubBasis ( index ); }
     Basis BasisNode::getSubBasis ( int index ) const {
         return Basis(std::vector<SubBasis> {allSubBasis[index]});
     }
 
-    void Basis::addBasis (Basis basis) { (*this)->addBasis (basis);} 
+    void Basis::addBasis (Basis basis) { (*this)->addBasis (basis);}
     void BasisNode::addBasis (Basis basis) {
-        this->allSubBasis.push_back(basis.getSubBasis()[0]);
+        for ( auto &subBasis : basis.getSubBasis() ) {
+            allSubBasis.push_back(subBasis);
+        }
     }
 
-    void Basis::addBasis (SubBasis basis) { (*this)->addBasis (basis);} 
+    void Basis::addBasis (SubBasis basis) { (*this)->addBasis (basis);}
     void BasisNode::addBasis (SubBasis basis) {
         this->allSubBasis.push_back(basis);
     }
 
-    std::vector<int> Basis::getSize () const { (*this)->getSize ();} 
+    std::vector<int> Basis::getSize () const { (*this)->getSize ();}
     std::vector<int> BasisNode::getSize () const {
         std::vector<int> size;
         // std::vector<int> sizeSubBasis;
         // for(int i = 0; i < getDimension(); i++){
-        //     sizeSubBasis = allSubBasis[i]->getSize(); 
+        //     sizeSubBasis = allSubBasis[i]->getSize();
         //     for(int j = 0; j < sizeSubBasis.size(); j++){
         //          size.push_back(sizeSubBasis[j]);
         //     }
@@ -89,34 +111,15 @@ namespace spline {
         return stream << base.getRepresentation();
     }
 
-    // Basis Basis::operator+ (const Basis& other) const { 
-    //     return plusMultivariate(*this, other);
-    // }
-    //
-    // Basis Basis::operator+ (const MonomialBasis& other) const {
-    //     return plusMultivariate(*this, other);
-    // } 
-    //
-    // Basis Basis::operator+ (const BSplineBasis& other) const {
-    //     return plusMultivariate(*this, other);
-    // } 
-    //
-    // Basis Basis::operator* (const Basis& other) const { 
-    //     return timesMultivariate(*this, other);
-    // }
-    //
-    // Basis Basis::operator* (const MonomialBasis& other) const {
-    //     return timesMultivariate(*this, other);
-    // } 
-    //
-    // Basis Basis::operator* (const BSplineBasis& other) const {
-    //     return timesMultivariate(*this, other);
-    // } 
-
-    AnyTensor  Basis::operator() (const std::vector< AnyScalar > &  x ) const {
-        return (*this)->operator()(x);
+    Basis Basis::operator+ (const Basis& other) const {
+        return plusBasis(*this, other);
     }
 
+    // Basis Basis::operator* (const Basis& other) const {
+    //     return timesBasis(this, other);
+    // }
+
+    AnyTensor  Basis::operator() (const std::vector< AnyScalar > &  x ) const { return (*this)->operator()(x); }
     AnyTensor  BasisNode::operator() (const std::vector< AnyScalar > &  x   ) const {
         spline_assert(x.size()==allSubBasis.size());
         AnyTensor ret = AnyTensor::unity();
@@ -126,34 +129,8 @@ namespace spline {
         return ret;
     }
 
-    // ST  Basis::operator()  (const std::vector< SX > &  x   ) const {
-    //     return (*this)->operator() (x);
-    // }
-    //
-    // ST  BasisNode::operator()  (const std::vector< SX > &  x   ) const {
-    //     assert(x.size()==allSubBasis.size());
-    //     ST ret(1,{});
-    //     for (int i = 0; i < x.size(); ++i) {
-    //         ret = ret.outer_product(allSubBasis[i](std::vector< SX >{x[i]}));
-    //     }
-    //     return ret;
-    // }
-    //
-    // MT  Basis::operator()  (const std::vector< MX > &  x   ) const {
-    //     return (*this)->operator() (x);
-    // }
-    //
-    // MT  BasisNode::operator()  (const std::vector< MX > &  x   ) const {
-    //     assert(x.size()==allSubBasis.size());
-    //     MT ret(1,{});
-    //     for (int i = 0; i < x.size(); ++i) {
-    //         ret = ret.outer_product(allSubBasis[i](std::vector< MX >{x[i]}));
-    //     }
-    //     return ret;
-    // }
-
     BSplineBasis Basis::castBSpline() const{return (*this)->castBSpline();}
     BSplineBasis BasisNode::castBSpline() const{
-        assert(false); // not inmplemented
+        spline_assert(false); // not inmplemented
     }
 } // namespace spline

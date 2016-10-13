@@ -3,9 +3,6 @@
 
 #include <vector>
 
-#include "../SharedObject/SharedObject.h"
-#include "../SharedObject/SharedObjectNode.h"
-
 #include "SubBasis.h"
 #include "SubUnivariateBasis.h"
 
@@ -23,27 +20,29 @@ namespace spline{
         SubBSplineBasisNode (const std::vector<double >& knots, int degree);
         SubBSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 
+        virtual SubBasis operator+(const SubMonomialBasis& other) const ;
+        virtual SubBasis operator+(const SubBSplineBasis& other) const ;
+        virtual SubBasis operator+(const SubBasis& other) const ;
+        virtual SubBasis operator+(const SubBasisDummy& other) const ;
 
         std::vector<double>& getKnots ();
         const std::vector<double>& getKnots () const;
         void setKnots (std::vector<double>& knots) ;
+
+        std::vector<double> greville () const;
         //
-        //   std::vector<double> greville () const;
-        //
-        //   virtual std::vector<double> evaluationGrid (void) const;
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        virtual SubBasis operator+(const SubBasis& other) const ;
-        virtual SubBasis operator*(const SubBasis& other) const ;
-
         virtual int getLength() const ;
+
         template<class T>
         AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
 
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     private:
 
         //  std::vector<bool> indector(int i, double x);
@@ -70,20 +69,8 @@ namespace spline{
         const std::vector<double> &getKnots () const;
         void setKnots (std::vector<double> &knots) ;
 
-        virtual SubBasis operator+(const SubBasis& other) const ;
-        virtual SubBasis operator+(const SubMonomialBasis& other) const ;
-        virtual SubBasis operator+(const SubBSplineBasis& other) const ;
-
-        virtual SubBasis operator*(const SubBasis& other) const ;
-        virtual SubBasis operator*(const SubMonomialBasis& other) const ;
-        virtual SubBasis operator*(const SubBSplineBasis& other) const ;
-
-        //   BSplineBasis operator*(const MonomialBasis& other) const ;
-        //   BSplineBasis operator*(const BSplineBasis& other) const ;
+        std::vector<double> greville () const;
         //
-        //   std::vector<double> greville () const;
-        //
-        //   virtual std::vector<double> evaluationGrid (void) const;
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
         /// Return a string with a representation (for SWIG)

@@ -3,9 +3,6 @@
 
 #include <vector>
 
-#include "../SharedObject/SharedObject.h"
-#include "../SharedObject/SharedObjectNode.h"
-
 #include "SubBasis.h"
 #include "SubUnivariateBasis.h"
 
@@ -22,16 +19,20 @@ namespace spline{
     public:
         SubMonomialBasisNode(int degree) : SubUnivariateBasisNode(degree) {};
 
+        virtual SubBasis operator+(const SubMonomialBasis& other) const ;
+        virtual SubBasis operator+(const SubBSplineBasis& other) const ;
+        virtual SubBasis operator+(const SubBasis& other) const ;
+        virtual SubBasis operator+(const SubBasisDummy& other) const ;
+
         virtual std::string getRepresentation() const ;
-        //    virtual std::vector<double> evaluationGrid(void) const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        virtual SubBasis operator+(const SubBasis& other) const ;
-        virtual SubBasis operator*(const SubBasis& other) const ;
         virtual int getLength() const ;
         template<class T>
         AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
+
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     };
 
 #endif // SWIG
@@ -47,19 +48,7 @@ namespace spline{
 #endif // SWIG
         SubMonomialBasis(int degree);
 
-        virtual SubBasis operator+(const SubMonomialBasis& other) const ;
-        virtual SubBasis operator+(const SubBSplineBasis& other) const ;
-        virtual SubBasis operator+(const SubBasis& other) const ;
-
-        virtual SubBasis operator*(const SubMonomialBasis& other) const ;
-        virtual SubBasis operator*(const SubBSplineBasis& other) const ;
-        virtual SubBasis operator*(const SubBasis& other) const ;
-
         virtual std::string getRepresentation() const ;
-        //   Basis operator*(const MonomialBasis& other)const ;
-        //   Basis operator*(const BSplineBasis& other)const ;
-
-        //    virtual std::vector<double> evaluationGrid(void) const;
 
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)
@@ -69,7 +58,7 @@ namespace spline{
             }
 #endif // SWIG
     };
-    
+
     template<class T>
     AnyTensor SubMonomialBasisNode::SubBasisEvalution (const std::vector< T >& x ) const {
         T x_ = x[0];
@@ -82,6 +71,5 @@ namespace spline{
     }
 
 }  // namespace spline
-
 
 #endif  // SUBMONOMIALBASIS_H_

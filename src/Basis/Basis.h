@@ -4,14 +4,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <any_tensor.hpp>
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
 #include "SubBasis.h"
 #include "../Function/Argument.h"
-// #include <tensor.hpp>
-#include <any_tensor.hpp>
 
 namespace spline {
     class Basis;
@@ -22,6 +21,7 @@ namespace spline {
 
     class BasisNode : public SharedObjectNode {
     public:
+        BasisNode (const std::vector< Basis >& allBasis);
         BasisNode (const std::vector< SubBasis >& allSubBasis);
         int getDimension () const;
 
@@ -31,26 +31,26 @@ namespace spline {
         std::vector< Argument > getArguments() const;
 
         Argument getSubArgument( int index ) const;
-        int indexArgument(Argument a);
+        int indexArgument(Argument a) const;
 
         bool hasArguments() const;
 
         virtual std::string getRepresentation() const ;
 
-        virtual std::vector< SubBasis > getSubBasis() const;
-        virtual Basis getSubBasis( int index ) const;
+        std::vector< SubBasis > getSubBasis() const;
+        Basis getSubBasis( int index ) const;
+        SubBasis getSubBasis( Argument a) const;
 
         void addBasis(Basis basis);
         void addBasis(SubBasis basis);
 
-        // virtual Basis operator+(const Basis& rhs) const;
-        // virtual Basis operator*(const Basis& rhs) const;
+        Basis operator+(const Basis& rhs) const;
+        // Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        // virtual ST operator()(const std::vector< SX >& x) const;
-        // virtual MT operator()(const std::vector< MX >& x) const;
 
         virtual BSplineBasis castBSpline() const;
+
     // protected:
         std::vector< SubBasis > allSubBasis;
         std::vector< Argument > allArguments;
@@ -72,12 +72,13 @@ namespace spline {
         std::vector<int> getSize () const;
         Basis ();
         Basis (const std::vector< SubBasis >& allSubBasis);
+        Basis (const std::vector< Basis >& allBasis);
 
         void setArguments (const std::vector< spline::Argument >& argument);
         std::vector< spline::Argument > getArguments() const;
 
         spline::Argument getSubArgument( int index ) const;
-        int indexArgument(spline::Argument a);
+        int indexArgument(Argument a) const;
 
         bool hasArguments() const;
 
@@ -85,17 +86,16 @@ namespace spline {
 
         std::vector< SubBasis > getSubBasis() const;
         Basis getSubBasis( int index ) const;
+        SubBasis getSubBasis( Argument a) const;
 
 
         void addBasis(Basis basis);
         void addBasis(SubBasis basis);
 
-        // virtual Basis operator+(const Basis& rhs) const;
-        // virtual Basis operator*(const Basis& rhs) const;
+        Basis operator+(const Basis& rhs) const;
+        // Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        // ST operator()(const std::vector< SX >& x) const;
-        // MT operator()(const std::vector< MX >& x) const;
 
         virtual BSplineBasis castBSpline() const;
     };

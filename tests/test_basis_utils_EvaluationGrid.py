@@ -30,13 +30,12 @@ class Test_Basis_SubBasis(unittest.TestCase):
         # check that s.split fails when the separator is not a string
         with self.assertRaises(TypeError):
             s.split(2)
-
+    #
 if __name__ == '__main__':
-    a = [0,2,1]
-    p = Polynomial(a, 'x')
-    print p
-    print p([1]).data()
-    print p([3]).data()
+    b1 = MonomialBasis(2)
+    b2 = MonomialBasis(3)
+    b3 = BSplineBasis([0,1],2,2)
 
-
+    eg1 = EvaluationGrid(b1)
+    print eg1
     unittest.main()

@@ -13,6 +13,7 @@
 
 namespace spline {
     class SubBasis;
+    class SubBasisDummy;
     class SubBSplineBasis;
     class SubMonomialBasis;
 
@@ -20,18 +21,21 @@ namespace spline {
 
     class SubBasisNode : public SharedObjectNode {
     public:
+        virtual SubBasis operator+(const SubBasis& rhs) const;
+        virtual SubBasis operator+(const SubBasisDummy& rhs) const;
+        virtual SubBasis operator+(const SubMonomialBasis& rhs) const;
+        virtual SubBasis operator+(const SubBSplineBasis& rhs) const;
+
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        // virtual ST operator()(const std::vector< SX >& x) const;
-        // virtual MT operator()(const std::vector< MX >& x) const;
         virtual int getDimension() const {return 0;};
 
         template< class T >
             void assertVectorLenghtCorrect( const std::vector< T >& x) const;
-        
-    };
 
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
+    };
 
 #endif // SWIG
 
@@ -50,27 +54,24 @@ namespace spline {
         SubBasis ();
 
         virtual SubBasis operator+(const SubBasis& rhs) const;
+        virtual SubBasis operator+(const SubBasisDummy& rhs) const;
         virtual SubBasis operator+(const SubMonomialBasis& rhs) const;
         virtual SubBasis operator+(const SubBSplineBasis& rhs) const;
-        virtual SubBasis operator*(const SubBasis& rhs) const;
-        virtual SubBasis operator*(const SubMonomialBasis& rhs) const;
-        virtual SubBasis operator*(const SubBSplineBasis& rhs) const;
+        // virtual SubBasis operator*(const SubBasis& rhs) const;
+        // virtual SubBasis operator*(const SubMonomialBasis& rhs) const;
+        // virtual SubBasis operator*(const SubBSplineBasis& rhs) const;
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        // ST operator()(const std::vector< SX >& x) const;
-        // MT operator()(const std::vector< MX >& x) const;
         int getDimension() const;
 
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     };
 
-
- 
-
-        template< class T >
+    template< class T >
         void SubBasisNode::assertVectorLenghtCorrect( const std::vector< T >& x) const{
             assert(x.size() == getDimension());  // imput vector has wrong dimention
         }
 
-}  
+}
 #endif  // SUBBASIS_H_
