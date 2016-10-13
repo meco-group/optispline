@@ -91,19 +91,19 @@ namespace spline {
         this->allSubBasis.push_back(basis);
     }
 
-    std::vector<int> Basis::getSize () const { (*this)->getSize ();}
-    std::vector<int> BasisNode::getSize () const {
-        std::vector<int> size;
-        // std::vector<int> sizeSubBasis;
-        // for(int i = 0; i < getDimension(); i++){
-        //     sizeSubBasis = allSubBasis[i]->getSize();
-        //     for(int j = 0; j < sizeSubBasis.size(); j++){
-        //          size.push_back(sizeSubBasis[j]);
-        //     }
-        // }
-        return size;
+    std::vector<int> Basis::getShape () const { (*this)->getShape ();}
+    std::vector<int> BasisNode::getShape () const {
+        std::vector<int> shape;
+        for(auto const& b : getSubBasis()){
+            for(int s : b.getShape()){
+                std::cout << s << std::endl;
+                shape.push_back(s);
+                std::cout << s << std::endl;
+            }
+        }
+        std::cout << shape << std::endl;
+        return shape;
     }
-
 
     std::string BasisNode::getRepresentation() const {return "Basis"  + std::to_string(allArguments.size()) + std::to_string(allSubBasis.size());};
     std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};

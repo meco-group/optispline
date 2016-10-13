@@ -25,7 +25,7 @@ namespace spline {
         BasisNode (const std::vector< SubBasis >& allSubBasis);
         int getDimension () const;
 
-        std::vector<int> getSize () const;
+        std::vector<int> getShape () const;
 
         void setArguments (const std::vector< Argument >& argument);
         std::vector< Argument > getArguments() const;
@@ -69,7 +69,7 @@ namespace spline {
 #endif // SWIG
         int getDimension () const;
 
-        std::vector<int> getSize () const;
+        std::vector<int> getShape () const;
         Basis ();
         Basis (const std::vector< SubBasis >& allSubBasis);
         Basis (const std::vector< Basis >& allBasis);

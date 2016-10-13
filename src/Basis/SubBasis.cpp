@@ -48,6 +48,7 @@ namespace spline {
     }
 
     int SubBasis::getDimension() const{ return (*this)->getDimension();}
+    std::vector< int > SubBasis::getShape() const { return (*this)->getShape();}
 
     void SubBasis::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const{(*this)->getEvaluationGrid(eg);}
     void SubBasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const{}
