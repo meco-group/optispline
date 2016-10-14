@@ -19,8 +19,8 @@ namespace spline{
         std::string getRepresentation() const ;
 
         EvaluationGridNode(Basis basis);
-        void evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector) const;
-        void evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector, spline::Function f) const;
+        std::vector< AnyTensor > evaluateEvaluationGrid() const;
+        std::vector< AnyTensor > evaluateEvaluationGrid(const Function & f) const;
 
         void getPermutation(std::vector< int > * indexPermutation, Basis basis) const;
     private:
@@ -44,8 +44,8 @@ namespace spline{
             std::ostream& operator<<(std::ostream &stream, const EvaluationGrid& obj) {
                 return stream << obj.getRepresentation();
             }
-        void evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector) const;
-        void evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector, Function f) const;
+        std::vector< AnyTensor > evaluateEvaluationGrid() const;
+        std::vector< AnyTensor > evaluateEvaluationGrid(const Function & f) const;
 #endif // SWIG
     };
 } // namespace spline

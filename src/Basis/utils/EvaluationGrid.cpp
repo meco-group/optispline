@@ -16,10 +16,10 @@ namespace spline{
 
     EvaluationGridNode::EvaluationGridNode(Basis basis) : griddedBasis(basis) {}
 
-    void EvaluationGrid::evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector) const {return (*this)->evaluateEvaluationGrid(returnVector);}
-    void EvaluationGridNode::evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector) const {
+    std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid() const {return (*this)->evaluateEvaluationGrid();}
+    std::vector< AnyTensor > EvaluationGridNode::evaluateEvaluationGrid() const {
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
-        std::vector< AnyTensor > postStep { AnyTensor::unity() };
+        std::vector< AnyTensor > postStep ;
 
         for(SubBasis b : griddedBasis.getSubBasis()){
             std::vector< std::vector< AnyScalar > > evaluationGrid;
@@ -31,51 +31,57 @@ namespace spline{
                 }
             }
             preStep = postStep;
+            postStep.clear();
         }
-        *returnVector = preStep;
+        return preStep;
     }
 
-
-    void EvaluationGrid::evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector, Function f) const {return (*this)->evaluateEvaluationGrid(returnVector, f);}
-    void EvaluationGridNode::evaluateEvaluationGrid(std::vector< AnyTensor > * returnVector, Function f) const {
+    std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid(const Function & f) const {return (*this)->evaluateEvaluationGrid(f);}
+    std::vector< AnyTensor > EvaluationGridNode::evaluateEvaluationGrid(const Function & f) const {
         Basis basis = f.getBasis();
         std::vector< int > indexPermutation;
         getPermutation(&indexPermutation, basis);
 
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
-        std::vector< AnyTensor > postStep { AnyTensor::unity() };
+        std::vector< AnyTensor > postStep ;
 
-        for(int i = 0; i < basis.getDimension(); i++){
-            SubBasis subBasis = basis.getSubBasis()[i];
-            SubBasis correspondingSubBasis = griddedBasis.getSubBasis()[indexPermutation[i]];
+        for(int i = 0; i < griddedBasis.getDimension(); i++){
+            SubBasis subBasis = griddedBasis.getSubBasis()[i];
             std::vector< std::vector< AnyScalar > > evaluationGrid;
-            correspondingSubBasis.getEvaluationGrid(&evaluationGrid);
+            subBasis.getEvaluationGrid(&evaluationGrid);
             for(auto const & subPoint : evaluationGrid){
-                AnyTensor subEvaluation = subBasis(subPoint);
-                for( AnyTensor pre : preStep){
-                    postStep.push_back(pre.outer_product( subEvaluation ));
+                if(indexPermutation[i] < 0){
+                    for( AnyTensor pre : preStep){
+                        postStep.push_back(pre);
+                    }
+                }else{
+                    SubBasis correspondingSubBasis = basis.getSubBasis()[indexPermutation[i]];
+                    AnyTensor subEvaluation = correspondingSubBasis(subPoint);
+                    for( AnyTensor pre : preStep){
+                        postStep.push_back(pre.outer_product( subEvaluation ));
+                    }
                 }
             }
             preStep = postStep;
+            postStep.clear();
         }
 
-        postStep.clear();
         for( AnyTensor pre : preStep){
             postStep.push_back(pre.inner(f.getCoefficient().getData()));
         }
 
-        *returnVector = postStep;
+        return postStep;
     }
 
     void EvaluationGridNode::getPermutation(std::vector< int > * indexPermutation, Basis basis) const{
         std::vector< int > index;
         if(griddedBasis.hasArguments() && basis.hasArguments()){
-            for(auto & a : basis.getArguments()){
-                index.push_back(griddedBasis.indexArgument(a));
+            for(auto & a : griddedBasis.getArguments()){
+                index.push_back(basis.indexArgument(a));
             }
         }else{
             spline_assert(griddedBasis.getDimension() == basis.getDimension());
-            for(int i = 0; i < basis.getDimension(); i++){
+            for(int i = 0; i < griddedBasis.getDimension(); i++){
                 index.push_back(i);
             }
         }
