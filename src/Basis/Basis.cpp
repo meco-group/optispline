@@ -51,7 +51,16 @@ namespace spline {
 
     int Basis::indexArgument(Argument a) const { return (*this)->indexArgument(a); }
     int BasisNode::indexArgument(Argument a) const {
-        return find(allArguments.begin(), allArguments.end(), a) - allArguments.begin();
+        auto it = std::find(allArguments.begin(), allArguments.end(), a);
+        int index;
+        if (it == allArguments.end())
+        {
+            index = -1;
+        } else
+        {
+            index = std::distance(allArguments.begin(), it);
+        }
+        return  index;
     }
 
     bool Basis::hasArguments() const{ return (*this)->hasArguments();}
@@ -67,7 +76,8 @@ namespace spline {
     SubBasis Basis::getSubBasis ( Argument a) const { return (*this)->getSubBasis ( a ); }
     SubBasis BasisNode::getSubBasis ( Argument a ) const {
         int index = indexArgument(a);
-        if(index == allSubBasis.size()){
+        // if(index == allSubBasis.size()){
+        if(index < 0){
             return SubBasisDummy();
         } else {
             return allSubBasis[index];
