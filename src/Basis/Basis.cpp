@@ -106,12 +106,9 @@ namespace spline {
         std::vector<int> shape;
         for(auto const& b : getSubBasis()){
             for(int s : b.getShape()){
-                std::cout << s << std::endl;
                 shape.push_back(s);
-                std::cout << s << std::endl;
             }
         }
-        std::cout << shape << std::endl;
         return shape;
     }
 

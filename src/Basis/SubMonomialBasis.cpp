@@ -48,10 +48,8 @@ namespace spline {
     }
 
     void SubMonomialBasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * grid) const{
-        std::cout << "gird size " << grid->size() << std::endl;
         for(int i = 0; i < getLength(); i++){
             grid->push_back(std::vector<AnyScalar> {(double) i});
         }
-        std::cout << "gird size " << grid->size() << std::endl;
     }
 } // namespace spline

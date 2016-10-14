@@ -4,7 +4,7 @@
 #include "../Basis.h"
 #include "../SubBasis.h"
 #include "../../Function/Argument.h"
-#include "../../common.h"	
+#include "../../common.h"
 
 namespace spline{
 
@@ -16,8 +16,8 @@ namespace spline{
                 if(std::find(allArguments.begin(), allArguments.end(), a) == allArguments.end()) {
                     /* v does not contain x */
                     allArguments.push_back(a);
-                }         
-            } 
+                }
+            }
 
             for(auto &a : allArguments){
                 SubBasis subBasis1 = b1.getSubBasis(a);

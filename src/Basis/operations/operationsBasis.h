@@ -7,7 +7,7 @@
 #include "times.h"
 // #include "../Basis.h"
 // #include "../SubBasis.h"
-// #include "../../common.h"	
+// #include "../../common.h"
 
 namespace spline{
     class Basis;

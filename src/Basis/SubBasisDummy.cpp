@@ -12,16 +12,16 @@ namespace spline {
     }
     std::string SubBasisDummy::getRepresentation() const { return (*this)->getRepresentation() ; }
     std::string SubBasisDummyNode::getRepresentation() const {
-        return "SubBasisDummy object"; 
+        return "SubBasisDummy object";
     }
 
     SubBasis SubBasisDummyNode::operator+ (const SubBasis& other) const  {
         return other + shared_from_this< SubBasisDummy >();
-    } 
+    }
 
     SubBasis SubBasisDummyNode::operator+ (const SubMonomialBasis& other) const  {
         return other.get()->shared_from_this< SubMonomialBasis >();
-    } 
+    }
 
     SubBasis SubBasisDummyNode::operator+ (const SubBSplineBasis& other) const  {
         return other.get()->shared_from_this< SubBSplineBasis >();
