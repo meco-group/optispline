@@ -122,9 +122,9 @@ namespace spline {
         return plusBasis(*this, other);
     }
 
-    // Basis Basis::operator* (const Basis& other) const {
-    //     return timesBasis(this, other);
-    // }
+    Basis Basis::operator* (const Basis& other) const {
+        return timesBasis(this, other);
+    }
 
     AnyTensor  Basis::operator() (const std::vector< AnyScalar > &  x ) const { return (*this)->operator()(x); }
     AnyTensor  BasisNode::operator() (const std::vector< AnyScalar > &  x   ) const {

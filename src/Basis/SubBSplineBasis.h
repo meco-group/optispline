@@ -25,6 +25,11 @@ namespace spline{
         virtual SubBasis operator+(const SubBasis& other) const ;
         virtual SubBasis operator+(const SubBasisDummy& other) const ;
 
+        virtual SubBasis operator*(const SubMonomialBasis& other) const ;
+        virtual SubBasis operator*(const SubBSplineBasis& other) const ;
+        virtual SubBasis operator*(const SubBasis& other) const ;
+        virtual SubBasis operator*(const SubBasisDummy& other) const ;
+
         std::vector<double>& getKnots ();
         const std::vector<double>& getKnots () const;
         void setKnots (std::vector<double>& knots) ;
@@ -73,8 +78,6 @@ namespace spline{
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
-        /// Return a string with a representation (for SWIG)
-        virtual std::string getRepresentation() const ;
 
     private:
         //  std::vector<bool> indector(int i, double x);

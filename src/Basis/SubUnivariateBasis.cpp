@@ -34,7 +34,27 @@ namespace spline {
         return SubBasis();
     }
 
-    int SubUnivariateBasis::getLength ( ) const  { return (*this)->getLength(); } 
+    SubBasis SubUnivariateBasisNode::operator* (const SubBasis& other) const  {
+        spline_assert(false); //  Univariate is "abstract"
+        return SubBasis();
+    }
+
+    SubBasis SubUnivariateBasisNode::operator* (const SubBasisDummy& other) const  {
+        spline_assert(false); //  Univariate is "abstract"
+        return SubBasis();
+    }
+
+    SubBasis SubUnivariateBasisNode::operator* (const SubMonomialBasis &other) const  {
+        spline_assert(false); //  Univariate is "abstract"
+        return SubBasis();
+    }
+
+    SubBasis SubUnivariateBasisNode::operator* (const SubBSplineBasis &other) const  {
+        spline_assert(false); //  Univariate is "abstract"
+        return SubBasis();
+    }
+
+    int SubUnivariateBasis::getLength ( ) const  { return (*this)->getLength(); }
     int SubUnivariateBasisNode::getLength ( ) const {
          assert(0);
     }

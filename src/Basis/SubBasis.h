@@ -25,6 +25,10 @@ namespace spline {
         virtual SubBasis operator+(const SubBasisDummy& rhs) const;
         virtual SubBasis operator+(const SubMonomialBasis& rhs) const;
         virtual SubBasis operator+(const SubBSplineBasis& rhs) const;
+        virtual SubBasis operator*(const SubBasis& rhs) const;
+        virtual SubBasis operator*(const SubBasisDummy& rhs) const;
+        virtual SubBasis operator*(const SubMonomialBasis& rhs) const;
+        virtual SubBasis operator*(const SubBSplineBasis& rhs) const;
 
         virtual std::string getRepresentation() const ;
 
@@ -58,15 +62,16 @@ namespace spline {
         virtual SubBasis operator+(const SubBasisDummy& rhs) const;
         virtual SubBasis operator+(const SubMonomialBasis& rhs) const;
         virtual SubBasis operator+(const SubBSplineBasis& rhs) const;
-        // virtual SubBasis operator*(const SubBasis& rhs) const;
-        // virtual SubBasis operator*(const SubMonomialBasis& rhs) const;
-        // virtual SubBasis operator*(const SubBSplineBasis& rhs) const;
-        virtual std::string getRepresentation() const ;
+        virtual SubBasis operator*(const SubBasis& rhs) const;
+        virtual SubBasis operator*(const SubBasisDummy& rhs) const;
+        virtual SubBasis operator*(const SubMonomialBasis& rhs) const;
+        virtual SubBasis operator*(const SubBSplineBasis& rhs) const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
         int getDimension() const;
         std::vector< int > getShape() const ;
 
+        virtual std::string getRepresentation() const ;
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     };
 
