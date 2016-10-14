@@ -140,4 +140,13 @@ namespace spline {
     BSplineBasis BasisNode::castBSpline() const{
         spline_assert(false); // not inmplemented
     }
+
+    int Basis::totalNumberSubBasis() const{ return (*this)->totalNumberSubBasis();}
+    int BasisNode::totalNumberSubBasis() const{
+        int r = 1;
+        for(int i : getShape()){
+            r *= i;
+        }
+        return r;
+    }
 } // namespace spline

@@ -51,6 +51,8 @@ namespace spline {
 
         virtual BSplineBasis castBSpline() const;
 
+        int totalNumberSubBasis() const;
+
     // protected:
         std::vector< SubBasis > allSubBasis;
         std::vector< Argument > allArguments;
@@ -98,6 +100,7 @@ namespace spline {
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         virtual BSplineBasis castBSpline() const;
+        int totalNumberSubBasis() const;
     };
 }
 #endif  // BASIS_H_
