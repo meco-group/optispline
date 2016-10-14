@@ -270,9 +270,9 @@ namespace std {
     }
 
     GUESTOBJECT * from_ptr(const AnyTensor *a) {
-      if (a->is_double()) return from_ref(static_cast<DT>(*a));
-      if (a->is_SX()) return from_ref(static_cast<ST>(*a));
-      if (a->is_MX()) return from_ref(static_cast<MT>(*a));
+      if (a->is_DT()) return from_ref(static_cast<DT>(*a));
+      if (a->is_ST()) return from_ref(static_cast<ST>(*a));
+      if (a->is_MT()) return from_ref(static_cast<MT>(*a));
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
