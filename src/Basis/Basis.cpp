@@ -101,7 +101,7 @@ namespace spline {
         this->allSubBasis.push_back(basis);
     }
 
-    std::vector<int> Basis::getShape () const { (*this)->getShape ();}
+    std::vector<int> Basis::getShape () const { return (*this)->getShape ();}
     std::vector<int> BasisNode::getShape () const {
         std::vector<int> shape;
         for(auto const& b : getSubBasis()){
