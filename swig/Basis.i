@@ -151,13 +151,26 @@ namespace std {
 %enddef
 #else
 %define %tensor_helpers()
-    function varargout = subsref(self,s)
+%matlabcode %{
+   function varargout = subsref(self,s)
       if numel(s)==1 & s.type=='()'
-        [varargout{1:nargout}]= paren(self, s.subs{:});
+        [varargout{1:nargout}]= index_helper(self, s.subs{:});
       else
         [varargout{1:nargout}] = builtin('subsref',self,s);
       end
    end
+   function out = index_helper(self, varargin)
+      args = [];
+      for i=1:numel(varargin)
+        if strcmp(varargin{i},':')
+          args = [args -1];
+        else
+          args = [args varargin{i}-1];
+        end
+      end
+      out = index(self,args);
+   end
+%}
 %enddef
 #endif
 
@@ -257,9 +270,9 @@ namespace std {
     }
 
     GUESTOBJECT * from_ptr(const AnyTensor *a) {
-      if (a->is_double()) return from_ref(static_cast<DT>(*a));
-      if (a->is_SX()) return from_ref(static_cast<ST>(*a));
-      if (a->is_MX()) return from_ref(static_cast<MT>(*a));
+      if (a->is_DT()) return from_ref(static_cast<DT>(*a));
+      if (a->is_ST()) return from_ref(static_cast<ST>(*a));
+      if (a->is_MT()) return from_ref(static_cast<MT>(*a));
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON

@@ -4,6 +4,7 @@
 #include <casadi/casadi.hpp>
 #include <string>
 
+#include "../common.h"
 #include "SubBasis.h"
 
 namespace spline {
@@ -26,7 +27,7 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const {assert(0);};
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const {spline_assert(0); return DT();};
 
         virtual int getLength() const ;
         int getDegree () const ;
@@ -36,7 +37,7 @@ namespace spline {
             std::cout << getLength() << std::endl;
             return std::vector< int > {getLength()};}
 
-        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {assert(0);};
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {spline_assert(0);};
     protected:
         int degree;
     };
