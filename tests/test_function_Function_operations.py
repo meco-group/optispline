@@ -40,6 +40,7 @@ if __name__ == '__main__':
     # print p2([5])
 
     p = p1 + p2
+    p = p1 * p2
     print p
     print p([0,0])
     print p([0,1])
@@ -50,4 +51,25 @@ if __name__ == '__main__':
     print p([2,0])
     print p([2,1])
     print p([2,2])
+
+
+    x = Polynomial([0,1],'x')
+    y = Polynomial([0,1],'y')
+
+    f = x + y*x + y*y
+
+    for i  in range(3):
+        for j  in range(3):
+            print i + i*j +j**2,
+            print " <--> "
+            print f([i,j])
+
+    h = f + p
+    for i  in range(3):
+        for j  in range(3):
+            print str(i) + " , " + str(j) + " : ",
+            print i + j**2  + i*j + i**2*j,
+            print " <--> "
+            print h([i,j])
+
     unittest.main()
