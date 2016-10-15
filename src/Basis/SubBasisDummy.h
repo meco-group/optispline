@@ -14,11 +14,13 @@ namespace spline {
     class SubBSplineBasis;
     class SubBasisDummyNode : public SubBasisNode {
     public:
-        // virtual SubBasis operator+(const SubMonomialBasis& other) const ;
-        // virtual SubBasis operator+(const SubBSplineBasis& other) const ;
         virtual SubBasis operator+(const SubBasis& other) const ;
         virtual SubBasis operator+(const SubMonomialBasis& other) const ;
         virtual SubBasis operator+(const SubBSplineBasis& other) const ;
+
+        virtual SubBasis operator*(const SubBasis& other) const ;
+        virtual SubBasis operator*(const SubMonomialBasis& other) const ;
+        virtual SubBasis operator*(const SubBSplineBasis& other) const ;
 
         virtual std::string getRepresentation() const ;
     };

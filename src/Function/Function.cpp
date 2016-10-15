@@ -9,32 +9,76 @@ namespace spline {
     }
 
     Function Function::operator+(Function f){
-        Basis b = getBasis();
-        EvaluationGrid evaluationGrid = EvaluationGrid(b);
+        Basis sumBasis = getBasis() + f.getBasis();
+        EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
         std::vector< AnyTensor > basisEvaluated;
         std::vector< AnyTensor > thisFunctionEvaluated;
         std::vector< AnyTensor > otherFunctionEvaluated;
         std::vector< AnyTensor > sumFunctionEvaluated;
 
-        evaluationGrid.evaluateEvaluationGrid(&basisEvaluated);
-        evaluationGrid.evaluateEvaluationGrid(&thisFunctionEvaluated, *this);
-        evaluationGrid.evaluateEvaluationGrid(&otherFunctionEvaluated, f);
+        basisEvaluated = evaluationGrid.evaluateEvaluationGrid();
+        thisFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(*this);
+        otherFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(f);
 
         for(int i = 0; i < basisEvaluated.size(); i++){
             sumFunctionEvaluated.push_back(thisFunctionEvaluated[i] + otherFunctionEvaluated[i]);
         }
 
+        AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
+        AnyTensor B = AnyTensor::pack(sumFunctionEvaluated, 0);
+
+        int numberEval = basisEvaluated.size();
+        int numberBasis = sumBasis.totalNumberSubBasis();
+        int numberCoef = coef.getNumberCoefficents();
+
+        std::vector< int > shapeA = {numberEval,numberBasis};
+        std::vector< int > shapeB = {numberBasis,numberCoef};
+        A = A.shape(shapeA);
+        B = B.shape(shapeB);
+        AnyTensor C = AnyTensor::solve(A,B);
+
+        std::vector< int > shapeCoef = coef.getShape();
+        std::vector< int > shape = sumBasis.getShape();
+        shape.insert(shape.end(), shapeCoef.begin(), shapeCoef.end());
+        C = C.shape(shape);
+        return Function(sumBasis,C);
+    }
 
 
+    Function Function::operator*(Function f){
+        Basis sumBasis = getBasis() * f.getBasis();
+        EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
+        std::vector< AnyTensor > basisEvaluated;
+        std::vector< AnyTensor > thisFunctionEvaluated;
+        std::vector< AnyTensor > otherFunctionEvaluated;
+        std::vector< AnyTensor > sumFunctionEvaluated;
 
-            // return Function(b,coef);
-            //
-            //     casadi::DM Univariatestd::shared_ptr<Basis>::transformation( const std::shared_ptr<Basis> &b) const {
-            //         std::vector<double> grid = evaluationGrid();
-            //         casadi::DM A(evalstd::shared_ptr<Basis>(grid));
-            //         casadi::DM B(b.evalstd::shared_ptr<Basis>(grid));
-            //         return casadi::DM::solve(A, B);
-            //     }
+        basisEvaluated = evaluationGrid.evaluateEvaluationGrid();
+        thisFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(*this);
+        otherFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(f);
+
+        for(int i = 0; i < basisEvaluated.size(); i++){
+            sumFunctionEvaluated.push_back(thisFunctionEvaluated[i] * otherFunctionEvaluated[i]);
+        }
+
+        AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
+        AnyTensor B = AnyTensor::pack(sumFunctionEvaluated, 0);
+
+        int numberEval = basisEvaluated.size();
+        int numberBasis = sumBasis.totalNumberSubBasis();
+        int numberCoef = coef.getNumberCoefficents();
+
+        std::vector< int > shapeA = {numberEval,numberBasis};
+        std::vector< int > shapeB = {numberBasis,numberCoef};
+        A = A.shape(shapeA);
+        B = B.shape(shapeB);
+        AnyTensor C = AnyTensor::solve(A,B);
+
+        std::vector< int > shapeCoef = coef.getShape();
+        std::vector< int > shape = sumBasis.getShape();
+        shape.insert(shape.end(), shapeCoef.begin(), shapeCoef.end());
+        C = C.shape(shape);
+        return Function(sumBasis,C);
     }
 
 }  // namespace spline

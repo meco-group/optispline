@@ -10,10 +10,9 @@ namespace spline{
 
     std::string SubBSplineBasisNode::getRepresentation() const {
         std::stringstream s;
-        s << "BSplineBasis object" << getKnots();
+        s << "BSplineBasis object";
         return s.str();
     };
-    std::string SubBSplineBasis::getRepresentation() const { return (*this)->getRepresentation() ;};
 
     SubBasis SubBSplineBasisNode::operator+ (const SubBasis& other) const {
         return other + shared_from_this<SubBSplineBasis>();
@@ -29,6 +28,22 @@ namespace spline{
 
     SubBasis SubBSplineBasisNode::operator+ (const SubMonomialBasis& other) const {
         return plusSubBasis (shared_from_this<SubBSplineBasis>(), other);
+    }
+
+    SubBasis SubBSplineBasisNode::operator* (const SubBasis& other) const {
+        return other * shared_from_this<SubBSplineBasis>();
+    }
+
+    SubBasis SubBSplineBasisNode::operator* (const SubBasisDummy& other) const {
+        return shared_from_this<SubBSplineBasis>();
+    }
+
+    SubBasis SubBSplineBasisNode::operator* (const SubBSplineBasis& other) const {
+        return timesSubBasis (shared_from_this<SubBSplineBasis>(), other);
+    }
+
+    SubBasis SubBSplineBasisNode::operator* (const SubMonomialBasis& other) const {
+        return timesSubBasis (shared_from_this<SubBSplineBasis>(), other);
     }
 
     std::vector<double> SubBSplineBasis::greville () const {return (*this)->greville();}
@@ -108,7 +123,7 @@ namespace spline{
     AnyTensor SubBSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         assert(x.size()==getDimension());
         if(AnyScalar::is_double(x)) {
-            return SubBasisEvalution<double>(AnyScalar::vector_double(x));
+            return SubBasisEvalution<double>(AnyScalar::as_double(x));
         } else {
             return SubBasisEvalution<AnyScalar>(x);
         }

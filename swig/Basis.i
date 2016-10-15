@@ -134,8 +134,56 @@ namespace std {
   }
 }
 
+
+#ifdef SWIGPYTHON
+%define %tensor_helpers()
+%pythoncode %{
+    def __getitem__(self, s):
+          ind = []
+          for i in s:
+            if isinstance(i, slice):
+              assert i.step is None and i.stop is None and i.start is None
+              ind.append(-1)
+            else:
+              ind.append(i)
+          return self.index(ind)
+%}
+%enddef
+#else
+%define %tensor_helpers()
+%matlabcode %{
+   function varargout = subsref(self,s)
+      if numel(s)==1 & s.type=='()'
+        [varargout{1:nargout}]= index_helper(self, s.subs{:});
+      else
+        [varargout{1:nargout}] = builtin('subsref',self,s);
+      end
+   end
+   function out = index_helper(self, varargin)
+      args = [];
+      for i=1:numel(varargin)
+        if strcmp(varargin{i},':')
+          args = [args -1];
+        else
+          args = [args varargin{i}-1];
+        end
+      end
+      out = index(self,args);
+   end
+%}
+%enddef
+#endif
+
 %include <tensor.hpp>
 
+
+%template(DTensor) Tensor<DM>;
+%template(STensor) Tensor<SX>;
+%template(MTensor) Tensor<MX>;
+
+%template(DTensorVector) std::vector< Tensor<DM> >;
+%template(STensorVector) std::vector< Tensor<SX> >;
+%template(MTensorVector) std::vector< Tensor<MX> >;
 
 %fragment("tensortools_anyscalar", "header", fragment="casadi_aux") {
   namespace casadi {
@@ -222,9 +270,9 @@ namespace std {
     }
 
     GUESTOBJECT * from_ptr(const AnyTensor *a) {
-      if (a->is_double()) return from_ref(static_cast<DT>(*a));
-      if (a->is_SX()) return from_ref(static_cast<ST>(*a));
-      if (a->is_MX()) return from_ref(static_cast<MT>(*a));
+      if (a->is_DT()) return from_ref(static_cast<DT>(*a));
+      if (a->is_ST()) return from_ref(static_cast<ST>(*a));
+      if (a->is_MT()) return from_ref(static_cast<MT>(*a));
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
@@ -409,6 +457,14 @@ namespace spline {
 }
 #endif
 
-%template(DTensor) Tensor<DM>;
-%template(STensor) Tensor<SX>;
-%template(MTensor) Tensor<MX>;
+%extend Tensor<DM> {
+  %tensor_helpers()
+}
+%extend Tensor<SX> {
+  %tensor_helpers()
+}
+%extend Tensor<MX> {
+  %tensor_helpers()
+}
+
+

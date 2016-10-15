@@ -25,7 +25,7 @@ namespace spline {
         BasisNode (const std::vector< SubBasis >& allSubBasis);
         int getDimension () const;
 
-        std::vector<int> getSize () const;
+        std::vector<int> getShape () const;
 
         void setArguments (const std::vector< Argument >& argument);
         std::vector< Argument > getArguments() const;
@@ -45,11 +45,13 @@ namespace spline {
         void addBasis(SubBasis basis);
 
         Basis operator+(const Basis& rhs) const;
-        // Basis operator*(const Basis& rhs) const;
+        Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         virtual BSplineBasis castBSpline() const;
+
+        int totalNumberSubBasis() const;
 
     // protected:
         std::vector< SubBasis > allSubBasis;
@@ -69,7 +71,7 @@ namespace spline {
 #endif // SWIG
         int getDimension () const;
 
-        std::vector<int> getSize () const;
+        std::vector<int> getShape () const;
         Basis ();
         Basis (const std::vector< SubBasis >& allSubBasis);
         Basis (const std::vector< Basis >& allBasis);
@@ -93,11 +95,12 @@ namespace spline {
         void addBasis(SubBasis basis);
 
         Basis operator+(const Basis& rhs) const;
-        // Basis operator*(const Basis& rhs) const;
+        Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         virtual BSplineBasis castBSpline() const;
+        int totalNumberSubBasis() const;
     };
 }
 #endif  // BASIS_H_

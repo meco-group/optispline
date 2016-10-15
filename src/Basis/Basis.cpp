@@ -51,7 +51,16 @@ namespace spline {
 
     int Basis::indexArgument(Argument a) const { return (*this)->indexArgument(a); }
     int BasisNode::indexArgument(Argument a) const {
-        return find(allArguments.begin(), allArguments.end(), a) - allArguments.begin();
+        auto it = std::find(allArguments.begin(), allArguments.end(), a);
+        int index;
+        if (it == allArguments.end())
+        {
+            index = -1;
+        } else
+        {
+            index = std::distance(allArguments.begin(), it);
+        }
+        return  index;
     }
 
     bool Basis::hasArguments() const{ return (*this)->hasArguments();}
@@ -67,7 +76,8 @@ namespace spline {
     SubBasis Basis::getSubBasis ( Argument a) const { return (*this)->getSubBasis ( a ); }
     SubBasis BasisNode::getSubBasis ( Argument a ) const {
         int index = indexArgument(a);
-        if(index == allSubBasis.size()){
+        // if(index == allSubBasis.size()){
+        if(index < 0){
             return SubBasisDummy();
         } else {
             return allSubBasis[index];
@@ -91,19 +101,16 @@ namespace spline {
         this->allSubBasis.push_back(basis);
     }
 
-    std::vector<int> Basis::getSize () const { (*this)->getSize ();}
-    std::vector<int> BasisNode::getSize () const {
-        std::vector<int> size;
-        // std::vector<int> sizeSubBasis;
-        // for(int i = 0; i < getDimension(); i++){
-        //     sizeSubBasis = allSubBasis[i]->getSize();
-        //     for(int j = 0; j < sizeSubBasis.size(); j++){
-        //          size.push_back(sizeSubBasis[j]);
-        //     }
-        // }
-        return size;
+    std::vector<int> Basis::getShape () const { return (*this)->getShape ();}
+    std::vector<int> BasisNode::getShape () const {
+        std::vector<int> shape;
+        for(auto const& b : getSubBasis()){
+            for(int s : b.getShape()){
+                shape.push_back(s);
+            }
+        }
+        return shape;
     }
-
 
     std::string BasisNode::getRepresentation() const {return "Basis"  + std::to_string(allArguments.size()) + std::to_string(allSubBasis.size());};
     std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
@@ -115,9 +122,9 @@ namespace spline {
         return plusBasis(*this, other);
     }
 
-    // Basis Basis::operator* (const Basis& other) const {
-    //     return timesBasis(this, other);
-    // }
+    Basis Basis::operator* (const Basis& other) const {
+        return timesBasis(*this, other);
+    }
 
     AnyTensor  Basis::operator() (const std::vector< AnyScalar > &  x ) const { return (*this)->operator()(x); }
     AnyTensor  BasisNode::operator() (const std::vector< AnyScalar > &  x   ) const {
@@ -132,5 +139,14 @@ namespace spline {
     BSplineBasis Basis::castBSpline() const{return (*this)->castBSpline();}
     BSplineBasis BasisNode::castBSpline() const{
         spline_assert(false); // not inmplemented
+    }
+
+    int Basis::totalNumberSubBasis() const{ return (*this)->totalNumberSubBasis();}
+    int BasisNode::totalNumberSubBasis() const{
+        int r = 1;
+        for(int i : getShape()){
+            r *= i;
+        }
+        return r;
     }
 } // namespace spline
