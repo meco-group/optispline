@@ -50,7 +50,7 @@ namespace spline{
         return returnBasis;
     }
 
-    Basis plusBasis(const Basis& b1,const  Basis& b2 ){
+    Basis timesBasis(const Basis& b1,const  Basis& b2 ){
         Basis returnBasis = Basis();
         if(b1.hasArguments() && b2.hasArguments()){
             std::vector< Argument > allArguments = b1.getArguments();

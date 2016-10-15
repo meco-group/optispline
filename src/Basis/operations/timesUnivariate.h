@@ -1,5 +1,5 @@
-#ifndef CPP_SPLINES_TIMES_H
-#define CPP_SPLINES_TIMES_H
+#ifndef CPP_SPLINES_TIMESUNIVARIATE_H
+#define CPP_SPLINES_TIMESUNIVARIATE_H
 
 #include "SubBasis.h"
 #include "SubMonomialBasis.h"

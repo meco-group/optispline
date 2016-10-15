@@ -123,7 +123,7 @@ namespace spline {
     }
 
     Basis Basis::operator* (const Basis& other) const {
-        return timesBasis(this, other);
+        return timesBasis(*this, other);
     }
 
     AnyTensor  Basis::operator() (const std::vector< AnyScalar > &  x ) const { return (*this)->operator()(x); }
