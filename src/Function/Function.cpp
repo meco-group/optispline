@@ -35,7 +35,7 @@ namespace spline {
         std::vector< int > shapeB = {numberBasis,numberCoef};
         A = A.shape(shapeA);
         B = B.shape(shapeB);
-        AnyTensor C = AnyTensor::solve(A,B);
+        AnyTensor C = A.solve(B);
 
         std::vector< int > shapeCoef = coef.getShape();
         std::vector< int > shape = sumBasis.getShape();
@@ -72,7 +72,7 @@ namespace spline {
         std::vector< int > shapeB = {numberBasis,numberCoef};
         A = A.shape(shapeA);
         B = B.shape(shapeB);
-        AnyTensor C = AnyTensor::solve(A,B);
+        AnyTensor C = A.solve(B);
 
         std::vector< int > shapeCoef = coef.getShape();
         std::vector< int > shape = sumBasis.getShape();
