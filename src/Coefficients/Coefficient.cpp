@@ -24,5 +24,9 @@ namespace spline {
             return i*j;
         }
 
+        Coefficient Coefficient::operator-() const {
+            return Coefficient( -data);
+        }
+
 }  // namespace spline
 

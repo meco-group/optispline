@@ -8,7 +8,7 @@ namespace spline {
         return basis(x).inner(coef.data);
     }
 
-    Function Function::operator+(Function f){
+    Function Function::operator+(Function f) const {
         Basis sumBasis = getBasis() + f.getBasis();
         EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
         std::vector< AnyTensor > basisEvaluated;
@@ -35,7 +35,7 @@ namespace spline {
         std::vector< int > shapeB = {numberBasis,numberCoef};
         A = A.shape(shapeA);
         B = B.shape(shapeB);
-        AnyTensor C = AnyTensor::solve(A,B);
+        AnyTensor C = A.solve(B);
 
         std::vector< int > shapeCoef = coef.getShape();
         std::vector< int > shape = sumBasis.getShape();
@@ -45,7 +45,7 @@ namespace spline {
     }
 
 
-    Function Function::operator*(Function f){
+    Function Function::operator*(Function f) const {
         Basis sumBasis = getBasis() * f.getBasis();
         EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
         std::vector< AnyTensor > basisEvaluated;
@@ -72,13 +72,22 @@ namespace spline {
         std::vector< int > shapeB = {numberBasis,numberCoef};
         A = A.shape(shapeA);
         B = B.shape(shapeB);
-        AnyTensor C = AnyTensor::solve(A,B);
+        AnyTensor C = A.solve(B);
 
         std::vector< int > shapeCoef = coef.getShape();
         std::vector< int > shape = sumBasis.getShape();
         shape.insert(shape.end(), shapeCoef.begin(), shapeCoef.end());
         C = C.shape(shape);
         return Function(sumBasis,C);
+    }
+
+
+    Function Function::operator-(Function f) const {
+        return operator+(-f);
+    }
+
+    Function Function::operator-() const {
+        return Function(basis, -coef);
     }
 
 }  // namespace spline
