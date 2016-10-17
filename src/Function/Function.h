@@ -9,10 +9,12 @@
 namespace spline {
     class Function {
 
+
     public :
         Function( const Basis& basis, const Coefficient& coef) : basis(basis), coef(coef) {}
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+
 
         Function operator+(const Function f) const ;
         Function operator*(const Function f) const ;
@@ -24,6 +26,12 @@ namespace spline {
     public:
         Basis basis;
         Coefficient coef;
+
+    private:
+      typedef std::function<Basis(const Basis&, const Basis&)> BasisComposition;
+      typedef std::function<AnyTensor(const AnyTensor&, const AnyTensor&)> TensorComposition;
+      Function generic_operation(const Function& f,
+          const BasisComposition & bc, const TensorComposition & tc) const ;
     };
 } // namespace spline
 
