@@ -71,5 +71,12 @@ if __name__ == '__main__':
             print i + j**2  + i*j + i**2*j,
             print " <--> "
             print h([i,j])
+    h = -f - p
+    for i  in range(3):
+        for j  in range(3):
+            print str(i) + " , " + str(j) + " : ",
+            print -(i + j**2  + i*j + i**2*j),
+            print " <--> "
+            print h([i,j])
 
     unittest.main()
