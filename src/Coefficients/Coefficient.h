@@ -19,6 +19,7 @@ namespace spline {
         // const std::vector< int > getShape() const;
 
         // Coefficient operator+ (Coefficient & other) const;
+        Coefficient operator-() const ;
         const AnyTensor getData(){return data;}
     public:
         const AnyTensor data;
