@@ -10,89 +10,44 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 import unittest
 from Basis import *
 from casadi import *
+from helpers import BasisTestCase
 
-class Test_Basis_SubBasis(unittest.TestCase):
+from numpy.polynomial.polynomial import polyval
 
-    def assertEqualTensor(self, a, b):
-        self.assertTrue(list(a.data().full())==b)
+class Test_Function_Operations(BasisTestCase):
 
-    def assertNotEqualTensor(self, a, b):
-        self.assertFalse(list(a.data().full())==b)
+    def test_polynomial_operations(self):
+      
+      p1 = Polynomial([0,0,1],'x')
+      p2 = Polynomial([0,1],'y')
+      
+      x = Polynomial([0,1],'x')
+      y = p2
+      f = x + y*x + y*y
+      
+      
+      for p,poly in [
+                      (p1+p2, lambda x,y: x**2+y),
+                      (p1*p2, lambda x,y: x**2*y),
+                      (f, lambda x,y: x + y*x + y*y),
+                      (f + p1+p2, lambda x,y: x + y*x + y*y+x**2+y),
+                      (f + p1*p2, lambda x,y: x + y*x + y*y+x**2*y)
+                    ]:
 
+        for arg in [ [0,0], [1,0], [0,1], [2,2], [0.7,1.3]]:
+          self.assertEqualTensor(p(arg), poly(*arg))
+          
+          
+      p1 = Polynomial([0,0,1],'x')
+      p2 = Polynomial([0,1])
+      
+      for p,poly in [
+                      (p1+p2, lambda x: x**2+x),
+                      (p1*p2, lambda x: x**3),
+                    ]:
 
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
-
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
-
+        for arg in [0,1,2,1.3]:
+          self.assertEqualTensor(p([arg]), poly(arg))
+      
 if __name__ == '__main__':
-    p1 = Polynomial([0,0,1],'x')
-    print p1
-    # print p1([5])
-    p2 = Polynomial([0,1])
-    print p2
-    # print p2([5])
-
-    p = p1 + p2
-    p = p1 * p2
-    print p
-    print p([0,0])
-    print p([0,1])
-    print p([0,2])
-    print p([1,0])
-    print p([1,1])
-    print p([1,2])
-    print p([2,0])
-    print p([2,1])
-    print p([2,2])
-
-
-    x = Polynomial([0,1],'x')
-    y = Polynomial([0,1],'y')
-
-    # MX z = MX::sym('z');
-    f = x + y*x + y*y;
-    #
-    # Function operator+(const AnyTensor &x) {
-    #
-    # }
-    #
-    # g +=[f>=0]
-    #
-    # AnyTensor Function::operator>=(const AnyTensor&x) {
-    #     return getCoefficients().getData()>=x;
-    # }
-    #
-    #
-
-
-    # Z = Polynomial([z])
-
-    for i  in range(3):
-        for j  in range(3):
-            print i + i*j +j**2,
-            print " <--> "
-            print f([i,j])
-
-    h = f + p
-    for i  in range(3):
-        for j  in range(3):
-            print str(i) + " , " + str(j) + " : ",
-            print i + j**2  + i*j + i**2*j,
-            print " <--> "
-            print h([i,j])
-    h = -f - p
-    for i  in range(3):
-        for j  in range(3):
-            print str(i) + " , " + str(j) + " : ",
-            print -(i + j**2  + i*j + i**2*j),
-            print " <--> "
-            print h([i,j])
-
     unittest.main()

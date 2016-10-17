@@ -11,14 +11,9 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 
 from Basis import *
 from casadi import *
+from helpers import BasisTestCase
 
-class Test_Basis_SubBasis(unittest.TestCase):
-
-    def assertEqualTensor(self, a, b):
-        self.assertTrue(list(a.data().full())==b)
-
-    def assertNotEqualTensor(self, a, b):
-        self.assertFalse(list(a.data().full())==b)
+class Test_Basis_Basis(BasisTestCase):
 
     def test_getDimenstion1(self):
         s1 = SubMonomialBasis(3)
@@ -53,8 +48,7 @@ class Test_Basis_SubBasis(unittest.TestCase):
         x = [0.1]
         for _ in range(10):
             x = [random.random()]
-            r = b(x)
-            self.assertTrue(all((r.data() == s1(x).data()).full()))
+            self.assertEqualTensor(b(x),s1(x))
 
     def test_getEvaluation2(self):
         s1 = SubMonomialBasis(2)
@@ -73,33 +67,23 @@ class Test_Basis_SubBasis(unittest.TestCase):
         b.addBasis(s1)
         b.addBasis(s2)
         x = [0.1,2]
-        r = b(x).data().full()
-        self.assertTrue((np.array([[1,2,4,8],[0.1,0.2,0.4,0.8],[0.01,0.02,0.04,0.08]])==r).any())
-        print b.getShape()
-
+        self.assertEqualTensor(b(x),np.array([[1,2,4,8],[0.1,0.2,0.4,0.8],[0.01,0.02,0.04,0.08]]))
+        
     def test_hasArgument1(self):
         b = Basis()
         self.assertFalse(b.hasArguments())
-
+        
     def test_hasArgument2(self):
         a = Argument()
         b = Basis()
         b.setArguments([a,a])
         self.assertTrue(b.hasArguments())
-
+        
 # TODO constructor
     # def test_getEvaluation1(self):
     # def test_getEvaluation2(self):
-    # new constructor
 
-if __name__ == '__main__':
-    s1 = SubMonomialBasis(2)
-    s2 = SubMonomialBasis(3)
-    b = Basis()
-    b.addBasis(s1)
-    b.addBasis(s2)
-    x = [0.1,2]
-    r = b(x).data().full()
-    print b.getShape()
+
+if __name__ == '__main__':        
     unittest.main()
 

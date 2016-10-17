@@ -10,24 +10,11 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 
 from Basis import *
 from casadi import *
+from helpers import BasisTestCase
 
 import pdb
 
-class Test_Basis_SubBasis(unittest.TestCase):
-
-    def assertEqualTensor(self, a, b):
-        try:
-          a = a.data()
-        except:
-          pass
-        self.assertTrue(list(a.full())==b)
-
-    def assertNotEqualTensor(self, a, b):
-        try:
-          a = a.data()
-        except:
-          pass
-        self.assertFalse(list(a.full())==b)
+class Test_Basis_SubMonomial(BasisTestCase):
 
     def test_getLength(self):
         s = SubMonomialBasis(3)

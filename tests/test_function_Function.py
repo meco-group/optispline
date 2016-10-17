@@ -10,14 +10,9 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 import unittest
 from casadi import *
 from Basis import *
+from helpers import BasisTestCase
 
-class Test_Basis_SubBasis(unittest.TestCase):
-
-    def assertEqualTensor(self, a, b):
-        self.assertTrue(list(a.data().full())==b)
-
-    def assertNotEqualTensor(self, a, b):
-        self.assertFalse(list(a.data().full())==b)
+class Test_Function_Function(BasisTestCase):
 
     def test_construct_function(self):
         a = MX.sym('a',3 + 1,1)
