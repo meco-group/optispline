@@ -61,21 +61,6 @@ namespace spline{
         return grevillePoints;
     }
 
-    //   std::vector<double> std::make_shared<Basis>::evaluationGrid (void) const {
-    //       return greville();
-    //   }
-    //
-    //
-    //   std::make_shared<Basis>::addKnots(const std::vector<double> newKnots, bool unique) const {
-    //       std::vector<double> kn;
-    //       if (unique){
-    //           kn = addKnotsUnique(knots, newKnots);
-    //       } else {
-    //           kn = addKnotsNotUnique(knots, newKnots);
-    //       }
-    //       return std::make_shared<Basis>(kn, degree);
-    //   }
-
     int SubBSplineBasisNode::getLength () const{
         return knots.size() - degree - 1;
     }

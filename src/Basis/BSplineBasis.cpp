@@ -13,7 +13,7 @@ namespace spline{
 
     std::string BSplineBasisNode::getRepresentation() const {
         std::stringstream s;
-        s << "BSplineBasis object" << getKnots();
+        s << "BSplineBasis object";
         return s.str();
     };
     std::string BSplineBasis::getRepresentation() const { return (*this)->getRepresentation() ;};

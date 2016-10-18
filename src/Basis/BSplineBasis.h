@@ -20,8 +20,6 @@ namespace spline{
         BSplineBasisNode (const std::vector<double >& knots, int degree);
         BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 
-        std::vector<double>& getKnots ();
-        const std::vector<double>& getKnots () const;
         void setKnots (std::vector<double>& knots) ;
         /// Return a string with a representation (for SWIG)
         virtual std::string getRepresentation() const ;
@@ -50,7 +48,6 @@ namespace spline{
         /// Return a string with a representation (for SWIG)
         virtual std::string getRepresentation() const ;
 
-	virtual BSplineBasis castBSpline() const;
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)
         inline friend
