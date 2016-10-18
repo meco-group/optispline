@@ -30,15 +30,15 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
 ax.scatter(x_list,y_list,z_list,'ko')
-plt.show()
+# plt.show()
 
-
+#------------------------------------------------------------------------
 
 degree = 3
-m = SubMonomialBasis(degree)
+m = BSplineBasis([0,1], degree, 3)
 b = Basis([m,m])
 
-opti = Optistack()
+opti = OptiSpline()
 
 bound = opti.var()
 fitting = opti.Function(b)
@@ -54,12 +54,10 @@ sol = opti.solver(bound,con,"ipopt",{"ipopt":{"tol":1e-15}})
 
 sol.solve()
 
-e_ = sol.value()
+est_function = sol.value(fitting)
 
-est_function = Function(b,a)
-
-
-
+#------------------------------------------------------------------------
+# Plotting
 import numpy as np
 
 n = 20
