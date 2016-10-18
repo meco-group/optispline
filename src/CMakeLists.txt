@@ -36,6 +36,8 @@ add_library(Basis SHARED
 
     Coefficients/Coefficient.h Coefficients/Coefficient.cpp
 
+    Optistack/optistack.h Optistack/optistack.cpp
+
     ../tensor-tools/any_tensor.cpp
     ../tensor-tools/any_tensor.hpp
     ../tensor-tools/tensor.hpp

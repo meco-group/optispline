@@ -95,6 +95,7 @@ namespace std {
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
 #include <src/Function/Argument.h>
+#include <src/Optistack/optistack.h>
 
 #include <casadi/casadi.hpp>
 %}
@@ -443,7 +444,7 @@ namespace std {
 
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
-
+%include <src/Optistack/optistack.h>
 
 #ifdef SWIGMATLAB
 namespace spline {
@@ -466,5 +467,3 @@ namespace spline {
 %extend Tensor<MX> {
   %tensor_helpers()
 }
-
-

@@ -8,6 +8,10 @@ namespace spline {
         return basis(x).inner(coef.data);
     }
 
+    Function Function::value(const OptistackSolver& sol) const {
+      return Function(basis, coef.value(sol));
+    }
+
     Function Function::generic_operation(const Function& f,
         const BasisComposition & bc, const TensorComposition & tc) const  {
 

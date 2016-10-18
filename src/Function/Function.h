@@ -15,6 +15,7 @@ namespace spline {
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
+        Function value(const OptistackSolver& sol) const;
 
         Function operator+(const Function f) const ;
         Function operator*(const Function f) const ;
