@@ -136,11 +136,6 @@ namespace spline {
         return ret;
     }
 
-    BSplineBasis Basis::castBSpline() const{return (*this)->castBSpline();}
-    BSplineBasis BasisNode::castBSpline() const{
-        spline_assert(false); // not inmplemented
-    }
-
     int Basis::totalNumberSubBasis() const{ return (*this)->totalNumberSubBasis();}
     int BasisNode::totalNumberSubBasis() const{
         int r = 1;

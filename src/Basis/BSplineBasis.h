@@ -25,8 +25,6 @@ namespace spline{
         /// Return a string with a representation (for SWIG)
         virtual std::string getRepresentation() const ;
 
-	virtual BSplineBasis castBSpline() const;
-	
     private:
 
     };
