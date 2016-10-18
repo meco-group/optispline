@@ -6,10 +6,6 @@ namespace spline {
         data(DT(DM(v),std::vector<int>{static_cast<int>(v.size()),1,1})){
     }
 
-      Coefficient Coefficient::value(const OptistackSolver& sol) const {
-        return Coefficient(data.value(sol));
-      }
-
 
         std::vector< int > Coefficient::getShape() const{
             std::vector< int > dims = data.dims();

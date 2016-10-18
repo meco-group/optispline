@@ -14,17 +14,15 @@ namespace spline {
         Coefficient (const AnyTensor& t) : data(t){}
         Coefficient (const std::vector< double >& v);
 
-        Coefficient value(const OptistackSolver& sol) const;
-
         std::vector< int > getShape() const;
         int getNumberCoefficents() const;
         // const std::vector< int > getShape() const;
 
         // Coefficient operator+ (Coefficient & other) const;
         Coefficient operator-() const ;
-        const AnyTensor getData(){return data;}
+        AnyTensor getData() const {return data;}
     public:
-        const AnyTensor data;
+        AnyTensor data;
     };
 } // namespace spline
 

@@ -8,8 +8,11 @@ namespace spline {
         return basis(x).inner(coef.data);
     }
 
-    Function Function::value(const OptistackSolver& sol) const {
-      return Function(basis, coef.value(sol));
+    MX Function::operator<=(const MX& x) const {
+      return getCoefficient().getData().as_MT().data()<=x;
+    }
+    MX Function::operator>=(const MX& x) const {
+      return getCoefficient().getData().as_MT().data()>=x;
     }
 
     Function Function::generic_operation(const Function& f,

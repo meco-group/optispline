@@ -6,6 +6,9 @@
 
 #include <casadi/casadi.hpp>
 
+#include "../Function/Function.h"
+#include "../Coefficients/Coefficient.h"
+
 using namespace casadi;
 
 #ifndef SWIG
@@ -79,5 +82,29 @@ private:
   bool solved_;
 
 };
+class OptiSpline;
+
+class OptiSplineSolver : public OptistackSolver {
+  friend class OptiSpline;
+public:
+  using OptistackSolver::value;
+  spline::Function value(const spline::Function& f) const;
+  spline::Coefficient value(const spline::Coefficient& c) const;
+  AnyTensor value(const AnyTensor& c) const;
+  Tensor<DM> value(const Tensor<MX>& c) const;
+
+protected:
+  OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options);
+};
+
+class OptiSpline : public Optistack {
+  friend class OptiSplineSolver;
+public:
+  using Optistack::var;
+  MT var(const std::vector<int>& shape);
+  spline::Function Function(const spline::Basis& b);
+  OptiSplineSolver solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options=Dict()) const;
+};
+
 
 #endif //OPTISTACK_H

@@ -182,3 +182,43 @@ void OptistackSolver::value(const MX& x, const DM& v) {
   Slice all;
   target.set(v, false, all, all);
 }
+
+spline::Function OptiSplineSolver::value(const spline::Function& f) const {
+  return spline::Function(f.getBasis(), value(f.getCoefficient()));
+}
+
+spline::Coefficient OptiSplineSolver::value(const spline::Coefficient& c) const {
+  return spline::Coefficient(value(c.getData()));
+}
+
+AnyTensor OptiSplineSolver::value(const AnyTensor& t) const {
+  if (t.is_DT()) return t.as_DT();
+  if (t.is_MT()) return value(t.as_MT());
+  spline_assert_message(false, "Value only supported for MX");
+  return DT();
+}
+
+Tensor<DM> OptiSplineSolver::value(const Tensor<MX>& t) const {
+  return Tensor<DM>(OptistackSolver::value(t.data()), t.dims());
+}
+
+spline::Function OptiSpline::Function(const spline::Basis& b) {
+  std::vector<int> shape = b.getShape();
+  shape.push_back(1);
+  shape.push_back(1);
+
+  return spline::Function(b, spline::Coefficient(var(shape)));
+}
+
+MT OptiSpline::var(const std::vector<int> & shape) {
+  return MT(var(product(shape)), shape);
+}
+
+
+OptiSplineSolver OptiSpline::solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) const {
+  return OptiSplineSolver(*this, f, g, solver, options);
+}
+
+OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) : OptistackSolver(sc, f, g, solver, options) {
+
+}

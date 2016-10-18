@@ -15,14 +15,15 @@ namespace spline {
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        Function value(const OptistackSolver& sol) const;
-
         Function operator+(const Function f) const ;
         Function operator*(const Function f) const ;
         Function operator-() const ;
         Function operator-(const Function f) const ;
         Basis getBasis() const {return basis;}
         Coefficient getCoefficient() const {return coef;}
+
+        MX operator<=(const MX& x) const;
+        MX operator>=(const MX& x) const;
         // Argument& getArgument (){ return getBasis().getArgument();}
     public:
         Basis basis;
