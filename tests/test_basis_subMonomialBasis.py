@@ -30,8 +30,8 @@ class Test_Basis_SubMonomial(BasisTestCase):
 
     def test_evaluation1(self):
         s = MonomialBasis(3)
-        r = s([2.0]).data()
-        self.assertEqual(r.size(1),s.getLength())
+        r = s([2.0])
+        self.assertEqual(r.shape[0],s.getLength())
 
     def test_evaluation2(self):
         s = MonomialBasis(3)
@@ -47,13 +47,13 @@ class Test_Basis_SubMonomial(BasisTestCase):
         s = MonomialBasis(3)
         x = MX.sym("x")
         r = s([x])
-        self.assertTrue(isinstance(r.data(),MX))
+        self.assertTrue(isinstance(r,MX))
 
     def test_evaluationSX1(self):
         s = MonomialBasis(3)
         x = SX.sym("x")
         r = s([x])
-        self.assertTrue(isinstance(r.data(),SX))
+        self.assertTrue(isinstance(r,SX))
 
 if __name__ == '__main__':
     unittest.main()

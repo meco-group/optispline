@@ -281,14 +281,26 @@ namespace std {
     }
 
     GUESTOBJECT* from_ptr(const DT *a) {
+      if (a->n_dims()<=2) {
+        DM r = a->matrix();
+        return from_ref(r);
+      }
       return SWIG_NewPointerObj(new DT(*a), $descriptor(Tensor< casadi::Matrix<double> > *), SWIG_POINTER_OWN);
     }
 
     GUESTOBJECT* from_ptr(const ST *a) {
+      if (a->n_dims()<=2) {
+        SX r = a->matrix();
+        return from_ref(r);
+      }
       return SWIG_NewPointerObj(new ST(*a), $descriptor(Tensor< casadi::Matrix<casadi::SXElem> > *), SWIG_POINTER_OWN);
     }
 
     GUESTOBJECT* from_ptr(const MT *a) {
+      if (a->n_dims()<=2) {
+        MX r = a->matrix();
+        return from_ref(r);
+      }
       return SWIG_NewPointerObj(new MT(*a), $descriptor(Tensor< casadi::MX > *), SWIG_POINTER_OWN);
     }
 
