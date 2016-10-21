@@ -65,10 +65,7 @@ def _swig_repr(self):
 
 
 %include "std_vector.i"
-// Instantiate templates used by example
-namespace std {
-   %template(DoubleVector) vector<double>;
-}
+
 
 %include "exception.i"
 
@@ -105,8 +102,12 @@ namespace std {
   namespace casadi {
     bool to_ptr(PyObject *p, AnyScalar** m);
     bool to_ptr(PyObject *p, AnyTensor** m);
+    bool to_ptr(PyObject *p, spline::TensorBasis** m);
+    bool to_ptr(PyObject *p, spline::Basis** m);
     PyObject * from_ptr(const AnyScalar *a);
     PyObject * from_ptr(const AnyTensor *a);
+    PyObject * from_ptr(const spline::TensorBasis *a);
+    PyObject * from_ptr(const spline::Basis *a);
     PyObject *from_ptr(const DT *a);
     PyObject *from_ptr(const ST *a);
     PyObject *from_ptr(const MT *a);
@@ -117,8 +118,12 @@ namespace std {
   namespace casadi {
     bool to_ptr(mxArray *p, AnyScalar** m);
     bool to_ptr(mxArray *p, AnyTensor** m);
+    bool to_ptr(mxArray *p, spline::TensorBasis** m);
+    bool to_ptr(mxArray *p, spline::Basis** m);
     mxArray * from_ptr(const AnyScalar *a);
     mxArray * from_ptr(const AnyTensor *a);
+    mxArray * from_ptr(const spline::TensorBasis *a);
+    mxArray * from_ptr(const spline::Basis *a);
     mxArray *from_ptr(const DT *a);
     mxArray *from_ptr(const ST *a);
     mxArray *from_ptr(const MT *a);
@@ -188,6 +193,26 @@ namespace std {
 
 %fragment("tensortools_anyscalar", "header", fragment="casadi_aux") {
   namespace casadi {
+    bool to_ptr(GUESTOBJECT *p, spline::Basis** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::Basis*), 0))) {
+        return true;
+      }
+      return false;
+    }
+    bool to_ptr(GUESTOBJECT *p, spline::TensorBasis** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::TensorBasis*), 0))) {
+        return true;
+      }
+      return false;
+    }
     bool to_ptr(GUESTOBJECT *p, AnyScalar** m) {
       // Treat Null
       if (is_null(p)) return false;
@@ -303,7 +328,13 @@ namespace std {
       }
       return SWIG_NewPointerObj(new MT(*a), $descriptor(Tensor< casadi::MX > *), SWIG_POINTER_OWN);
     }
-
+    
+    GUESTOBJECT* from_ptr(const spline::Basis *a) {
+      return SWIG_NewPointerObj(new spline::Basis(*a), $descriptor(spline::Basis *), SWIG_POINTER_OWN);
+    }
+    GUESTOBJECT* from_ptr(const spline::TensorBasis *a) {
+      return SWIG_NewPointerObj(new spline::TensorBasis(*a), $descriptor(spline::TensorBasis *), SWIG_POINTER_OWN);
+    }
   } // namespace casadi
  }
 
@@ -426,6 +457,11 @@ namespace std {
 
 %tensortools_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
 %tensortools_typemaps("AnyTensor", PREC_MX, AnyTensor)
+%tensortools_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
+%tensortools_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
+
+%tensortools_template("[int]", PREC_IVector, std::vector<int>)
+%tensortools_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
 
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
@@ -441,8 +477,6 @@ namespace std {
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>
 
-%template(SubBasisVector) std::vector< spline::Basis >;
-%template(BasisVector) std::vector< spline::TensorBasis >;
 %template(AnyScalarVectorVector) std::vector< std::vector< AnyScalar > >; // Debug
 
 %include <src/Basis/TensorBasis.h>

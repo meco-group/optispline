@@ -74,5 +74,7 @@ namespace spline {
     Function Function::operator-() const {
         return Function(basis, -coef);
     }
+    
+    std::string Function::getRepresentation() const {return "Function";};
 
 }  // namespace spline

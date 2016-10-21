@@ -26,6 +26,9 @@ namespace spline {
 
         MX operator<=(const MX& x) const;
         MX operator>=(const MX& x) const;
+        
+        std::string getRepresentation() const ;
+        void repr() const { userOut() << getRepresentation() << std::endl;}
         // Argument& getArgument (){ return getBasis().getArgument();}
     public:
         TensorBasis basis;

@@ -7,10 +7,6 @@ degree = 2
 m_path = BSplineBasis([0,1],degree,6)
 b_path = TensorBasis([m_path])
 
-
-a=C.SX.sym("x",2,3)
-
-print STensor(a)
 opti = OptiSpline()
 
 t = opti.var()
@@ -34,8 +30,9 @@ m = MonomialBasis(degree)
 b = TensorBasis([m,m])
 
 a = C.DM([range(m.getLength()) for i in range(m.getLength())])
+print a
 a = DTensor(a, [m.getLength(),m.getLength(),1,1])
-
+print a
 a = Coefficient(a)
 est_function = Function(b,a)
 

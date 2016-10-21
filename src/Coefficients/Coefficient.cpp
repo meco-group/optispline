@@ -28,4 +28,6 @@ namespace spline {
             return Coefficient( -data);
         }
 
+        std::string Coefficient::getRepresentation() const {return "Coefficient";};
+    
 }  // namespace spline
