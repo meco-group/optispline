@@ -16,9 +16,9 @@ from helpers import BasisTestCase
 class Test_Basis_Basis(BasisTestCase):
 
     def test_getDimenstion1(self):
-        s1 = SubMonomialBasis(3)
-        s2 = SubMonomialBasis(4)
-        b = Basis()
+        s1 = MonomialBasis(3)
+        s2 = MonomialBasis(4)
+        b = TensorBasis()
         b.addBasis(s1)
         self.assertEqual(b.getDimension(), 1)
 
@@ -27,23 +27,23 @@ class Test_Basis_Basis(BasisTestCase):
         self.assertEqual(b.getDimension(), 3)
 
     def test_getDimenstion2(self):
-        s1 = SubMonomialBasis(3)
-        b = Basis()
+        s1 = MonomialBasis(3)
+        b = TensorBasis()
         b.addBasis(s1)
         self.assertEqual(len(b.getSubBasis()), 1)
 
     def test_getDimenstion3(self):
-        s1 = SubMonomialBasis(3)
-        s2 = SubMonomialBasis(4)
-        b = Basis()
+        s1 = MonomialBasis(3)
+        s2 = MonomialBasis(4)
+        b = TensorBasis()
         b.addBasis(s1)
         b.addBasis(s2)
         b.addBasis(s1)
         self.assertEqual(len(b.getSubBasis()), 3)
 
     def test_getEvaluation1(self):
-        s1 = SubMonomialBasis(3)
-        b = Basis()
+        s1 = MonomialBasis(3)
+        b = TensorBasis()
         b.addBasis(s1)
         x = [0.1]
         for _ in range(10):
@@ -51,9 +51,9 @@ class Test_Basis_Basis(BasisTestCase):
             self.assertEqualTensor(b(x),s1(x))
 
     def test_getEvaluation2(self):
-        s1 = SubMonomialBasis(2)
-        s2 = SubMonomialBasis(3)
-        b = Basis()
+        s1 = MonomialBasis(2)
+        s2 = MonomialBasis(3)
+        b = TensorBasis()
         b.addBasis(s1)
         b.addBasis(s2)
         x = [0.1]
@@ -61,21 +61,21 @@ class Test_Basis_Basis(BasisTestCase):
             b(x)
 
     def test_getEvaluation3(self):
-        s1 = SubMonomialBasis(2)
-        s2 = SubMonomialBasis(3)
-        b = Basis()
+        s1 = MonomialBasis(2)
+        s2 = MonomialBasis(3)
+        b = TensorBasis()
         b.addBasis(s1)
         b.addBasis(s2)
         x = [0.1,2]
         self.assertEqualTensor(b(x),np.array([[1,2,4,8],[0.1,0.2,0.4,0.8],[0.01,0.02,0.04,0.08]]))
         
     def test_hasArgument1(self):
-        b = Basis()
+        b = TensorBasis()
         self.assertFalse(b.hasArguments())
         
     def test_hasArgument2(self):
         a = Argument()
-        b = Basis()
+        b = TensorBasis()
         b.setArguments([a,a])
         self.assertTrue(b.hasArguments())
         

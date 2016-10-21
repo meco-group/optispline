@@ -1,19 +1,19 @@
-#ifndef BASIS_H_
-#define BASIS_H_
+#ifndef SUBBASIS_H_
+#define SUBBASIS_H_
 
 #include <iostream>
 #include <string>
 #include <vector>
-#include <any_tensor.hpp>
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
-#include "SubBasis.h"
-#include "../Function/Argument.h"
+// #include <tensor.hpp>
+#include <any_tensor.hpp>
 
 namespace spline {
     class Basis;
+    class DummyBasis;
     class BSplineBasis;
     class MonomialBasis;
 
@@ -21,39 +21,25 @@ namespace spline {
 
     class BasisNode : public SharedObjectNode {
     public:
-        BasisNode (const std::vector< Basis >& allBasis);
-        BasisNode (const std::vector< SubBasis >& allSubBasis);
-        int getDimension () const;
-
-        std::vector<int> getShape () const;
-
-        void setArguments (const std::vector< Argument >& argument);
-        std::vector< Argument > getArguments() const;
-
-        Argument getSubArgument( int index ) const;
-        int indexArgument(Argument a) const;
-
-        bool hasArguments() const;
+        virtual Basis operator+(const Basis& rhs) const;
+        virtual Basis operator+(const DummyBasis& rhs) const;
+        virtual Basis operator+(const MonomialBasis& rhs) const;
+        virtual Basis operator+(const BSplineBasis& rhs) const;
+        virtual Basis operator*(const Basis& rhs) const;
+        virtual Basis operator*(const DummyBasis& rhs) const;
+        virtual Basis operator*(const MonomialBasis& rhs) const;
+        virtual Basis operator*(const BSplineBasis& rhs) const;
 
         virtual std::string getRepresentation() const ;
 
-        std::vector< SubBasis > getSubBasis() const;
-        Basis getSubBasis( int index ) const;
-        SubBasis getSubBasis( Argument a) const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        virtual int getDimension() const {return 0;};
+        virtual std::vector< int > getShape() const {return std::vector< int > {};}
 
-        void addBasis(Basis basis);
-        void addBasis(SubBasis basis);
+        template< class T >
+            void assertVectorLenghtCorrect( const std::vector< T >& x) const;
 
-        Basis operator+(const Basis& rhs) const;
-        Basis operator*(const Basis& rhs) const;
-
-        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-
-        int totalNumberSubBasis() const;
-
-    // protected:
-        std::vector< SubBasis > allSubBasis;
-        std::vector< Argument > allArguments;
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     };
 
 #endif // SWIG
@@ -67,37 +53,32 @@ namespace spline {
         BasisNode* operator->() const ;
 
 #endif // SWIG
-        int getDimension () const;
+        // int getDimension () const;
 
-        std::vector<int> getShape () const;
+        // std::vector<int> getSize () const;
         Basis ();
-        Basis (const std::vector< SubBasis >& allSubBasis);
-        Basis (const std::vector< Basis >& allBasis);
 
-        void setArguments (const std::vector< spline::Argument >& argument);
-        std::vector< spline::Argument > getArguments() const;
+        virtual Basis operator+(const Basis& rhs) const;
+        virtual Basis operator+(const DummyBasis& rhs) const;
+        virtual Basis operator+(const MonomialBasis& rhs) const;
+        virtual Basis operator+(const BSplineBasis& rhs) const;
+        virtual Basis operator*(const Basis& rhs) const;
+        virtual Basis operator*(const DummyBasis& rhs) const;
+        virtual Basis operator*(const MonomialBasis& rhs) const;
+        virtual Basis operator*(const BSplineBasis& rhs) const;
 
-        spline::Argument getSubArgument( int index ) const;
-        int indexArgument(Argument a) const;
-
-        bool hasArguments() const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        int getDimension() const;
+        std::vector< int > getShape() const ;
 
         virtual std::string getRepresentation() const ;
-
-        std::vector< SubBasis > getSubBasis() const;
-        Basis getSubBasis( int index ) const;
-        SubBasis getSubBasis( Argument a) const;
-
-
-        void addBasis(Basis basis);
-        void addBasis(SubBasis basis);
-
-        Basis operator+(const Basis& rhs) const;
-        Basis operator*(const Basis& rhs) const;
-
-        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-
-        int totalNumberSubBasis() const;
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     };
+
+    template< class T >
+        void BasisNode::assertVectorLenghtCorrect( const std::vector< T >& x) const{
+            assert(x.size() == getDimension());  // imput vector has wrong dimention
+        }
+
 }
-#endif  // BASIS_H_
+#endif  // SUBBASIS_H_

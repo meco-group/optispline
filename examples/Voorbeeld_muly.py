@@ -55,9 +55,9 @@ plt.show()
 # In[6]:
 
 degree = 3
-#m = SubBSplineBasis([0,1],degree,3)
-m = SubMonomialBasis(degree)
-b = Basis([m,m])
+#m = BSplineBasis([0,1],degree,3)
+m = MonomialBasis(degree)
+b = TensorBasis([m,m])
 
 
 V = ca_tools.struct_symSX([
@@ -153,8 +153,8 @@ plt.show()
 # In[8]:
 
 degree = 2
-m_path = SubBSplineBasis([0,1],degree,6)
-b_path = Basis([m_path])
+m_path = BSplineBasis([0,1],degree,6)
+b_path = TensorBasis([m_path])
 
 
 V = ca_tools.struct_symSX([
@@ -299,8 +299,8 @@ print sol['ay']
 
 
 degree = 2
-m_path = SubBSplineBasis([0,1],degree,6)
-b_path = Basis([m_path])
+m_path = BSplineBasis([0,1],degree,6)
+b_path = TensorBasis([m_path])
 
 
 V = ca_tools.struct_symSX([

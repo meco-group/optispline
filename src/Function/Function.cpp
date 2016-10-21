@@ -18,7 +18,7 @@ namespace spline {
     Function Function::generic_operation(const Function& f,
         const BasisComposition & bc, const TensorComposition & tc) const  {
 
-      Basis sumBasis = bc(getBasis(), f.getBasis());
+      TensorBasis sumBasis = bc(getBasis(), f.getBasis());
       EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
       std::vector< AnyTensor > basisEvaluated;
       std::vector< AnyTensor > thisFunctionEvaluated;
@@ -55,14 +55,14 @@ namespace spline {
 
     Function Function::operator+(Function f) const {
       return generic_operation(f,
-          [](const Basis& lhs, const Basis& rhs) { return lhs + rhs; },
+          [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
 
     Function Function::operator*(Function f) const {
       return generic_operation(f,
-          [](const Basis& lhs, const Basis& rhs) { return lhs * rhs; },
+          [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 

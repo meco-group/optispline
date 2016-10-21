@@ -23,24 +23,24 @@ def wrap(s, casadiType):
 class Test_Basis_SubBSpline(BasisTestCase):
 
     def test_getLength(self):
-        s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
+        s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
         self.assertEqual(s.getLength(), 4)
 
     def test_getDimension(self):
-        s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
+        s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
         self.assertEqual(s.getDimension(), 1)
 
     def test_getDegree(self):
-        s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
+        s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
         self.assertEqual(s.getDegree(), 2)
 
     def test_evaluation1(self):
-        s = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
+        s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
         r = s([0.1]).data()
         self.assertEqual(r.size(1),s.getLength())
 
     def test_evaluation2(self):
-        S = SubBSplineBasis([0,0,0,0.5,1,1,1], 2)
+        S = BSplineBasis([0,0,0,0.5,1,1,1], 2)
 
         for s in [S, wrap(S,SX), wrap(S,MX)]:
             for arg, check in [

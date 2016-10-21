@@ -44,9 +44,9 @@ ax.scatter(x_list,y_list,z_list,'ko')
 
 
 degree = 3
-#m = SubBSplineBasis([0,1],degree,3)
-m = SubMonomialBasis(degree)
-b = Basis([m,m])
+#m = BSplineBasis([0,1],degree,3)
+m = MonomialBasis(degree)
+b = TensorBasis([m,m])
 
 a_ = opt.optivar(m.getLenght(),m.getLenght())
 bound = opt.optivar()

@@ -1,15 +1,15 @@
 #include <vector>
 #include <algorithm>
 #include "operationsBasis.h"
+#include "../TensorBasis.h"
 #include "../Basis.h"
-#include "../SubBasis.h"
 #include "../../Function/Argument.h"
 #include "../../common.h"
 
 namespace spline{
 
-    Basis plusBasis(const Basis& b1,const  Basis& b2 ){
-        Basis returnBasis = Basis();
+    TensorBasis plusBasis(const TensorBasis& b1,const  TensorBasis& b2 ){
+        TensorBasis returnBasis = TensorBasis();
         if(b1.hasArguments() && b2.hasArguments()){
             std::vector< Argument > allArguments = b1.getArguments();
             for(auto &a : b2.getArguments()){
@@ -20,10 +20,10 @@ namespace spline{
             }
 
             for(auto &a : allArguments){
-                SubBasis subBasis1 = b1.getSubBasis(a);
-                SubBasis subBasis2 = b2.getSubBasis(a);
+                Basis subBasis1 = b1.getSubBasis(a);
+                Basis subBasis2 = b2.getSubBasis(a);
                 std::cout << subBasis1.getRepresentation() << "   " << subBasis2.getRepresentation() << std::endl;
-                SubBasis sum = subBasis1 + subBasis2;
+                Basis sum = subBasis1 + subBasis2;
                 returnBasis.addBasis(sum);
             }
 
@@ -32,9 +32,9 @@ namespace spline{
         }else{
             spline_assert_message(b1.getDimension() == b2.getDimension(),"Mismatch dimension");
             for(int i = 0; i < b1.getDimension(); i++){
-                SubBasis subBasis1 = b1.getSubBasis()[i];
-                SubBasis subBasis2 = b2.getSubBasis()[i];
-                SubBasis sum = subBasis1 + subBasis2;
+                Basis subBasis1 = b1.getSubBasis()[i];
+                Basis subBasis2 = b2.getSubBasis()[i];
+                Basis sum = subBasis1 + subBasis2;
                 returnBasis.addBasis(sum);
             }
 
@@ -50,8 +50,8 @@ namespace spline{
         return returnBasis;
     }
 
-    Basis timesBasis(const Basis& b1,const  Basis& b2 ){
-        Basis returnBasis = Basis();
+    TensorBasis timesBasis(const TensorBasis& b1,const  TensorBasis& b2 ){
+        TensorBasis returnBasis = TensorBasis();
         if(b1.hasArguments() && b2.hasArguments()){
             std::vector< Argument > allArguments = b1.getArguments();
             for(auto &a : b2.getArguments()){
@@ -62,10 +62,10 @@ namespace spline{
             }
 
             for(auto &a : allArguments){
-                SubBasis subBasis1 = b1.getSubBasis(a);
-                SubBasis subBasis2 = b2.getSubBasis(a);
+                Basis subBasis1 = b1.getSubBasis(a);
+                Basis subBasis2 = b2.getSubBasis(a);
                 std::cout << subBasis1.getRepresentation() << "   " << subBasis2.getRepresentation() << std::endl;
-                SubBasis sum = subBasis1 * subBasis2;
+                Basis sum = subBasis1 * subBasis2;
                 returnBasis.addBasis(sum);
             }
 
@@ -74,9 +74,9 @@ namespace spline{
         }else{
             spline_assert_message(b1.getDimension() == b2.getDimension(),"Mismatch dimension");
             for(int i = 0; i < b1.getDimension(); i++){
-                SubBasis subBasis1 = b1.getSubBasis()[i];
-                SubBasis subBasis2 = b2.getSubBasis()[i];
-                SubBasis sum = subBasis1 * subBasis2;
+                Basis subBasis1 = b1.getSubBasis()[i];
+                Basis subBasis2 = b2.getSubBasis()[i];
+                Basis sum = subBasis1 * subBasis2;
                 returnBasis.addBasis(sum);
             }
 

@@ -4,26 +4,26 @@
 
 namespace spline{
 
-    SubBasis timesSubBasis(const SubBSplineBasis& b1 , const SubBSplineBasis& b2){
+    Basis timesSubBasis(const BSplineBasis& b1 , const BSplineBasis& b2){
         int newDegree = b1.getDegree() + b2.getDegree();
         const std::vector<double> v = unionKnots(b1.getKnots(), b2.getKnots(), newDegree, b1.getDegree(), b2.getDegree());
-        return SubBSplineBasis(v, newDegree) ;
+        return BSplineBasis(v, newDegree) ;
     }
 
-    SubBasis timesSubBasis(const SubBSplineBasis& b1 , const SubMonomialBasis& b2){
+    Basis timesSubBasis(const BSplineBasis& b1 , const MonomialBasis& b2){
         //    TODO experimantal implementation
         int newDegree = b1.getDegree() + b2.getDegree();
         const std::vector<double> v = unionKnots(b1.getKnots(), b1.getKnots(), newDegree, b1.getDegree(), b2.getDegree());
-        return SubBSplineBasis(v, newDegree) ;
+        return BSplineBasis(v, newDegree) ;
     }
 
-    SubBasis timesSubBasis(const SubMonomialBasis& b1 , const SubBSplineBasis& b2){
+    Basis timesSubBasis(const MonomialBasis& b1 , const BSplineBasis& b2){
         return timesSubBasis(b2, b1);
     }
 
-    SubBasis timesSubBasis(const SubMonomialBasis& b1 , const SubMonomialBasis& b2){
+    Basis timesSubBasis(const MonomialBasis& b1 , const MonomialBasis& b2){
         int newDegree = b1.getDegree() + b2.getDegree();
-        return SubMonomialBasis(newDegree);
+        return MonomialBasis(newDegree);
     }
 
 }

@@ -5,32 +5,32 @@
 
 #include "plus.h"
 #include "times.h"
+// #include "../TensorBasis.h"
 // #include "../Basis.h"
-// #include "../SubBasis.h"
 // #include "../../common.h"
 
 namespace spline{
-    class Basis;
+    class TensorBasis;
     //
-    // Basis plusBasis(const Basis& b1,const  Basis& b2 );
+    // TensorBasis plusBasis(const TensorBasis& b1,const  TensorBasis& b2 );
     //
-       Basis plusBasis(const Basis& b1,const  Basis& b2 );
-       Basis timesBasis(const Basis& b1,const  Basis& b2 );
+       TensorBasis plusBasis(const TensorBasis& b1,const  TensorBasis& b2 );
+       TensorBasis timesBasis(const TensorBasis& b1,const  TensorBasis& b2 );
     //
     //
     //
     //
     //
     // template< class Basis1, class Basis2 >
-    //     Basis genericOperation(const Basis1& b1,const  Basis2& b2, const std::function<Basis(const Basis1&, const Basis2&)>& bfun ){
-    //         Basis returnBasis = Basis();
+    //     TensorBasis genericOperation(const Basis1& b1,const  Basis2& b2, const std::function<TensorBasis(const Basis1&, const Basis2&)>& bfun ){
+    //         TensorBasis returnBasis = TensorBasis();
     //         if(b1.hasArgument() && b2.hasArgument()){
     //             // std::vector<Argument>
     //         }else{
     //             spline_assert_message(b1.getDimension() != b2.getDimension(),"Mismatch dimension");
     //             for(int i = 0; i < b1.getDimention(); i++){
-    //                 SubBasis subBasis1 = b1.getSubBasis()[i];
-    //                 SubBasis subBasis2 = b2.getSubBasis()[i];
+    //                 Basis subBasis1 = b1.getSubBasis()[i];
+    //                 Basis subBasis2 = b2.getSubBasis()[i];
     //                 returnBasis.addBasis(bfun(subBasis1, subBasis2));
     //             }
     //         }
@@ -38,14 +38,14 @@ namespace spline{
     //     }
     //
     // template< class Basis1, class Basis2 >
-    //     Basis plusBasis(const Basis1& b1,const  Basis2& b2){
-    //         auto plusBasisOp = [](const Basis1& a, const Basis2& b) -> Basis { return plusSubBasis(a,b); };
+    //     TensorBasis plusBasis(const Basis1& b1,const  Basis2& b2){
+    //         auto plusBasisOp = [](const Basis1& a, const Basis2& b) -> TensorBasis { return plusSubBasis(a,b); };
     //         genericOperation<Basis1, Basis2>(b1, b2, plusBasisOp);
     //     }
     //
     // template< class Basis1, class Basis2 >
-    //     Basis timesBasis(const Basis1& b1,const  Basis2& b2){
-    //         auto timesBasisOp = [](const Basis1& a, const Basis2& b) -> Basis { return timesSubBasis(a,b); };
+    //     TensorBasis timesBasis(const Basis1& b1,const  Basis2& b2){
+    //         auto timesBasisOp = [](const Basis1& a, const Basis2& b) -> TensorBasis { return timesSubBasis(a,b); };
     //         genericOperation<Basis1, Basis2>(b1, b2, timesBasisOp);
     //     }
     //

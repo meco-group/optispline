@@ -51,14 +51,14 @@ def _swig_repr(self):
 // Renameing PYTHON
 //{% if false %}
 //%{
-//%remame(__eval__) Basis::evalBasis
+//%remame(__eval__) TensorBasis::evalBasis
 //%}
 //{% endif %}
 
 // Renameing MATLAB
 //{% if false %}
 //%{
-//%remame(f) Basis::evalBasis
+//%remame(f) TensorBasis::evalBasis
 //%}
 //{% endif %}
 
@@ -79,11 +79,11 @@ namespace std {
 #include <src/SharedObject/SharedObjectNode.h>
 
 #include <src/Basis/utils/CommonBasis.h>
-#include <src/Basis/SubBasis.h>
-#include <src/Basis/SubUnivariateBasis.h>
-#include <src/Basis/SubMonomialBasis.h>
-#include <src/Basis/SubBSplineBasis.h>
 #include <src/Basis/Basis.h>
+#include <src/Basis/UnivariateBasis.h>
+#include <src/Basis/MonomialBasis.h>
+#include <src/Basis/BSplineBasis.h>
+#include <src/Basis/TensorBasis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
@@ -424,16 +424,16 @@ namespace std {
 %include <tensor.hpp>
 
 %include <src/Basis/utils/CommonBasis.h>
-%include <src/Basis/SubBasis.h>
-%include <src/Basis/SubUnivariateBasis.h>
-%include <src/Basis/SubMonomialBasis.h>
-%include <src/Basis/SubBSplineBasis.h>
+%include <src/Basis/Basis.h>
+%include <src/Basis/UnivariateBasis.h>
+%include <src/Basis/MonomialBasis.h>
+%include <src/Basis/BSplineBasis.h>
 
-%template(SubBasisVector) std::vector< spline::SubBasis >;
-%template(BasisVector) std::vector< spline::Basis >;
+%template(SubBasisVector) std::vector< spline::Basis >;
+%template(BasisVector) std::vector< spline::TensorBasis >;
 %template(AnyScalarVectorVector) std::vector< std::vector< AnyScalar > >; // Debug
 
-%include <src/Basis/Basis.h>
+%include <src/Basis/TensorBasis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>

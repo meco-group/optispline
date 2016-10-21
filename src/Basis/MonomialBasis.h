@@ -1,15 +1,13 @@
-#ifndef MONOMIALBASIS_H_
-#define MONOMIALBASIS_H_
+#ifndef SUBMONOMIALBASIS_H_
+#define SUBMONOMIALBASIS_H_
 
 #include <vector>
-
-#include "../SharedObject/SharedObject.h"
-#include "../SharedObject/SharedObjectNode.h"
 
 #include "Basis.h"
 #include "UnivariateBasis.h"
 
 #include "utils/CommonBasis.h"
+
 namespace spline{
 
     class BSplineBasis;
@@ -17,14 +15,35 @@ namespace spline{
 #ifndef SWIG
 
     class MonomialBasisNode : public UnivariateBasisNode {
+
     public:
-        MonomialBasisNode(int degree) ;
+        MonomialBasisNode(int degree) : UnivariateBasisNode(degree) {};
+
+        virtual Basis operator+(const MonomialBasis& other) const ;
+        virtual Basis operator+(const BSplineBasis& other) const ;
+        virtual Basis operator+(const Basis& other) const ;
+        virtual Basis operator+(const DummyBasis& other) const ;
+
+        virtual Basis operator*(const MonomialBasis& other) const ;
+        virtual Basis operator*(const BSplineBasis& other) const ;
+        virtual Basis operator*(const Basis& other) const ;
+        virtual Basis operator*(const DummyBasis& other) const ;
 
         virtual std::string getRepresentation() const ;
+
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+
+        virtual int getLength() const ;
+        template<class T>
+        AnyTensor SubBasisEvalution (const std::vector< T >& x ) const ;
+
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     };
+
 #endif // SWIG
 
     class MonomialBasis : public UnivariateBasis {
+
     public:
 
 #ifndef SWIG
@@ -44,7 +63,18 @@ namespace spline{
             }
 #endif // SWIG
     };
-    
+
+    template<class T>
+    AnyTensor MonomialBasisNode::SubBasisEvalution (const std::vector< T >& x ) const {
+        T x_ = x[0];
+        int lenght  = this->getLength();
+        std::vector<T> evaluation_basis(lenght);
+        for (int i = 0; i < lenght; ++i) {
+              evaluation_basis[i] = pow(x_,i);
+        }
+        return AnyTensor(vertcat(evaluation_basis));
+    }
+
 }  // namespace spline
 
-#endif  // MONOMIALBASIS_H_
+#endif  // SUBMONOMIALBASIS_H_

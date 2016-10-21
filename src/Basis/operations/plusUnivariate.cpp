@@ -4,26 +4,26 @@
 
 namespace spline{
 
-    SubBasis plusSubBasis (const SubBSplineBasis &b1, const SubBSplineBasis &b2) {
+    Basis plusSubBasis (const BSplineBasis &b1, const BSplineBasis &b2) {
         int newDegree = std::max(b1.getDegree(), b2.getDegree());
         const std::vector<double> v = unionKnots(b1.getKnots(), b2.getKnots(), newDegree, b1.getDegree(), b2.getDegree());
-        return SubBSplineBasis(v, newDegree);
+        return BSplineBasis(v, newDegree);
     }
 
-    SubBasis plusSubBasis (const SubBSplineBasis &b1, const SubMonomialBasis &b2) {
+    Basis plusSubBasis (const BSplineBasis &b1, const MonomialBasis &b2) {
         //    TODO experimantal implementation
         int newDegree = std::max(b1.getDegree(), b2.getDegree());
         const std::vector<double> v = increaseMultiplicityKnots(b1.getKnots(), newDegree - b1.getDegree());
-        return SubBSplineBasis(v, newDegree);
+        return BSplineBasis(v, newDegree);
     }
 
-    SubBasis plusSubBasis (const SubMonomialBasis &b1, const SubBSplineBasis &b2) {
+    Basis plusSubBasis (const MonomialBasis &b1, const BSplineBasis &b2) {
         return plusSubBasis(b2, b1);
     }
 
-    SubBasis plusSubBasis (const SubMonomialBasis &b1, const SubMonomialBasis &b2) {
+    Basis plusSubBasis (const MonomialBasis &b1, const MonomialBasis &b2) {
         int newDegree = std::max(b1.getDegree(), b2.getDegree());
-        return SubMonomialBasis(newDegree);
+        return MonomialBasis(newDegree);
     }
 
 }  // namespace spline

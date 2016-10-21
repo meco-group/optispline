@@ -1,5 +1,5 @@
 #include "EvaluationGrid.h"
-#include "../SubBasis.h"
+#include "../Basis.h"
 #include "../../common.h"
 
 namespace spline{
@@ -7,21 +7,21 @@ namespace spline{
     EvaluationGridNode* EvaluationGrid::operator->() const { return get(); }
 
     // EvaluationGrid::EvaluationGrid (){
-    //     assign_node(new EvaluationGridNode(Basis()));
+    //     assign_node(new EvaluationGridNode(TensorBasis()));
     // }
     //
-    EvaluationGrid::EvaluationGrid (Basis basis){
+    EvaluationGrid::EvaluationGrid (TensorBasis basis){
         assign_node(new EvaluationGridNode(basis));
     }
 
-    EvaluationGridNode::EvaluationGridNode(Basis basis) : griddedBasis(basis) {}
+    EvaluationGridNode::EvaluationGridNode(TensorBasis basis) : griddedBasis(basis) {}
 
     std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid() const {return (*this)->evaluateEvaluationGrid();}
     std::vector< AnyTensor > EvaluationGridNode::evaluateEvaluationGrid() const {
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
         std::vector< AnyTensor > postStep ;
 
-        for(SubBasis b : griddedBasis.getSubBasis()){
+        for(Basis b : griddedBasis.getSubBasis()){
             std::vector< std::vector< AnyScalar > > evaluationGrid;
             b.getEvaluationGrid(&evaluationGrid);
             for(auto const & subPoint : evaluationGrid){
@@ -38,7 +38,7 @@ namespace spline{
 
     std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid(const Function & f) const {return (*this)->evaluateEvaluationGrid(f);}
     std::vector< AnyTensor > EvaluationGridNode::evaluateEvaluationGrid(const Function & f) const {
-        Basis basis = f.getBasis();
+        TensorBasis basis = f.getBasis();
         std::vector< int > indexPermutation;
         getPermutation(&indexPermutation, basis);
 
@@ -46,7 +46,7 @@ namespace spline{
         std::vector< AnyTensor > postStep ;
 
         for(int i = 0; i < griddedBasis.getDimension(); i++){
-            SubBasis subBasis = griddedBasis.getSubBasis()[i];
+            Basis subBasis = griddedBasis.getSubBasis()[i];
             std::vector< std::vector< AnyScalar > > evaluationGrid;
             subBasis.getEvaluationGrid(&evaluationGrid);
             for(auto const & subPoint : evaluationGrid){
@@ -55,7 +55,7 @@ namespace spline{
                         postStep.push_back(pre);
                     }
                 }else{
-                    SubBasis correspondingSubBasis = basis.getSubBasis()[indexPermutation[i]];
+                    Basis correspondingSubBasis = basis.getSubBasis()[indexPermutation[i]];
                     AnyTensor subEvaluation = correspondingSubBasis(subPoint);
                     for( AnyTensor pre : preStep){
                         postStep.push_back(pre.outer_product( subEvaluation ));
@@ -73,7 +73,7 @@ namespace spline{
         return postStep;
     }
 
-    void EvaluationGridNode::getPermutation(std::vector< int > * indexPermutation, Basis basis) const{
+    void EvaluationGridNode::getPermutation(std::vector< int > * indexPermutation, TensorBasis basis) const{
         std::vector< int > index;
         if(griddedBasis.hasArguments() && basis.hasArguments()){
             for(auto & a : griddedBasis.getArguments()){
@@ -92,7 +92,7 @@ namespace spline{
         std::stringstream s;
         // s << "EvaluationGrid" << std::endl;
         s << "EvaluationGrid";
-        // for(SubBasis b : griddedBasis.getSubBasis()){
+        // for(Basis b : griddedBasis.getSubBasis()){
         //     std::vector< std::vector< AnyScalar > > evalutionGrid = b.getEvaluationGrid();
         //     for(auto const & subPoint : evalutionGrid){
         //         for(auto const & sP : subPoint){

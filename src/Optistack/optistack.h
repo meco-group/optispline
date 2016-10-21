@@ -102,7 +102,7 @@ class OptiSpline : public Optistack {
 public:
   using Optistack::var;
   MT var(const std::vector<int>& shape);
-  spline::Function Function(const spline::Basis& b);
+  spline::Function Function(const spline::TensorBasis& b);
   OptiSplineSolver solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options=Dict()) const;
 };
 

@@ -36,7 +36,7 @@ ax.scatter(x_list,y_list,z_list,'ko')
 
 degree = 3
 m = BSplineBasis([0,1], degree, 3)
-b = Basis([m,m])
+b = TensorBasis([m,m])
 
 opti = OptiSpline()
 

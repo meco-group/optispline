@@ -9,7 +9,7 @@
 
 #include "../Function/Argument.h"
 #include "../Function/Function.h"
-#include "../Basis.h"
+#include "../TensorBasis.h"
 namespace spline{
 
 #ifndef SWIG
@@ -18,13 +18,13 @@ namespace spline{
     public:
         std::string getRepresentation() const ;
 
-        EvaluationGridNode(Basis basis);
+        EvaluationGridNode(TensorBasis basis);
         std::vector< AnyTensor > evaluateEvaluationGrid() const;
         std::vector< AnyTensor > evaluateEvaluationGrid(const Function & f) const;
 
-        void getPermutation(std::vector< int > * indexPermutation, Basis basis) const;
+        void getPermutation(std::vector< int > * indexPermutation, TensorBasis basis) const;
     private:
-        Basis griddedBasis;
+        TensorBasis griddedBasis;
     };
 
 #endif // SWIG
@@ -33,7 +33,7 @@ namespace spline{
     public:
         std::string getRepresentation() const ;
         // EvaluationGrid();
-        EvaluationGrid(Basis basis);
+        EvaluationGrid(TensorBasis basis);
 
 #ifndef SWIG
 

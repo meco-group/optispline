@@ -17,40 +17,40 @@ import pdb
 class Test_Basis_SubMonomial(BasisTestCase):
 
     def test_getLength(self):
-        s = SubMonomialBasis(3)
+        s = MonomialBasis(3)
         self.assertEqual(s.getLength(), 4)
 
     def test_getDimension(self):
-        s = SubMonomialBasis(3)
+        s = MonomialBasis(3)
         self.assertEqual(s.getDimension(), 1)
 
     def test_getDegree(self):
-        s = SubMonomialBasis(3)
+        s = MonomialBasis(3)
         self.assertEqual(s.getDegree(), 3)
 
     def test_evaluation1(self):
-        s = SubMonomialBasis(3)
+        s = MonomialBasis(3)
         r = s([2.0]).data()
         self.assertEqual(r.size(1),s.getLength())
 
     def test_evaluation2(self):
-        s = SubMonomialBasis(3)
+        s = MonomialBasis(3)
         r = s([2.0])
         self.assertEqualTensor(r,[1,2,4,8])
 
     def test_evaluation3(self):
-        s = SubMonomialBasis(3)
+        s = MonomialBasis(3)
         r = s([0.0])
         self.assertEqualTensor(r,[1,0,0,0])
 
     def test_evaluationMX1(self):
-        s = SubMonomialBasis(3)
+        s = MonomialBasis(3)
         x = MX.sym("x")
         r = s([x])
         self.assertTrue(isinstance(r.data(),MX))
 
     def test_evaluationSX1(self):
-        s = SubMonomialBasis(3)
+        s = MonomialBasis(3)
         x = SX.sym("x")
         r = s([x])
         self.assertTrue(isinstance(r.data(),SX))

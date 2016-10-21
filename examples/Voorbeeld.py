@@ -96,12 +96,12 @@ plt.plot(interval,middel,'r')
 # In[7]:
 
 degree = 1
-m = SubMonomialBasis(degree)
+m = MonomialBasis(degree)
 
 
 # In[8]:
 
-b = Basis([m])
+b = TensorBasis([m])
 b = MonomialBasis(degree)
 
 
@@ -125,10 +125,10 @@ a = Coefficient(a)
 est_function = Function(b,a)
 
 
-#Function( Basis& basis, const Coefficient& coef) : basis(basis), coef(coef) {} 
+#Function( TensorBasis& basis, const Coefficient& coef) : basis(basis), coef(coef) {} 
 
 #    
-#Basis b;
+#TensorBasis b;
 #ST s;#
 
 ##explicit Coefficient(const ST& a);
@@ -220,8 +220,8 @@ plt.plot(interval,middel,'r')
 # In[ ]:
 
 degree = 2
-m = SubBSplineBasis([0,0,0,0.5,1,1,1],degree)
-b = Basis([m])
+m = BSplineBasis([0,0,0,0.5,1,1,1],degree)
+b = TensorBasis([m])
 a_ = ca.SX.sym('a',m.getLength(),1)
 a = STensor(a_, [m.getLength(),1,1])
 a = Coefficient(a)

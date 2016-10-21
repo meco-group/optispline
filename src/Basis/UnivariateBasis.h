@@ -1,12 +1,11 @@
-#ifndef CPP_SPLINE_UNIVARIATEBASIS_H
-#define CPP_SPLINE_UNIVARIATEBASIS_H
+#ifndef CPP_SPLINE_SUBUNIVARIATEBASIS_H
+#define CPP_SPLINE_SUBUNIVARIATEBASIS_H
 
 #include <casadi/casadi.hpp>
 #include <string>
 
+#include "../common.h"
 #include "Basis.h"
-#include "../SharedObject/SharedObject.h"
-#include "../SharedObject/SharedObjectNode.h"
 
 namespace spline {
 
@@ -17,20 +16,33 @@ namespace spline {
 
     class UnivariateBasisNode : public BasisNode {
     public:
-        //   casadi::DM transformation( const Basis &b) const;
-        //
-        //   virtual std::vector<double> evaluationGrid (void) const = 0;
-        UnivariateBasisNode(SubBasis subbasis);
+        virtual Basis operator+(const MonomialBasis& other) const ;
+        virtual Basis operator+(const BSplineBasis& other) const ;
+        virtual Basis operator+(const Basis& other) const ;
+        virtual Basis operator+(const DummyBasis& other) const ;
+
+        virtual Basis operator*(const MonomialBasis& other) const ;
+        virtual Basis operator*(const BSplineBasis& other) const ;
+        virtual Basis operator*(const Basis& other) const ;
+        virtual Basis operator*(const DummyBasis& other) const ;
+
+        UnivariateBasisNode(int degree);
 
         virtual std::string getRepresentation() const ;
+
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const {spline_assert(0); return DT();};
 
         virtual int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
+        int getDimension() const;
+        std::vector< int > getShape() const {
+            std::cout << getLength() << std::endl;
+            return std::vector< int > {getLength()};}
+
+        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {spline_assert(0);};
     protected:
-#ifndef SWIG
-        void assertUnivariateBasis() const;
-#endif
+        int degree;
     };
 
 #endif // SWIG
@@ -49,12 +61,7 @@ namespace spline {
         int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
-
-#ifndef SWIG
-        void assertUnivariateBasis() const;
-        SubBasis getSubUnivariateBasis() const;
-#endif
     };
 } // namespace spline
 
-#endif //CPP_SPLINE_UNIVARIATEBASIS_H
+#endif //CPP_SPLINE_SUBUNIVARIATEBASIS_H

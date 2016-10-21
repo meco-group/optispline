@@ -1,17 +1,17 @@
 #ifndef CPP_SPLINES_TIMESUNIVARIATE_H
 #define CPP_SPLINES_TIMESUNIVARIATE_H
 
-#include "SubBasis.h"
-#include "SubMonomialBasis.h"
-#include "SubBSplineBasis.h"
+#include "Basis.h"
+#include "MonomialBasis.h"
+#include "BSplineBasis.h"
 
 namespace spline{
 //TODO specify return type
 // #ifndef SWIG
-    SubBasis timesSubBasis(const SubBSplineBasis& b1 , const SubBSplineBasis& b2);
-    SubBasis timesSubBasis(const SubMonomialBasis& b1 , const SubMonomialBasis& b2);
-    SubBasis timesSubBasis(const SubMonomialBasis& b1 , const SubBSplineBasis& b2);
-    SubBasis timesSubBasis(const SubBSplineBasis& b1 , const SubMonomialBasis& b2);
+    Basis timesSubBasis(const BSplineBasis& b1 , const BSplineBasis& b2);
+    Basis timesSubBasis(const MonomialBasis& b1 , const MonomialBasis& b2);
+    Basis timesSubBasis(const MonomialBasis& b1 , const BSplineBasis& b2);
+    Basis timesSubBasis(const BSplineBasis& b1 , const MonomialBasis& b2);
 
 // #endif // SWIG
 } // namespace spline
