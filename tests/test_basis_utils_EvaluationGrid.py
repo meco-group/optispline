@@ -18,7 +18,7 @@ class Test_Basis_utils(BasisTestCase):
       b1 = MonomialBasis(2)
       b2 = MonomialBasis(3)
       b3 = BSplineBasis([0,1],2,2)
-
+      b1 = TensorBasis(b1)
       eg1 = EvaluationGrid(b1)
       print eg1
 
