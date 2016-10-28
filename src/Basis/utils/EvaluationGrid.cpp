@@ -38,7 +38,7 @@ namespace spline{
 
     std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid(const Function & f) const {return (*this)->evaluateEvaluationGrid(f);}
     std::vector< AnyTensor > EvaluationGridNode::evaluateEvaluationGrid(const Function & f) const {
-        TensorBasis basis = f.getBasis();
+        TensorBasis basis = f.getTensorBasis();
         std::vector< int > indexPermutation;
         getPermutation(&indexPermutation, basis);
 

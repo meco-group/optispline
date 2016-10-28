@@ -184,7 +184,7 @@ void OptistackSolver::value(const MX& x, const DM& v) {
 }
 
 spline::Function OptiSplineSolver::value(const spline::Function& f) const {
-  return spline::Function(f.getBasis(), value(f.getCoefficient()));
+  return spline::Function(f.getTensorBasis(), value(f.getCoefficient()));
 }
 
 spline::Coefficient OptiSplineSolver::value(const spline::Coefficient& c) const {
