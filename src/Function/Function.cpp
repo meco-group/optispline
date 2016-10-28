@@ -5,7 +5,7 @@
 namespace spline {
 
     AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const{
-        return basis(x).inner(coef.data);
+        return basis(x).inner(coef.getData());
     }
 
     MX Function::operator<=(const MX& x) const {

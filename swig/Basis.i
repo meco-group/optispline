@@ -107,10 +107,12 @@ def _swig_repr(self):
     bool to_ptr(PyObject *p, MT** m);
     bool to_ptr(PyObject *p, spline::TensorBasis** m);
     bool to_ptr(PyObject *p, spline::Basis** m);
+    bool to_ptr(PyObject *p, spline::Coefficient** m);
     PyObject * from_ptr(const AnyScalar *a);
     PyObject * from_ptr(const AnyTensor *a);
     PyObject * from_ptr(const spline::TensorBasis *a);
     PyObject * from_ptr(const spline::Basis *a);
+    PyObject * from_ptr(const spline::Coefficient *a);
     PyObject *from_ptr(const DT *a);
     PyObject *from_ptr(const ST *a);
     PyObject *from_ptr(const MT *a);
@@ -126,10 +128,12 @@ def _swig_repr(self):
     bool to_ptr(mxArray *p, MT** m);
     bool to_ptr(mxArray *p, spline::TensorBasis** m);
     bool to_ptr(mxArray *p, spline::Basis** m);
+    bool to_ptr(mxArray *p, spline::Coefficient** m);
     mxArray * from_ptr(const AnyScalar *a);
     mxArray * from_ptr(const AnyTensor *a);
     mxArray * from_ptr(const spline::TensorBasis *a);
     mxArray * from_ptr(const spline::Basis *a);
+    mxArray * from_ptr(const spline::Coefficient *a);
     mxArray *from_ptr(const DT *a);
     mxArray *from_ptr(const ST *a);
     mxArray *from_ptr(const MT *a);
@@ -217,6 +221,25 @@ def _swig_repr(self):
                                     $descriptor(spline::TensorBasis*), 0))) {
         return true;
       }
+      return false;
+    }
+    bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::Coefficient*), 0))) {
+        return true;
+      }
+      
+      {
+        AnyTensor tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+      
       return false;
     }
     bool to_ptr(GUESTOBJECT *p, AnyScalar** m) {
@@ -310,9 +333,9 @@ def _swig_repr(self):
         return true;
       }
       
-      // Try first converting to a temporary MM
+      // Try first converting to a temporary MX
       {
-        MT tmp, *mt=&tmp;
+        MX tmp, *mt=&tmp;
         if(casadi::to_ptr(p, m ? &mt : 0)) {
           if (m) **m = *mt;
           return true;
@@ -323,28 +346,24 @@ def _swig_repr(self):
     }
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m) {
       {
-        DT *m2;
-        if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(&m2),
-                                      $descriptor(DT*), 0))) {
-          if (m) **m=*m2;
+        DT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+      {
+        ST tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
           return true;
         }
       }
 
       {
-        ST *m2;
-        if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(&m2),
-                                      $descriptor(ST*), 0))) {
-          if (m) **m=*m2;
-          return true;
-        }
-      }
-
-      {
-        MT *m2;
-        if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(&m2),
-                                      $descriptor(MT*), 0))) {
-          if (m) **m=*m2;
+        MT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
           return true;
         }
       }
@@ -393,6 +412,9 @@ def _swig_repr(self):
         return from_ref(r);
       }
       return SWIG_NewPointerObj(new MT(*a), $descriptor(Tensor< casadi::MX > *), SWIG_POINTER_OWN);
+    }
+    GUESTOBJECT* from_ptr(const spline::Coefficient *a) {
+      return SWIG_NewPointerObj(new spline::Coefficient(*a), $descriptor(spline::Coefficient *), SWIG_POINTER_OWN);
     }
     
     GUESTOBJECT* from_ptr(const spline::Basis *a) {
@@ -535,6 +557,7 @@ def _swig_repr(self):
 %tensortools_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
 %tensortools_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
 %tensortools_typemaps("Basis", PREC_MX, spline::Basis)
+%tensortools_typemaps("Coefficient", PREC_MX, spline::Coefficient)
 %tensortools_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %tensortools_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 

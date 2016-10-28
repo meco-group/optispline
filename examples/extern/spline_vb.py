@@ -33,10 +33,7 @@ def FunDerivative(self):
   vx_cfs_, knots2 = derivative(self.getCoefficient(), knots, degree)
   m2 = BSplineBasis(knots2, degree-1)
   basis2 = TensorBasis([m2])
-  try:
-    return Function(basis2, Coefficient(DTensor(vx_cfs_,[m2.getLength(), 1, 1])))
-  except:
-    return Function(basis2, Coefficient(MTensor(vx_cfs_,[m2.getLength(), 1, 1])))
+  return Function(basis2, vx_cfs_)
 
 Function.derivative = FunDerivative
 
