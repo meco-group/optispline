@@ -5,6 +5,8 @@ import casadi as ca
 import numpy as np
 import random
 
+opti = OptiSpline()
+
 x = [0.15,0.18,0.45,0.50,0.9]
 y = np.zeros(5)
 plt.plot(x,y,'ko')
@@ -17,47 +19,33 @@ knots = np.hstack(((degree)*[0],np.linspace(0.,1.,knotsint),(degree)*[1]))
 m = BSplineBasis(knots,degree)
 b = TensorBasis([m])
 
-a_ = ca.SX.sym('a',m.getLenght(),1)
-a = STensor(a_, [m.getLenght(),1,1])
-a = Coefficient(a)
-s = Function(b,a)
+s = opti.Function(b)
 
 # Objective
 obj = 0.
 x_ = 0.
 dx = 0.02
 while (x_ < 1.):
-    obj = obj + (s([x_]).data())*dx
+    obj = obj + (s([x_]))*dx
     x_ = x_ + dx
 
 # Constraints
 con = []
-con_lower = []
-con_upper = []
 for x_ in x:
-    con.append(s([x_]).data())
-    con_lower.append(0.)
-    con_upper.append(ca.inf)
+    con.append(s([x_])>=0)
 
-for i in range(0,m.getLenght()):
-    con.append(a_[i,0])
-    con_lower.append(-1.)
-    con_upper.append(ca.inf)
+con.append(s>=-1)
 
-nlp = { 'x':ca.vertcat(a_),'f':obj,'g':ca.vertcat(*con) }
-solver = ca.nlpsol("solver","ipopt", nlp)
-r = solver(lbg=con_lower,ubg=con_upper)
+sol = opti.solver(obj,con,"ipopt")
+sol.solve()
 
-a = r['x'].full()[0:m.getLenght()]
-a = DTensor(a, [m.getLenght(),1,1])
-a = Coefficient(a)
-s = Function(b,a)
+s = sol.value(s)
 interval = np.linspace(0.,1.,101)
 
 field = []
 
 for i in interval:
-    field.append(s([i]).data())
+    field.append(s([i]))
 
 plt.figure()
 plt.plot(x,y,'ko')
