@@ -102,6 +102,9 @@ def _swig_repr(self):
   namespace casadi {
     bool to_ptr(PyObject *p, AnyScalar** m);
     bool to_ptr(PyObject *p, AnyTensor** m);
+    bool to_ptr(PyObject *p, DT** m);
+    bool to_ptr(PyObject *p, ST** m);
+    bool to_ptr(PyObject *p, MT** m);
     bool to_ptr(PyObject *p, spline::TensorBasis** m);
     bool to_ptr(PyObject *p, spline::Basis** m);
     PyObject * from_ptr(const AnyScalar *a);
@@ -118,6 +121,9 @@ def _swig_repr(self):
   namespace casadi {
     bool to_ptr(mxArray *p, AnyScalar** m);
     bool to_ptr(mxArray *p, AnyTensor** m);
+    bool to_ptr(mxArray *p, DT** m);
+    bool to_ptr(mxArray *p, ST** m);
+    bool to_ptr(mxArray *p, MT** m);
     bool to_ptr(mxArray *p, spline::TensorBasis** m);
     bool to_ptr(mxArray *p, spline::Basis** m);
     mxArray * from_ptr(const AnyScalar *a);
@@ -255,6 +261,66 @@ def _swig_repr(self):
       return false;
     }
 
+    bool to_ptr(GUESTOBJECT *p, DT** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::DT*), 0))) {
+        return true;
+      }
+      
+      // Try first converting to a temporary DM
+      {
+        DM tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+
+      return false;
+    }
+    bool to_ptr(GUESTOBJECT *p, ST** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::ST*), 0))) {
+        return true;
+      }
+      
+      // Try first converting to a temporary SX
+      {
+        SX tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+
+      return false;
+    }
+    bool to_ptr(GUESTOBJECT *p, MT** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::MT*), 0))) {
+        return true;
+      }
+      
+      // Try first converting to a temporary MM
+      {
+        MT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+
+      return false;
+    }
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m) {
       {
         DT *m2;
@@ -457,6 +523,9 @@ def _swig_repr(self):
 
 %tensortools_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
 %tensortools_typemaps("AnyTensor", PREC_MX, AnyTensor)
+%tensortools_typemaps("STensor", PREC_MX, Tensor<casadi::SX>)
+%tensortools_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
+%tensortools_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
 %tensortools_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %tensortools_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 

@@ -90,7 +90,9 @@ public:
   using OptistackSolver::value;
   spline::Function value(const spline::Function& f) const;
   spline::Coefficient value(const spline::Coefficient& c) const;
+  void value(const spline::Coefficient& c, const Tensor<DM>& d);
   AnyTensor value(const AnyTensor& c) const;
+  void value(const Tensor<MX>& c, const Tensor<DM>& d);
   Tensor<DM> value(const Tensor<MX>& c) const;
 
 protected:
