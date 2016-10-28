@@ -16,7 +16,6 @@ namespace spline {
 
         std::vector< int > getShape() const;
         int getNumberCoefficents() const;
-        // const std::vector< int > getShape() const;
 
         // Coefficient operator+ (Coefficient & other) const;
         Coefficient operator-() const ;

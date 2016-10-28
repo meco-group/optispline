@@ -14,7 +14,6 @@ namespace spline {
         Function( const TensorBasis& basis, const Coefficient& coef) : basis(basis), coef(coef) {}
         Function( const Basis& basis, const Coefficient& coef) : basis(TensorBasis(basis)), coef(coef) {}
 
-
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         Function operator+(const Function f) const ;
