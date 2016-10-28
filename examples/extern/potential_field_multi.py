@@ -1,7 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from Basis import *
+from TensorBasis import *
 import casadi as ca
 import numpy as np
 import random
@@ -34,8 +34,8 @@ plt.show()
 degree = 2
 knotsint = 10
 knots = np.hstack(((degree)*[-r],np.linspace(-r,r,knotsint),(degree)*[r]))
-m = SubBSplineBasis(knots,degree)
-b = Basis([m,m])
+m = BSplineBasis(knots,degree)
+b = TensorBasis([m,m])
 
 a_ = ca.SX.sym('a',m.getLenght(),m.getLenght())
 a = STensor(a_, [m.getLenght(),m.getLenght(),1,1])

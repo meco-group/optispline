@@ -15,7 +15,7 @@ SX.sym('x');
 addpath([path filesep 'cpp_splines/develop/' os '-MATLAB'],'-begin');
 
 %%
-import TensorBasis.*
+import Basis.*
 
 % define two univariate subbases
 knots = linspace(0,1,20);
@@ -29,8 +29,8 @@ knots  = B2.getKnots;  % why is this a swig object instead of vector?
 degree = B2.getDegree; % this seems OK
 
 % add and multiply subbases
-B3 = B1 + B2; 
-B4 = B1*B2;   
+B3 = B1 + B2;
+B4 = B1*B2;
 
 % create Cartesian product of B1 and B2
 sbv = SubBasisVector();
@@ -49,7 +49,7 @@ mvar_spline = TensorBasis.Function(B,a);
 z=zeros(30,30);
 for i = 1:30
     for j = 1:30
-        eval_spline = mvar_spline({x(i),y(j)});   
+        eval_spline = mvar_spline({x(i),y(j)});
         eval_spline = DM(eval_spline.data());
         z(i,j) = full(eval_spline);
     end
