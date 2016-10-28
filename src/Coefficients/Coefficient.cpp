@@ -12,7 +12,7 @@ namespace spline {
         int d = dims.size();
         int i = dims[d-2];
         int j = dims[d-1];
-        return *(new std::vector< int > {i,j});
+        return *(new std::vector< int > {i,j}); // ouch
     }
 
     int Coefficient::getNumberCoefficents() const{

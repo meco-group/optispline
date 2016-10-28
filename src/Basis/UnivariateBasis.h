@@ -57,6 +57,7 @@ namespace spline {
 #endif // SWIG
 
         virtual std::string getRepresentation() const ;
+  
 
         int getLength() const ;
         int getDegree () const ;

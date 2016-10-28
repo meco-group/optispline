@@ -55,14 +55,14 @@ namespace spline{
 
         std::vector<double> grevillePoints (getLength());
         for (int i = 0; i < getLength(); ++i) {
-            grevillePoints[i] = std::accumulate(knots.begin()+i+1,knots.begin()+i+degree+1, 0.0) / degree;
+            grevillePoints[i] = std::accumulate(knots_.begin()+i+1,knots_.begin()+i+degree+1, 0.0) / degree;
         }
 
         return grevillePoints;
     }
 
     int BSplineBasisNode::getLength () const{
-        return knots.size() - degree - 1;
+        return knots_.size() - degree - 1;
     }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& knots, int degree)  {
@@ -70,38 +70,38 @@ namespace spline{
     }
 
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree)
-    : UnivariateBasisNode(degree), knots(knots){ }
+    : UnivariateBasisNode(degree), knots_(knots){ }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) : UnivariateBasisNode(degree) {
         int numberOfKnots = 2*degree + numberOfIntervals;
-        knots.resize(numberOfKnots, 0);
+        knots_.resize(numberOfKnots, 0);
 
         for (int i = 0; i < degree; ++i) {
-            knots[i] = bounds[0];
-            knots[numberOfKnots - i - 1] = bounds[1];
+            knots_[i] = bounds[0];
+            knots_[numberOfKnots - i - 1] = bounds[1];
         }
 
         for (int i = 0; i < numberOfIntervals; ++i) {
-            knots[degree + i] = bounds[0] + (bounds[1] - bounds[0]) * (double)i/(numberOfIntervals-1);
+            knots_[degree + i] = bounds[0] + (bounds[1] - bounds[0]) * (double)i/(numberOfIntervals-1);
         }
 
-        setKnots(knots);
+        setKnots(knots_);
     }
 
     std::vector< double >& BSplineBasis::getKnots () { return (*this)->getKnots(); }
     std::vector< double >& BSplineBasisNode::getKnots () {
-        return knots;
+        return knots_;
     }
 
     const std::vector< double >& BSplineBasis::getKnots () const { return (*this)->getKnots(); }
     const std::vector< double >& BSplineBasisNode::getKnots () const {
-        return knots;
+        return knots_;
     }
 
-    void BSplineBasis::setKnots (std::vector< double >& knots) { return (*this)->setKnots (knots); }
-    void BSplineBasisNode::setKnots (std::vector< double >& knots) {
-        knots = knots;
+    void BSplineBasis::setKnots (const std::vector< double >& knots) { return (*this)->setKnots (knots); }
+    void BSplineBasisNode::setKnots (const std::vector< double >& knots) {
+        knots_ = knots;
     }
 
 

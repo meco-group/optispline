@@ -33,7 +33,10 @@ def FunDerivative(self):
   vx_cfs_, knots2 = derivative(self.getCoefficient(), knots, degree)
   m2 = BSplineBasis(knots2, degree-1)
   basis2 = TensorBasis([m2])
-  return Function(basis2, Coefficient(MTensor(vx_cfs_,[m2.getLength(), 1, 1])))
+  try:
+    return Function(basis2, Coefficient(DTensor(vx_cfs_,[m2.getLength(), 1, 1])))
+  except:
+    return Function(basis2, Coefficient(MTensor(vx_cfs_,[m2.getLength(), 1, 1])))
 
 Function.derivative = FunDerivative
 
@@ -96,43 +99,27 @@ if len(via_pnts)>0:
 
 sol.solve()
 
-sol = r['x'].full()
-x_cfs_ = sol[:m.getLength()]
-y_cfs_ = sol[m.getLength():2*m.getLength()]
-T = sol.value(T)
+T = float(sol.value(T))
 t_via = sol.value(t_via)
 
-x_cfs = DTensor(x_cfs_, [m.getLength(), 1, 1])
-x_cfs = Coefficient(x_cfs)
-y_cfs = DTensor(y_cfs_, [m.getLength(), 1, 1])
-y_cfs = Coefficient(y_cfs)
-
-knotsT = T*knots
-basis = TensorBasis([BSplineBasis(knotsT, degree)])
 time = np.linspace(0, T, 101)
 
-x = Function(basis, x_cfs)
-y = Function(basis, y_cfs)
+x = sol.value(x)
 
+x.getBasis().setKnots(list(T*knots))
 
-vx_cfs_, knotsT2 = derivative(x_cfs_, knotsT, degree)
-vy_cfs_, knotsT2 = derivative(y_cfs_, knotsT, degree)
-basis2 = TensorBasis([BSplineBasis(knotsT2, degree-1)])
+y = sol.value(y)
 
-vx_cfs = DTensor(vx_cfs_, [m2.getLength(), 1, 1])
-vx_cfs = Coefficient(vx_cfs)
-vx = Function(basis2, vx_cfs)
+y.getBasis().setKnots(list(T*knots))
 
-vy_cfs = DTensor(vy_cfs_, [m2.getLength(), 1, 1])
-vy_cfs = Coefficient(vy_cfs)
-vy = Function(basis2, vy_cfs)
+vx = x.derivative()
+vy = y.derivative()
 
+x_s = np.array([float(x([t])) for t in time.tolist()])
+y_s = np.array([float(y([t])) for t in time.tolist()])
 
-x_s = np.array([x([t]) for t in time.tolist()])
-y_s = np.array([y([t]) for t in time.tolist()])
-
-vx_s = np.array([vx([t]) for t in time.tolist()])
-vy_s = np.array([vy([t]) for t in time.tolist()])
+vx_s = np.array([float(vx([t])) for t in time.tolist()])
+vy_s = np.array([float(vy([t])) for t in time.tolist()])
 
 
 plt.figure()
@@ -150,4 +137,4 @@ plt.plot(time, vx_s)
 plt.subplot(2, 1, 2)
 plt.plot(time, vy_s)
 
-# plt.show(block=True)
+plt.show(block=True)

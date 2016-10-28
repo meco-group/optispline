@@ -73,6 +73,9 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
+        
+      
+        virtual void foo() const {};
     };
 
     template< class T >

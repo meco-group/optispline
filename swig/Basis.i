@@ -396,7 +396,15 @@ def _swig_repr(self):
     }
     
     GUESTOBJECT* from_ptr(const spline::Basis *a) {
-      return SWIG_NewPointerObj(new spline::Basis(*a), $descriptor(spline::Basis *), SWIG_POINTER_OWN);
+      if (dynamic_cast<const spline::MonomialBasisNode*>(a->get())) {;
+        const spline::MonomialBasisNode * b = dynamic_cast<const spline::MonomialBasisNode*>(a->get());
+        return SWIG_NewPointerObj(new spline::MonomialBasis(b->shared_from_this<spline::MonomialBasis>()), $descriptor(spline::MonomialBasis *), SWIG_POINTER_OWN);
+      } else if (dynamic_cast<const spline::BSplineBasisNode*>(a->get())) {   
+        const spline::BSplineBasisNode * b = dynamic_cast<const spline::BSplineBasisNode*>(a->get()); 
+        return SWIG_NewPointerObj(new spline::BSplineBasis(b->shared_from_this<spline::BSplineBasis>()), $descriptor(spline::BSplineBasis *), SWIG_POINTER_OWN);
+      } else {
+        return SWIG_NewPointerObj(new spline::Basis(*a), $descriptor(spline::Basis *), SWIG_POINTER_OWN);
+      }
     }
     GUESTOBJECT* from_ptr(const spline::TensorBasis *a) {
       return SWIG_NewPointerObj(new spline::TensorBasis(*a), $descriptor(spline::TensorBasis *), SWIG_POINTER_OWN);
@@ -526,6 +534,7 @@ def _swig_repr(self):
 %tensortools_typemaps("STensor", PREC_MX, Tensor<casadi::SX>)
 %tensortools_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
 %tensortools_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
+%tensortools_typemaps("Basis", PREC_MX, spline::Basis)
 %tensortools_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %tensortools_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 

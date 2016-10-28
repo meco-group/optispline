@@ -55,6 +55,8 @@ namespace spline{
 
         virtual std::string getRepresentation() const ;
 
+        virtual void foo() const {};
+        
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)
         inline friend
