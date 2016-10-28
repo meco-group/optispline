@@ -1,6 +1,6 @@
 import sys, os
 
-from TensorBasis import *
+from Basis import *
 import numpy as np
 import matplotlib.pyplot as plt
 import casadi as cas
