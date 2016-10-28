@@ -51,7 +51,7 @@ namespace spline {
     }
 
    AnyTensor MonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
-        assert(x.size()==getDimension());
+        assert(x.size()==getNumberOfSubBasis());
         if(AnyScalar::is_double(x)) {
             return SubBasisEvalution<double>(AnyScalar::as_double(x));
         } else {

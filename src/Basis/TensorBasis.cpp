@@ -33,8 +33,8 @@ namespace spline {
 
     TensorBasisNode::TensorBasisNode (const std::vector< Basis >& allSubBasis_) : allSubBasis(allSubBasis_), allArguments(std::vector<Argument>{}){}
 
-    int TensorBasis::getDimension () const { return (*this)->getDimension(); }
-    int TensorBasisNode::getDimension () const {
+    int TensorBasis::getNumberOfSubBasis () const { return (*this)->getNumberOfSubBasis(); }
+    int TensorBasisNode::getNumberOfSubBasis () const {
         return allSubBasis.size();
     }
 
@@ -80,7 +80,7 @@ namespace spline {
     Basis TensorBasis::getBasis () const {
     //     return (*this)->getBasis (); }
     // Basis TensorBasisNode::getBasis () const {
-        spline_assert(getDimension() == 1);
+        spline_assert(getNumberOfSubBasis() == 1);
         return getSubBasis()[0];
     }
 
@@ -150,8 +150,8 @@ namespace spline {
         return ret;
     }
 
-    int TensorBasis::totalNumberSubBasis() const{ return (*this)->totalNumberSubBasis();}
-    int TensorBasisNode::totalNumberSubBasis() const{
+    int TensorBasis::totalNumberBasisFunctions() const{ return (*this)->totalNumberBasisFunctions();}
+    int TensorBasisNode::totalNumberBasisFunctions() const{
         int r = 1;
         for(int i : getShape()){
             r *= i;

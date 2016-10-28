@@ -30,8 +30,8 @@ namespace spline{
             returnBasis.setArguments(allArguments);
 
         }else{
-            spline_assert_message(b1.getDimension() == b2.getDimension(),"Mismatch dimension");
-            for(int i = 0; i < b1.getDimension(); i++){
+            spline_assert_message(b1.getNumberOfSubBasis() == b2.getNumberOfSubBasis(),"Mismatch dimension");
+            for(int i = 0; i < b1.getNumberOfSubBasis(); i++){
                 Basis subBasis1 = b1.getSubBasis()[i];
                 Basis subBasis2 = b2.getSubBasis()[i];
                 Basis sum = subBasis1 + subBasis2;
@@ -72,8 +72,8 @@ namespace spline{
             returnBasis.setArguments(allArguments);
 
         }else{
-            spline_assert_message(b1.getDimension() == b2.getDimension(),"Mismatch dimension");
-            for(int i = 0; i < b1.getDimension(); i++){
+            spline_assert_message(b1.getNumberOfSubBasis() == b2.getNumberOfSubBasis(),"Mismatch dimension");
+            for(int i = 0; i < b1.getNumberOfSubBasis(); i++){
                 Basis subBasis1 = b1.getSubBasis()[i];
                 Basis subBasis2 = b2.getSubBasis()[i];
                 Basis sum = subBasis1 * subBasis2;

@@ -27,7 +27,7 @@ namespace spline{
     //         if(b1.hasArgument() && b2.hasArgument()){
     //             // std::vector<Argument>
     //         }else{
-    //             spline_assert_message(b1.getDimension() != b2.getDimension(),"Mismatch dimension");
+    //             spline_assert_message(b1.getNumberOfSubBasis() != b2.getNumberOfSubBasis(),"Mismatch dimension");
     //             for(int i = 0; i < b1.getDimention(); i++){
     //                 Basis subBasis1 = b1.getSubBasis()[i];
     //                 Basis subBasis2 = b2.getSubBasis()[i];

@@ -37,7 +37,7 @@ namespace spline {
       AnyTensor B = AnyTensor::pack(sumFunctionEvaluated, 0);
 
       int numberEval = basisEvaluated.size();
-      int numberBasis = sumBasis.totalNumberSubBasis();
+      int numberBasis = sumBasis.totalNumberBasisFunctions();
       int numberCoef = coef.getNumberCoefficents();
 
       std::vector< int > shapeA = {numberEval, numberBasis};

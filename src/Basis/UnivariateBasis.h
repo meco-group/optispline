@@ -35,7 +35,7 @@ namespace spline {
         virtual int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
-        int getDimension() const;
+        int getNumberOfSubBasis() const;
         std::vector< int > getShape() const {
             std::cout << getLength() << std::endl;
             return std::vector< int > {getLength()};}
