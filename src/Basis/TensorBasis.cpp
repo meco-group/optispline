@@ -72,15 +72,14 @@ namespace spline {
         return allArguments.size() > 0;
     }
 
-    std::vector< Basis > TensorBasis::getSubBasis () const { return (*this)->getSubBasis (); }
-    std::vector< Basis > TensorBasisNode::getSubBasis () const {
+    Basis TensorBasis::getBasis () const { return (*this)->getSubBasis (); }
+    Basis TensorBasisNode::getBasis () const {
         return allSubBasis;
     }
 
-    Basis TensorBasis::getSubBasis ( Argument a) const { return (*this)->getSubBasis ( a ); }
-    Basis TensorBasisNode::getSubBasis ( Argument a ) const {
+    Basis TensorBasis::getBasis ( Argument a) const { return (*this)->getSubBasis ( a ); }
+    Basis TensorBasisNode::getBasis ( Argument a ) const {
         int index = indexArgument(a);
-        // if(index == allSubBasis.size()){
         if(index < 0){
             return DummyBasis();
         } else {
@@ -88,10 +87,10 @@ namespace spline {
         }
     }
 
-    TensorBasis TensorBasis::getSubBasis ( int index ) const { return (*this)->getSubBasis ( index ); }
-    TensorBasis TensorBasisNode::getSubBasis ( int index ) const {
-        return TensorBasis(std::vector<Basis> {allSubBasis[index]});
-    }
+    // TensorBasis TensorBasis::getBasis ( int index ) const { return (*this)->getSubBasis ( index ); }
+    // TensorBasis TensorBasisNode::getBasis ( int index ) const {
+    //     return TensorBasis(std::vector<Basis> {allSubBasis[index]});
+    // }
 
     void TensorBasis::addBasis (TensorBasis basis) { (*this)->addBasis (basis);}
     void TensorBasisNode::addBasis (TensorBasis basis) {
