@@ -1,11 +1,13 @@
 import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from TensorBasis import *
+from Basis import *
 import casadi as ca
 import numpy as np
 import random
 import time
+
+opti = OptiSpline()
 
 # Generate some data
 # First we generate the wall, then some obstacle. This represents lidar data.
@@ -37,10 +39,7 @@ knots = np.hstack(((degree)*[-r],np.linspace(-r,r,knotsint),(degree)*[r]))
 m = BSplineBasis(knots,degree)
 b = TensorBasis([m,m])
 
-a_ = ca.SX.sym('a',m.getLenght(),m.getLenght())
-a = STensor(a_, [m.getLenght(),m.getLenght(),1,1])
-a = Coefficient(a)
-potential_field = Function(b,a) # This is the spline in X and Y which we will be using as the potential field
+potential_field = opti.Function(b) # This is the spline in X and Y which we will be using as the potential field
  
 # Now let's formulate the optimization problem using CasADi
 # The problem we want to solve is:
@@ -66,39 +65,26 @@ x_ = -r
 while (x_ < r):
     y_ = -r
     while (y_ < r):
-        obj = obj + (potential_field([x_,y_]).data())*dx*dy/(4.*r*r) # divide by the area to get a non-dimensional measure
-        y_ = y_ + dy    
+        obj = obj + potential_field([x_,y_])*dx*dy/(4.*r*r) # divide by the area to get a non-dimensional measure
+        y_ = y_ + dy
     x_ = x_ + dx
 _stop_integration = time.time()
 
 # Now, let's do the constraints.
 con = []
-con_lower = []
-con_upper = []
+
 # constraint (1)
 for i in range(0,x.size):
-    con.append(potential_field([x[i],y[i]]).data())
-    con_lower.append(0.)
-    con_upper.append(ca.inf)
+    con.append(potential_field([x[i],y[i]])>=0)
 
 # constraint (2)
-for i in range(0,m.getLenght()):
-    for j in range(0,m.getLenght()):
-        con.append(a_[i,j])
-        con_lower.append(-1.)
-        con_upper.append(ca.inf)
+con.append(potential_field>=-1)
 
 # Now let's solve the problem
-nlp = { 'x':ca.vertcat(a_),'f':obj,'g':ca.vertcat(*con) }
-solver = ca.nlpsol("solver","ipopt", nlp)
-R = solver(lbg=con_lower,ubg=con_upper)
+sol = opti.solver(obj,con,"ipopt")
+sol.solve()
 
-# Because of the toolbox's current syntax, we have to construct a new/the same spline object again. This should be easier right?
-sol = R['x']
-a = ca.DM(R['x'].full())
-a = DTensor(a, [m.getLenght(),m.getLenght(),1,1])
-a = Coefficient(a)
-potential_field = Function(b,a) # in the end, we get the exact same object, but now with coefficients as values
+potential_field = sol.value(potential_field)
 _stop_optimization = time.time()
 
 # Now let's evaluate the potential_field to verify the solution.
@@ -113,7 +99,7 @@ for i in range(0,N):
     for j in range(0,N):
         x_ = X[i,j]
         y_ = Y[i,j]
-        potential_field_eval[i,j] = potential_field([x_,y_]).data()
+        potential_field_eval[i,j] = potential_field([x_,y_])
 
 # Plot the solution
 fig = plt.figure()
