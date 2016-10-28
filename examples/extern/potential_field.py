@@ -1,6 +1,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
-from Basis import *
+from TensorBasis import *
 import casadi as ca
 import numpy as np
 import random
@@ -14,8 +14,8 @@ degree = 3
 knotsint = 20
 knots = np.hstack(((degree)*[0],np.linspace(0.,1.,knotsint),(degree)*[1]))
 # knots = (degree)*[0] + [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.] + (degree)*[1]
-m = SubBSplineBasis(knots,degree)
-b = Basis([m])
+m = BSplineBasis(knots,degree)
+b = TensorBasis([m])
 
 a_ = ca.SX.sym('a',m.getLenght(),1)
 a = STensor(a_, [m.getLenght(),1,1])

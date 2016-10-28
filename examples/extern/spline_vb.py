@@ -1,7 +1,6 @@
 import sys, os
-sys.path.insert(0, '/home/ruben/Documents/Work/Repositories/splines_binary')
 
-from Basis import *
+from TensorBasis import *
 import numpy as np
 import matplotlib.pyplot as plt
 import casadi as cas
@@ -20,8 +19,8 @@ def derivative(coeffs, knots1, degree, o=1):
         T[(j, j)] = -1. / delta_knots
         T[(j, j + 1)] = 1. / delta_knots
         P = (degree - i) * np.dot(T, P)
-    m = SubBSplineBasis(knots_out, degree)
-    basis = Basis([m])
+    m = BSplineBasis(knots_out, degree)
+    basis = TensorBasis([m])
     if isinstance(coeffs, (cas.SX, cas.MX)):
         coeffs_out = cas.mtimes(cas.DM(P), coeffs)
     else:
@@ -37,8 +36,8 @@ via_pnts = []
 
 degree = 3
 knots = np.r_[np.zeros(degree), np.linspace(0, 1, 10+1), np.ones(degree)]
-m = SubBSplineBasis(knots, degree)
-basis = Basis([m])
+m = BSplineBasis(knots, degree)
+basis = TensorBasis([m])
 
 x_cfs_ = cas.SX.sym('x', m.getLenght())
 x_cfs = STensor(x_cfs_, [m.getLenght(), 1, 1]) # wat is dees?
@@ -52,8 +51,8 @@ y = Function(basis, y_cfs) # also in casadi
 
 vx_cfs_, knots2 = derivative(x_cfs_, knots, degree) # derivative should be in toolbox
 vy_cfs_, knots2 = derivative(y_cfs_, knots, degree)
-m2 = SubBSplineBasis(knots2, degree-1)
-basis2 = Basis([m2])
+m2 = BSplineBasis(knots2, degree-1)
+basis2 = TensorBasis([m2])
 
 vx_cfs = STensor(vx_cfs_, [m2.getLenght(), 1, 1])
 vx_cfs = Coefficient(vx_cfs)
@@ -142,7 +141,7 @@ y_cfs = DTensor(y_cfs_, [m.getLenght(), 1, 1])
 y_cfs = Coefficient(y_cfs)
 
 knotsT = T*knots
-basis = Basis([SubBSplineBasis(knotsT, degree)])
+basis = TensorBasis([BSplineBasis(knotsT, degree)])
 time = np.linspace(0, T, 101)
 
 x = Function(basis, x_cfs)
@@ -151,7 +150,7 @@ y = Function(basis, y_cfs)
 
 vx_cfs_, knotsT2 = derivative(x_cfs_, knotsT, degree)
 vy_cfs_, knotsT2 = derivative(y_cfs_, knotsT, degree)
-basis2 = Basis([SubBSplineBasis(knotsT2, degree-1)])
+basis2 = TensorBasis([BSplineBasis(knotsT2, degree-1)])
 
 vx_cfs = DTensor(vx_cfs_, [m2.getLenght(), 1, 1])
 vx_cfs = Coefficient(vx_cfs)
