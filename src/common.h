@@ -48,7 +48,7 @@ class SplineException : public std::exception {
 // String denoting where the assertion is situated
 #define SPLINE_ASSERT_WHERE " on line " SPLINE_ASSERT_STR(__LINE__) \
     " of file " SPLINE_ASSERT_STR(__FILE__)
-    
+
 #define spline_assert_message(x, msg) \
 { \
   bool is_ok; \
