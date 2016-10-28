@@ -33,16 +33,11 @@ B3 = B1 + B2;
 B4 = B1*B2;
 
 % create Cartesian product of B1 and B2
-sbv = SubBasisVector();
-sbv.append(B1);
-sbv.append(B2);
-B = TensorBasis.TensorBasis(sbv); % what are the fields of this object???
+B = Basis.TensorBasis({B1,B2}); % what are the fields of this object???
 
 % create multivariate spline
-a_ = rand(B1.getLenght(),B2.getLenght());
-a = DTensor(a_, [B1.getLenght(),B2.getLenght(),1,1]);
-a = Coefficient(a); % how to use the Coefficient class???
-mvar_spline = TensorBasis.Function(B,a);
+a = rand(B1.getLength(),B2.getLength());
+mvar_spline = Basis.Function(B, a);
 
 % evaluate multivariate spline and plot
 [x,y] = meshgrid(linspace(0,1,30),linspace(0,1,30));
@@ -50,7 +45,6 @@ z=zeros(30,30);
 for i = 1:30
     for j = 1:30
         eval_spline = mvar_spline({x(i),y(j)});
-        eval_spline = DM(eval_spline.data());
         z(i,j) = full(eval_spline);
     end
 end
