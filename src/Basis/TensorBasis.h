@@ -84,10 +84,13 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
-        std::vector< Basis > getSubBasis() const;
-        TensorBasis getSubBasis( int index ) const;
-        Basis getSubBasis( Argument a) const;
+        Basis getBasis() const;
+        Basis getBasis(Argument a) const;
+        Basis getBasis(int index) const;
+        // Basis operator[](Argument a) const;
+        // Basis operator[](int index) const;
 
+        // TensorBasis getTensorBasis() const;
 
         void addBasis(TensorBasis basis);
         void addBasis(Basis basis);
