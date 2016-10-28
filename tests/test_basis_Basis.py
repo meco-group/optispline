@@ -20,11 +20,11 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         b = TensorBasis()
         b.addBasis(s1)
-        self.assertEqual(b.getDimension(), 1)
+        self.assertEqual(b.getNumberOfSubBasis(), 1)
 
         b.addBasis(s2)
         b.addBasis(s1)
-        self.assertEqual(b.getDimension(), 3)
+        self.assertEqual(b.getNumberOfSubBasis(), 3)
 
     def test_getDimenstion2(self):
         s1 = MonomialBasis(3)

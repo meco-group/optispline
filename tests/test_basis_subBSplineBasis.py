@@ -28,7 +28,7 @@ class Test_Basis_SubBSpline(BasisTestCase):
 
     def test_getDimension(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
-        self.assertEqual(s.getDimension(), 1)
+        self.assertEqual(s.getNumberOfSubBasis(), 1)
 
     def test_getDegree(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)

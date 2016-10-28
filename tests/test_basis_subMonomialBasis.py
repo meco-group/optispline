@@ -22,7 +22,7 @@ class Test_Basis_SubMonomial(BasisTestCase):
 
     def test_getDimension(self):
         s = MonomialBasis(3)
-        self.assertEqual(s.getDimension(), 1)
+        self.assertEqual(s.getNumberOfSubBasis(), 1)
 
     def test_getDegree(self):
         s = MonomialBasis(3)
