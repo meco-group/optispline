@@ -1,6 +1,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
-from TensorBasis import *
+from Basis import *
 import casadi as ca
 import numpy as np
 import random
@@ -21,7 +21,7 @@ a_ = ca.SX.sym('a',m.getLenght(),1)
 a = STensor(a_, [m.getLenght(),1,1])
 a = Coefficient(a)
 s = Function(b,a)
- 
+
 # Objective
 obj = 0.
 x_ = 0.
