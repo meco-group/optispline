@@ -36,7 +36,7 @@ B4 = B1*B2;
 B = Basis.TensorBasis({B1,B2}); % what are the fields of this object???
 
 % create multivariate spline
-a = rand(B1.getLength(),B2.getLength());
+a = rand(B.getShape());
 mvar_spline = Basis.Function(B, a);
 
 % evaluate multivariate spline and plot
@@ -44,7 +44,7 @@ mvar_spline = Basis.Function(B, a);
 z=zeros(30,30);
 for i = 1:30
     for j = 1:30
-        eval_spline = mvar_spline({x(i),y(j)});
+        eval_spline = mvar_spline({x(i,j),y(i,j)});
         z(i,j) = full(eval_spline);
     end
 end
