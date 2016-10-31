@@ -89,13 +89,8 @@ namespace spline{
         setKnots(knots_);
     }
 
-    std::vector< double >& BSplineBasis::getKnots () { return (*this)->getKnots(); }
-    std::vector< double >& BSplineBasisNode::getKnots () {
-        return knots_;
-    }
-
-    const std::vector< double >& BSplineBasis::getKnots () const { return (*this)->getKnots(); }
-    const std::vector< double >& BSplineBasisNode::getKnots () const {
+    std::vector< double > BSplineBasis::getKnots () const { return (*this)->getKnots(); }
+    std::vector< double > BSplineBasisNode::getKnots () const {
         return knots_;
     }
 

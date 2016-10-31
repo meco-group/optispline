@@ -30,8 +30,7 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const ;
         virtual Basis operator*(const DummyBasis& other) const ;
 
-        std::vector<double>& getKnots ();
-        const std::vector<double>& getKnots () const;
+        std::vector<double> getKnots () const;
         void setKnots (const std::vector<double>& knots) ;
 
         std::vector<double> greville () const;
@@ -70,15 +69,14 @@ namespace spline{
         BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 
 //  TODO(jgillis) moet ik de variant met const houden??
-        std::vector<double> &getKnots ();
-        const std::vector<double> &getKnots () const;
+        std::vector<double> getKnots () const;
         void setKnots (const std::vector<double> &knots) ;
 
         std::vector<double> greville () const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
-        
+
         virtual void foo() const {};
 
     private:
