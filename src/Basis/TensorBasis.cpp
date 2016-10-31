@@ -78,30 +78,23 @@ namespace spline {
     }
 
     Basis TensorBasis::getBasis () const {
-    //     return (*this)->getBasis (); }
-    // Basis TensorBasisNode::getBasis () const {
         spline_assert(getDimension() == 1);
         return getSubBasis()[0];
     }
 
     Basis TensorBasis::getBasis ( Argument a) const {
-    //     return (*this)->getSubBasis ( a ); }
-    // Basis TensorBasisNode::getBasis ( Argument a ) const {
         int index = indexArgument(a);
         if(index < 0){
             return DummyBasis();
         } else {
-            return getSubBasis()[index];
+            return getBasis(index);
         }
     }
 
     Basis TensorBasis::getBasis (int index) const {
+        spline_assert(index>=0 && index<getDimension());
         return getSubBasis()[index];
     }
-    // TensorBasis TensorBasis::getBasis ( int index ) const { return (*this)->getSubBasis ( index ); }
-    // TensorBasis TensorBasisNode::getBasis ( int index ) const {
-    //     return TensorBasis(std::vector<Basis> {allSubBasis[index]});
-    // }
 
     void TensorBasis::addBasis (TensorBasis basis) { (*this)->addBasis (basis);}
     void TensorBasisNode::addBasis (TensorBasis basis) {
