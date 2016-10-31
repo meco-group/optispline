@@ -19,7 +19,7 @@ namespace spline {
         int d = dims.size();
         int i = dims[d-2];
         int j = dims[d-1];
-        return *(new std::vector< int > {i,j}); // ouch
+        return {i,j};
     }
 
     int CoefficientNode::getNumberCoefficents() const{
@@ -35,8 +35,8 @@ namespace spline {
     }
 
     std::string CoefficientNode::getRepresentation() const {return "Coefficient";};
-    
-    
+
+
     Coefficient::Coefficient (const AnyTensor& t) {
       assign_node(new CoefficientNode(t));
     }
@@ -45,11 +45,11 @@ namespace spline {
     }
 
     std::vector< int > Coefficient::getShape() const { return (*this)->getShape(); }
-    
+
     int Coefficient::getNumberCoefficents() const { return (*this)->getNumberCoefficents(); }
 
     Coefficient Coefficient::operator-() const { return (*this)->operator-().shared_from_this<Coefficient>(); }
     AnyTensor Coefficient::getData() const  { return (*this)->getData(); }
     std::string Coefficient::getRepresentation() const { return (*this)->getRepresentation(); }
-    
+
 }  // namespace spline
