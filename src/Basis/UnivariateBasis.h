@@ -36,9 +36,7 @@ namespace spline {
         int getDegree () const ;
         void setDegree (int degree);
         int getDimension() const;
-        std::vector< int > getShape() const {
-            std::cout << getLength() << std::endl;
-            return std::vector< int > {getLength()};}
+        std::vector< int > getShape() const { return {getLength()};}
 
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {spline_assert(0);};
     protected:
@@ -57,7 +55,7 @@ namespace spline {
 #endif // SWIG
 
         virtual std::string getRepresentation() const ;
-  
+
 
         int getLength() const ;
         int getDegree () const ;

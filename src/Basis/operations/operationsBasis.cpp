@@ -22,7 +22,6 @@ namespace spline{
             for(auto &a : allArguments){
                 Basis subBasis1 = b1.getBasis(a);
                 Basis subBasis2 = b2.getBasis(a);
-                std::cout << subBasis1.getRepresentation() << "   " << subBasis2.getRepresentation() << std::endl;
                 Basis sum = subBasis1 + subBasis2;
                 returnBasis.addBasis(sum);
             }
@@ -64,7 +63,6 @@ namespace spline{
             for(auto &a : allArguments){
                 Basis subBasis1 = b1.getBasis(a);
                 Basis subBasis2 = b2.getBasis(a);
-                std::cout << subBasis1.getRepresentation() << "   " << subBasis2.getRepresentation() << std::endl;
                 Basis sum = subBasis1 * subBasis2;
                 returnBasis.addBasis(sum);
             }

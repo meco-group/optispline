@@ -29,8 +29,6 @@ class Test_Function_SubBasis(BasisTestCase):
         a_ = SX.sym('a',3 + 1,1)
         a = STensor(a_, [3 + 1,1,1])
         a = Coefficient(a)
-        # print list(a.getData().data() == a_)
-        # print(any(False == ( a.getData().data() == a_)))
         testfun = Function('testfun',[a_],[a.getData().data()])
         v = [0.1,0.2,0.3,0.4]
         self.assertEqualArray(testfun(v),v)
@@ -40,7 +38,6 @@ class Test_Function_SubBasis(BasisTestCase):
         a = DM(a)
         a_ = DTensor(a, [2,2,1,1])
         a_ = Coefficient(a_)
-        # print all(a_.getData().data() == a)
-     
+
 if __name__ == '__main__':
     unittest.main()
