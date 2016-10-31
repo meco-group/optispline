@@ -41,8 +41,8 @@ namespace spline{
         }else{
             spline_assert_message(b1.getDimension() == b2.getDimension(),"Mismatch dimension");
             for(int i = 0; i < b1.getDimension(); i++){
-                Basis subBasis1 = b1.getSubBasis()[i];
-                Basis subBasis2 = b2.getSubBasis()[i];
+                Basis subBasis1 = b1.getBasis(i);
+                Basis subBasis2 = b2.getBasis(i);
                 Basis sum = bc(subBasis1, subBasis2);
                 returnBasis.addBasis(sum);
             }
