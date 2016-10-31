@@ -1,12 +1,11 @@
 #ifndef CPP_SPLINE_SUBBSPLINEBASIS_H
 #define CPP_SPLINE_SUBBSPLINEBASIS_H
 
+#include <any_tensor.hpp>
 #include <vector>
 
 #include "Basis.h"
 #include "UnivariateBasis.h"
-
-#include "utils/CommonBasis.h"
 
 namespace spline{
 

@@ -1,6 +1,5 @@
 #include "Polynomial.h"
 #include "../Basis/MonomialBasis.h"
-#include "../Basis/utils/CommonBasis.h"
 
 namespace spline{
 

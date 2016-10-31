@@ -10,7 +10,6 @@ add_library(Basis SHARED
     SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
 
     Basis/utils/vectorUtilities.h Basis/utils/vectorUtilities.cpp
-    Basis/utils/CommonBasis.h
 
     Basis/Basis.h Basis/Basis.cpp
     Basis/DummyBasis.h Basis/DummyBasis.cpp
