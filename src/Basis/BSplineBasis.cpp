@@ -1,8 +1,5 @@
-#include <math.h>       /* pow */
-#include <numeric>      // std::accumulate -> greville
 #include <sstream>
 #include "BSplineBasis.h"
-#include "SubBSplineBasis.h"
 
 #include "operations/operationsBasis.h"
 
@@ -13,94 +10,108 @@ namespace spline{
 
     std::string BSplineBasisNode::getRepresentation() const {
         std::stringstream s;
-        s << "BSplineBasis object" << getKnots();
+        s << "BSplineBasis object";
         return s.str();
     };
-    std::string BSplineBasis::getRepresentation() const { return (*this)->getRepresentation() ;};
 
-    //   std::make_shared<Basis>::operator* (const Monomialestd::shared_ptr<Basis> &other) const {
-    //       return timesstd::shared_ptr<Basis>(*this, other);
-    //   }
-    //
-    //   std::make_shared<Basis>::operator* (const std::make_shared<Basis> &other) const{
-    //       return timesstd::shared_ptr<Basis>(*this, other);
-    //   }
-    //
-    //   std::vector<double> std::make_shared<Basis>::greville () const {
-    //       int d = degree;
-    //       if(d == 1){
-    //           d =1;
-    //       }
-    //
-    //       std::vector<double> g (length());
-    //       double s;
-    //       for (int i = 0; i < length(); ++i) {
-    //           g[i] = std::accumulate(knots.begin()+i+1,knots.begin()+i+d+1, 0.0) / (d);
-    //       }
-    //
-    //       return g;
-    //   }
-    //
-    //   std::vector<double> std::make_shared<Basis>::evaluationGrid (void) const {
-    //       return greville();
-    //   }
-    //
-    //
-    //   std::make_shared<Basis>::addKnots(const std::vector<double> newKnots, bool unique) const {
-    //       std::vector<double> kn;
-    //       if (unique){
-    //           kn = addKnotsUnique(knots, newKnots);
-    //       } else {
-    //           kn = addKnotsNotUnique(knots, newKnots);
-    //       }
-    //       return std::make_shared<Basis>(kn, degree);
-    //   }
+    Basis BSplineBasisNode::operator+ (const Basis& other) const {
+        return other + shared_from_this<BSplineBasis>();
+    }
 
+    Basis BSplineBasisNode::operator+ (const DummyBasis& other) const {
+        return shared_from_this<BSplineBasis>();
+    }
+
+    Basis BSplineBasisNode::operator+ (const BSplineBasis& other) const {
+        return plusSubBasis (shared_from_this<BSplineBasis>(), other);
+    }
+
+    Basis BSplineBasisNode::operator+ (const MonomialBasis& other) const {
+        return plusSubBasis (shared_from_this<BSplineBasis>(), other);
+    }
+
+    Basis BSplineBasisNode::operator* (const Basis& other) const {
+        return other * shared_from_this<BSplineBasis>();
+    }
+
+    Basis BSplineBasisNode::operator* (const DummyBasis& other) const {
+        return shared_from_this<BSplineBasis>();
+    }
+
+    Basis BSplineBasisNode::operator* (const BSplineBasis& other) const {
+        return timesSubBasis (shared_from_this<BSplineBasis>(), other);
+    }
+
+    Basis BSplineBasisNode::operator* (const MonomialBasis& other) const {
+        return timesSubBasis (shared_from_this<BSplineBasis>(), other);
+    }
+
+    std::vector<double> BSplineBasis::greville () const {return (*this)->greville();}
+    std::vector<double> BSplineBasisNode::greville () const {
+        int degree = getDegree();
+        if(degree == 0){
+            degree = 1;
+        }
+
+        std::vector<double> grevillePoints (getLength());
+        for (int i = 0; i < getLength(); ++i) {
+            grevillePoints[i] = std::accumulate(knots_.begin()+i+1,knots_.begin()+i+degree+1, 0.0) / degree;
+        }
+
+        return grevillePoints;
+    }
+
+    int BSplineBasisNode::getLength () const{
+        return knots_.size() - degree - 1;
+    }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& knots, int degree)  {
-        assign_node(new BSplineBasisNode(knots, degree)); 
+        assign_node(new BSplineBasisNode(knots, degree));
     }
 
-    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree) 
-    : UnivariateBasisNode(SubBSplineBasis(knots, degree)) { }
+    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree)
+    : UnivariateBasisNode(degree), knots_(knots){ }
 
-    BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(generateKnots(bounds,degree,numberOfIntervals), degree)); };
-
-    std::vector< double >& BSplineBasis::getKnots () { return (*this)->getKnots(); } 
-    std::vector< double >& BSplineBasisNode::getKnots () {
-        assertUnivariateBasis();
-// TODO improve
-        SubBSplineBasis b = getSubBasis()[0]->shared_from_this<SubBSplineBasis>();
-
-        return b.getKnots();
-    }
-
-    const std::vector< double >& BSplineBasis::getKnots () const { return (*this)->getKnots(); } 
-    const std::vector< double >& BSplineBasisNode::getKnots () const {
-    }
-
-    void BSplineBasis::setKnots (std::vector< double >& knots) { return (*this)->setKnots (knots); } 
-    void BSplineBasisNode::setKnots (std::vector< double >& knots) {
-    }
-    
-    BSplineBasis BSplineBasis::castBSpline() const{ return (*this)->castBSpline (); } 
-    BSplineBasis BSplineBasisNode::castBSpline() const {
-    assert(false);
-    }
-
-
-    std::vector<double> generateKnots(const std::vector<double >& bounds, int degree, int numberOfIntervals){
+    BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
+    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) : UnivariateBasisNode(degree) {
         int numberOfKnots = 2*degree + numberOfIntervals;
-	std::vector<double> knots(numberOfKnots, 0.0);
+        knots_.resize(numberOfKnots, 0);
+
         for (int i = 0; i < degree; ++i) {
-            knots[i] = bounds[0];
-            knots[numberOfKnots - i - 1] = bounds[1];
+            knots_[i] = bounds[0];
+            knots_[numberOfKnots - i - 1] = bounds[1];
         }
 
         for (int i = 0; i < numberOfIntervals; ++i) {
-            knots[degree + i] = bounds[0] + (bounds[1] - bounds[0]) * (double)i/(numberOfIntervals-1);
+            knots_[degree + i] = bounds[0] + (bounds[1] - bounds[0]) * (double)i/(numberOfIntervals-1);
         }
 
-	return knots;
+        setKnots(knots_);
+    }
+
+    std::vector< double > BSplineBasis::getKnots () const { return (*this)->getKnots(); }
+    std::vector< double > BSplineBasisNode::getKnots () const {
+        return knots_;
+    }
+
+    void BSplineBasis::setKnots (const std::vector< double >& knots) { return (*this)->setKnots (knots); }
+    void BSplineBasisNode::setKnots (const std::vector< double >& knots) {
+        knots_ = knots;
+    }
+
+
+    AnyTensor BSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
+        assert(x.size()==getDimension());
+        if(AnyScalar::is_double(x)) {
+            return SubBasisEvalution<double>(AnyScalar::as_double(x));
+        } else {
+            return SubBasisEvalution<AnyScalar>(x);
+        }
+    }
+
+    void BSplineBasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * grid) const{
+        for(auto const& point : greville()){
+            grid->push_back(std::vector<AnyScalar> {point});
+        }
     }
 } // namespace spline

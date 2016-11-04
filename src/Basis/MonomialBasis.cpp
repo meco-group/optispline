@@ -1,9 +1,4 @@
-#include <math.h>       /* pow */
-
-#include <casadi/casadi.hpp> // range
-
 #include "MonomialBasis.h"
-#include "SubMonomialBasis.h"
 
 #include "operations/operationsBasis.h"
 
@@ -19,9 +14,58 @@ namespace spline {
     MonomialBasisNode* MonomialBasis::get() const { return static_cast<MonomialBasisNode*>(SharedObject::get()); };
     MonomialBasisNode* MonomialBasis::operator->() const { return get(); }
 
-    MonomialBasisNode::MonomialBasisNode(int degree) : UnivariateBasisNode(SubMonomialBasis(degree)) {};
     MonomialBasis::MonomialBasis(int degree)  {
         assign_node(new MonomialBasisNode(degree));
     }
 
+    Basis MonomialBasisNode::operator+ (const Basis& other) const {
+        return other + shared_from_this<MonomialBasis>();
+    }
+
+    Basis MonomialBasisNode::operator+ (const DummyBasis& other) const {
+        return shared_from_this<MonomialBasis>();
+    }
+
+    Basis MonomialBasisNode::operator+ (const BSplineBasis& other) const {
+        return plusSubBasis (shared_from_this<MonomialBasis>(), other);
+    }
+
+    Basis MonomialBasisNode::operator+ (const MonomialBasis& other) const {
+        return plusSubBasis (shared_from_this<MonomialBasis>(), other);
+    }
+
+    Basis MonomialBasisNode::operator* (const Basis& other) const {
+        return other * shared_from_this<MonomialBasis>();
+    }
+
+    Basis MonomialBasisNode::operator* (const DummyBasis& other) const {
+        return shared_from_this<MonomialBasis>();
+    }
+
+    Basis MonomialBasisNode::operator* (const BSplineBasis& other) const {
+        return timesSubBasis (shared_from_this<MonomialBasis>(), other);
+    }
+
+    Basis MonomialBasisNode::operator* (const MonomialBasis& other) const {
+        return timesSubBasis (shared_from_this<MonomialBasis>(), other);
+    }
+
+   AnyTensor MonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
+        assert(x.size()==getDimension());
+        if(AnyScalar::is_double(x)) {
+            return SubBasisEvalution<double>(AnyScalar::as_double(x));
+        } else {
+            return SubBasisEvalution<AnyScalar>(x);
+        }
+    }
+
+    int MonomialBasisNode::getLength () const {
+         return getDegree() + 1;
+    }
+
+    void MonomialBasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * grid) const{
+        for(int i = 0; i < getLength(); i++){
+            grid->push_back(std::vector<AnyScalar> {(double) i});
+        }
+    }
 } // namespace spline

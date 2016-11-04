@@ -10,8 +10,9 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 
 from Basis import *
 from casadi import *
+from helpers import BasisTestCase
 
-class Test_Basis_SubBasis(unittest.TestCase):
+class Test_Function_Argument(BasisTestCase):
 
     def test_representation1(self):
         a = Argument()

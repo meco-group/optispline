@@ -28,7 +28,7 @@ matrix:
       dist: trusty
       language: minimal
       script:
-        - #ctest -V -R python
+        - ctest -V -R python
       install:
         - wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/linux/casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz/download -O casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz
         - mkdir $HOME/casadi-py27-np1.9.1-v$CASADIVERSION
@@ -62,8 +62,8 @@ matrix:
       dist: trusty
       language: minimal
       script:
-        - #ctest -V -R python
-        - #ctest -V -R valgrind
+        - ctest -V -R python
+        - ctest -V -R valgrind
       install:
         - wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/linux/casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz/download -O casadi-py27-np1.9.1-v$CASADIVERSION.tar.gz
         - mkdir $HOME/casadi-py27-np1.9.1-v$CASADIVERSION

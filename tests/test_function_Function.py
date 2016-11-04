@@ -10,87 +10,82 @@ valgrind = int(os.environ.get("VALGRIND",'0'))
 import unittest
 from casadi import *
 from Basis import *
+from helpers import BasisTestCase
 
-class Test_Basis_SubBasis(unittest.TestCase):
-
-    def assertEqualTensor(self, a, b):
-        self.assertTrue(list(a.data().full())==b)
-
-    def assertNotEqualTensor(self, a, b):
-        self.assertFalse(list(a.data().full())==b)
+class Test_Function_Function(BasisTestCase):
 
     def test_construct_function(self):
         a = MX.sym('a',3 + 1,1)
         a = MTensor(a, [3 + 1,1,1])
         a = Coefficient(a)
-        m = SubMonomialBasis(3)
-        b = Basis([m])
+        m = MonomialBasis(3)
+        b = TensorBasis([m])
         f = Function(b,a)
 
     def test_function_evaluation_type1(self):
         a_ = [2,0,0,1]
         a_ = DTensor(a_, [3 + 1,1,1])
         a_ = Coefficient(a_)
-        m = SubMonomialBasis(3)
-        b = Basis([m])
+        m = MonomialBasis(3)
+        b = TensorBasis([m])
         f = Function(b,a_) 
         x = [1.0] 
-        self.assertEqual(type(f(x).data()), casadi.DM)
+        self.assertEqual(type(f(x)), casadi.DM)
 
 
     def test_function_evaluation_type2(self):
         a_ = [2,0,0,1]
         a_ = DTensor(a_, [3 + 1,1,1])
         a_ = Coefficient(a_)
-        m = SubMonomialBasis(3)
-        b = Basis([m])
+        m = MonomialBasis(3)
+        b = TensorBasis([m])
         f = Function(b,a_) 
         x = [SX.sym('x',1,1)] 
-        self.assertEqual(type(f(x).data()), casadi.SX)
+        self.assertEqual(type(f(x)), casadi.SX)
 
 
     def test_function_evaluation_type3(self):
         a_ = SX.sym('a',3 + 1,1)
         a_ = STensor(a_, [3 + 1,1,1])
         a_ = Coefficient(a_)
-        m = SubMonomialBasis(3)
-        b = Basis([m])
+        m = MonomialBasis(3)
+        b = TensorBasis([m])
         f = Function(b,a_) 
         x = [1.0] 
-        self.assertEqual(type(f(x).data()), casadi.SX)
+        self.assertEqual(type(f(x)), casadi.SX)
 
 
     def test_function_evaluation_type4(self):
         a_ = SX.sym('a',3 + 1,1)
         a_ = STensor(a_, [3 + 1,1,1])
         a_ = Coefficient(a_)
-        m = SubMonomialBasis(3)
-        b = Basis([m])
+        m = MonomialBasis(3)
+        b = TensorBasis([m])
         f = Function(b,a_) 
         x = [SX.sym('x',1,1)] 
-        self.assertEqual(type(f(x).data()), casadi.SX)
+        self.assertEqual(type(f(x)), casadi.SX)
 
     def test_function_evaluation_1(self):
         a_ = [2,0,0,1]
         a_ = DTensor(a_, [3 + 1,1,1])
         a_ = Coefficient(a_)
-        m = SubMonomialBasis(3)
-        b = Basis([m])
+        m = MonomialBasis(3)
+        b = TensorBasis([m])
         f = Function(b,a_) 
-        self.assertEqual( f([0.0]).data(), 2 )
-        self.assertEqual( f([1.0]).data(), 3 )
-        self.assertEqual( f([2.0]).data(), 10 )
+        self.assertEqual( f([0.0]), 2 )
+        self.assertEqual( f([1.0]), 3 )
+        self.assertEqual( f([2.0]), 10 )
 
     def test_function_evaluation_2(self):
         a = DM([[1,1],[0,2]]) # 1 + y + 2xy
         a_ = DTensor(a, [2,2,1,1])
         a_ = Coefficient(a_)
-        m = SubMonomialBasis(1)
-        b = Basis([m,m])
+        m = MonomialBasis(1)
+        b = TensorBasis([m,m])
         f = Function(b,a_) 
         for x in range(-5, 4):
             for y in range(-5, 4):
-                self.assertEqual( f([x,y]).data() , 1 + y + 2*x*y)
+                self.assertEqual( f([x,y]) , 1 + y + 2*x*y)
 
 if __name__ == '__main__':
     unittest.main()
