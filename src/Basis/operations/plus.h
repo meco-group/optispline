@@ -1,7 +1,19 @@
-#ifndef CPP_SPLINES_PLUS_H
-#define CPP_SPLINES_PLUS_H
+#ifndef PLUSUNIVARIATE_H
+#define PLUSUNIVARIATE_H
 
-#include "plusUnivariate.h"
+#include "Basis.h"
+#include "MonomialBasis.h"
+#include "BSplineBasis.h"
 
-#endif //CPP_SPLINES_PLUS_H
+namespace spline{
+//TODO specify return type
+// #ifndef SWIG
+    Basis plusSubBasis(const BSplineBasis& b1 , const BSplineBasis& b2);
+    Basis plusSubBasis(const MonomialBasis& b1 , const MonomialBasis& b2);
+    Basis plusSubBasis(const MonomialBasis& b1 , const BSplineBasis& b2);
+    Basis plusSubBasis(const BSplineBasis& b1 , const MonomialBasis& b2);
 
+// #endif // SWIG
+} // namespace spline
+
+#endif /* PLUSUNIVARIATE_H */

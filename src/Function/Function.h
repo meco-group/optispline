@@ -20,11 +20,16 @@ namespace spline {
         Function operator*(const Function f) const ;
         Function operator-() const ;
         Function operator-(const Function f) const ;
-        TensorBasis getBasis() const {return basis;}
+        Basis getBasis() const;
+        Basis getBasis(int i) const;
+        TensorBasis getTensorBasis() const {return basis;} 
         Coefficient getCoefficient() const {return coef;}
 
         MX operator<=(const MX& x) const;
         MX operator>=(const MX& x) const;
+        
+        std::string getRepresentation() const ;
+        void repr() const { userOut() << getRepresentation() << std::endl;}
         // Argument& getArgument (){ return getBasis().getArgument();}
     public:
         TensorBasis basis;

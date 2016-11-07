@@ -16,7 +16,7 @@ import pdb
 def wrap(s, casadiType):
     def eval(a):
         x = [casadiType.sym('x') for i in a]
-        temp = Function('temp',x,[s(x).data()])
+        temp = Function('temp',x,[s(x)])
         return DTensor(temp(a),[s.getLength()])
     return eval
 
@@ -36,8 +36,8 @@ class Test_Basis_SubBSpline(BasisTestCase):
 
     def test_evaluation1(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
-        r = s([0.1]).data()
-        self.assertEqual(r.size(1),s.getLength())
+        r = s([0.1])
+        self.assertEqual(r.shape[0],s.getLength())
 
     def test_evaluation2(self):
         S = BSplineBasis([0,0,0,0.5,1,1,1], 2)

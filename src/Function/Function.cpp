@@ -1,11 +1,11 @@
 #include <vector>
 #include "Function.h"
 #include "../Basis/utils/EvaluationGrid.h"
-
+#include "../common.h"
 namespace spline {
 
     AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const{
-        return basis(x).inner(coef.data);
+        return basis(x).inner(coef.getData());
     }
 
     MX Function::operator<=(const MX& x) const {
@@ -14,11 +14,20 @@ namespace spline {
     MX Function::operator>=(const MX& x) const {
       return getCoefficient().getData().as_MT().data()>=x;
     }
+    
+    Basis Function::getBasis() const {
+      spline_assert_message(basis.getDimension()==1, ".getBasis() syntax only works for a 1-D TensorBasis.");
+      return basis.getSubBasis()[0];
+    }
+    Basis Function::getBasis(int index) const {
+      spline_assert(index>=0 && index<basis.getDimension());
+      return basis.getSubBasis()[index];
+    }
 
     Function Function::generic_operation(const Function& f,
         const BasisComposition & bc, const TensorComposition & tc) const  {
 
-      TensorBasis sumBasis = bc(getBasis(), f.getBasis());
+      TensorBasis sumBasis = bc(getTensorBasis(), f.getTensorBasis());
       EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
       std::vector< AnyTensor > basisEvaluated;
       std::vector< AnyTensor > thisFunctionEvaluated;
@@ -74,5 +83,7 @@ namespace spline {
     Function Function::operator-() const {
         return Function(basis, -coef);
     }
+    
+    std::string Function::getRepresentation() const {return "Function";};
 
 }  // namespace spline

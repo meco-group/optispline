@@ -1,5 +1,5 @@
 #include <vector>
-#include "plusUnivariate.h"
+#include "plus.h"
 #include "../utils/vectorUtilities.h"
 
 namespace spline{

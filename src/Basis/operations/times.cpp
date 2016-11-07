@@ -1,5 +1,5 @@
 #include <vector>
-#include "timesUnivariate.h"
+#include "times.h"
 #include "../utils/vectorUtilities.h"
 
 namespace spline{

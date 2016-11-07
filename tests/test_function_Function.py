@@ -30,7 +30,7 @@ class Test_Function_Function(BasisTestCase):
         b = TensorBasis([m])
         f = Function(b,a_) 
         x = [1.0] 
-        self.assertEqual(type(f(x).data()), casadi.DM)
+        self.assertEqual(type(f(x)), casadi.DM)
 
 
     def test_function_evaluation_type2(self):
@@ -41,7 +41,7 @@ class Test_Function_Function(BasisTestCase):
         b = TensorBasis([m])
         f = Function(b,a_) 
         x = [SX.sym('x',1,1)] 
-        self.assertEqual(type(f(x).data()), casadi.SX)
+        self.assertEqual(type(f(x)), casadi.SX)
 
 
     def test_function_evaluation_type3(self):
@@ -52,7 +52,7 @@ class Test_Function_Function(BasisTestCase):
         b = TensorBasis([m])
         f = Function(b,a_) 
         x = [1.0] 
-        self.assertEqual(type(f(x).data()), casadi.SX)
+        self.assertEqual(type(f(x)), casadi.SX)
 
 
     def test_function_evaluation_type4(self):
@@ -63,7 +63,7 @@ class Test_Function_Function(BasisTestCase):
         b = TensorBasis([m])
         f = Function(b,a_) 
         x = [SX.sym('x',1,1)] 
-        self.assertEqual(type(f(x).data()), casadi.SX)
+        self.assertEqual(type(f(x)), casadi.SX)
 
     def test_function_evaluation_1(self):
         a_ = [2,0,0,1]
@@ -72,9 +72,9 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(3)
         b = TensorBasis([m])
         f = Function(b,a_) 
-        self.assertEqual( f([0.0]).data(), 2 )
-        self.assertEqual( f([1.0]).data(), 3 )
-        self.assertEqual( f([2.0]).data(), 10 )
+        self.assertEqual( f([0.0]), 2 )
+        self.assertEqual( f([1.0]), 3 )
+        self.assertEqual( f([2.0]), 10 )
 
     def test_function_evaluation_2(self):
         a = DM([[1,1],[0,2]]) # 1 + y + 2xy
@@ -85,7 +85,7 @@ class Test_Function_Function(BasisTestCase):
         f = Function(b,a_) 
         for x in range(-5, 4):
             for y in range(-5, 4):
-                self.assertEqual( f([x,y]).data() , 1 + y + 2*x*y)
+                self.assertEqual( f([x,y]) , 1 + y + 2*x*y)
 
 if __name__ == '__main__':
     unittest.main()

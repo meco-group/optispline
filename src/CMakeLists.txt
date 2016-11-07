@@ -10,7 +10,6 @@ add_library(Basis SHARED
     SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
 
     Basis/utils/vectorUtilities.h Basis/utils/vectorUtilities.cpp
-    Basis/utils/CommonBasis.h
 
     Basis/Basis.h Basis/Basis.cpp
     Basis/DummyBasis.h Basis/DummyBasis.cpp
@@ -25,10 +24,8 @@ add_library(Basis SHARED
     Basis/utils/EvaluationGrid.h Basis/utils/EvaluationGrid.cpp
 
     Basis/operations/operationsBasis.h Basis/operations/operationsBasis.cpp
-    Basis/operations/plus.h
-    Basis/operations/plusUnivariate.h Basis/operations/plusUnivariate.cpp
-    Basis/operations/times.h
-    Basis/operations/timesUnivariate.h Basis/operations/timesUnivariate.cpp
+    Basis/operations/plus.h Basis/operations/plus.cpp
+    Basis/operations/times.h Basis/operations/times.cpp
 
     Function/Function.h Function/Function.cpp
     Function/Polynomial.h Function/Polynomial.cpp

@@ -1,12 +1,11 @@
 #ifndef CPP_SPLINE_SUBBSPLINEBASIS_H
 #define CPP_SPLINE_SUBBSPLINEBASIS_H
 
+#include <any_tensor.hpp>
 #include <vector>
 
 #include "Basis.h"
 #include "UnivariateBasis.h"
-
-#include "utils/CommonBasis.h"
 
 namespace spline{
 
@@ -30,9 +29,8 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const ;
         virtual Basis operator*(const DummyBasis& other) const ;
 
-        std::vector<double>& getKnots ();
-        const std::vector<double>& getKnots () const;
-        void setKnots (std::vector<double>& knots) ;
+        std::vector<double> getKnots () const;
+        void setKnots (const std::vector<double>& knots) ;
 
         std::vector<double> greville () const;
         //
@@ -51,7 +49,7 @@ namespace spline{
     private:
 
         //  std::vector<bool> indector(int i, double x);
-         std::vector<double> knots;
+         std::vector<double> knots_;
     };
 
 #endif // SWIG
@@ -70,14 +68,15 @@ namespace spline{
         BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals);
 
 //  TODO(jgillis) moet ik de variant met const houden??
-        std::vector<double> &getKnots ();
-        const std::vector<double> &getKnots () const;
-        void setKnots (std::vector<double> &knots) ;
+        std::vector<double> getKnots () const;
+        void setKnots (const std::vector<double> &knots) ;
 
         std::vector<double> greville () const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
+
+        virtual void foo() const {};
 
     private:
         //  std::vector<bool> indector(int i, double x);
@@ -88,26 +87,26 @@ namespace spline{
         T x = x_[0];
         T b;
         double bottom;
-        T basis[degree+1][knots.size()-1];
+        T basis[degree+1][knots_.size()-1];
 
-        for (int i=0; i<(knots.size()-1); i++){
-            if((i < degree+1) and (knots[0] == knots[i])){
-                basis[0][i] = ((x >= knots[i]) and (x <= knots[i+1]));
+        for (int i=0; i<(knots_.size()-1); i++){
+            if((i < degree+1) and (knots_[0] == knots_[i])){
+                basis[0][i] = ((x >= knots_[i]) and (x <= knots_[i+1]));
             }else{
-                basis[0][i] = ((x > knots[i]) and (x <= knots[i+1]));
+                basis[0][i] = ((x > knots_[i]) and (x <= knots_[i+1]));
             }
         }
 
         for (int d=1; d<(degree+1); d++){
             for (int i=0; i < getLength(); i++){
                 b = 0;
-                bottom = knots[i+d] - knots[i];
+                bottom = knots_[i+d] - knots_[i];
                 if (bottom != 0){
-                    b = (x - knots[i])*basis[d-1][i]/bottom;
+                    b = (x - knots_[i])*basis[d-1][i]/bottom;
                 }
-                bottom = knots[i+d+1] - knots[i+1];
+                bottom = knots_[i+d+1] - knots_[i+1];
                 if (bottom != 0){
-                    b += (knots[i+d+1] - x)*basis[d-1][i+1]/bottom;
+                    b += (knots_[i+d+1] - x)*basis[d-1][i+1]/bottom;
                 }
                 basis[d][i] = b;
             }

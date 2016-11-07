@@ -1,12 +1,11 @@
 #ifndef SUBMONOMIALBASIS_H_
 #define SUBMONOMIALBASIS_H_
 
+#include <any_tensor.hpp>
 #include <vector>
 
 #include "Basis.h"
 #include "UnivariateBasis.h"
-
-#include "utils/CommonBasis.h"
 
 namespace spline{
 
@@ -54,6 +53,8 @@ namespace spline{
         MonomialBasis(int degree);
 
         virtual std::string getRepresentation() const ;
+
+        virtual void foo() const {};
 
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)

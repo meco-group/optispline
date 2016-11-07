@@ -184,11 +184,16 @@ void OptistackSolver::value(const MX& x, const DM& v) {
 }
 
 spline::Function OptiSplineSolver::value(const spline::Function& f) const {
-  return spline::Function(f.getBasis(), value(f.getCoefficient()));
+  return spline::Function(f.getTensorBasis(), value(f.getCoefficient()));
 }
 
 spline::Coefficient OptiSplineSolver::value(const spline::Coefficient& c) const {
   return spline::Coefficient(value(c.getData()));
+}
+
+void OptiSplineSolver::value(const spline::Coefficient& c, const Tensor<DM>& d) {
+  spline_assert_message(c.getData().is_MT(), "Value only supported for MX");
+  value(c.getData().as_MT(), d);
 }
 
 AnyTensor OptiSplineSolver::value(const AnyTensor& t) const {
@@ -200,6 +205,11 @@ AnyTensor OptiSplineSolver::value(const AnyTensor& t) const {
 
 Tensor<DM> OptiSplineSolver::value(const Tensor<MX>& t) const {
   return Tensor<DM>(OptistackSolver::value(t.data()), t.dims());
+}
+
+void OptiSplineSolver::value(const Tensor<MX>& t, const Tensor<DM>& d) {
+  spline_assert_message(t.squeeze().dims()==d.squeeze().dims(), "Tensor dimensions must match. Got " << t.dims() << " and " << d.dims() <<".");
+  OptistackSolver::value(t.data(), d.data());
 }
 
 spline::Function OptiSpline::Function(const spline::TensorBasis& b) {

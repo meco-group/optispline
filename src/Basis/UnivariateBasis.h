@@ -58,6 +58,7 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
+
         int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
