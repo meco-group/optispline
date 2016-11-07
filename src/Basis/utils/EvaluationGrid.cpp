@@ -3,21 +3,9 @@
 #include "../../common.h"
 
 namespace spline{
-    EvaluationGridNode* EvaluationGrid::get() const { return static_cast<EvaluationGridNode*>(SharedObject::get()); };
-    EvaluationGridNode* EvaluationGrid::operator->() const { return get(); }
+    EvaluationGrid::EvaluationGrid(TensorBasis basis) : griddedBasis(basis) {}
 
-    // EvaluationGrid::EvaluationGrid (){
-    //     assign_node(new EvaluationGridNode(TensorBasis()));
-    // }
-    //
-    EvaluationGrid::EvaluationGrid (TensorBasis basis){
-        assign_node(new EvaluationGridNode(basis));
-    }
-
-    EvaluationGridNode::EvaluationGridNode(TensorBasis basis) : griddedBasis(basis) {}
-
-    std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid() const {return (*this)->evaluateEvaluationGrid();}
-    std::vector< AnyTensor > EvaluationGridNode::evaluateEvaluationGrid() const {
+    std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid() const {
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
         std::vector< AnyTensor > postStep ;
 
@@ -36,8 +24,6 @@ namespace spline{
         return preStep;
     }
 
-    std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid(const Function & f) const {return (*this)->evaluateEvaluationGrid(f);}
-    std::vector< AnyTensor > EvaluationGridNode::evaluateEvaluationGrid(const Function & f) const {
         TensorBasis basis = f.getTensorBasis();
         std::vector< int > indexPermutation = getPermutation(basis);
 
@@ -88,7 +74,7 @@ namespace spline{
         return index;
     }
 
-    std::string EvaluationGridNode::getRepresentation() const {
+    std::string EvaluationGrid::getRepresentation() const {
         std::stringstream s;
         // s << "EvaluationGrid" << std::endl;
         s << "EvaluationGrid";
@@ -107,5 +93,4 @@ namespace spline{
         return s.str();
     };
 
-    std::string EvaluationGrid::getRepresentation() const { return (*this)->getRepresentation() ;};
 }
