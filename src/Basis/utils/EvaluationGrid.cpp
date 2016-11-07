@@ -24,6 +24,7 @@ namespace spline{
         return preStep;
     }
 
+    std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid(const spline::Function & f) const {
         TensorBasis basis = f.getTensorBasis();
         std::vector< int > indexPermutation = getPermutation(basis);
 

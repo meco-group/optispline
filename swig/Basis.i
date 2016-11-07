@@ -85,7 +85,6 @@ def _swig_repr(self):
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/utils/vectorUtilities.h> // Debug
-#include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 #include <src/Coefficients/Coefficient.h>
 
@@ -93,6 +92,8 @@ def _swig_repr(self):
 #include <src/Function/Polynomial.h>
 #include <src/Function/Argument.h>
 #include <src/Optistack/optistack.h>
+
+#include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 #include <casadi/casadi.hpp>
 %}
@@ -231,7 +232,7 @@ def _swig_repr(self):
                                     $descriptor(spline::Coefficient*), 0))) {
         return true;
       }
-      
+
       {
         AnyTensor tmp, *mt=&tmp;
         if(casadi::to_ptr(p, m ? &mt : 0)) {
@@ -239,7 +240,7 @@ def _swig_repr(self):
           return true;
         }
       }
-      
+
       return false;
     }
     bool to_ptr(GUESTOBJECT *p, AnyScalar** m) {
@@ -292,7 +293,7 @@ def _swig_repr(self):
                                     $descriptor(spline::DT*), 0))) {
         return true;
       }
-      
+
       // Try first converting to a temporary DM
       {
         DM tmp, *mt=&tmp;
@@ -312,7 +313,7 @@ def _swig_repr(self):
                                     $descriptor(spline::ST*), 0))) {
         return true;
       }
-      
+
       // Try first converting to a temporary SX
       {
         SX tmp, *mt=&tmp;
@@ -332,7 +333,7 @@ def _swig_repr(self):
                                     $descriptor(spline::MT*), 0))) {
         return true;
       }
-      
+
       // Try first converting to a temporary MX
       {
         MX tmp, *mt=&tmp;
@@ -416,13 +417,13 @@ def _swig_repr(self):
     GUESTOBJECT* from_ptr(const spline::Coefficient *a) {
       return SWIG_NewPointerObj(new spline::Coefficient(*a), $descriptor(spline::Coefficient *), SWIG_POINTER_OWN);
     }
-    
+
     GUESTOBJECT* from_ptr(const spline::Basis *a) {
       if (dynamic_cast<const spline::MonomialBasisNode*>(a->get())) {;
         const spline::MonomialBasisNode * b = dynamic_cast<const spline::MonomialBasisNode*>(a->get());
         return SWIG_NewPointerObj(new spline::MonomialBasis(b->shared_from_this<spline::MonomialBasis>()), $descriptor(spline::MonomialBasis *), SWIG_POINTER_OWN);
-      } else if (dynamic_cast<const spline::BSplineBasisNode*>(a->get())) {   
-        const spline::BSplineBasisNode * b = dynamic_cast<const spline::BSplineBasisNode*>(a->get()); 
+      } else if (dynamic_cast<const spline::BSplineBasisNode*>(a->get())) {
+        const spline::BSplineBasisNode * b = dynamic_cast<const spline::BSplineBasisNode*>(a->get());
         return SWIG_NewPointerObj(new spline::BSplineBasis(b->shared_from_this<spline::BSplineBasis>()), $descriptor(spline::BSplineBasis *), SWIG_POINTER_OWN);
       } else {
         return SWIG_NewPointerObj(new spline::Basis(*a), $descriptor(spline::Basis *), SWIG_POINTER_OWN);
