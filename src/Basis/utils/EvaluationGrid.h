@@ -21,8 +21,6 @@ namespace spline{
         EvaluationGridNode(TensorBasis basis);
         std::vector< AnyTensor > evaluateEvaluationGrid() const;
         std::vector< AnyTensor > evaluateEvaluationGrid(const Function & f) const;
-
-        void getPermutation(std::vector< int > * indexPermutation, TensorBasis basis) const;
     private:
         TensorBasis griddedBasis;
     };
@@ -47,6 +45,7 @@ namespace spline{
         std::vector< AnyTensor > evaluateEvaluationGrid() const;
         std::vector< AnyTensor > evaluateEvaluationGrid(const Function & f) const;
 #endif // SWIG
+        std::vector< int > getPermutation(TensorBasis basis) const;
     };
 } // namespace spline
 
