@@ -16,11 +16,11 @@ namespace spline {
     }
     
     Basis Function::getBasis() const {
-      spline_assert_message(basis.getDimension()==1, ".getBasis() syntax only works for a 1-D TensorBasis.");
+      spline_assert_message(basis.getNumberOfSubBasis()==1, ".getBasis() syntax only works for a 1-D TensorBasis.");
       return basis.getSubBasis()[0];
     }
     Basis Function::getBasis(int index) const {
-      spline_assert(index>=0 && index<basis.getDimension());
+      spline_assert(index>=0 && index<basis.getNumberOfSubBasis());
       return basis.getSubBasis()[index];
     }
 
