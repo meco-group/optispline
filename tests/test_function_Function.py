@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import meco_binaries;meco_binaries(cpp_splines='develop')
 import os
 
 # Boolean flag to indicate if we run in valgrind

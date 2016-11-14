@@ -1,6 +1,4 @@
-
-import casadi.*
-SX.sym('x');
+meco_binaries('cpp_splines','develop')
 
 import Basis.*
 
@@ -66,5 +64,5 @@ for i = 1:30
 
 end
 
-z
+z(1)
 

@@ -1,4 +1,5 @@
 import unittest
+import meco_binaries;meco_binaries(cpp_splines='develop')
 
 #!/usr/bin/env python
 import sys

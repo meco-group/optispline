@@ -4,18 +4,19 @@ variables:
     CI_PROJECT_NAME: cpp_splines
     CC: gcc-4.7
     CXX: g++-4.7
-    DEBIAN_BINARIES: /Dropbox/debian_binaries
+    DEBIAN_BINARIES: /Dropbox/meco_binaries_debian
+    WINDOWS_BINARIES: /Dropbox/meco_binaries_windows
+    MATLABPATH: $DEBIAN_BINARIES
+    PYTHONPATH: $PYTHONPATH:$DEBIAN_BINARIES
 
 before_script:
     - source env.sh 
-    - export PATH=$SWIG_HOME/bin:$SWIG_HOME/share:$PATH
-    
-    - export CASADI_PREFIX=/Dropbox/${BUILD_OS}_binaries/${BUILD_LANG}_binaries/casadi_binaries/${CASADIVERSION}/
-    - echo $CASADI_PREFIX
 
 after_script:
-    - export TARGET=/Dropbox/${BUILD_OS}_binaries/${BUILD_LANG}_binaries/${CI_PROJECT_NAME}_binaries/$CI_BUILD_REF_NAME
+    - source env.sh 
+    - export TARGET=/Dropbox/meco_binaries_${BUILD_OS}/${BUILD_LANG}/${CI_PROJECT_NAME}/$CI_BUILD_REF_NAME
     - mkdir -p $TARGET
+    - touch build/swig/build_`date -Iseconds`.log
     - rsync -av --progress build/swig/ $TARGET --exclude CMakeFiles
  
 debian-matlab:
@@ -60,7 +61,8 @@ windows-matlab:
         MATLABRELEASE: R2014a
         BUILD_LANG: matlab$MATLABRELEASE
   script:
-
+    - echo $CASADIVERSION
+    - export CASADI_PREFIX=$WINDOWS_BINARIES/$BUILD_LANG/casadi/$CASADIVERSION/
     - export MATLAB_ROOT=/repo/matlabR2014a-win
 
     - mkdir build

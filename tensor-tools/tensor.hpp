@@ -146,12 +146,12 @@ class Tensor {
   }
 
   static T get(const T& data, const std::vector<int> dims, const std::vector<int>& ind) {
-    return data[ind2sub(dims, ind)];
+    return data.nz(ind2sub(dims, ind));
   }
 
   static void set(T& data, const std::vector<int> dims, const std::vector<int>& ind,
                   const T& rhs) {
-    data[ind2sub(dims, ind)] = rhs;
+    data.nz(ind2sub(dims, ind)) = rhs;
   }
 
   int n_dims() const {return dims_.size(); }
@@ -350,7 +350,7 @@ class Tensor {
       sub_a = ind2sub(A.dims(), ind_a);
       sub_b = ind2sub(B.dims(), ind_b);
       sub_c = ind2sub(new_dims, ind_c);
-      data[sub_c]+= data_[sub_a]*B.data()[sub_b];
+      data.nz(sub_c)+= data_.nz(sub_a)*B.data().nz(sub_b);
 
     }
 

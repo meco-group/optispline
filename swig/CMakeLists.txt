@@ -1,6 +1,11 @@
 find_package(SWIGMATLAB REQUIRED)
 include(${SWIG_USE_FILE})
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
+  SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../src:\$ORIGIN:$ENV{CASADI_PREFIX}:.")
+endif()
+
 include_directories(${CASADI_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-tools)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 if(WITH_PYTHON)
@@ -33,4 +38,11 @@ if(WITH_MATLAB)
    swig_link_libraries(BasisMEX ${MATLAB_LIBRARIES} Basis ${CASADI_LIBRARIES})
    set_target_properties(BasisMEX PROPERTIES PREFIX "" SUFFIX .${MATLAB_MEX_EXT})
    add_custom_target(Basis_matlab DEPENDS BasisMEX Basis)
+   add_custom_command(TARGET BasisMEX
+                   POST_BUILD
+                   COMMAND rm -f ${CMAKE_CURRENT_BINARY_DIR}/SwigMem.m)
 endif()
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/meco_setup.m "meco_binaries('casadi','$ENV{CASADIVERSION}');casadi.SX.sym('x');" )
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/meco_setup.py "meco_binaries(casadi='$ENV{CASADIVERSION}');import casadi;casadi.SX.sym('x')")
+
