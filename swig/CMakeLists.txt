@@ -1,7 +1,4 @@
-if(WITH_MATLAB)
-  find_package(SWIGMATLAB)
-endif()
-find_package(SWIG REQUIRED)
+find_package(SWIGMATLAB REQUIRED)
 include(${SWIG_USE_FILE})
 
 include_directories(${CASADI_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-tools)

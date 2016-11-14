@@ -2,14 +2,12 @@ image: meco
 
 variables:
     CI_PROJECT_NAME: cpp_splines
-    CASADIVERSION: 3.0.0
     CC: gcc-4.7
     CXX: g++-4.7
+    DEBIAN_BINARIES: /Dropbox/debian_binaries
 
 before_script:
-    - mkdir -p /home/travis/build/casadi/testbot
-    - export SWIG_HOME=/repo/swig_matlab
-    - pushd /home/travis/build/casadi/testbot && ln -s $SWIG_HOME swig-matlab-install && popd
+    - source env.sh 
     - export PATH=$SWIG_HOME/bin:$SWIG_HOME/share:$PATH
     
     - export CASADI_PREFIX=/Dropbox/${BUILD_OS}_binaries/${BUILD_LANG}_binaries/casadi_binaries/${CASADIVERSION}/
