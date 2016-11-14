@@ -1,0 +1,79 @@
+image: meco
+
+variables:
+    CI_PROJECT_NAME: cpp_splines
+    CASADIVERSION: 3.0.0
+    CC: gcc-4.7
+    CXX: g++-4.7
+
+before_script:
+    - mkdir -p /home/travis/build/casadi/testbot
+    - export SWIG_HOME=/repo/swig_matlab
+    - pushd /home/travis/build/casadi/testbot && ln -s $SWIG_HOME swig-matlab-install && popd
+    - export PATH=$SWIG_HOME/bin:$SWIG_HOME/share:$PATH
+    
+    - export CASADI_PREFIX=/Dropbox/${BUILD_OS}_binaries/${BUILD_LANG}_binaries/casadi_binaries/${CASADIVERSION}/
+    - echo $CASADI_PREFIX
+
+after_script:
+    - export TARGET=/Dropbox/${BUILD_OS}_binaries/${BUILD_LANG}_binaries/${CI_PROJECT_NAME}_binaries/$CI_BUILD_REF_NAME
+    - mkdir -p $TARGET
+    - rsync -av --progress build/swig/ $TARGET --exclude CMakeFiles
+ 
+debian-matlab:
+  stage: build
+  variables:
+        BUILD_OS: debian
+        MATLABRELEASE: R2014a
+        BUILD_LANG: matlab$MATLABRELEASE
+  script:
+    - export MATLAB_ROOT=/repo/matlabR2014a
+
+    - mkdir build
+    - pushd build
+    - echo $CASADI_PREFIX
+    - cmake -DWITH_PYTHON=OFF ..
+    - make VERBOSE=1
+    - cp src/*.so swig
+
+    - export PATH=$PATH:$MATLAB_ROOT/bin/
+    - ctest -V -R matlab
+
+debian-python:
+  stage: build
+  variables:
+        BUILD_OS: debian
+        BUILD_LANG: python27
+  script:
+    - mkdir build
+    - pushd build
+    - echo $CASADI_PREFIX
+    - cmake -DWITH_MATLAB=OFF ..
+    - make VERBOSE=1
+    - cp src/*.so swig
+
+    - export PATH=$PATH:$MATLAB_ROOT/bin/
+    - ctest -V -R python
+
+windows-matlab:
+  stage: build
+  variables:
+        BUILD_OS: windows
+        MATLABRELEASE: R2014a
+        BUILD_LANG: matlab$MATLABRELEASE
+  script:
+
+    - export MATLAB_ROOT=/repo/matlabR2014a-win
+
+    - mkdir build
+    - pushd build
+    - cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain64.cmake -DWITH_PYTHON=OFF ..
+    - make VERBOSE=1
+    - cp src/*.dll swig
+
+
+# run tests using the binary built before
+test:
+  #stage: test
+  script:
+    - echo 123

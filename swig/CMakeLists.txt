@@ -13,16 +13,18 @@ if(WITH_PYTHON)
   include_directories(${NUMPY_PATH})
 endif()
 if(WITH_MATLAB)
+  if(NOT MATLAB_LIBRARIES)
   find_package(MATLAB)
+  endif()
   include_directories(${MATLAB_INCLUDE_DIR})
 endif()
 
 set(CMAKE_SWIG_FLAGS "")
 
 set_source_files_properties(Basis.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE Basis.i PROPERTY SWIG_FLAGS "-I${PROJECT_SOURCE_DIR}" "-I${CASADI_INCLUDE_DIR}" "-I${CASADI_INCLUDE_DIR}" "-D__STDC_UTF_16__")
+set_property(SOURCE Basis.i PROPERTY SWIG_FLAGS "-I${PROJECT_SOURCE_DIR}" "-I${CASADI_INCLUDE_DIR}" "-I${CASADI_INCLUDE_DIR}" ${MATLAB_EXTRA_CXXFLAGS})
 
-set(SWIG_MODULE_Basis_EXTRA_DEPS ${CMAKE_SOURCE_DIR}/src/libBasis${CMAKE_SHARED_LIBRARY_SUFFIX})
+#set(SWIG_MODULE_Basis_EXTRA_DEPS ${CMAKE_SOURCE_DIR}/src/libBasis${CMAKE_SHARED_LIBRARY_SUFFIX})
   
 if(WITH_PYTHON)
   swig_add_module(Basis python Basis.i)

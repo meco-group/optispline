@@ -615,3 +615,9 @@ namespace spline {
 %extend Tensor<MX> {
   %tensor_helpers()
 }
+
+#ifdef WINMAT64
+%begin %{
+#define UINT64_T unsigned long long int
+%}
+#endif

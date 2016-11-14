@@ -15,11 +15,11 @@ foreach(file ${files})
         python ${file}) 
     set_tests_properties(valgrind_${BASE} PROPERTIES ENVIRONMENT "VALGRIND=1")
     add_test("python_${BASE}" python ${file})
-    set_tests_properties("python_${BASE}" valgrind_${BASE} PROPERTIES ENVIRONMENT "PYTHONPATH=${CMAKE_CURRENT_SOURCE_DIR}/../swig:$ENV{CASADI_PREFIX}:$ENV{PYTHONPATH}")
+    set_tests_properties("python_${BASE}" valgrind_${BASE} PROPERTIES ENVIRONMENT "PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/../swig:$ENV{CASADI_PREFIX}:$ENV{PYTHONPATH}")
 endforeach()
 
 add_test(matlab
-    matlab -nojvm -nodesktop -r "addpath('$ENV{CASADI_PREFIX}');addpath('${CMAKE_CURRENT_SOURCE_DIR}/../swig');test_matlab"
+    matlab -nojvm -nodesktop -r "addpath('$ENV{CASADI_PREFIX}');addpath('${CMAKE_CURRENT_BINARY_DIR}/../swig');cd ${CMAKE_CURRENT_SOURCE_DIR};runAll('matlab')"
     )
 
 
