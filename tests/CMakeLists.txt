@@ -11,8 +11,8 @@ foreach(file ${files})
     # This makes it possible to short-circuit expensive tests
     add_test(valgrind_${BASE}
         valgrind --leak-check=full
-        --suppressions=$ENV{CASADI_PREFIX}/include/valgrind-python.supp --suppressions=$ENV{CASADI_PREFIX}/include/valgrind-python.supp 
-        --suppressions=cpp_splines.supp
+        --suppressions=$ENV{CASADI_PREFIX}/include/casadi/valgrind-python.supp --suppressions=$ENV{CASADI_PREFIX}/include/casadi/valgrind-python.supp 
+        --suppressions=${CMAKE_CURRENT_SOURCE_DIR}/cpp_splines.supp
         --show-possibly-lost=no --error-limit=no --gen-suppressions=all
         python ${file}) 
     set_tests_properties(valgrind_${BASE} PROPERTIES ENVIRONMENT "VALGRIND=1")
