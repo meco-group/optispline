@@ -52,7 +52,8 @@ debian-python:
     - make VERBOSE=1
 
     - ctest -V -R python
-
+    - ctest -V -R valgrind
+    
 windows-matlab:
   stage: build
   variables:
