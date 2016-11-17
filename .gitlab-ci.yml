@@ -34,6 +34,8 @@ coverage:
     - cmake -DWITH_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
     - ctest -V -R python
+  after_script:
+    - echo 123
 
 debian-matlab:
   stage: build
