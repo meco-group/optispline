@@ -30,10 +30,12 @@ coverage:
         BUILD_OS: debian
         BUILD_LANG: python27
   script:
+    - apt-get install gcovr
     - pushd build
     - cmake -DWITH_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
-    - ctest -V -R python
+    - ctest -V -R python_test
+    - gcovr --exclude-directories=swig -r ..
   after_script:
     - echo 123
 
