@@ -1,5 +1,8 @@
 import sys, os
 
+print os.environ
+
+import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
 from Basis import *
 import numpy as np
 import matplotlib.pyplot as plt

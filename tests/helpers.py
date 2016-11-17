@@ -7,9 +7,14 @@ import os
 # expensive computations within 'if not valgrind'
 valgrind = int(os.environ.get("VALGRIND",'0'))
 
+import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
+
 import unittest
 import numpy as np
 import casadi as C
+
+from casadi import *
+from Basis import *
 
 class BasisTestCase(unittest.TestCase):
 

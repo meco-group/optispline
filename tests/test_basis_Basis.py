@@ -1,18 +1,12 @@
 #!/usr/bin/env python
-import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
 
-import unittest
 import os
 import random
 
-# Boolean flag to indicate if we run in valgrind
-# To speed up valgrind, you may choose to put
-# expensive computations within 'if not valgrind'
-valgrind = int(os.environ.get("VALGRIND",'0'))
+from helpers import *
 
 from Basis import *
 from casadi import *
-from helpers import BasisTestCase
 
 class Test_Basis_Basis(BasisTestCase):
 
