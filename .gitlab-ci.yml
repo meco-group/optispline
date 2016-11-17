@@ -24,6 +24,17 @@ after_script:
     - rm -rf swig/*.pyc
     - rsync -av --progress swig/ $TARGET --exclude CMakeFiles
  
+coverage:
+  stage: build
+  variables:
+        BUILD_OS: debian
+        BUILD_LANG: python27
+  script:
+    - pushd build
+    - cmake -DWITH_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
+    - make VERBOSE=1
+    - ctest -V -R python
+
 debian-matlab:
   stage: build
   variables:
