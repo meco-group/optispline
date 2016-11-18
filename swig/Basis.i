@@ -224,6 +224,20 @@ def _swig_repr(self):
                                     $descriptor(spline::DT*), 0))) {
         return true;
       }
+      
+      #ifdef SWIGMATLAB
+      if (mxIsDouble(p) && !mxIsSparse(p)) {
+        if (m) {
+          int n_dims = mxGetNumberOfDimensions(p);
+          const size_t* p_dim = static_cast<const size_t*>(mxGetDimensions(p));
+          std::vector<int> dim(p_dim, p_dim+n_dims);
+          double* p_data = static_cast<double*>(mxGetData(p));
+          std::vector<double> data(p_data, p_data+product(dim));
+          **m = DT(data, dim);
+        }
+        return true;
+      }
+      #endif // SWIGMATLAB
 
       // Try first converting to a temporary DM
       {
@@ -315,6 +329,19 @@ def _swig_repr(self):
     GUESTOBJECT * from_ptr(const AnyTensor *a) {
       if (a->is_DT()) {
         DT temp = static_cast<DT>(*a);
+#if SWIGMATLAB
+        int n_dim = temp.n_dims();
+        if (n_dim==0) return mxCreateDoubleScalar(static_cast<double>(temp.data()));
+        std::vector<size_t> dim(n_dim);
+        std::vector<int> dims = temp.dims();
+        std::copy(dims.begin(), dims.end(), dim.begin());
+        mxArray *p  = mxCreateNumericArray(n_dim, get_ptr(dim), mxDOUBLE_CLASS, mxREAL);
+        spline_assert(p);
+        double* d = static_cast<double*>(mxGetData(p));
+        std::vector<double> nz = temp.data().nonzeros();
+        std::copy(nz.begin(), nz.end(), d);
+        return p;
+#endif
         if (temp.n_dims()<=2) {
           DM r = temp.matrix();
           if (r.is_scalar()) return from_ref(static_cast<double>(r));
