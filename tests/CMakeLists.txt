@@ -1,5 +1,6 @@
 enable_testing()
 
+if(WITH_PYTHON)
 file(GLOB_RECURSE files "${CMAKE_SOURCE_DIR}/tests/*.py" )
 
 foreach(file ${files})
@@ -32,8 +33,10 @@ foreach(file ${files})
     add_test("python_${BASE}" python ${file} -dAgg)
     set_tests_properties("python_${BASE}" PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_CURRENT_BINARY_DIR}/../swig")
 endforeach()
+endif()
 
 
+if(WITH_MATLAB)
 file(GLOB_RECURSE files "${CMAKE_SOURCE_DIR}/tests/*.m" "${CMAKE_SOURCE_DIR}/examples/*.m")
 
 foreach(file ${files})
@@ -50,8 +53,7 @@ foreach(file ${files})
     set_tests_properties(matlab_${BASE} PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_CURRENT_BINARY_DIR}/../swig")
 
 endforeach()
-
-
+endif()
 
 
 
