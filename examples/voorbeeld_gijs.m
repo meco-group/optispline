@@ -1,4 +1,4 @@
-meco_binaries('cpp_splines','develop')
+meco_binaries('cpp_splines','fill_in_the_branch_you_want')
 
 import Basis.*
 
@@ -56,9 +56,7 @@ for i = 1:30
 
     for j = 1:30
 
-        eval_spline = mvar_spline({x(i,j),y(i,j)});
-
-        z(i,j) = full(eval_spline);
+        z(i,j) = mvar_spline({x(i,j),y(i,j)});
 
     end
 

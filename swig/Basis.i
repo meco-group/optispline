@@ -317,6 +317,7 @@ def _swig_repr(self):
         DT temp = static_cast<DT>(*a);
         if (temp.n_dims()<=2) {
           DM r = temp.matrix();
+          if (r.is_scalar()) return from_ref(static_cast<double>(r));
           return from_ref(r);
         }
         return from_ref(temp);

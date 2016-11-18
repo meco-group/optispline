@@ -20,7 +20,7 @@ class Test_Function_Function(BasisTestCase):
         b = TensorBasis([m])
         f = Function(b,a_) 
         x = [1.0] 
-        self.assertEqual(type(f(x)), casadi.DM)
+        self.assertEqual(type(f(x)), float)
 
 
     def test_function_evaluation_type2(self):
