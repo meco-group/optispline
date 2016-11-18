@@ -66,15 +66,15 @@ t_via = opti.var(len(via_pnts))
 
 g = []
 
-g.append(x([0]) == start_pnt[0]) #.data() ...
-g.append(y([0]) == start_pnt[1])
-g.append(x([1]) == end_pnt[0])
-g.append(y([1]) == end_pnt[1])
+g.append(x(0) == start_pnt[0]) #.data() ...
+g.append(y(0) == start_pnt[1])
+g.append(x(1) == end_pnt[0])
+g.append(y(1) == end_pnt[1])
 
-g.append(vx([0])==0)
-g.append(vy([0])==0)
-g.append(vx([1])==0)
-g.append(vy([1])==0)
+g.append(vx(0)==0)
+g.append(vy(0)==0)
+g.append(vx(1)==0)
+g.append(vy(1)==0)
 
 for k, via_pnt in enumerate(via_pnts):
     g.append(x([t_via[k]])== via_pnt[0])
@@ -117,11 +117,11 @@ y.getBasis().setKnots(list(T*knots))
 vx = x.derivative()
 vy = y.derivative()
 
-x_s = np.array([float(x([t])) for t in time.tolist()])
-y_s = np.array([float(y([t])) for t in time.tolist()])
+x_s = np.array([float(x(t)) for t in time.tolist()])
+y_s = np.array([float(y(t)) for t in time.tolist()])
 
-vx_s = np.array([float(vx([t])) for t in time.tolist()])
-vy_s = np.array([float(vy([t])) for t in time.tolist()])
+vx_s = np.array([float(vx(t)) for t in time.tolist()])
+vy_s = np.array([float(vy(t)) for t in time.tolist()])
 
 
 plt.figure()

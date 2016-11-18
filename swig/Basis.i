@@ -561,6 +561,10 @@ def _swig_repr(self):
 
 %include <src/Coefficients/Coefficient.h>
 
+#ifdef SWIGPYTHON
+%rename(call) spline::Function::operator();
+#endif
+
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
 %include <src/Optistack/optistack.h>
@@ -579,7 +583,7 @@ namespace spline {
   %matlabcode %{
    function varargout = subsref(self,s)
       if numel(s)==1 && strcmp(s.type,'()')
-        [varargout{1:nargout}]= paren(self, s.subs{:});
+        [varargout{1:nargout}] = paren(self, s.subs);
       else
         [varargout{1:nargout}] = builtin('subsref',self,s);
       end
@@ -588,6 +592,18 @@ namespace spline {
 }
 }
 #endif
+
+#ifdef SWIGPYTHON
+namespace spline {
+%extend Function {
+  %pythoncode %{
+    def __call__(self, *args):
+      return self.call(args)
+  %}
+}
+}
+#endif
+
 
 %extend Tensor<DM> {
   %tensor_helpers()

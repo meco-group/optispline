@@ -56,7 +56,7 @@ for i = 1:30
 
     for j = 1:30
 
-        z(i,j) = mvar_spline({x(i,j),y(i,j)});
+        z(i,j) = mvar_spline(x(i,j),y(i,j));
 
     end
 

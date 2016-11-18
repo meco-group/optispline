@@ -27,13 +27,13 @@ obj = 0.
 x_ = 0.
 dx = 0.02
 while (x_ < 1.):
-    obj = obj + (s([x_]))*dx
+    obj = obj + (s(x_))*dx
     x_ = x_ + dx
 
 # Constraints
 con = []
 for x_ in x:
-    con.append(s([x_])>=0)
+    con.append(s(x_)>=0)
 
 con.append(s>=-1)
 
@@ -46,7 +46,7 @@ interval = np.linspace(0.,1.,101)
 field = []
 
 for i in interval:
-    field.append(s([i]))
+    field.append(s(i))
 
 plt.figure()
 plt.plot(x,y,'ko')
