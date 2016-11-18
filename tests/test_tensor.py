@@ -65,6 +65,19 @@ class Test_Tensor(BasisTestCase):
           self.assertEqualT( B.index(myslice(1,k)), C.index(myslice(3,k)))
           
 
+    def test_cross(self):
+        STensor(DTensor(5,[]))
+        MTensor(DTensor(5,[]))
+    
+    def test_input_typemap(self):
+      a = np.random.random((2,3,4))
+      b = DTensor(a)
+      
+      self.assertEqualT( a[:,:,0], b[:,:,0] )
+      self.assertEqualT( a[:,:,1], b[:,:,1] )
+      self.assertEqualT( a[:,1,:], b[:,1,:] )
+      self.assertEqualT( a[0,:,:], b[0,:,:] )
+      
 if __name__ == '__main__':        
     unittest.main()
 

@@ -237,7 +237,37 @@ def _swig_repr(self):
         }
         return true;
       }
+      #else
       #endif // SWIGMATLAB
+      #ifdef SWIGPYTHON
+      // 1D numpy array
+      if (is_array(p) && array_is_native(p)) {
+      
+        // Make sure we have a contigous array
+        int array_is_new_object;
+        PyArrayObject* array;
+
+        array = obj_to_array_contiguous_allow_conversion(p, NPY_DOUBLE, &array_is_new_object);
+        if (array) {
+            int n_dim = array_numdims(p);
+            std::vector<int> dim(n_dim);
+            for (int i=0;i<dim.size();++i) dim[i] = array_size(p,i);
+            std::vector<int> dim_rev = dim;
+            std::reverse(dim_rev.begin(), dim_rev.end());
+            
+            double* d = reinterpret_cast<double*>(array_data(array));
+            std::vector<double> data(d, d+product(dim));
+            std::vector<int> order_rev = range(n_dim);
+            std::reverse(order_rev.begin(), order_rev.end());
+            if (m) **m = DT(data, dim_rev).reorder_dims(order_rev);
+            if (array_is_new_object) Py_DECREF(array);
+            return true;
+        }
+
+        // No match
+        return false;
+      }
+      #endif
 
       // Try first converting to a temporary DM
       {
@@ -268,6 +298,15 @@ def _swig_repr(self):
         }
       }
 
+      // Try first converting to a temporary DT
+      {
+        DT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+
       return false;
     }
     bool to_ptr(GUESTOBJECT *p, MT** m) {
@@ -288,6 +327,15 @@ def _swig_repr(self):
         }
       }
 
+      // Try first converting to a temporary DT
+      {
+        DT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+      
       return false;
     }
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m) {
