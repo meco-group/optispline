@@ -78,6 +78,23 @@ class Test_Tensor(BasisTestCase):
       self.assertEqualT( a[:,1,:], b[:,1,:] )
       self.assertEqualT( a[0,:,:], b[0,:,:] )
       
+    def test_output_typemap(self):
+    
+      B1 = MonomialBasis(2)
+      B2 = MonomialBasis(3)
+      B3 = MonomialBasis(4)
+
+      B = TensorBasis([B1,B2,B3])
+
+      a = np.random.random(B.getShape())
+
+      F = Basis.Function(B, a)
+
+      c = F.getCoefficient()
+      r = c.getData()
+
+      self.assertEqualT( r, a )
+      
 if __name__ == '__main__':        
     unittest.main()
 

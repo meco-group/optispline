@@ -390,6 +390,19 @@ def _swig_repr(self):
         std::copy(nz.begin(), nz.end(), d);
         return p;
 #endif
+#ifdef SWIGPYTHON
+        int n_dim = temp.n_dims();
+        if (n_dim==0 || n_dim==1 && temp.dims(0)==1 || n_dim==2 && temp.dims(0)==1 && temp.dims(1)==1) return PyFloat_FromDouble(static_cast<double>(temp.data()));
+        std::vector<npy_intp> dim(n_dim);
+        for (int i=0;i<n_dim;++i) dim[i] = temp.dims(i);
+        PyObject* ret = PyArray_SimpleNew(n_dim, get_ptr(dim), NPY_DOUBLE);
+        std::vector<int> order = range(n_dim);
+        std::reverse(order.begin(), order.end());
+        double* d = static_cast<double*>(array_data(ret));
+        std::vector<double> nz = temp.reorder_dims(order).data().nonzeros();
+        std::copy(nz.begin(), nz.end(), d);
+        return ret;
+#endif
         if (temp.n_dims()<=2) {
           DM r = temp.matrix();
           if (r.is_scalar()) return from_ref(static_cast<double>(r));

@@ -1,7 +1,5 @@
 import sys, os
 
-print os.environ
-
 import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
 from Basis import *
 import numpy as np
@@ -11,8 +9,12 @@ import casadi as cas
 opti = OptiSpline()
 
 def derivative(coeffs, knots1, degree, o=1):
-    coeffs = coeffs.getData().data()
-    n = coeffs.shape[0]
+    coeffs = coeffs.getData()
+    try:
+      n = coeffs.shape[0]
+    except:
+      coeffs = coeffs.data()
+      n = coeffs.shape[0]
     P = np.eye(n)
     knots = knots1.copy()
     knots_out = knots[o:-o]
@@ -29,7 +31,7 @@ def derivative(coeffs, knots1, degree, o=1):
     if isinstance(coeffs, (cas.SX, cas.MX)):
         coeffs_out = cas.mtimes(cas.DM(P), coeffs)
     else:
-        coeffs_out = P.dot(coeffs)
+        coeffs_out = P.dot(coeffs.squeeze())
     return coeffs_out, knots_out
 
 def FunDerivative(self):

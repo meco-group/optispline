@@ -15,6 +15,7 @@ import casadi as C
 
 from casadi import *
 from Basis import *
+import Basis
 
 class BasisTestCase(unittest.TestCase):
 
@@ -46,11 +47,17 @@ class BasisTestCase(unittest.TestCase):
         try:
           a = C.DM(a)
         except:
-          a = a.data()
+          try:
+            a = a.data()
+          except:
+            a = a.ravel()
         try:
           b = C.DM(b)
         except:
-          b = b.data()
+          try:
+            b = b.data()
+          except:
+            b = b.ravel()
         self.assertTrue(float(C.norm_inf(a-b))<1e-9)
 
     def assertNotEqualTensor(self, a, b):
