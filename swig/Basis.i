@@ -313,9 +313,30 @@ def _swig_repr(self):
     }
 
     GUESTOBJECT * from_ptr(const AnyTensor *a) {
-      if (a->is_DT()) return from_ref(static_cast<DT>(*a));
-      if (a->is_ST()) return from_ref(static_cast<ST>(*a));
-      if (a->is_MT()) return from_ref(static_cast<MT>(*a));
+      if (a->is_DT()) {
+        DT temp = static_cast<DT>(*a);
+        if (temp.n_dims()<=2) {
+          DM r = temp.matrix();
+          return from_ref(r);
+        }
+        return from_ref(temp);
+      }
+      if (a->is_ST()) {
+        ST temp = static_cast<ST>(*a);
+        if (temp.n_dims()<=2) {
+          SX r = temp.matrix();
+          return from_ref(r);
+        }
+        return from_ref(temp);
+      }
+      if (a->is_MT()) {
+        MT temp = static_cast<MT>(*a);
+        if (temp.n_dims()<=2) {
+          MX r = temp.matrix();
+          return from_ref(r);
+        }
+        return from_ref(temp);
+      }
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
@@ -323,26 +344,14 @@ def _swig_repr(self):
     }
 
     GUESTOBJECT* from_ptr(const DT *a) {
-      if (a->n_dims()<=2) {
-        DM r = a->matrix();
-        return from_ref(r);
-      }
       return SWIG_NewPointerObj(new DT(*a), $descriptor(Tensor< casadi::Matrix<double> > *), SWIG_POINTER_OWN);
     }
 
     GUESTOBJECT* from_ptr(const ST *a) {
-      if (a->n_dims()<=2) {
-        SX r = a->matrix();
-        return from_ref(r);
-      }
       return SWIG_NewPointerObj(new ST(*a), $descriptor(Tensor< casadi::Matrix<casadi::SXElem> > *), SWIG_POINTER_OWN);
     }
 
     GUESTOBJECT* from_ptr(const MT *a) {
-      if (a->n_dims()<=2) {
-        MX r = a->matrix();
-        return from_ref(r);
-      }
       return SWIG_NewPointerObj(new MT(*a), $descriptor(Tensor< casadi::MX > *), SWIG_POINTER_OWN);
     }
     GUESTOBJECT* from_ptr(const spline::Coefficient *a) {
@@ -415,16 +424,6 @@ def _swig_repr(self):
 %enddef
 #endif
 
-%include <tensor.hpp>
-
-
-%template(DTensor) Tensor<DM>;
-%template(STensor) Tensor<SX>;
-%template(MTensor) Tensor<MX>;
-
-%template(DTensorVector) std::vector< Tensor<DM> >;
-%template(STensorVector) std::vector< Tensor<SX> >;
-%template(MTensorVector) std::vector< Tensor<MX> >;
 
 %casadi_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
@@ -434,6 +433,7 @@ def _swig_repr(self):
 %casadi_typemaps("Basis", PREC_MX, spline::Basis)
 %casadi_typemaps("Coefficient", PREC_MX, spline::Coefficient)
 %casadi_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
+%casadi_template("[DTensor]", PREC_MXVector, std::vector< Tensor<casadi::DM> >)
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 
 %casadi_template("[int]", PREC_IVector, std::vector<int>)
@@ -446,6 +446,14 @@ def _swig_repr(self):
 %template(ArgumentVector) std::vector< spline::Argument >;
 
 %include <tensor.hpp>
+
+
+%template(DTensor) Tensor<DM>;
+%template(STensor) Tensor<SX>;
+%template(MTensor) Tensor<MX>;
+
+%template(STensorVector) std::vector< Tensor<SX> >;
+%template(MTensorVector) std::vector< Tensor<MX> >;
 
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/Basis.h>
