@@ -32,6 +32,10 @@ import_array();
 #ifdef SWIGPYTHON
 %pythoncode %{
 
+import casadi
+swigtypeconvertor = casadi.swigtypeconvertor
+swig_typename_convertor_python2cpp = casadi.swig_typename_convertor_python2cpp
+
 _swig_repr_default = _swig_repr
 def _swig_repr(self):
   if hasattr(self,'getRepresentation'):
