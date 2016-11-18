@@ -33,7 +33,10 @@ std::vector<T> mrange(T start, T stop) {
 
 #ifndef SWIG
 int product(const std::vector<int>& a);
+int sum(const std::vector<int>& a);
 #endif
+
+std::vector<int> invert_order(const std::vector<int>& order);
 
 template <class T>
 class Tensor {
@@ -44,11 +47,59 @@ class Tensor {
 
   }
 
-  static Tensor<T> concat(const std::vector< Tensor<T> >& v) {
-    tensor_assert_message(false, "Not implemented");
+  static Tensor<T> concat(const std::vector< Tensor<T> >& v, int axis) {
+    tensor_assert(v.size()>0);
+
+    // Establish reference dimensions
+    auto dims = v[0].dims();
+    int n_dims = v[0].n_dims();
+
+    tensor_assert(axis<n_dims);
+
+    // Choose an ordering to bring the axis dimension to the end
+    std::vector<int> order;
+    for (int i=0;i<axis;++i) order.push_back(i);
+    for (int i=axis+1;i<n_dims;++i) order.push_back(i);
+    order.push_back(axis);
+
+    // Dimension checks
+    for (auto& t : v) {
+      tensor_assert(n_dims==t.n_dims());
+
+      tensor_assert(std::equal(dims.begin(), dims.begin()+axis, t.dims().begin()) &&
+            std::equal(dims.begin()+axis+1, dims.end(), t.dims().begin()+axis+1));
+
+    }
+
+    /*
+    We will bring each vector into a 'canonical concat' form
+
+        trailing_dim x axis_dim
+    */
+
+    // The dimensions
+    int trailing_dim = product(dims)/dims[axis];
+
+    std::vector<T> data;
+    for (auto& t : v) {
+      int axis_dim = t.dims(axis);
+      Tensor<T> e = t.reorder_dims(order);
+      data.push_back(reshape(e.data(), trailing_dim, axis_dim));
+    }
+
+    T res = horzcat(data);
+
+    std::vector<int> new_dims = dims;
+    new_dims[axis] = res.numel()/trailing_dim;
+
+    std::vector<int> permuted_dims = reorder(new_dims, order);
+
+    return Tensor(res, permuted_dims).reorder_dims(invert_order(order));
+
   }
 
   static Tensor<T> pack(const std::vector< Tensor<T> >& v, int axis) {
+    tensor_assert(v.size()>0);
     auto dims = v[0].dims();
 
     std::vector<T> data;

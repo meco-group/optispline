@@ -6,6 +6,21 @@ int product(const std::vector<int>& a) {
   return r;
 }
 
+int sum(const std::vector<int>& a) {
+  int r = 0;
+  for (int i=0;i<a.size();++i) r+=a[i];
+  return r;
+}
+
+std::vector<int> invert_order(const std::vector<int>& order) {
+  std::vector<int> ret(order.size());
+  for (int i=0;i<order.size();++i) {
+    int j=order[i];
+    ret[j] = i;
+  }
+  return ret;
+}
+
 bool AnyScalar::is_double() const {
   return t == TENSOR_DOUBLE;
 }
@@ -217,8 +232,12 @@ AnyTensor::operator MT() const {
 
 
 AnyTensor AnyTensor::concat(const std::vector<AnyTensor>& v, int axis) {
-  tensor_assert_message(false, "Not implemented");
-  return DT();
+  switch (AnyTensor::type(v)) {
+    case TENSOR_DOUBLE: return DT::concat(AnyTensor::as_DT(v), axis);
+    case TENSOR_SX: return ST::concat(AnyTensor::as_ST(v), axis);
+    case TENSOR_MX: return MT::concat(AnyTensor::as_MT(v), axis);
+    default: tensor_assert(false); return DT();
+  }
 }
 
 std::vector<double> AnyScalar::as_double(const std::vector<AnyScalar>& v) {
