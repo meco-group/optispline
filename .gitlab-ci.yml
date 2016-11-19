@@ -1,5 +1,9 @@
 image: meco
 
+stages:
+  - tests
+  - binaries
+
 variables:
     CI_PROJECT_NAME: cpp_splines
     CC: gcc-4.7
@@ -23,10 +27,6 @@ after_script:
     - touch swig/build_`date -Iseconds`.log
     - rm -rf swig/*.pyc swig/CMakeFiles
     - rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
-
-stages:
-  - tests
-  - binaries
 
 coverage:
   stage: tests
@@ -118,8 +118,3 @@ windows-python:
     - cp src/*.dll swig
     - sed -i -e "s/'SwigPyObject'/'SwigPyCasadiObject'/g" swig/Basis.py
     
-# run tests using the binary built before
-test:
-  #stage: test
-  script:
-    - echo 123
