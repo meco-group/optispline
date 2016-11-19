@@ -24,7 +24,7 @@ after_script:
     - set -e
     - pushd build
     - export TARGET=meco_binaries_${BUILD_OS}/${BUILD_LANG}/${CI_PROJECT_NAME}/$CI_BUILD_REF_NAME
-    - touch swig/build_`date -Iseconds`.log
+    - TZ=CET touch swig/build_`date -Iseconds`.log
     - rm -rf swig/*.pyc swig/CMakeFiles
     - rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
 
@@ -35,7 +35,6 @@ coverage:
         BUILD_LANG: python27
   script:
     - set -e
-    - apt-get install gcovr
     - pushd build
     - cmake -DWITH_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
