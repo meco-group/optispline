@@ -136,10 +136,8 @@ AnyScalar::AnyScalar(const MX& s) {
 }
 
 AnyScalar::AnyScalar() {
-  t = TENSOR_NULL;
+  t = TENSOR_DOUBLE;
   data_double = 0;
-  data_sx = 0;
-  data_mx = 0;
 }
 
 AnyScalar::operator double() const {
