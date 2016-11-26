@@ -100,6 +100,7 @@ def _swig_repr(self):
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
 #include <src/Function/Argument.h>
+#include <src/Function/Index.h>
 #include <src/Optistack/optistack.h>
 
 #include <src/Basis/utils/EvaluationGrid.h> // Debug
@@ -122,9 +123,12 @@ def _swig_repr(self):
     bool to_ptr(GUESTOBJECT *p, DT** m);
     bool to_ptr(GUESTOBJECT *p, ST** m);
     bool to_ptr(GUESTOBJECT *p, MT** m);
+    bool to_ptr(GUESTOBJECT *p, spline::Index** m);
     bool to_ptr(GUESTOBJECT *p, spline::TensorBasis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Basis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
+    bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
+
     GUESTOBJECT * from_ptr(const AnyScalar *a);
     GUESTOBJECT * from_ptr(const AnyTensor *a);
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
@@ -133,6 +137,8 @@ def _swig_repr(self):
     GUESTOBJECT *from_ptr(const DT *a);
     GUESTOBJECT *from_ptr(const ST *a);
     GUESTOBJECT *from_ptr(const MT *a);
+    GUESTOBJECT *from_ptr(const spline::Index *a);
+    GUESTOBJECT *from_ptr(const spline::Argument *a);
   }
 }
 
@@ -367,11 +373,69 @@ def _swig_repr(self):
       }
       return false;
     }
+    
+    bool to_ptr(GUESTOBJECT *p, spline::Index** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::Index*), 0))) {
+        return true;
+      }
+      // String scalar
+      {
+        std::string tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m=tmp;
+          return true;
+        }
+      }      
+      // Integer scalar
+      {
+        int tmp;
+        if (to_val(p, &tmp)) {
+#ifdef SWIGMATLAB
+          if (m) **m=tmp-1;
+#else
+          if (m) **m=tmp;
+#endif
+          return true;
+        }
+      }      
+      return false;
+    }
+
+    bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::Argument*), 0))) {
+        return true;
+      }
+
+      // String scalar
+      {
+        std::string tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m=tmp;
+          return true;
+        }
+      }
+      return false;
+    }
 
     GUESTOBJECT * from_ptr(const AnyScalar *a) {
       //if (a->is_double()) return from_ref(static_cast<double>(*a));
       //if (a->is_SX()) return from_ref(static_cast<SX>(*a));
       //if (a->is_MX()) return from_ref(static_cast<MX>(*a));
+#ifdef SWIGPYTHON
+      return Py_None;
+#endif // SWIGPYTHON
+      return 0;
+    }
+
+    GUESTOBJECT * from_ptr(const spline::Index *a) {
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
@@ -465,6 +529,9 @@ def _swig_repr(self):
     GUESTOBJECT* from_ptr(const spline::TensorBasis *a) {
       return SWIG_NewPointerObj(new spline::TensorBasis(*a), $descriptor(spline::TensorBasis *), SWIG_POINTER_OWN);
     }
+    GUESTOBJECT* from_ptr(const spline::Argument *a) {
+      return SWIG_NewPointerObj(new spline::Argument(*a), $descriptor(spline::Argument *), SWIG_POINTER_OWN);
+    }
   } // namespace casadi
  }
 
@@ -520,6 +587,8 @@ def _swig_repr(self):
 
 %casadi_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
+%casadi_typemaps("argument", PREC_MX, spline::Argument)
+%casadi_typemaps("index", PREC_MX, spline::Index)
 %casadi_typemaps("STensor", PREC_MX, Tensor<casadi::SX>)
 %casadi_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
 %casadi_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
@@ -530,14 +599,15 @@ def _swig_repr(self):
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 
 %casadi_template("[int]", PREC_IVector, std::vector<int>)
+%casadi_template("[index]", PREC_IVector, std::vector< spline::Index >)
+%casadi_template("[argument]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
 
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
 
 %include <src/Function/Argument.h>
-%template(ArgumentVector) std::vector< spline::Argument >;
-
+%include <src/Function/Index.h>
 %include <tensor.hpp>
 
 

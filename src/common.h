@@ -68,6 +68,7 @@ class SplineException : public std::exception {
 
 #define spline_assert(x) spline_assert_message(x, "No description")
 
+#define spline_error(msg) spline_assert_message(false, msg)
 
 }
 #endif  // COMMON_H

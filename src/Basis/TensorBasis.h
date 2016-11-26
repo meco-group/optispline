@@ -11,6 +11,7 @@
 
 #include "Basis.h"
 #include "../Function/Argument.h"
+#include "../Function/Index.h"
 
 namespace spline {
     class TensorBasis;
@@ -87,7 +88,7 @@ namespace spline {
 
         Basis getBasis() const;
         Basis getBasis(Argument a) const;
-        Basis getBasis(int index) const;
+        Basis getBasis(const Index& index) const;
         // Basis operator[](Argument a) const;
         // Basis operator[](int index) const;
 

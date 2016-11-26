@@ -74,6 +74,37 @@ class Test_Basis_Basis(BasisTestCase):
         b.setArguments([a,a])
         self.assertTrue(b.hasArguments())
         
+    def test_Index(self):
+        s1 = MonomialBasis(2)
+        s2 = MonomialBasis(3)
+        b = TensorBasis([s1,s2])
+        with self.assertRaises(Exception):
+          p = b.getBasis(-1)
+        with self.assertRaises(Exception):
+          p = b.getBasis(2)
+
+        p = b.getBasis(0)
+        self.assertEqual( p.getDegree(), 2)
+        p = b.getBasis(1)
+        self.assertEqual( p.getDegree(), 3)
+        
+        p = b.getBasis("x")
+
+        s1 = MonomialBasis(2)
+        s2 = MonomialBasis(3)
+        b = TensorBasis([s1,s2])
+        b.setArguments(["x","y"])
+        
+        p = b.getBasis(0)
+        self.assertEqual( p.getDegree(), 2)
+        p = b.getBasis(1)
+        self.assertEqual( p.getDegree(), 3)
+        
+        p = b.getBasis("x")
+        self.assertEqual( p.getDegree(), 2)
+        p = b.getBasis("y")
+        self.assertEqual( p.getDegree(), 3)
+        
 # TODO constructor
     # def test_getEvaluation1(self):
     # def test_getEvaluation2(self):

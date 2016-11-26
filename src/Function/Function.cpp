@@ -19,9 +19,8 @@ namespace spline {
       spline_assert_message(basis.getNumberOfSubBasis()==1, ".getBasis() syntax only works for a 1-D TensorBasis.");
       return basis.getSubBasis()[0];
     }
-    Basis Function::getBasis(int index) const {
-      spline_assert(index>=0 && index<basis.getNumberOfSubBasis());
-      return basis.getSubBasis()[index];
+    Basis Function::getBasis(const Index& index) const {
+      return basis.getBasis(index);
     }
 
     Function Function::generic_operation(const Function& f,

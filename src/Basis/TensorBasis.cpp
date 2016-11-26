@@ -91,9 +91,10 @@ namespace spline {
         }
     }
 
-    Basis TensorBasis::getBasis (int index) const {
-        spline_assert(index>=0 && index<getNumberOfSubBasis());
-        return getSubBasis()[index];
+    Basis TensorBasis::getBasis (const Index& index) const {
+      int ind = index.concrete(getArguments());
+      spline_assert(ind<getNumberOfSubBasis());
+      return getSubBasis()[ind];
     }
 
     void TensorBasis::addBasis (TensorBasis basis) { (*this)->addBasis (basis);}
