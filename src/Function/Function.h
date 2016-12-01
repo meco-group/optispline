@@ -6,6 +6,8 @@
 #include "../Basis/TensorBasis.h"
 #include "../Coefficients/Coefficient.h"
 #include <any_tensor.hpp>
+#include "Index.h"
+
 namespace spline {
     class Function {
 
@@ -21,8 +23,8 @@ namespace spline {
         Function operator-() const ;
         Function operator-(const Function f) const ;
         Basis getBasis() const;
-        Basis getBasis(int i) const;
-        TensorBasis getTensorBasis() const {return basis;} 
+        Basis getBasis(const Index& i) const;
+        TensorBasis getTensorBasis() const {return basis;}
         Coefficient getCoefficient() const {return coef;}
 
         MX operator<=(const MX& x) const;

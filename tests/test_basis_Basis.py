@@ -1,17 +1,12 @@
 #!/usr/bin/env python
 
-import unittest
 import os
 import random
 
-# Boolean flag to indicate if we run in valgrind
-# To speed up valgrind, you may choose to put
-# expensive computations within 'if not valgrind'
-valgrind = int(os.environ.get("VALGRIND",'0'))
+from helpers import *
 
 from Basis import *
 from casadi import *
-from helpers import BasisTestCase
 
 class Test_Basis_Basis(BasisTestCase):
 
@@ -20,11 +15,11 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         b = TensorBasis()
         b.addBasis(s1)
-        self.assertEqual(b.getDimension(), 1)
+        self.assertEqual(b.getNumberOfSubBasis(), 1)
 
         b.addBasis(s2)
         b.addBasis(s1)
-        self.assertEqual(b.getDimension(), 3)
+        self.assertEqual(b.getNumberOfSubBasis(), 3)
 
     def test_getDimenstion2(self):
         s1 = MonomialBasis(3)
@@ -78,6 +73,37 @@ class Test_Basis_Basis(BasisTestCase):
         b = TensorBasis()
         b.setArguments([a,a])
         self.assertTrue(b.hasArguments())
+        
+    def test_Index(self):
+        s1 = MonomialBasis(2)
+        s2 = MonomialBasis(3)
+        b = TensorBasis([s1,s2])
+        with self.assertRaises(Exception):
+          p = b.getBasis(-1)
+        with self.assertRaises(Exception):
+          p = b.getBasis(2)
+
+        p = b.getBasis(0)
+        self.assertEqual( p.getDegree(), 2)
+        p = b.getBasis(1)
+        self.assertEqual( p.getDegree(), 3)
+        
+        p = b.getBasis("x")
+
+        s1 = MonomialBasis(2)
+        s2 = MonomialBasis(3)
+        b = TensorBasis([s1,s2])
+        b.setArguments(["x","y"])
+        
+        p = b.getBasis(0)
+        self.assertEqual( p.getDegree(), 2)
+        p = b.getBasis(1)
+        self.assertEqual( p.getDegree(), 3)
+        
+        p = b.getBasis("x")
+        self.assertEqual( p.getDegree(), 2)
+        p = b.getBasis("y")
+        self.assertEqual( p.getDegree(), 3)
         
 # TODO constructor
     # def test_getEvaluation1(self):

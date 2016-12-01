@@ -3,7 +3,7 @@
 
 message(STATUS "Looking for SWIG for MATLAB")
 # Set hints to look for SWIG, end with 0 to look once without hints also
-set(SWIGMATLABHINTS "$ENV{SWIGMATLAB}" "0")
+set(SWIGMATLABHINTS "$ENV{SWIG_HOME}")
 foreach(SWIGMATLABHINT ${SWIGMATLABHINTS})
   find_program(SWIG_EXECUTABLE
     swig
@@ -22,9 +22,11 @@ unset(SWIGMATLABHINTS)
 
 if(SWIG_EXECUTABLE)
   set(SWIGMATLAB_FOUND TRUE)
+  set(SWIG_USE_FILE ${CMAKE_ROOT}/Modules/UseSWIG.cmake)
   message(STATUS "Found SWIG for MATLAB: " ${SWIG_EXECUTABLE})
 else()
   set(SWIGMATLAB_FOUND FALSE)
   set(WITH_MATLAB OFF)
   message(STATUS "Cound not find SWIG for MATLAB. Try setting SWIGMATLAB env var.")
 endif()
+

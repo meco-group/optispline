@@ -11,6 +11,7 @@
 
 #include "Basis.h"
 #include "../Function/Argument.h"
+#include "../Function/Index.h"
 
 namespace spline {
     class TensorBasis;
@@ -22,7 +23,7 @@ namespace spline {
     class TensorBasisNode : public SharedObjectNode {
     public:
         TensorBasisNode (const std::vector< Basis >& allBasis);
-        int getDimension () const;
+        int getNumberOfSubBasis () const;
 
         std::vector<int> getShape () const;
 
@@ -49,7 +50,7 @@ namespace spline {
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        int totalNumberSubBasis() const;
+        int totalNumberBasisFunctions() const;
 
     // protected:
         std::vector< Basis > allSubBasis;
@@ -67,7 +68,7 @@ namespace spline {
         TensorBasisNode* operator->() const ;
 
 #endif // SWIG
-        int getDimension () const;
+        int getNumberOfSubBasis () const;
 
         std::vector<int> getShape () const;
         TensorBasis ();
@@ -87,7 +88,7 @@ namespace spline {
 
         Basis getBasis() const;
         Basis getBasis(Argument a) const;
-        Basis getBasis(int index) const;
+        Basis getBasis(const Index& index) const;
         // Basis operator[](Argument a) const;
         // Basis operator[](int index) const;
 
@@ -102,7 +103,7 @@ namespace spline {
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        int totalNumberSubBasis() const;
+        int totalNumberBasisFunctions() const;
     };
 }
 #endif  // BASIS_H_

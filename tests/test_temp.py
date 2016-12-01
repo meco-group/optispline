@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
 
 import os
 

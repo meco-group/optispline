@@ -30,6 +30,7 @@ add_library(Basis SHARED
     Function/Function.h Function/Function.cpp
     Function/Polynomial.h Function/Polynomial.cpp
     Function/Argument.h Function/Argument.cpp
+    Function/Index.h Function/Index.cpp
 
     Coefficients/Coefficient.h Coefficients/Coefficient.cpp
 

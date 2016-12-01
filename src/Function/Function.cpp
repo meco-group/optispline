@@ -16,12 +16,11 @@ namespace spline {
     }
     
     Basis Function::getBasis() const {
-      spline_assert_message(basis.getDimension()==1, ".getBasis() syntax only works for a 1-D TensorBasis.");
+      spline_assert_message(basis.getNumberOfSubBasis()==1, ".getBasis() syntax only works for a 1-D TensorBasis.");
       return basis.getSubBasis()[0];
     }
-    Basis Function::getBasis(int index) const {
-      spline_assert(index>=0 && index<basis.getDimension());
-      return basis.getSubBasis()[index];
+    Basis Function::getBasis(const Index& index) const {
+      return basis.getBasis(index);
     }
 
     Function Function::generic_operation(const Function& f,
@@ -46,7 +45,7 @@ namespace spline {
       AnyTensor B = AnyTensor::pack(sumFunctionEvaluated, 0);
 
       int numberEval = basisEvaluated.size();
-      int numberBasis = sumBasis.totalNumberSubBasis();
+      int numberBasis = sumBasis.totalNumberBasisFunctions();
       int numberCoef = coef.getNumberCoefficents();
 
       std::vector< int > shapeA = {numberEval, numberBasis};

@@ -1,11 +1,12 @@
-[![Build Status](https://travis-ci.org/meco-group/cpp_splines.svg?branch=master)](https://travis-ci.org/meco-group/cpp_splines)
-[![Coverage Status](https://coveralls.io/repos/github/meco-group/cpp_splines/badge.svg?branch=master)](https://coveralls.io/github/meco-group/cpp_splines?branch=master)
-# Run the binariess (inside MECO group):
+[![build status](https://gitlab.mech.kuleuven.be/meco-software/cpp_splines/badges/develop/build.svg)](https://gitlab.mech.kuleuven.be/meco-software/cpp_splines/commits/develop)
 
- 1. 
-    - Linux: `sudo mount -t davfs https://drives.kuleuven.be/hcwebdav /mnt`
-    - Windows: should be mounted already ('J:').
- 2. Locate and run the example scripts on the mounted drive, inside the MECO folder, `software/cpp_splines/master/test.*`
+
+[![coverage report](https://gitlab.mech.kuleuven.be/meco-software/cpp_splines/badges/develop/coverage.svg)](https://gitlab.mech.kuleuven.be/meco-software/cpp_splines/commits/develop)
+
+
+# Run the binaries (inside MECO group):
+
+See instructions https://gitlab.mech.kuleuven.be/meco-software/meco_binaries/tree/master
 
 # cpp_splines
 

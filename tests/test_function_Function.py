@@ -1,16 +1,6 @@
 #!/usr/bin/env python
 
-import os
-
-# Boolean flag to indicate if we run in valgrind
-# To speed up valgrind, you may choose to put
-# expensive computations within 'if not valgrind'
-valgrind = int(os.environ.get("VALGRIND",'0'))
-
-import unittest
-from casadi import *
-from Basis import *
-from helpers import BasisTestCase
+from helpers import *
 
 class Test_Function_Function(BasisTestCase):
 
@@ -29,8 +19,8 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(3)
         b = TensorBasis([m])
         f = Function(b,a_) 
-        x = [1.0] 
-        self.assertEqual(type(f(x)), casadi.DM)
+        x = 1.0
+        self.assertEqual(type(f(x)), float)
 
 
     def test_function_evaluation_type2(self):
@@ -40,7 +30,7 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(3)
         b = TensorBasis([m])
         f = Function(b,a_) 
-        x = [SX.sym('x',1,1)] 
+        x = SX.sym('x',1,1)
         self.assertEqual(type(f(x)), casadi.SX)
 
 
@@ -51,7 +41,7 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(3)
         b = TensorBasis([m])
         f = Function(b,a_) 
-        x = [1.0] 
+        x = 1.0
         self.assertEqual(type(f(x)), casadi.SX)
 
 
@@ -62,7 +52,7 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(3)
         b = TensorBasis([m])
         f = Function(b,a_) 
-        x = [SX.sym('x',1,1)] 
+        x = SX.sym('x',1,1)
         self.assertEqual(type(f(x)), casadi.SX)
 
     def test_function_evaluation_1(self):
@@ -72,9 +62,9 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(3)
         b = TensorBasis([m])
         f = Function(b,a_) 
-        self.assertEqual( f([0.0]), 2 )
-        self.assertEqual( f([1.0]), 3 )
-        self.assertEqual( f([2.0]), 10 )
+        self.assertEqual( f(0.0), 2 )
+        self.assertEqual( f(1.0), 3 )
+        self.assertEqual( f(2.0), 10 )
 
     def test_function_evaluation_2(self):
         a = DM([[1,1],[0,2]]) # 1 + y + 2xy
@@ -85,7 +75,7 @@ class Test_Function_Function(BasisTestCase):
         f = Function(b,a_) 
         for x in range(-5, 4):
             for y in range(-5, 4):
-                self.assertEqual( f([x,y]) , 1 + y + 2*x*y)
+                self.assertEqual( f(x,y) , 1 + y + 2*x*y)
 
 if __name__ == '__main__':
     unittest.main()

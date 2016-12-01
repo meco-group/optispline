@@ -69,6 +69,6 @@ namespace spline {
          return degree ;
     }
 
-    int UnivariateBasisNode::getDimension() const { return 1; }
+    int UnivariateBasisNode::getNumberOfSubBasis() const { return 1; }
 }  // namespace spline
 

@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-
-import unittest
-from Basis import *
-from casadi import *
-from helpers import BasisTestCase
+from helpers import *
 
 class Test_Function_Polynomial(BasisTestCase):
 

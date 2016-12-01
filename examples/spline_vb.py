@@ -1,5 +1,6 @@
 import sys, os
 
+import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
 from Basis import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,8 +9,12 @@ import casadi as cas
 opti = OptiSpline()
 
 def derivative(coeffs, knots1, degree, o=1):
-    coeffs = coeffs.getData().data()
-    n = coeffs.shape[0]
+    coeffs = coeffs.getData()
+    try:
+      n = coeffs.shape[0]
+    except:
+      coeffs = coeffs.data()
+      n = coeffs.shape[0]
     P = np.eye(n)
     knots = knots1.copy()
     knots_out = knots[o:-o]
@@ -26,7 +31,7 @@ def derivative(coeffs, knots1, degree, o=1):
     if isinstance(coeffs, (cas.SX, cas.MX)):
         coeffs_out = cas.mtimes(cas.DM(P), coeffs)
     else:
-        coeffs_out = P.dot(coeffs)
+        coeffs_out = P.dot(coeffs.squeeze())
     return coeffs_out, knots_out
 
 def FunDerivative(self):
@@ -61,15 +66,15 @@ t_via = opti.var(len(via_pnts))
 
 g = []
 
-g.append(x([0]) == start_pnt[0]) #.data() ...
-g.append(y([0]) == start_pnt[1])
-g.append(x([1]) == end_pnt[0])
-g.append(y([1]) == end_pnt[1])
+g.append(x(0) == start_pnt[0]) #.data() ...
+g.append(y(0) == start_pnt[1])
+g.append(x(1) == end_pnt[0])
+g.append(y(1) == end_pnt[1])
 
-g.append(vx([0])==0)
-g.append(vy([0])==0)
-g.append(vx([1])==0)
-g.append(vy([1])==0)
+g.append(vx(0)==0)
+g.append(vy(0)==0)
+g.append(vx(1)==0)
+g.append(vy(1)==0)
 
 for k, via_pnt in enumerate(via_pnts):
     g.append(x([t_via[k]])== via_pnt[0])
@@ -112,11 +117,11 @@ y.getBasis().setKnots(list(T*knots))
 vx = x.derivative()
 vy = y.derivative()
 
-x_s = np.array([float(x([t])) for t in time.tolist()])
-y_s = np.array([float(y([t])) for t in time.tolist()])
+x_s = np.array([float(x(t)) for t in time.tolist()])
+y_s = np.array([float(y(t)) for t in time.tolist()])
 
-vx_s = np.array([float(vx([t])) for t in time.tolist()])
-vy_s = np.array([float(vy([t])) for t in time.tolist()])
+vx_s = np.array([float(vx(t)) for t in time.tolist()])
+vy_s = np.array([float(vy(t)) for t in time.tolist()])
 
 
 plt.figure()

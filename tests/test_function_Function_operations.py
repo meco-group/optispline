@@ -1,16 +1,6 @@
 #!/usr/bin/env python
 
-import os
-
-# Boolean flag to indicate if we run in valgrind
-# To speed up valgrind, you may choose to put
-# expensive computations within 'if not valgrind'
-valgrind = int(os.environ.get("VALGRIND",'0'))
-
-import unittest
-from Basis import *
-from casadi import *
-from helpers import BasisTestCase
+from helpers import *
 
 from numpy.polynomial.polynomial import polyval
 
@@ -35,7 +25,7 @@ class Test_Function_Operations(BasisTestCase):
                     ]:
 
         for arg in [ [0,0], [1,0], [0,1], [2,2], [0.7,1.3]]:
-          self.assertEqualTensor(p(arg), poly(*arg))
+          self.assertEqualTensor(p(*arg), poly(*arg))
           
           
       p1 = Polynomial([0,0,1],'x')
@@ -47,7 +37,7 @@ class Test_Function_Operations(BasisTestCase):
                     ]:
 
         for arg in [0,1,2,1.3]:
-          self.assertEqualTensor(p([arg]), poly(arg))
+          self.assertEqualTensor(p(arg), poly(arg))
       
 if __name__ == '__main__':
     unittest.main()

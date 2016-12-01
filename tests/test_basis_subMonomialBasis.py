@@ -1,16 +1,5 @@
 #!/usr/bin/env python
-
-import unittest
-import os
-
-# Boolean flag to indicate if we run in valgrind
-# To speed up valgrind, you may choose to put
-# expensive computations within 'if not valgrind'
-valgrind = int(os.environ.get("VALGRIND",'0'))
-
-from Basis import *
-from casadi import *
-from helpers import BasisTestCase
+from helpers import *
 
 import pdb
 
@@ -22,7 +11,7 @@ class Test_Basis_SubMonomial(BasisTestCase):
 
     def test_getDimension(self):
         s = MonomialBasis(3)
-        self.assertEqual(s.getDimension(), 1)
+        self.assertEqual(s.getNumberOfSubBasis(), 1)
 
     def test_getDegree(self):
         s = MonomialBasis(3)

@@ -1,6 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
 from Basis import *
 import casadi as ca
 import numpy as np
@@ -65,7 +66,7 @@ x_ = -r
 while (x_ < r):
     y_ = -r
     while (y_ < r):
-        obj = obj + potential_field([x_,y_])*dx*dy/(4.*r*r) # divide by the area to get a non-dimensional measure
+        obj = obj + potential_field(x_,y_)*dx*dy/(4.*r*r) # divide by the area to get a non-dimensional measure
         y_ = y_ + dy
     x_ = x_ + dx
 _stop_integration = time.time()
@@ -75,7 +76,7 @@ con = []
 
 # constraint (1)
 for i in range(0,x.size):
-    con.append(potential_field([x[i],y[i]])>=0)
+    con.append(potential_field(x[i],y[i])>=0)
 
 # constraint (2)
 con.append(potential_field>=-1)
@@ -99,7 +100,7 @@ for i in range(0,N):
     for j in range(0,N):
         x_ = X[i,j]
         y_ = Y[i,j]
-        potential_field_eval[i,j] = potential_field([x_,y_])
+        potential_field_eval[i,j] = potential_field(x_,y_)
 
 # Plot the solution
 fig = plt.figure()

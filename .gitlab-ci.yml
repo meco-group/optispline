@@ -1,0 +1,119 @@
+image: meco
+
+stages:
+  - tests
+  - binaries
+
+variables:
+    CI_PROJECT_NAME: cpp_splines
+    CC: gcc-4.7
+    CXX: g++-4.7
+    DEBIAN_BINARIES: /Dropbox/meco_binaries_debian
+    WINDOWS_BINARIES: /Dropbox/meco_binaries_windows
+    MATLABPATH: $DEBIAN_BINARIES
+    PYTHONPATH: $PYTHONPATH:$DEBIAN_BINARIES
+
+before_script:
+    - source env.sh 
+    - set -e
+    - mkdir build
+    - echo $CASADI_PREFIX
+
+after_script:
+    - source env.sh
+    - set -e
+    - pushd build
+    - export TARGET=meco_binaries_${BUILD_OS}/${BUILD_LANG}/${CI_PROJECT_NAME}/$CI_BUILD_REF_NAME
+    - TZ=CET touch swig/build_`date -Iseconds`.log
+    - rm -rf swig/*.pyc swig/CMakeFiles
+    - rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
+
+coverage:
+  stage: tests
+  variables:
+        BUILD_OS: debian
+        BUILD_LANG: python27
+  script:
+    - set -e
+    - pushd build
+    - cmake -DWITH_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
+    - make VERBOSE=1
+    - ctest -V -R python_test
+    - gcovr -e  ".*wrap.cxx" -r ..
+  after_script:
+    - echo 123
+
+debian-matlab:
+  stage: binaries
+  variables:
+        BUILD_OS: debian
+        MATLABRELEASE: R2014a
+        BUILD_LANG: matlab$MATLABRELEASE
+  script:
+    - set -e
+    - export MATLAB_ROOT=/repo/matlabR2014a
+
+    - pushd build
+
+    - cmake -DWITH_PYTHON=OFF ..
+    - make VERBOSE=1
+    - cp src/*.so swig
+
+    - export PATH=$PATH:$MATLAB_ROOT/bin/
+    - ctest -V -R matlab
+
+debian-python:
+  stage: binaries
+  variables:
+        BUILD_OS: debian
+        BUILD_LANG: python27
+  script:
+    - set -e
+    - pushd build
+    - cmake -DWITH_MATLAB=OFF ..
+    - make VERBOSE=1
+    - cp src/*.so swig
+    
+    - ctest -V -R python
+    - ctest -V -R valgrind
+    
+windows-matlab:
+  stage: binaries
+  variables:
+        BUILD_OS: windows
+        MATLABRELEASE: R2014a
+        BUILD_LANG: matlab$MATLABRELEASE
+  script:
+    - set -e
+    - export CASADI_PREFIX=$WINDOWS_BINARIES/$BUILD_LANG/casadi/$CASADIVERSION/
+    - export MATLAB_ROOT=/repo/matlabR2014a-win
+    - pushd build
+    - cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain64.cmake -DWITH_PYTHON=OFF ..
+    - make VERBOSE=1
+    - cp src/*.dll swig
+
+windows-python:
+  stage: binaries
+  variables:
+        BUILD_OS: windows
+        BUILD_LANG: python27
+  script:
+    - set -e
+    - export NUMPYSUFFIX=win32
+    - export CASADI_PREFIX=$WINDOWS_BINARIES/$BUILD_LANG/casadi/$CASADIVERSION/
+    - echo "find_library(PYTHON_LIBRARY NAMES python27 PATHS $HOME/.wine/drive_c/Python27/libs NO_SYSTEM_ENVIRONMENT_PATH)" > tmp.txt
+    - echo "find_path(PYTHON_INCLUDE_DIR NAMES Python.h PATHS $HOME/.wine/drive_c/Python27/include NO_SYSTEM_ENVIRONMENT_PATH)" >> tmp.txt
+    - echo "set(PYTHON_EXECUTABLE $HOME/.wine/drive_c/Python27/python.exe)" >> tmp.txt
+    - echo "set(NUMPY_INCLUDE_DIR $HOME/.wine/drive_c/Python27/Lib/site-packages/numpy-1.9.1-py2.7-$NUMPYSUFFIX.egg/numpy/core/include)" >> tmp.txt
+    - echo "set(NUMPY_INCLUDED_DIRS $HOME/.wine/drive_c/Python27/Lib/site-packages/numpy-1.9.1-py2.7-$NUMPYSUFFIX.egg/numpy/core/include/numpy)" >> tmp.txt
+    - echo "set(NUMPY_PATH $HOME/.wine/drive_c/Python27/Lib/site-packages/numpy-1.9.1-py2.7-$NUMPYSUFFIX.egg/numpy/core/include/numpy)" >> tmp.txt
+    - cat swig/CMakeLists.txt >> tmp.txt
+    - mv tmp.txt swig/CMakeLists.txt
+    - which swig
+    - mkdir -p swig/python && pushd swig && swig -I$SWIG_LIB/python -co pyrun.swg && sed -i -e 's/\"SwigPyObject\"/\"SwigPyCasadiObject\"/g' pyrun.swg && popd
+    - pushd build
+    - cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain32.cmake -DWITH_MATLAB=OFF ..
+    - make VERBOSE=1
+    - cp src/*.dll swig
+    - sed -i -e "s/'SwigPyObject'/'SwigPyCasadiObject'/g" swig/Basis.py
+    
