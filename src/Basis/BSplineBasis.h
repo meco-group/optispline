@@ -8,7 +8,7 @@
 #include "UnivariateBasis.h"
 
 namespace spline{
-
+    typedef std::vector<AnyScalar> AnyVector;
     class MonomialBasis;
 
 #ifndef SWIG
@@ -16,8 +16,8 @@ namespace spline{
     class BSplineBasisNode : public UnivariateBasisNode {
 
     public:
-        BSplineBasisNode (const std::vector<double >& knots, int degree);
-        BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals);
+        BSplineBasisNode (const AnyVector& knots, int degree);
+        BSplineBasisNode (const AnyVector& bounds, int degree, int numberOfIntervals);
 
         virtual Basis operator+(const MonomialBasis& other) const ;
         virtual Basis operator+(const BSplineBasis& other) const ;
@@ -29,16 +29,16 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const ;
         virtual Basis operator*(const DummyBasis& other) const ;
 
-        std::vector<double> getKnots () const;
-        void setKnots (const std::vector<double>& knots) ;
+        AnyVector getKnots () const;
+        void setKnots (const AnyVector& knots) ;
 
-        std::vector<double> greville () const;
+        AnyVector greville () const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
         virtual std::string getRepresentation() const ;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        virtual AnyTensor operator()(const AnyVector& x) const;
 
         virtual int getLength() const ;
 
@@ -49,7 +49,7 @@ namespace spline{
     private:
 
         //  std::vector<bool> indector(int i, double x);
-         std::vector<double> knots_;
+        AnyVector knots_;
     };
 
 #endif // SWIG
@@ -64,12 +64,11 @@ namespace spline{
         BSplineBasisNode* operator->() const ;
 #endif // SWIG
 
-        BSplineBasis (const std::vector<double >& knots, int degree);
-        BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals);
+        BSplineBasis (const AnyVector& knots, int degree);
+        BSplineBasis (const AnyVector& bounds, int degree, int numberOfIntervals);
 
-//  TODO(jgillis) moet ik de variant met const houden??
         std::vector<double> getKnots () const;
-        void setKnots (const std::vector<double> &knots) ;
+        void setKnots (const AnyVector& knots) ;
 
         std::vector<double> greville () const;
         //
@@ -86,7 +85,7 @@ namespace spline{
     AnyTensor BSplineBasisNode::SubBasisEvalution (const std::vector< T > & x_) const {
         T x = x_[0];
         T b;
-        double bottom;
+        T bottom;
         T basis[degree+1][knots_.size()-1];
 
         for (int i=0; i<(knots_.size()-1); i++){
