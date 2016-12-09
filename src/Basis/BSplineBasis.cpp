@@ -5,6 +5,79 @@
 
 namespace spline{
 
+
+    casadi::Function  BSplineEvaluator::create(const std::string &name, int n_knots, int degree,
+        const Dict& opts) {
+      casadi::Function ret;
+      ret.assignNode(new BSplineEvaluator(name, n_knots, degree));
+      ret->construct(opts);
+      return ret;
+    }
+
+    size_t BSplineEvaluator::get_n_in() { return 2; }
+    size_t BSplineEvaluator::get_n_out() { return 1; }
+
+    Sparsity BSplineEvaluator::get_sparsity_in(int i) {
+      if (i==0) {
+        return Sparsity::dense(n_knots_, 1);
+      } else {
+        return Sparsity::dense(1, 1);
+      }
+      return Sparsity();
+    }
+
+    Sparsity BSplineEvaluator::get_sparsity_out(int i) {
+      if (i==0) {
+        return Sparsity::dense(n_knots_ - degree_ - 1, 1);
+      }
+      return Sparsity();
+    }
+
+
+    BSplineEvaluator::BSplineEvaluator(const std::string &name, int n_knots, int degree) :
+      casadi::FunctionInternal(name), n_knots_(n_knots), degree_(degree) {
+
+    }
+
+    void BSplineEvaluator::print(std::ostream &stream) const {
+      stream << "BSpline(" << n_knots_ << "," << degree_ << ")";
+    }
+
+    void BSplineEvaluator::init(const Dict& opts) {
+      casadi::FunctionInternal::init(opts);
+      alloc_w((degree_+1)*(n_knots_-1), true);
+    }
+
+    Function BSplineEvaluator::getFullJacobian(const std::string& name, const Dict& opts) {
+      int n = n_knots_ - degree_ - 1;
+      MX knots = MX::sym("knots", n_knots_);
+      MX x = MX::sym("x");
+
+      MX delta_knots = knots(range(1+degree_, n_knots_-1))
+                       - knots(range(1, n_knots_-degree_-1));
+
+      Sparsity sp_diag = vertsplit(Sparsity::diag(n), {0, n-1, n})[0];
+      Sparsity sp_band = vertsplit(Sparsity::band(n, -1), {0, n-1, n})[0];
+
+      MX delta_knots_inv = 1/delta_knots;
+      MX T = MX(sp_diag, -delta_knots_inv) + MX(sp_band, delta_knots_inv);
+
+      Function bspline_evaluator = BSplineEvaluator::create("f", n_knots_-2, degree_-1);
+
+      MX res = bspline_evaluator({knots(range(1, n_knots_-1)), x})[0];
+
+      MX J = mtimes(T.T(), res);
+      return Function("J", {knots, x}, { horzcat(MX(n, n_knots_), degree_*J) });
+    }
+
+    void BSplineEvaluator::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, int mem) {
+      eval_generic<SXElem>(0, arg, res, iw, w);
+    }
+
+    void BSplineEvaluator::eval(void* mem, const double** arg, double** res, int* iw, double* w) const {
+      eval_generic<double>(mem, arg, res, iw, w);
+    }
+
     BSplineBasisNode* BSplineBasis::get() const { return static_cast<BSplineBasisNode*>(SharedObject::get()); };
     BSplineBasisNode* BSplineBasis::operator->() const { return get(); }
 
@@ -70,7 +143,7 @@ namespace spline{
     }
 
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree)
-    : UnivariateBasisNode(degree), knots_(knots){ }
+    : UnivariateBasisNode(degree), bspline_evaluator_(BSplineEvaluator::create("f", knots.size(), degree) ), knots_(knots) { }
 
     BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
     BSplineBasisNode::BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) : UnivariateBasisNode(degree) {
@@ -102,16 +175,32 @@ namespace spline{
 
     AnyTensor BSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         assert(x.size()==getNumberOfSubBasis());
-        if(AnyScalar::is_double(x)) {
-            return SubBasisEvalution<double>(AnyScalar::as_double(x));
-        } else {
-            return SubBasisEvalution<AnyScalar>(x);
-        }
+        return SubBasisEvalution(x);
     }
 
     void BSplineBasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * grid) const{
         for(auto const& point : greville()){
             grid->push_back(std::vector<AnyScalar> {point});
         }
+    }
+
+
+
+    AnyTensor BSplineBasisNode::SubBasisEvalution (const std::vector< AnyScalar > & x_) const {
+        AnyScalar x = x_[0];
+
+        if (x.is_double()) {
+          DM ret = bspline_evaluator_(std::vector<DM>{knots_, x.as_double()})[0];
+          return DT(ret, {ret.numel()});
+        }
+        if (x.is_MX()) {
+          MX ret = bspline_evaluator_(std::vector<MX>{knots_, x.as_MX()})[0];
+          return MT(ret, {ret.numel()});
+        }
+        if (x.is_SX()) {
+          SX ret = bspline_evaluator_(std::vector<SX>{knots_, x.as_SX()})[0];
+          return ST(ret, {ret.numel()});
+        }
+        return AnyTensor();
     }
 } // namespace spline
