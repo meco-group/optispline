@@ -100,6 +100,9 @@ class AnyScalar {
     friend inline AnyScalar operator&&(const AnyScalar &x, const AnyScalar &y) {
       ANYSCALAR_BINARY_OP(&&)
     }
+    friend inline AnyScalar operator+(const AnyScalar &x, const AnyScalar &y) {
+      ANYSCALAR_BINARY_OP(+)
+    }
 
     AnyScalar& operator+=(const AnyScalar& rhs);
 
@@ -232,6 +235,12 @@ class AnyTensor {
 
 AnyTensor vertcat(const std::vector<AnyScalar> & v);
 AnyTensor vertcat(const std::vector<double> & v);
+
+
+/*class AnyVector : public AnyTensor {
+    AnyVector(const std::vector<AnyScalar>& s) : AnyTensor(vertcat(s)) {
+    }
+};*/
 
 #undef ANYSCALAR_BINARY_OP
 #undef ANYTENSOR_BINARY

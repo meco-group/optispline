@@ -138,15 +138,15 @@ namespace spline{
         return knots_.size() - degree - 1;
     }
 
-    BSplineBasis::BSplineBasis (const std::vector<double >& knots, int degree)  {
+    BSplineBasis::BSplineBasis (const AnyVector& knots, int degree)  {
         assign_node(new BSplineBasisNode(knots, degree));
     }
 
-    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& knots, int degree)
+    BSplineBasisNode::BSplineBasisNode (const AnyVector& knots, int degree)
     : UnivariateBasisNode(degree), bspline_evaluator_(BSplineEvaluator::create("f", knots.size(), degree) ), knots_(knots) { }
 
-    BSplineBasis::BSplineBasis (const std::vector<double >& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
-    BSplineBasisNode::BSplineBasisNode (const std::vector<double >& bounds, int degree, int numberOfIntervals) : UnivariateBasisNode(degree) {
+    BSplineBasis::BSplineBasis (const AnyVector& bounds, int degree, int numberOfIntervals)  { assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals)); };
+    BSplineBasisNode::BSplineBasisNode (const AnyVector& bounds, int degree, int numberOfIntervals) : UnivariateBasisNode(degree) {
         int numberOfKnots = 2*degree + numberOfIntervals;
         knots_.resize(numberOfKnots, 0);
 
@@ -162,18 +162,18 @@ namespace spline{
         setKnots(knots_);
     }
 
-    std::vector< double > BSplineBasis::getKnots () const { return (*this)->getKnots(); }
-    std::vector< double > BSplineBasisNode::getKnots () const {
+    AnyVector BSplineBasis::getKnots () const { return (*this)->getKnots(); }
+    AnyVector BSplineBasisNode::getKnots () const {
         return knots_;
     }
 
-    void BSplineBasis::setKnots (const std::vector< double >& knots) { return (*this)->setKnots (knots); }
-    void BSplineBasisNode::setKnots (const std::vector< double >& knots) {
+    void BSplineBasis::setKnots (const AnyVector& knots) { return (*this)->setKnots (knots); }
+    void BSplineBasisNode::setKnots (const AnyVector& knots) {
         knots_ = knots;
     }
 
 
-    AnyTensor BSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
+    AnyTensor BSplineBasisNode::operator() (const AnyVector & x) const {
         assert(x.size()==getNumberOfSubBasis());
         return SubBasisEvalution(x);
     }
