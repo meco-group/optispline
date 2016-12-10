@@ -119,16 +119,16 @@ namespace spline{
         return timesSubBasis (shared_from_this<BSplineBasis>(), other);
     }
 
-    std::vector<double> BSplineBasis::greville () const {return (*this)->greville();}
-    std::vector<double> BSplineBasisNode::greville () const {
+    AnyVector BSplineBasis::greville () const {return (*this)->greville();}
+    AnyVector BSplineBasisNode::greville () const {
         int degree = getDegree();
         if(degree == 0){
             degree = 1;
         }
 
-        std::vector<double> grevillePoints (getLength());
+        AnyVector grevillePoints (getLength());
         for (int i = 0; i < getLength(); ++i) {
-            grevillePoints[i] = std::accumulate(knots_.begin()+i+1,knots_.begin()+i+degree+1, 0.0) / degree;
+            grevillePoints[i] = std::accumulate(knots_.begin()+i+1, knots_.begin()+i+degree+1, AnyScalar(0.0)) / degree;
         }
 
         return grevillePoints;
@@ -187,20 +187,21 @@ namespace spline{
 
 
     AnyTensor BSplineBasisNode::SubBasisEvalution (const std::vector< AnyScalar > & x_) const {
+        spline_assert(x_.size()>0);
         AnyScalar x = x_[0];
+        TensorType t = AnyScalar::merge(AnyScalar::type(knots_), x.type());
 
-        if (x.is_double()) {
-          DM ret = bspline_evaluator_(std::vector<DM>{knots_, x.as_double()})[0];
+        if (t==TENSOR_DOUBLE) {
+          DM ret = bspline_evaluator_(std::vector<DM>{AnyScalar::as_double(knots_), x.as_double()})[0];
           return DT(ret, {ret.numel()});
-        }
-        if (x.is_MX()) {
-          MX ret = bspline_evaluator_(std::vector<MX>{knots_, x.as_MX()})[0];
+        } else if (t==TENSOR_MX) {
+          MX ret = bspline_evaluator_(std::vector<MX>{vertcat(AnyScalar::as_MX(knots_)), x.as_MX()})[0];
           return MT(ret, {ret.numel()});
-        }
-        if (x.is_SX()) {
-          SX ret = bspline_evaluator_(std::vector<SX>{knots_, x.as_SX()})[0];
+        } else if (t==TENSOR_SX) {
+          SX ret = bspline_evaluator_(std::vector<SX>{vertcat(AnyScalar::as_SX(knots_)), x.as_SX()})[0];
           return ST(ret, {ret.numel()});
         }
+        spline_assert(0);
         return AnyTensor();
     }
 } // namespace spline

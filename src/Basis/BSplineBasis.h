@@ -148,10 +148,10 @@ namespace spline{
         BSplineBasis (const AnyVector& knots, int degree);
         BSplineBasis (const AnyVector& bounds, int degree, int numberOfIntervals);
 
-        std::vector<double> getKnots () const;
+        AnyVector getKnots () const;
         void setKnots (const AnyVector& knots) ;
 
-        std::vector<double> greville () const;
+        AnyVector greville () const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //

@@ -111,7 +111,28 @@ class AnyScalar {
     static bool is_double(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_DOUBLE;}
     static bool is_SX(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_SX;}
     static bool is_MX(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_MX;}
+    
+    static std::vector<AnyScalar> from_vector(const std::vector<double>& v);
+    static std::vector<AnyScalar> from_vector(const std::vector<SX>& v);
+    static std::vector<AnyScalar> from_vector(const std::vector<MX>& v);
 
+    #ifndef SWIG
+    /// Print a representation of the object to a stream (shorthand)
+    inline friend
+        std::ostream& operator<<(std::ostream &stream, const AnyScalar& obj) {
+            if (obj.is_double()) {
+              stream << "AnyScalar(double):" << obj.as_double();
+            } else if (obj.is_SX()) {
+              stream << "AnyScalar(SX):" << obj.as_SX();
+            } else if (obj.is_MX()) {
+              stream << "AnyScalar(MX):" << obj.as_MX();
+            } else {
+              stream << "AnyScalar(null)";
+            }
+            return stream;
+        }
+    #endif // SWIG
+    
   private:
     TensorType t;
     double data_double;
@@ -232,6 +253,15 @@ class AnyTensor {
     MT data_mx;
 };
 
+namespace casadi {
+  template<>
+  class CASADI_EXPORT casadi_limits<AnyScalar>{
+  public:
+    static bool is_zero(const AnyScalar& val);
+    //static bool is_equal(const AnyScalar& x, const AnyScalar& y, int depth);
+    static bool is_one(const AnyScalar& val);
+  };
+}
 
 AnyTensor vertcat(const std::vector<AnyScalar> & v);
 AnyTensor vertcat(const std::vector<double> & v);
