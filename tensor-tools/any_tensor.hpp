@@ -255,7 +255,7 @@ class AnyTensor {
 
 namespace casadi {
   template<>
-  class CASADI_EXPORT casadi_limits<AnyScalar>{
+  class casadi_limits<AnyScalar>{
   public:
     static bool is_zero(const AnyScalar& val);
     //static bool is_equal(const AnyScalar& x, const AnyScalar& y, int depth);
