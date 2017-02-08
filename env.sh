@@ -11,3 +11,5 @@ export CASADI_PREFIX=$DEBIAN_BINARIES/$BUILD_LANG/casadi/$CASADIVERSION/
 #export CC="gcc-4.7"
 #export CXX="g++-4.7"
 gcc --version
+export CC=
+export CXX=
