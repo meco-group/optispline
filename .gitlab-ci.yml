@@ -14,7 +14,7 @@ variables:
 
 before_script:
     - source env.sh
-    - rclone sync dropbox:$BINARIES/$SWIG_HOME_REL $SWIG_HOME
+    - rclone sync dropbox:meco_binaries_debian/$SWIG_HOME_REL $SWIG_HOME
     - rclone sync --include meco_binaries.* dropbox:$BINARIES $DEBIAN_BINARIES
     - chmod +x $SWIG_HOME/bin/swig
     - set -e
