@@ -6,8 +6,6 @@ stages:
 
 variables:
     CI_PROJECT_NAME: cpp_splines
-    CC: gcc-4.7
-    CXX: g++-4.7
     DEBIAN_BINARIES: /Dropbox/meco_binaries_debian
     WINDOWS_BINARIES: /Dropbox/meco_binaries_windows
     MATLABPATH: $DEBIAN_BINARIES
