@@ -14,7 +14,9 @@ variables:
     PYTHONPATH: $PYTHONPATH:$DEBIAN_BINARIES
 
 before_script:
-    - source env.sh 
+    - source env.sh
+    - ls /Dropbox
+    - rclone sync dropbox:meco_binaries_${BUILD_OS}/swig/2.0 $SWIG_HOME
     - set -e
     - mkdir build
     - echo $CASADI_PREFIX
