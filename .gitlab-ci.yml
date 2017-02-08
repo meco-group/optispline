@@ -14,7 +14,6 @@ variables:
     PYTHONPATH: $PYTHONPATH:$DEBIAN_BINARIES
 
 before_script:
-    - docker pull pma-rob-dbs.mech.kuleuven.be/meco/meco
     - source env.sh 
     - set -e
     - mkdir build
