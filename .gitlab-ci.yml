@@ -15,6 +15,7 @@ variables:
 before_script:
     - source env.sh
     - rclone sync dropbox:$BINARIES/$SWIG_HOME_REL $SWIG_HOME
+    - chmod +x $SWIG_HOME/bin/swig
     - set -e
     - mkdir build
     - echo $CASADI_PREFIX
