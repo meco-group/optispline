@@ -1,6 +1,6 @@
 #image: pma-rob-dbs.mech.kuleuven.be/meco/meco
 
-image: ubuntu
+image: meco
 
 stages:
   - tests
