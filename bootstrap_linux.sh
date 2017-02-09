@@ -1,5 +1,5 @@
 sudo apt-get update
-sudo apt-get install -y openssh-client git wget python2.7-dev
+sudo apt-get install -y openssh-client git wget python2.7-dev cmake g++-4.7
 
 
 if [ -f ~/.ssh/id_rsa.pub ];
@@ -43,6 +43,8 @@ cat <<EOF > build-python/run.sh
 rm CMakeCache.txt
 export BUILD_LANG=python27
 source ../env.sh
+export CC="gcc-4.7"
+export CXX="g++-4.7"
 cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
 EOF
 
