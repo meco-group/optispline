@@ -144,7 +144,8 @@ std::vector<MetaCon> OptistackSolver::categorize_constraints(const std::vector<M
 
   for (int i=0;i<g.size();++i) {
     MX c = g[i];
-    ret[i].original = c;
+    MetaCon& r = ret[i];
+    r.original = c;
     if (c.is_op(OP_LE) || c.is_op(OP_LT)) {
       std::vector<MX> args;
       while (c.is_op(OP_LE) || c.is_op(OP_LT)) {
@@ -152,13 +153,13 @@ std::vector<MetaCon> OptistackSolver::categorize_constraints(const std::vector<M
         c = c.dep(0);
       }
       args.push_back(c);
-      for (int i=0;i<args.size()-1;++i) {
-        ret[i].flattened.push_back(args[i+1]-args[i]);
-        ret[i].is_equality = false;
+      for (int j=0;j<args.size()-1;++j) {
+        r.flattened.push_back(args[j+1]-args[j]);
+        r.is_equality = false;
       }
     } else if (c.is_op(OP_EQ)) {
-        ret[i].flattened.push_back(c.dep(0)-c.dep(1));
-        ret[i].is_equality = true;
+        r.flattened.push_back(c.dep(0)-c.dep(1));
+        r.is_equality = true;
     } else {
       spline_assert_message(false, "Constraint type unkown. Use ==, >= or <= .");
     }
