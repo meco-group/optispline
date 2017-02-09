@@ -107,7 +107,7 @@ windows-python:
   script:
     - set -e
     - export NUMPYSUFFIX=win32
-    - export CASADI_PREFIX_REL=$BUILD_LANG/casadi/$CASADIVERSION
+    - export CASADI_PREFIX_REL=$BUILD_LANG/casadi/$CASADIVERSION $CASADI_PREFIX
     - export CASADI_PREFIX=$WINDOWS_BINARIES/$CASADI_PREFIX_REL
     - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL
     - echo "find_library(PYTHON_LIBRARY NAMES python27 PATHS $HOME/.wine/drive_c/Python27/libs NO_SYSTEM_ENVIRONMENT_PATH)" > tmp.txt
