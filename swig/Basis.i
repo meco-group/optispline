@@ -130,6 +130,7 @@ def _swig_repr(self):
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
 
+    GUESTOBJECT * from_ptr(const std::vector<AnyScalar>* a);
     GUESTOBJECT * from_ptr(const AnyScalar *a);
     GUESTOBJECT * from_ptr(const AnyTensor *a);
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
@@ -454,6 +455,16 @@ def _swig_repr(self):
       if (a->is_double()) return from_ref(static_cast<double>(*a));
       if (a->is_SX()) return from_ref(static_cast<SX>(*a));
       if (a->is_MX()) return from_ref(static_cast<MX>(*a));
+#ifdef SWIGPYTHON
+      return Py_None;
+#endif // SWIGPYTHON
+      return 0;
+    }
+
+    GUESTOBJECT * from_ptr(const std::vector<AnyScalar> *a) {
+      if (AnyScalar::is_double(*a)) return from_ref(AnyScalar::as_double(*a));
+      if (AnyScalar::is_SX(*a)) return from_ref(AnyScalar::as_SX(*a));
+      if (AnyScalar::is_MX(*a)) return from_ref(AnyScalar::as_MX(*a));
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
