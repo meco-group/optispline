@@ -62,7 +62,8 @@ public:
   // Solve the problem
   void solve();
 protected:
-  OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options);
+  OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g,
+      const std::string& solver, const Dict& options);
 private:
 
 
@@ -96,7 +97,8 @@ public:
   Tensor<DM> value(const Tensor<MX>& c) const;
 
 protected:
-  OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options);
+  OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g,
+      const std::string& solver, const Dict& options);
 };
 
 class OptiSpline : public Optistack {
@@ -105,7 +107,8 @@ public:
   using Optistack::var;
   MT var(const std::vector<int>& shape);
   spline::Function Function(const spline::TensorBasis& b);
-  OptiSplineSolver solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options=Dict()) const;
+  OptiSplineSolver solver(const MX& f, const std::vector<MX> & g,
+      const std::string& solver, const Dict& options=Dict()) const;
 };
 
 

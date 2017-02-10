@@ -29,7 +29,7 @@ namespace spline{
 
 #endif // SWIG
 
-    class Argument : public  SharedObject 
+    class Argument : public  SharedObject
     {
     public:
 #ifndef SWIG

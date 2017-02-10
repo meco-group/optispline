@@ -28,7 +28,8 @@ MX Optistack::flag(const MX& m, OptistackType type) {
   return m;
 }
 
-OptistackSolver Optistack::solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) const {
+OptistackSolver Optistack::solver(const MX& f, const std::vector<MX> & g,
+    const std::string& solver, const Dict& options) const {
   return OptistackSolver(*this, f, g, solver, options);
 }
 
@@ -87,7 +88,8 @@ DM OptistackSolver::value(const MX& x) const {
   return arg[0];
 }
 
-OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) : sc_(sc) {
+OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g,
+    const std::string& solver, const Dict& options) : sc_(sc) {
   solved_ = false;
 
   MX total_expr = vertcat(f, veccat(g));
@@ -209,7 +211,8 @@ Tensor<DM> OptiSplineSolver::value(const Tensor<MX>& t) const {
 }
 
 void OptiSplineSolver::value(const Tensor<MX>& t, const Tensor<DM>& d) {
-  spline_assert_message(t.squeeze().dims()==d.squeeze().dims(), "Tensor dimensions must match. Got " << t.dims() << " and " << d.dims() <<".");
+  spline_assert_message(t.squeeze().dims()==d.squeeze().dims(),
+    "Tensor dimensions must match. Got " << t.dims() << " and " << d.dims() <<".");
   OptistackSolver::value(t.data(), d.data());
 }
 
@@ -226,10 +229,12 @@ MT OptiSpline::var(const std::vector<int> & shape) {
 }
 
 
-OptiSplineSolver OptiSpline::solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) const {
+OptiSplineSolver OptiSpline::solver(const MX& f, const std::vector<MX> & g,
+    const std::string& solver, const Dict& options) const {
   return OptiSplineSolver(*this, f, g, solver, options);
 }
 
-OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) : OptistackSolver(sc, f, g, solver, options) {
+OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g,
+    const std::string& solver, const Dict& options) : OptistackSolver(sc, f, g, solver, options) {
 
 }

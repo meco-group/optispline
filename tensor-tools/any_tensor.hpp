@@ -111,7 +111,7 @@ class AnyScalar {
     static bool is_double(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_DOUBLE;}
     static bool is_SX(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_SX;}
     static bool is_MX(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_MX;}
-    
+
     static std::vector<AnyScalar> from_vector(const std::vector<double>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<SX>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<MX>& v);
@@ -132,7 +132,7 @@ class AnyScalar {
             return stream;
         }
     #endif // SWIG
-    
+
   private:
     TensorType t;
     double data_double;

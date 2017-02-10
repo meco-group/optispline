@@ -382,4 +382,4 @@ namespace casadi {
     return false;
   }
 
-}
+} //namespace casadi

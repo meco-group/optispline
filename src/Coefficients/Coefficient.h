@@ -28,12 +28,12 @@ namespace spline {
     public:
         AnyTensor data;
     };
-#endif  
-    
-    
+#endif
+
+
     class Coefficient : public SharedObject {
     public:
-    
+
     #ifndef SWIG
 
         CoefficientNode* get() const ;

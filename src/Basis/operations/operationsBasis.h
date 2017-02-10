@@ -15,4 +15,3 @@ namespace spline{
     TensorBasis timesBasis(const TensorBasis& b1, const TensorBasis& b2 );
 }
 #endif //  OPERATIONSBASISG
-
