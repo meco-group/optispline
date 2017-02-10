@@ -53,10 +53,10 @@ namespace spline {
         BasisNode* operator->() const ;
 
 #endif // SWIG
-        // int getNumberOfSubBasis () const;
+        // int getNumberOfSubBasis() const;
 
-        // std::vector<int> getSize () const;
-        Basis ();
+        // std::vector<int> getSize() const;
+        Basis();
 
         virtual Basis operator+(const Basis& rhs) const;
         virtual Basis operator+(const DummyBasis& rhs) const;
