@@ -67,3 +67,10 @@ swig/*.m
 /run.sh
 /tests/pdb/pdb.py
 /temp_tests/*
+/build*
+
+*.pyc
+*BACKUP*
+*BASE*
+*LOCAL*
+*REMOTE*

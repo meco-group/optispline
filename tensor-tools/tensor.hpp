@@ -416,6 +416,11 @@ class Tensor {
                                          mrange(n_dims()+b.n_dims()));
   }
 
+  Tensor mtimes(const Tensor &rhs) {
+    tensor_assert(n_dims()==2 && rhs.n_dims()==2);
+    return einstein(rhs, {-1, -2}, {-2, -3}, {-1, -3});
+  }
+
   Tensor inner(const Tensor&b) {
     const Tensor& a = *this;
 

@@ -2,7 +2,7 @@
 #define SHAREDOBJECTNODE
 
 namespace spline {
-    
+
 class SharedObject;
 
 #ifndef SWIG
@@ -27,7 +27,7 @@ public:
     template<class T>
         const T shared_from_this() const;
 
-private: 
+private:
     int count_;
 };
 

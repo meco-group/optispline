@@ -111,7 +111,7 @@ class AnyScalar {
     static bool is_double(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_DOUBLE;}
     static bool is_SX(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_SX;}
     static bool is_MX(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_MX;}
-    
+
     static std::vector<AnyScalar> from_vector(const std::vector<double>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<SX>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<MX>& v);
@@ -132,7 +132,7 @@ class AnyScalar {
             return stream;
         }
     #endif // SWIG
-    
+
   private:
     TensorType t;
     double data_double;
@@ -229,6 +229,28 @@ class AnyTensor {
       return this->operator=((*this) + b);
     }
 
+    AnyTensor mtimes(const AnyTensor& rhs) const {
+      ANYTENSOR_BINARY((*this), rhs, mtimes);
+    }
+
+    AnyTensor einstein(const AnyTensor &B, const std::vector<int>& a, const std::vector<int>& b, const std::vector<int>& c) const {
+      const AnyTensor& X = *this;
+      const AnyTensor& Y = B;
+      switch (AnyScalar::merge(X.t, Y.t)) {
+        case TENSOR_DOUBLE:
+          return X.as_DT().einstein(Y.as_DT(), a, b, c);
+        case TENSOR_SX:
+          return X.as_ST().einstein(Y.as_ST(), a, b, c);
+        case TENSOR_MX:
+          return X.as_MT().einstein(Y.as_MT(), a, b, c);
+        default:
+           assert(false); return DT();
+      }
+    }
+
+    inline friend AnyTensor mtimes(const AnyTensor &a, const AnyTensor &b) {
+      return a.mtimes(b);
+    }
 
     #ifndef SWIG
     /// Print a representation of the object to a stream (shorthand)

@@ -96,8 +96,8 @@ namespace spline{
     class BSplineBasisNode : public UnivariateBasisNode {
 
     public:
-        BSplineBasisNode (const AnyVector& knots, int degree);
-        BSplineBasisNode (const AnyVector& bounds, int degree, int numberOfIntervals);
+        BSplineBasisNode(const AnyVector& knots, int degree);
+        BSplineBasisNode(const AnyVector& bounds, int degree, int numberOfIntervals);
 
         virtual Basis operator+(const MonomialBasis& other) const ;
         virtual Basis operator+(const BSplineBasis& other) const ;
@@ -109,10 +109,10 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const ;
         virtual Basis operator*(const DummyBasis& other) const ;
 
-        AnyVector getKnots () const;
-        void setKnots (const AnyVector& knots) ;
+        AnyVector getKnots() const;
+        void setKnots(const AnyVector& knots) ;
 
-        AnyVector greville () const;
+        AnyVector greville() const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
@@ -122,7 +122,7 @@ namespace spline{
 
         virtual int getLength() const ;
 
-        AnyTensor SubBasisEvalution (const std::vector< AnyScalar >& x ) const ;
+        AnyTensor SubBasisEvalution(const std::vector< AnyScalar >& x ) const ;
 
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
     private:
@@ -145,13 +145,13 @@ namespace spline{
         BSplineBasisNode* operator->() const ;
 #endif // SWIG
 
-        BSplineBasis (const AnyVector& knots, int degree);
-        BSplineBasis (const AnyVector& bounds, int degree, int numberOfIntervals);
+        BSplineBasis(const AnyVector& knots, int degree);
+        BSplineBasis(const AnyVector& bounds, int degree, int numberOfIntervals);
 
-        AnyVector getKnots () const;
-        void setKnots (const AnyVector& knots) ;
+        AnyVector getKnots() const;
+        void setKnots(const AnyVector& knots) ;
 
-        AnyVector greville () const;
+        AnyVector greville() const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //

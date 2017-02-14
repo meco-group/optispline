@@ -16,4 +16,3 @@ public:
 };
 } // namespace spline
 #endif /* POLYNOMIAL_H */
-

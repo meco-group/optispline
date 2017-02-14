@@ -4,10 +4,13 @@
 
 namespace spline {
 
-    DummyBasisNode* DummyBasis::get() const { return static_cast<DummyBasisNode*>(SharedObject::get()); };
+    DummyBasisNode* DummyBasis::get() const {
+      return static_cast<DummyBasisNode*>(SharedObject::get());
+    };
+
     DummyBasisNode* DummyBasis::operator->() const { return get(); }
 
-    DummyBasis::DummyBasis (){
+    DummyBasis::DummyBasis() {
         assign_node(new DummyBasisNode());
     }
     std::string DummyBasis::getRepresentation() const { return (*this)->getRepresentation() ; }
@@ -39,4 +42,3 @@ namespace spline {
         return other.get()->shared_from_this< BSplineBasis >();
     }
 }  // namespace spline
-
