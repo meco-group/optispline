@@ -18,6 +18,7 @@ namespace spline {
         CoefficientNode(const std::vector< double >& v);
 
         std::vector< int > getShape() const;
+        std::vector< int > size() const;
         int getNumberCoefficents() const;
 
         // Coefficient operator+ (Coefficient & other) const;
@@ -45,6 +46,7 @@ namespace spline {
         Coefficient(const std::vector< double >& v);
 
         std::vector< int > getShape() const;
+        std::vector< int > size() const;
         int getNumberCoefficents() const;
 
         Coefficient operator-() const ;
