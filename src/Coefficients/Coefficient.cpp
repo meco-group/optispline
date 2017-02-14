@@ -26,7 +26,9 @@ namespace spline {
         return {i, j};
     }
 
+    int Coefficient::getNumberCoefficents() const { return (*this)->getNumberCoefficents(); }
     int CoefficientNode::getNumberCoefficents() const {
+        /* TODO use coefficient::size */
         std::vector< int > dims = data.dims();
         int d = dims.size();
         int i = dims[d-2];
@@ -49,9 +51,6 @@ namespace spline {
     }
 
     std::vector< int > Coefficient::getShape() const { return (*this)->getShape(); }
-
-    int Coefficient::getNumberCoefficents() const { return (*this)->getNumberCoefficents(); }
-
     Coefficient Coefficient::operator-() const {
         return (*this)->operator-().shared_from_this<Coefficient>();
     }

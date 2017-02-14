@@ -21,6 +21,7 @@ namespace spline {
         std::vector< int > size() const;
         int getNumberCoefficents() const;
 
+        int getNumberCoefficents() const;
         // Coefficient operator+ (Coefficient & other) const;
         CoefficientNode operator-() const ;
         AnyTensor getData() const {return data;}
@@ -40,6 +41,7 @@ namespace spline {
         CoefficientNode* get() const ;
         CoefficientNode* operator->() const ;
 
+        int getNumberCoefficents() const;
     #endif // SWIG
         Coefficient();
         Coefficient(const AnyTensor& t);
