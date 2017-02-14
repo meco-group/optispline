@@ -33,6 +33,7 @@ namespace spline {
         std::string getRepresentation() const ;
         void repr() const { userOut() << getRepresentation() << std::endl;}
         // Argument& getArgument (){ return getBasis().getArgument();}
+        std::vector< int > size() const;
     public:
         TensorBasis basis;
         Coefficient coef;
