@@ -22,15 +22,15 @@ namespace spline {
 
     class TensorBasisNode : public SharedObjectNode {
     public:
-        TensorBasisNode (const std::vector< Basis >& allBasis);
-        int getNumberOfSubBasis () const;
+        TensorBasisNode(const std::vector< Basis >& allBasis);
+        int getNumberOfSubBasis() const;
 
-        std::vector<int> getShape () const;
+        std::vector<int> getShape() const;
 
-        void setArguments (const std::vector< Argument >& argument);
+        void setArguments(const std::vector< Argument >& argument);
         std::vector< Argument > getArguments() const;
 
-        Argument getSubArgument( int index ) const;
+        Argument getSubArgument(int index) const;
         int indexArgument(Argument a) const;
 
         bool hasArguments() const;
@@ -38,7 +38,7 @@ namespace spline {
         virtual std::string getRepresentation() const ;
 
         std::vector< Basis > getSubBasis() const;
-        TensorBasis getSubBasis( int index ) const;
+        TensorBasis getSubBasis(int index) const;
         // Basis getBasis( int index ) const;
         // Basis getSubBasis( Argument a) const;
 
@@ -68,18 +68,18 @@ namespace spline {
         TensorBasisNode* operator->() const ;
 
 #endif // SWIG
-        int getNumberOfSubBasis () const;
+        int getNumberOfSubBasis() const;
 
-        std::vector<int> getShape () const;
-        TensorBasis ();
-        TensorBasis (const Basis & allSubBasis);
-        TensorBasis (const std::vector< Basis >& allSubBasis);
-        TensorBasis (const std::vector< TensorBasis >& allBasis);
+        std::vector<int> getShape() const;
+        TensorBasis();
+        TensorBasis(const Basis & allSubBasis);
+        TensorBasis(const std::vector< Basis >& allSubBasis);
+        TensorBasis(const std::vector< TensorBasis >& allBasis);
 
-        void setArguments (const std::vector< spline::Argument >& argument);
+        void setArguments(const std::vector< spline::Argument >& argument);
         std::vector< spline::Argument > getArguments() const;
 
-        spline::Argument getSubArgument( int index ) const;
+        spline::Argument getSubArgument(int index) const;
         int indexArgument(Argument a) const;
 
         bool hasArguments() const;

@@ -217,7 +217,7 @@ int main() {
     SX w = a;
     assert_equal(1.5, w);
   }
-  
+
   {
 
     std::vector<AnyScalar> v = {2, 3};

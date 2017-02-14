@@ -28,7 +28,8 @@ MX Optistack::flag(const MX& m, OptistackType type) {
   return m;
 }
 
-OptistackSolver Optistack::solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) const {
+OptistackSolver Optistack::solver(const MX& f, const std::vector<MX> & g,
+    const std::string& solver, const Dict& options) const {
   return OptistackSolver(*this, f, g, solver, options);
 }
 
@@ -87,7 +88,8 @@ DM OptistackSolver::value(const MX& x) const {
   return arg[0];
 }
 
-OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) : sc_(sc) {
+OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g,
+    const std::string& solver, const Dict& options) : sc_(sc) {
   solved_ = false;
 
   MX total_expr = vertcat(f, veccat(g));
@@ -144,7 +146,8 @@ std::vector<MetaCon> OptistackSolver::categorize_constraints(const std::vector<M
 
   for (int i=0;i<g.size();++i) {
     MX c = g[i];
-    ret[i].original = c;
+    MetaCon& r = ret[i];
+    r.original = c;
     if (c.is_op(OP_LE) || c.is_op(OP_LT)) {
       std::vector<MX> args;
       while (c.is_op(OP_LE) || c.is_op(OP_LT)) {
@@ -152,13 +155,13 @@ std::vector<MetaCon> OptistackSolver::categorize_constraints(const std::vector<M
         c = c.dep(0);
       }
       args.push_back(c);
-      for (int i=0;i<args.size()-1;++i) {
-        ret[i].flattened.push_back(args[i+1]-args[i]);
-        ret[i].is_equality = false;
+      for (int j=0;j<args.size()-1;++j) {
+        r.flattened.push_back(args[j+1]-args[j]);
+        r.is_equality = false;
       }
     } else if (c.is_op(OP_EQ)) {
-        ret[i].flattened.push_back(c.dep(0)-c.dep(1));
-        ret[i].is_equality = true;
+        r.flattened.push_back(c.dep(0)-c.dep(1));
+        r.is_equality = true;
     } else {
       spline_assert_message(false, "Constraint type unkown. Use ==, >= or <= .");
     }
@@ -208,7 +211,8 @@ Tensor<DM> OptiSplineSolver::value(const Tensor<MX>& t) const {
 }
 
 void OptiSplineSolver::value(const Tensor<MX>& t, const Tensor<DM>& d) {
-  spline_assert_message(t.squeeze().dims()==d.squeeze().dims(), "Tensor dimensions must match. Got " << t.dims() << " and " << d.dims() <<".");
+  spline_assert_message(t.squeeze().dims()==d.squeeze().dims(),
+    "Tensor dimensions must match. Got " << t.dims() << " and " << d.dims() <<".");
   OptistackSolver::value(t.data(), d.data());
 }
 
@@ -225,10 +229,12 @@ MT OptiSpline::var(const std::vector<int> & shape) {
 }
 
 
-OptiSplineSolver OptiSpline::solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) const {
+OptiSplineSolver OptiSpline::solver(const MX& f, const std::vector<MX> & g,
+    const std::string& solver, const Dict& options) const {
   return OptiSplineSolver(*this, f, g, solver, options);
 }
 
-OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options) : OptistackSolver(sc, f, g, solver, options) {
+OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g,
+    const std::string& solver, const Dict& options) : OptistackSolver(sc, f, g, solver, options) {
 
 }

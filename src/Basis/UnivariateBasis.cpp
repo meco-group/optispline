@@ -5,8 +5,10 @@
 #include "../common.h"
 
 namespace spline {
-    UnivariateBasisNode::UnivariateBasisNode(int degree_) :degree(degree_){ }
-    UnivariateBasisNode* UnivariateBasis::get() const { return static_cast<UnivariateBasisNode*>(SharedObject::get()); };
+    UnivariateBasisNode::UnivariateBasisNode(int degree_) :degree(degree_) { }
+    UnivariateBasisNode* UnivariateBasis::get() const {
+        return static_cast<UnivariateBasisNode*>(SharedObject::get());
+    };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
 
     std::string UnivariateBasis::getRepresentation() const { return (*this)->getRepresentation() ; }
@@ -54,21 +56,20 @@ namespace spline {
         return Basis();
     }
 
-    int UnivariateBasis::getLength ( ) const  { return (*this)->getLength(); }
-    int UnivariateBasisNode::getLength ( ) const {
+    int UnivariateBasis::getLength() const  { return (*this)->getLength(); }
+    int UnivariateBasisNode::getLength() const {
          assert(0);
     }
 
-    void  UnivariateBasis::setDegree (int degree) { (*this)->setDegree (degree); }
-    void  UnivariateBasisNode::setDegree (int degree) {
+    void UnivariateBasis::setDegree(int degree) { (*this)->setDegree(degree); }
+    void UnivariateBasisNode::setDegree(int degree) {
          this->degree = degree;
     }
 
-    int  UnivariateBasis::getDegree  ( ) const { return (*this)->getDegree (); }
-    int  UnivariateBasisNode::getDegree  ( ) const {
+    int  UnivariateBasis::getDegree() const { return (*this)->getDegree (); }
+    int  UnivariateBasisNode::getDegree() const {
          return degree ;
     }
 
     int UnivariateBasisNode::getNumberOfSubBasis() const { return 1; }
 }  // namespace spline
-

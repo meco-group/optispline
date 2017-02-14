@@ -328,3 +328,58 @@ AnyTensor concat(const std::vector<AnyTensor> & v, int axis) {
 AnyTensor vertcat(const std::vector<double>& v) {
   return DT(DM(v), {static_cast<int>(v.size())});
 }
+
+std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<double>& v) {
+  std::vector<AnyScalar> ret(v.size());
+  std::copy(v.begin(), v.end(), ret.begin());
+  return ret;
+}
+std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<SX>& v) {
+  std::vector<AnyScalar> ret(v.size());
+  std::copy(v.begin(), v.end(), ret.begin());
+  return ret;
+}
+std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<MX>& v) {
+  std::vector<AnyScalar> ret(v.size());
+  std::copy(v.begin(), v.end(), ret.begin());
+  return ret;
+}
+
+namespace casadi {
+  bool casadi_limits<AnyScalar>::is_zero(const AnyScalar& val) {
+    TensorType t = val.type();
+    switch (t) {
+      case TENSOR_DOUBLE:
+        return val.as_double()==0;
+        break;
+      case TENSOR_SX:
+        return val.as_SX().is_zero();
+        break;
+      case TENSOR_MX:
+        return val.as_MX().is_zero();
+        break;
+      default:
+        tensor_assert(false);
+    }
+    return false;
+  }
+
+  bool casadi_limits<AnyScalar>::is_one(const AnyScalar& val) {
+    TensorType t = val.type();
+    switch (t) {
+      case TENSOR_DOUBLE:
+        return val.as_double()==1;
+        break;
+      case TENSOR_SX:
+        return val.as_SX().is_one();
+        break;
+      case TENSOR_MX:
+        return val.as_MX().is_one();
+        break;
+      default:
+        tensor_assert(false);
+    }
+    return false;
+  }
+
+} //namespace casadi

@@ -49,5 +49,49 @@ class Test_Basis_SubBSpline(BasisTestCase):
                 ([1.0], [0,0,0,0])
                 ]:
                 self.assertEqualTensor(s(arg),check)
+    def test_derivative(self):
+      np.random.seed(0)
+      x = C.MX.sym("x")
+
+      N = 15
+
+      B = BSplineBasis([0,0,0] + list(np.linspace(0,1,N)) + [1,1,1],3)
+      c = np.random.random(*B.getShape())
+
+      f = Function(B,c)
+      F = C.Function("F",[x],[f(x)])
+
+      J = C.Function("F",[x],[C.jacobian(f(x),x)])
+      ts = np.linspace(0,1,1000)
+
+      def FunDerivative(self):
+        degree = self.getBasis().getDegree()
+        coeffs = self.getCoefficient().getData()
+        knots = np.array(self.getBasis().getKnots())
+        n = coeffs.shape[0]
+        delta_knots = knots[1+degree:-1] - knots[1:-degree-1]
+        T = np.zeros((n - 1, n))
+        j = np.arange(n - 1)
+        T[j, j] = -1. / delta_knots
+        T[j, j + 1] = 1. / delta_knots
+        P = degree * T
+        m = BSplineBasis(knots[1:-1], degree-1)
+        basis = TensorBasis([m])
+        return Function(basis, C.mtimes(P, coeffs))
+        
+      Function.derivative = FunDerivative
+
+
+      j = f.derivative()
+
+      s = [j(i) for i in ts]
+
+      S = [float(J(i)) for i in ts]
+
+      self.assertEqualArray(s,S,tol=1e-12)
+
+    
+    
+    
 if __name__ == '__main__':
     unittest.main()

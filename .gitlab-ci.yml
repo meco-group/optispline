@@ -1,4 +1,4 @@
-image: meco
+image: pma-rob-dbs.mech.kuleuven.be/meco/meco
 
 stages:
   - tests
@@ -6,15 +6,17 @@ stages:
 
 variables:
     CI_PROJECT_NAME: cpp_splines
-    CC: gcc-4.7
-    CXX: g++-4.7
     DEBIAN_BINARIES: /Dropbox/meco_binaries_debian
     WINDOWS_BINARIES: /Dropbox/meco_binaries_windows
+    BINARIES: meco_binaries_${BUILD_OS}
     MATLABPATH: $DEBIAN_BINARIES
     PYTHONPATH: $PYTHONPATH:$DEBIAN_BINARIES
 
 before_script:
-    - source env.sh 
+    - source env.sh
+    - rclone sync dropbox:meco_binaries_debian/$SWIG_HOME_REL $SWIG_HOME
+    - rclone sync --include meco_binaries.* dropbox:$BINARIES $DEBIAN_BINARIES
+    - chmod +x $SWIG_HOME/bin/swig
     - set -e
     - mkdir build
     - echo $CASADI_PREFIX
@@ -35,6 +37,7 @@ coverage:
         BUILD_LANG: python27
   script:
     - set -e
+    - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - pushd build
     - cmake -DWITH_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
@@ -51,6 +54,7 @@ debian-matlab:
         BUILD_LANG: matlab$MATLABRELEASE
   script:
     - set -e
+    - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - export MATLAB_ROOT=/repo/matlabR2014a
 
     - pushd build
@@ -69,6 +73,7 @@ debian-python:
         BUILD_LANG: python27
   script:
     - set -e
+    - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - pushd build
     - cmake -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
@@ -85,7 +90,9 @@ windows-matlab:
         BUILD_LANG: matlab$MATLABRELEASE
   script:
     - set -e
-    - export CASADI_PREFIX=$WINDOWS_BINARIES/$BUILD_LANG/casadi/$CASADIVERSION/
+    - export CASADI_PREFIX_REL=$BUILD_LANG/casadi/$CASADIVERSION/
+    - export CASADI_PREFIX=$WINDOWS_BINARIES/$CASADI_PREFIX_REL
+    - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - export MATLAB_ROOT=/repo/matlabR2014a-win
     - pushd build
     - cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain64.cmake -DWITH_PYTHON=OFF ..
@@ -100,7 +107,9 @@ windows-python:
   script:
     - set -e
     - export NUMPYSUFFIX=win32
-    - export CASADI_PREFIX=$WINDOWS_BINARIES/$BUILD_LANG/casadi/$CASADIVERSION/
+    - export CASADI_PREFIX_REL=$BUILD_LANG/casadi/$CASADIVERSION
+    - export CASADI_PREFIX=$WINDOWS_BINARIES/$CASADI_PREFIX_REL
+    - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - echo "find_library(PYTHON_LIBRARY NAMES python27 PATHS $HOME/.wine/drive_c/Python27/libs NO_SYSTEM_ENVIRONMENT_PATH)" > tmp.txt
     - echo "find_path(PYTHON_INCLUDE_DIR NAMES Python.h PATHS $HOME/.wine/drive_c/Python27/include NO_SYSTEM_ENVIRONMENT_PATH)" >> tmp.txt
     - echo "set(PYTHON_EXECUTABLE $HOME/.wine/drive_c/Python27/python.exe)" >> tmp.txt

@@ -29,7 +29,8 @@ class BasisTestCase(unittest.TestCase):
         if(len(a.shape) == 2):
             if(a.shape[1] == 1):
                 a = a[:,0]
-        self.assertTrue(np.linalg.norm(np.array(a)-np.array(b))<=tol)
+
+        self.assertTrue(np.linalg.norm(np.array(a)-np.array(b))<=tol,msg="%e > %e" % (np.linalg.norm(np.array(a)-np.array(b)),tol))
 
     def assertEqualT(self, a, b,tol=-1e-9):
         try:

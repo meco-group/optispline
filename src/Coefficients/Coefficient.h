@@ -28,12 +28,12 @@ namespace spline {
     public:
         AnyTensor data;
     };
-#endif  
-    
-    
+#endif
+
+
     class Coefficient : public SharedObject {
     public:
-    
+
     #ifndef SWIG
 
         CoefficientNode* get() const ;
@@ -41,8 +41,8 @@ namespace spline {
 
     #endif // SWIG
         Coefficient();
-        Coefficient (const AnyTensor& t);
-        Coefficient (const std::vector< double >& v);
+        Coefficient(const AnyTensor& t);
+        Coefficient(const std::vector< double >& v);
 
         std::vector< int > getShape() const;
         int getNumberCoefficents() const;

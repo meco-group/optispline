@@ -13,11 +13,11 @@ namespace spline{
     class ArgumentNode : public SharedObjectNode
     {
     public:
-        ArgumentNode ();
-        ArgumentNode (const std::string &name);
+        ArgumentNode();
+        ArgumentNode(const std::string &name);
 
-        const std::string& getName () const;
-        void setName (const std::string &name);
+        const std::string& getName() const;
+        void setName(const std::string &name);
 
         virtual std::string getRepresentation() const ;
 
@@ -29,7 +29,7 @@ namespace spline{
 
 #endif // SWIG
 
-    class Argument : public  SharedObject 
+    class Argument : public  SharedObject
     {
     public:
 #ifndef SWIG
@@ -39,13 +39,13 @@ namespace spline{
         inline friend
             std::ostream& operator<<(std::ostream &stream, const Argument& argument);
 #endif // SWIG
-        Argument ();
-        Argument (const std::string &name);
+        Argument();
+        Argument(const std::string &name);
 
         virtual std::string getRepresentation() const ;
 
-        const std::string  & getName () const;
-        void setName (const std::string &name);
+        const std::string  & getName() const;
+        void setName(const std::string &name);
 
         bool operator==(const Argument& other_arg) const;
         bool operator==(const std::string& other_arg_name) const;

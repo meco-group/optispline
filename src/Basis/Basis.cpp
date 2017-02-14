@@ -7,13 +7,13 @@ namespace spline {
     BasisNode* Basis::get() const { return static_cast<BasisNode*>(SharedObject::get()); };
     BasisNode* Basis::operator->() const { return get(); }
 
-    Basis::Basis (){
+    Basis::Basis() {
         assign_node(new BasisNode());
     }
 
     std::string BasisNode::getRepresentation() const {return "Basis";};
     std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
-    std::ostream& operator<<(std::ostream &stream, const Basis& base){
+    std::ostream& operator<<(std::ostream &stream, const Basis& base) {
         return stream << base.getRepresentation();
     }
 
@@ -65,16 +65,21 @@ namespace spline {
         return Basis();
     }
 
-    AnyTensor Basis::operator() (const std::vector< AnyScalar > & x) const { return (*this)->operator()(x); }
+    AnyTensor Basis::operator() (const std::vector< AnyScalar > & x) const {
+      return (*this)->operator()(x);
+    }
+
     AnyTensor BasisNode::operator() (const std::vector< AnyScalar > & x) const {
-        assert(false);		//Abstract
+        assert(false); //Abstract
         return AnyTensor();
     }
 
-    int Basis::getNumberOfSubBasis() const{ return (*this)->getNumberOfSubBasis();}
+    int Basis::getNumberOfSubBasis() const { return (*this)->getNumberOfSubBasis();}
     std::vector< int > Basis::getShape() const { return (*this)->getShape();}
 
-    void Basis::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const{(*this)->getEvaluationGrid(eg);}
-    void BasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const{}
+    void Basis::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {
+      (*this)->getEvaluationGrid(eg);
+    }
+    void BasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {}
 
 } // namespace spline

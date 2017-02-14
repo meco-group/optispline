@@ -4,7 +4,7 @@
 #include "../common.h"
 namespace spline {
 
-    AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const{
+    AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const {
         return basis(x).inner(coef.getData());
     }
 
@@ -14,9 +14,10 @@ namespace spline {
     MX Function::operator>=(const MX& x) const {
       return getCoefficient().getData().as_MT().data()>=x;
     }
-    
+
     Basis Function::getBasis() const {
-      spline_assert_message(basis.getNumberOfSubBasis()==1, ".getBasis() syntax only works for a 1-D TensorBasis.");
+      spline_assert_message(basis.getNumberOfSubBasis()==1,
+          ".getBasis() syntax only works for a 1-D TensorBasis.");
       return basis.getSubBasis()[0];
     }
     Basis Function::getBasis(const Index& index) const {
@@ -37,7 +38,7 @@ namespace spline {
       thisFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(*this);
       otherFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(f);
 
-      for (int i = 0; i < basisEvaluated.size(); i++){
+      for (int i = 0; i < basisEvaluated.size(); i++) {
           sumFunctionEvaluated.push_back(tc(thisFunctionEvaluated[i], otherFunctionEvaluated[i]));
       }
 
@@ -82,7 +83,7 @@ namespace spline {
     Function Function::operator-() const {
         return Function(basis, -coef);
     }
-    
+
     std::string Function::getRepresentation() const {return "Function";};
 
 }  // namespace spline

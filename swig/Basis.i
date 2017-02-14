@@ -119,6 +119,7 @@ def _swig_repr(self):
 %fragment("casadi_extra_decl", "header") {
   namespace casadi {
     bool to_ptr(GUESTOBJECT *p, AnyScalar** m);
+    bool to_ptr(GUESTOBJECT *p, std::vector<AnyScalar>** m);
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m);
     bool to_ptr(GUESTOBJECT *p, DT** m);
     bool to_ptr(GUESTOBJECT *p, ST** m);
@@ -129,6 +130,7 @@ def _swig_repr(self):
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
 
+    GUESTOBJECT * from_ptr(const std::vector<AnyScalar>* a);
     GUESTOBJECT * from_ptr(const AnyScalar *a);
     GUESTOBJECT * from_ptr(const AnyTensor *a);
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
@@ -224,6 +226,30 @@ def _swig_repr(self):
         }
       }
       return false;
+    }
+    
+    bool to_ptr(GUESTOBJECT *p, std::vector<AnyScalar>** m) {
+      {
+        std::vector<double> tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = AnyScalar::from_vector(*mt);
+          return true;
+        }
+      }
+      {
+        std::vector<SX> tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = AnyScalar::from_vector(*mt);
+          return true;
+        }
+      }
+      {
+        std::vector<MX> tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = AnyScalar::from_vector(*mt);
+          return true;
+        }
+      }
     }
 
     bool to_ptr(GUESTOBJECT *p, DT** m) {
@@ -426,9 +452,19 @@ def _swig_repr(self):
     }
 
     GUESTOBJECT * from_ptr(const AnyScalar *a) {
-      //if (a->is_double()) return from_ref(static_cast<double>(*a));
-      //if (a->is_SX()) return from_ref(static_cast<SX>(*a));
-      //if (a->is_MX()) return from_ref(static_cast<MX>(*a));
+      if (a->is_double()) return from_ref(static_cast<double>(*a));
+      if (a->is_SX()) return from_ref(static_cast<SX>(*a));
+      if (a->is_MX()) return from_ref(static_cast<MX>(*a));
+#ifdef SWIGPYTHON
+      return Py_None;
+#endif // SWIGPYTHON
+      return 0;
+    }
+
+    GUESTOBJECT * from_ptr(const std::vector<AnyScalar> *a) {
+      if (AnyScalar::is_double(*a)) return from_ref(AnyScalar::as_double(*a));
+      if (AnyScalar::is_SX(*a)) return from_ref(AnyScalar::as_SX(*a));
+      if (AnyScalar::is_MX(*a)) return from_ref(AnyScalar::as_MX(*a));
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
