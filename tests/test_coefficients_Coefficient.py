@@ -24,5 +24,18 @@ class Test_Function_SubBasis(BasisTestCase):
         a_ = DTensor(a, [2,2,1,1])
         a_ = Coefficient(a_)
 
+    def test_transform(self):
+        np.random.seed(0)
+        a = np.random.rand(2, 2)
+        a_cfs = Coefficient(a)
+        Tf = np.random.rand(2,2)
+        self.assertEqualT(a_cfs.transform(Tf, 0), Tf.dot(a))
+        self.assertEqualT(a_cfs.transform(Tf, 1), a.dot(Tf.T))
+        with self.assertRaises(Exception):
+            a_cfs.transform(Tf, 0)
+            a_cfs.transform(np.random.rand(2))
+            Tf = np.random.rand(2, 3)
+            a_cfs.test_transformsform(Tf)
+
 if __name__ == '__main__':
     unittest.main()

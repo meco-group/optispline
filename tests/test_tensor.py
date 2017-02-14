@@ -95,6 +95,18 @@ class Test_Tensor(BasisTestCase):
 
       self.assertEqualT( r, a )
 
+    def test_mtimes(self):
+      A = DTensor(range(6),[2,3])
+      B = DTensor(range(12),[3,4])
+
+      a = np.array(A.matrix())
+      b = np.array(B.matrix())
+
+      self.assertEqualT(A.mtimes(B), a.dot(b))
+
+      with self.assertRaises(Exception):
+        B.mtimes(A)
+
 if __name__ == '__main__':
     unittest.main()
 

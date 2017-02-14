@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <any_tensor.hpp>
+#include "../Function/NumericIndex.h"
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
@@ -52,6 +53,8 @@ namespace spline {
         Coefficient operator-() const ;
         AnyTensor getData() const;
         std::string getRepresentation() const;
+        /// Transform a direction of the coeffient's data tensor using given transformation matrix
+        AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;
     };
 } // namespace spline
 
