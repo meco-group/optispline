@@ -41,7 +41,7 @@ namespace spline {
 
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
 
-        int dimension() const {return 0;}
+        virtual int dimension() const {return 0;}
     };
 
 #endif // SWIG
