@@ -23,9 +23,10 @@ namespace spline {
     class TensorBasisNode : public SharedObjectNode {
     public:
         TensorBasisNode(const std::vector< Basis >& allBasis);
+
         int n_basis() const;
 
-        std::vector<int> getShape() const;
+        std::vector<int> dimension() const;
 
         void setArguments(const std::vector< Argument >& argument);
         std::vector< Argument > getArguments() const;
@@ -70,7 +71,7 @@ namespace spline {
 #endif // SWIG
         int n_basis() const;
 
-        std::vector<int> getShape() const;
+        std::vector<int> dimension() const;
         TensorBasis();
         TensorBasis(const Basis & allSubBasis);
         TensorBasis(const std::vector< Basis >& allSubBasis);

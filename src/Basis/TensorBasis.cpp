@@ -119,13 +119,11 @@ namespace spline {
         this->allSubBasis.push_back(basis);
     }
 
-    std::vector<int> TensorBasis::getShape() const { return (*this)->getShape ();}
-    std::vector<int> TensorBasisNode::getShape() const {
+    std::vector<int> TensorBasis::dimension() const { return (*this)->dimension ();}
+    std::vector<int> TensorBasisNode::dimension() const {
         std::vector<int> shape;
         for (auto const& b : getSubBasis()) {
-            for (int s : b.getShape()) {
-                shape.push_back(s);
-            }
+            shape.push_back(b.dimension());
         }
         return shape;
     }
