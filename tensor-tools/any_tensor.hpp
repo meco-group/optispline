@@ -229,6 +229,13 @@ class AnyTensor {
       return this->operator=((*this) + b);
     }
 
+    AnyTensor mtimes(const AnyTensor& rhs) const {
+      ANYTENSOR_BINARY((*this), rhs, mtimes);
+    }
+
+    inline friend AnyTensor mtimes(const AnyTensor &a, const AnyTensor &b) {
+      return a.mtimes(b);
+    }
 
     #ifndef SWIG
     /// Print a representation of the object to a stream (shorthand)
