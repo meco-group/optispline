@@ -40,9 +40,9 @@ namespace spline {
             returnBasis.setArguments(allArguments);
 
         } else {
-            spline_assert_message(b1.getNumberOfSubBasis() == b2.getNumberOfSubBasis(),
+            spline_assert_message(b1.n_basis() == b2.n_basis(),
               "Mismatch dimension");
-            for (int i = 0; i < b1.getNumberOfSubBasis(); i++) {
+            for (int i = 0; i < b1.n_basis(); i++) {
                 Basis subBasis1 = b1.getBasis(i);
                 Basis subBasis2 = b2.getBasis(i);
                 Basis sum = bc(subBasis1, subBasis2);

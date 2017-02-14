@@ -16,7 +16,7 @@ namespace spline {
     }
 
     Basis Function::getBasis() const {
-      spline_assert_message(basis.getNumberOfSubBasis()==1,
+      spline_assert_message(basis.n_basis()==1,
           ".getBasis() syntax only works for a 1-D TensorBasis.");
       return basis.getSubBasis()[0];
     }
@@ -56,7 +56,7 @@ namespace spline {
       AnyTensor C = A.solve(B);
 
       std::vector< int > shapeCoef = coef.getShape();
-      std::vector< int > shape = sumBasis.getShape();
+      std::vector< int > shape = sumBasis.dimension();
       shape.insert(shape.end(), shapeCoef.begin(), shapeCoef.end());
       C = C.shape(shape);
       return Function(sumBasis, C);

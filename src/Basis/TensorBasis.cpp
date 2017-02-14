@@ -88,7 +88,7 @@ namespace spline {
     }
 
     Basis TensorBasis::getBasis() const {
-        spline_assert(getNumberOfSubBasis() == 1);
+        spline_assert(n_basis() == 1);
         return getSubBasis()[0];
     }
 
@@ -103,7 +103,7 @@ namespace spline {
 
     Basis TensorBasis::getBasis(const Index& index) const {
       int ind = index.concrete(getArguments());
-      spline_assert(ind < getNumberOfSubBasis());
+      spline_assert(ind < n_basis());
       return getSubBasis()[ind];
     }
 
