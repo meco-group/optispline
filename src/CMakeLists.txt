@@ -31,7 +31,8 @@ add_library(Basis SHARED
     Function/Polynomial.h Function/Polynomial.cpp
     Function/Argument.h Function/Argument.cpp
     Function/Index.h Function/Index.cpp
-
+    Function/NumericIndex.h
+    
     Coefficients/Coefficient.h Coefficients/Coefficient.cpp
 
     Optistack/optistack.h Optistack/optistack.cpp
