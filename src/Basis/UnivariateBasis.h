@@ -35,7 +35,7 @@ namespace spline {
         virtual int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
-        int getNumberOfSubBasis() const;
+        int n_inputs() const;
         std::vector< int > getShape() const { return std::vector< int > {getLength()};}
 
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {spline_assert(0);};

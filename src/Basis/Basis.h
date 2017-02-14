@@ -33,7 +33,7 @@ namespace spline {
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        virtual int getNumberOfSubBasis() const {return 0;};
+        virtual int n_inputs() const {return 0;};
         virtual std::vector< int > getShape() const {return std::vector< int > {};}
 
         template< class T >
@@ -53,8 +53,6 @@ namespace spline {
         BasisNode* operator->() const ;
 
 #endif // SWIG
-        // int getNumberOfSubBasis() const;
-
         // std::vector<int> getSize() const;
         Basis();
 
@@ -68,7 +66,7 @@ namespace spline {
         virtual Basis operator*(const BSplineBasis& rhs) const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        int getNumberOfSubBasis() const;
+        int n_inputs() const;
         std::vector< int > getShape() const ;
 
         virtual std::string getRepresentation() const ;
@@ -80,7 +78,7 @@ namespace spline {
 
     template< class T >
         void BasisNode::assertVectorLenghtCorrect( const std::vector< T >& x) const{
-            assert(x.size() == getNumberOfSubBasis());  // imput vector has wrong dimention
+            assert(x.size() == n_inputs());  // imput vector has wrong dimention
         }
 
 }
