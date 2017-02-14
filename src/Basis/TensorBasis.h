@@ -25,8 +25,8 @@ namespace spline {
         TensorBasisNode(const std::vector< Basis >& allBasis);
 
         int n_basis() const;
-
         std::vector<int> dimension() const;
+        int n_inputs() const;
 
         void setArguments(const std::vector< Argument >& argument);
         std::vector< Argument > getArguments() const;
@@ -69,13 +69,14 @@ namespace spline {
         TensorBasisNode* operator->() const ;
 
 #endif // SWIG
-        int n_basis() const;
-
-        std::vector<int> dimension() const;
         TensorBasis();
         TensorBasis(const Basis & allSubBasis);
         TensorBasis(const std::vector< Basis >& allSubBasis);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
+
+        int n_basis() const;
+        int n_inputs() const;
+        std::vector<int> dimension() const;
 
         void setArguments(const std::vector< spline::Argument >& argument);
         std::vector< spline::Argument > getArguments() const;

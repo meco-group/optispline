@@ -163,8 +163,19 @@ namespace spline {
     }
     int TensorBasisNode::totalNumberBasisFunctions() const {
         int r = 1;
-        for (int i : getShape()) {
+        for (int i : dimension()) {
             r *= i;
+        }
+        return r;
+    }
+
+    int TensorBasis::n_inputs() const {
+        return (*this)->n_inputs();
+    }
+    int TensorBasisNode::n_inputs() const {
+        int r = 0;
+        for (auto const& b : getSubBasis()) {
+            r += b.n_inputs();
         }
         return r;
     }
