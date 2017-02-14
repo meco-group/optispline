@@ -27,7 +27,7 @@ class Test_Basis_SubBSpline(BasisTestCase):
     def test_evaluation1(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
         r = s([0.1])
-        self.assertEqual(r.shape[0],s.dimension())
+        self.assertEqual(r.shape[0], s.dimension())
 
     def test_evaluation2(self):
         S = BSplineBasis([0,0,0,0.2,0.5,0.7,1,1,1], 2)
@@ -56,7 +56,7 @@ class Test_Basis_SubBSpline(BasisTestCase):
       N = 15
 
       B = BSplineBasis([0,0,0] + list(np.linspace(0,1,N)) + [1,1,1],3)
-      c = np.random.random(*B.getShape())
+      c = np.random.random(*B.dimension())
 
       f = Function(B,c)
       F = C.Function("F",[x],[f(x)])
