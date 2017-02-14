@@ -38,8 +38,8 @@ namespace spline {
       : allSubBasis(allSubBasis_), allArguments(std::vector<Argument>{})
       {}
 
-    int TensorBasis::getNumberOfSubBasis() const { return (*this)->getNumberOfSubBasis(); }
-    int TensorBasisNode::getNumberOfSubBasis() const {
+    int TensorBasis::n_basis() const { return (*this)->n_basis(); }
+    int TensorBasisNode::n_basis() const {
         return allSubBasis.size();
     }
 

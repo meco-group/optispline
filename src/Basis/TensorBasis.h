@@ -23,7 +23,7 @@ namespace spline {
     class TensorBasisNode : public SharedObjectNode {
     public:
         TensorBasisNode(const std::vector< Basis >& allBasis);
-        int getNumberOfSubBasis() const;
+        int n_basis() const;
 
         std::vector<int> getShape() const;
 
@@ -68,7 +68,7 @@ namespace spline {
         TensorBasisNode* operator->() const ;
 
 #endif // SWIG
-        int getNumberOfSubBasis() const;
+        int n_basis() const;
 
         std::vector<int> getShape() const;
         TensorBasis();
