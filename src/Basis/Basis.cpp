@@ -80,4 +80,5 @@ namespace spline {
     void BasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {}
 
     int Basis::dimension() const { return (*this)->dimension();}
+    int Basis::n_inputs() const { return (*this)->n_inputs();}
 } // namespace spline
