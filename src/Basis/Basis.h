@@ -40,6 +40,8 @@ namespace spline {
             void assertVectorLenghtCorrect( const std::vector< T >& x) const;
 
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
+
+        int dimension() const {return 0;}
     };
 
 #endif // SWIG
@@ -72,6 +74,7 @@ namespace spline {
         virtual std::string getRepresentation() const ;
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
 
+        int dimension() const;
 
         virtual void foo() const {};
     };

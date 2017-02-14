@@ -39,6 +39,8 @@ namespace spline {
         std::vector< int > getShape() const { return std::vector< int > {getLength()};}
 
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {spline_assert(0);};
+
+        int dimension() const {return getLength();}
     protected:
         int degree;
     };
