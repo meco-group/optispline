@@ -101,10 +101,12 @@ def _swig_repr(self):
 #include <src/Function/Polynomial.h>
 #include <src/Function/Argument.h>
 #include <src/Function/Index.h>
+#include <src/Function/NumericIndex.h>
 #include <src/Optistack/optistack.h>
 
 #include <src/Basis/utils/EvaluationGrid.h> // Debug
 
+using namespace spline;
 #include <casadi/casadi.hpp>
 %}
 
@@ -125,6 +127,7 @@ def _swig_repr(self):
     bool to_ptr(GUESTOBJECT *p, ST** m);
     bool to_ptr(GUESTOBJECT *p, MT** m);
     bool to_ptr(GUESTOBJECT *p, spline::Index** m);
+    bool to_ptr(GUESTOBJECT *p, spline::NumericIndex** m);
     bool to_ptr(GUESTOBJECT *p, spline::TensorBasis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Basis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
@@ -139,6 +142,7 @@ def _swig_repr(self):
     GUESTOBJECT *from_ptr(const DT *a);
     GUESTOBJECT *from_ptr(const ST *a);
     GUESTOBJECT *from_ptr(const MT *a);
+    GUESTOBJECT *from_ptr(const spline::NumericIndex *a);
     GUESTOBJECT *from_ptr(const spline::Index *a);
     GUESTOBJECT *from_ptr(const spline::Argument *a);
   }
@@ -399,6 +403,29 @@ def _swig_repr(self):
       }
       return false;
     }
+
+    bool to_ptr(GUESTOBJECT *p, spline::NumericIndex** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::NumericIndex*), 0))) {
+        return true;
+      }   
+      // Integer scalar
+      {
+        int tmp;
+        if (to_val(p, &tmp)) {
+#ifdef SWIGMATLAB
+          if (m) **m=tmp-1;
+#else
+          if (m) **m=tmp;
+#endif
+          return true;
+        }
+      }      
+      return false;
+    }
     
     bool to_ptr(GUESTOBJECT *p, spline::Index** m) {
       // Treat Null
@@ -472,6 +499,13 @@ def _swig_repr(self):
     }
 
     GUESTOBJECT * from_ptr(const spline::Index *a) {
+#ifdef SWIGPYTHON
+      return Py_None;
+#endif // SWIGPYTHON
+      return 0;
+    }
+    
+    GUESTOBJECT * from_ptr(const spline::NumericIndex *a) {
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
@@ -625,6 +659,7 @@ def _swig_repr(self):
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
 %casadi_typemaps("argument", PREC_MX, spline::Argument)
 %casadi_typemaps("index", PREC_MX, spline::Index)
+%casadi_typemaps("index", PREC_MX, spline::NumericIndex)
 %casadi_typemaps("STensor", PREC_MX, Tensor<casadi::SX>)
 %casadi_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
 %casadi_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
@@ -644,6 +679,7 @@ def _swig_repr(self):
 
 %include <src/Function/Argument.h>
 %include <src/Function/Index.h>
+%include <src/Function/NumericIndex.h>
 %include <tensor.hpp>
 
 
