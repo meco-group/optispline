@@ -18,8 +18,12 @@ namespace spline {
 
     std::vector< int > Coefficient::dimension() const { return (*this)->dimension(); }
     std::vector< int > CoefficientNode::dimension () const {
-        std::vector< int > dims_ = dims;
-        return dims_.erase(dims_.end() - 1, dims_.end());
+        std::vector< int > dims_ = data.dims();
+        for (size_t i=0; i<2; i++)
+        {
+            dims_.pop_back();
+        }
+        return dims_;
     }
 
     std::vector< int > Coefficient::size() const { return (*this)->size(); }
