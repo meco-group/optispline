@@ -291,6 +291,13 @@ AnyTensor AnyTensor::pack(const std::vector<AnyTensor>& v, int axis) {
   }
 }
 
+AnyTensor AnyTensor::repeat(const AnyTensor&e, const std::vector<int>& factors) {
+  if (e.is_DT()) return DT::repeat(e.as_DT(), factors);
+  if (e.is_ST()) return ST::repeat(e.as_ST(), factors);
+  if (e.is_MT()) return MT::repeat(e.as_MT(), factors);
+  return {DT()};
+}
+
 std::vector<AnyTensor> unpack(const AnyTensor& v, int axis) {
   tensor_assert_message(false, "Not implemented yet");
   return {DT()};
