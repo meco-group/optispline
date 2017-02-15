@@ -18,10 +18,10 @@ namespace spline {
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        Function operator+(const Function f) const ;
-        Function operator*(const Function f) const ;
+        Function operator+(const Function& f) const ;
+        Function operator*(const Function& f) const ;
         Function operator-() const ;
-        Function operator-(const Function f) const ;
+        Function operator-(const Function& f) const ;
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;
         TensorBasis getTensorBasis() const {return basis;}
@@ -33,6 +33,9 @@ namespace spline {
         std::string getRepresentation() const ;
         void repr() const { userOut() << getRepresentation() << std::endl;}
         // Argument& getArgument (){ return getBasis().getArgument();}
+
+        int n_inputs() const;
+        std::vector< int > shape() const;
     public:
         TensorBasis basis;
         Coefficient coef;

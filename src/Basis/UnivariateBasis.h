@@ -32,13 +32,14 @@ namespace spline {
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const {spline_assert(0); return DT();};
 
-        virtual int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
-        int getNumberOfSubBasis() const;
-        std::vector< int > getShape() const { return std::vector< int > {getLength()};}
+        int n_inputs() const;
 
-        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {spline_assert(0);};
+        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const {spline_assert(0); return std::vector< std::vector < AnyScalar > >(); };
+
+        int dimension() const {return getLength();}
+        virtual int getLength() const ;
     protected:
         int degree;
     };
@@ -56,10 +57,10 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
-
-        int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
+    protected:
+        int getLength() const ;
     };
 } // namespace spline
 

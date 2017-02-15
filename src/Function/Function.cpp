@@ -16,7 +16,7 @@ namespace spline {
     }
 
     Basis Function::getBasis() const {
-      spline_assert_message(basis.getNumberOfSubBasis()==1,
+      spline_assert_message(basis.n_basis()==1,
           ".getBasis() syntax only works for a 1-D TensorBasis.");
       return basis.getSubBasis()[0];
     }
@@ -55,28 +55,28 @@ namespace spline {
       B = B.shape(shapeB);
       AnyTensor C = A.solve(B);
 
-      std::vector< int > shapeCoef = coef.getShape();
-      std::vector< int > shape = sumBasis.getShape();
+      std::vector< int > shapeCoef = coef.dimension();
+      std::vector< int > shape = sumBasis.dimension();
       shape.insert(shape.end(), shapeCoef.begin(), shapeCoef.end());
       C = C.shape(shape);
       return Function(sumBasis, C);
     }
 
-    Function Function::operator+(Function f) const {
+    Function Function::operator+(const Function& f) const {
       return generic_operation(f,
           [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
 
-    Function Function::operator*(Function f) const {
+    Function Function::operator*(const Function& f) const {
       return generic_operation(f,
           [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
 
-    Function Function::operator-(Function f) const {
+    Function Function::operator-(const Function& f) const {
         return operator+(-f);
     }
 
@@ -85,5 +85,13 @@ namespace spline {
     }
 
     std::string Function::getRepresentation() const {return "Function";};
+
+    int Function::n_inputs() const{
+        return basis.n_inputs();
+    }
+
+    std::vector< int > Function::shape() const{
+        return coef.shape();
+    }
 
 }  // namespace spline

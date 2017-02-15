@@ -53,7 +53,7 @@ namespace spline {
     }
 
    AnyTensor MonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
-        assert(x.size()==getNumberOfSubBasis());
+        assert(x.size()==n_inputs());
         if (AnyScalar::is_double(x)) {
             return SubBasisEvalution<double>(AnyScalar::as_double(x));
         } else {
@@ -65,10 +65,11 @@ namespace spline {
          return getDegree() + 1;
     }
 
-    void MonomialBasisNode::getEvaluationGrid(
-          std::vector< std::vector < AnyScalar > > * grid) const {
+    std::vector< std::vector < AnyScalar > > MonomialBasisNode::getEvaluationGrid() const {
+      std::vector< std::vector < AnyScalar > > ret;
         for (int i = 0; i < getLength(); i++) {
-            grid->push_back(std::vector<AnyScalar> {static_cast<double>(i)});
+            ret.push_back(std::vector<AnyScalar> {static_cast<double>(i)});
         }
+        return ret;
     }
 } // namespace spline

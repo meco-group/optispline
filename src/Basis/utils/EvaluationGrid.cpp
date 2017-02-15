@@ -10,8 +10,7 @@ namespace spline{
         std::vector< AnyTensor > postStep ;
 
         for(Basis b : griddedBasis.getSubBasis()){
-            std::vector< std::vector< AnyScalar > > evaluationGrid;
-            b.getEvaluationGrid(&evaluationGrid);
+            std::vector< std::vector< AnyScalar > > evaluationGrid = b.getEvaluationGrid();
             for(auto const & subPoint : evaluationGrid){
                 AnyTensor subEvaluation = b(subPoint);
                 for( AnyTensor pre : preStep){
@@ -31,10 +30,9 @@ namespace spline{
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
         std::vector< AnyTensor > postStep ;
 
-        for(int i = 0; i < griddedBasis.getNumberOfSubBasis(); i++){
+        for(int i = 0; i < griddedBasis.n_basis(); i++){
             Basis subBasis = griddedBasis.getSubBasis()[i];
-            std::vector< std::vector< AnyScalar > > evaluationGrid;
-            subBasis.getEvaluationGrid(&evaluationGrid);
+            std::vector< std::vector< AnyScalar > > evaluationGrid = subBasis.getEvaluationGrid();
             for(auto const & subPoint : evaluationGrid){
                 if(indexPermutation[i] < 0){
                     for( AnyTensor pre : preStep){
@@ -52,7 +50,7 @@ namespace spline{
             postStep.clear();
         }
 
-        for( AnyTensor pre : preStep){
+        for (AnyTensor pre : preStep) {
             postStep.push_back(pre.inner(f.getCoefficient().getData()));
         }
 
@@ -66,8 +64,8 @@ namespace spline{
                 index.push_back(basis.indexArgument(a));
             }
         }else{
-            spline_assert(griddedBasis.getNumberOfSubBasis() == basis.getNumberOfSubBasis());
-            for(int i = 0; i < griddedBasis.getNumberOfSubBasis(); i++){
+            spline_assert(griddedBasis.n_basis() == basis.n_basis());
+            for(int i = 0; i < griddedBasis.n_basis(); i++){
                 index.push_back(i);
             }
         }
