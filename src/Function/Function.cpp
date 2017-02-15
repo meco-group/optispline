@@ -12,15 +12,18 @@ namespace spline {
     }
 
     void Function::init( const TensorBasis& basis_, const Coefficient& coef_) {
-        std::vector< int > dim_basis = basis.dimension();
-        std::vector< int > dim_coef = coef.dimension();
-        spline_assert_message(dim_basis.size() <= dim_coef.size(), "Dimensions of basis and coeffincent can not be connected.");
-        spline_assert_message(dim_basis.size() + 2 >= dim_coef.size(), "Dimensions of basis and coeffincent can not be connected.");
+        std::vector< int > dim_basis = basis_.dimension();
+        std::vector< int > dim_coef = coef_.getData().dims();
+
+        int total_size_coef = dim_coef.size();
+        spline_assert_message(dim_basis.size() <= total_size_coef, "Dimensions of basis and coeffincent can not be connected.");
+        spline_assert_message(dim_basis.size() + 2 >= total_size_coef, "Dimensions of basis and coeffincent can not be connected.");
         for(int i = 0; i < dim_basis.size(); i++){
             spline_assert_message(dim_basis[i] == dim_coef[i], "Mismatch of dimention " + std::to_string(i) + " between basis and coefficient");
         }
+
         basis = basis_;
-        coef = coef_;
+        coef = coef_.add_trival_dimention( 2 + dim_basis.size() - dim_coef.size());
     }
 
     AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const {
