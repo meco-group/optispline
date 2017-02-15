@@ -29,6 +29,8 @@ after_script:
     - TZ=CET touch swig/build_`date -Iseconds`.log
     - rm -rf swig/*.pyc swig/CMakeFiles
     - echo $TARGET
+    
+    - rclone delete dropbox:$TARGET
     - rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
 
 coverage:
