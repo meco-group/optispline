@@ -39,8 +39,8 @@ namespace spline {
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
-        virtual int dimension() const {return 0;};
-        virtual int n_inputs() const {return 0;};
+        virtual int dimension() const {return 0;};  // Number of basis functions in the basis
+        virtual int n_inputs() const {return 0;};  // Number of inputs of the basis
     };
 
 #endif // SWIG
