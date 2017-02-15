@@ -92,6 +92,13 @@ namespace spline {
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
+    Function Function::operator+(const AnyScalar& a) const {
+        return operator+(Function::Constant(a, this->getTensorBasis(), this->shape()));
+    }
+
+    Function Function::operator+(const AnyTensor& t) const {
+        return operator+(Function::Constant(t, this->getTensorBasis()));
+    }
 
     Function Function::operator*(const Function& f) const {
       return generic_operation(f,
