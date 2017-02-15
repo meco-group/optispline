@@ -81,6 +81,8 @@ namespace spline {
     std::vector< std::vector < AnyScalar > > Basis::getEvaluationGrid() const {
       return (*this)->getEvaluationGrid();
     }
-    std::vector< std::vector < AnyScalar > > BasisNode::getEvaluationGrid() const {}
+    std::vector< std::vector < AnyScalar > > BasisNode::getEvaluationGrid() const {
+      return std::vector< std::vector < AnyScalar > >();
+    }
 
 } // namespace spline
