@@ -86,4 +86,12 @@ namespace spline {
 
     std::string Function::getRepresentation() const {return "Function";};
 
+    int Function::n_inputs() const{
+        return basis.n_inputs();
+    }
+
+    std::vector< int > Function::size() const{
+        return coef.size();
+    }
+
 }  // namespace spline
