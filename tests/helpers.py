@@ -43,22 +43,22 @@ class BasisTestCase(unittest.TestCase):
           dimb = np.array(b).shape
         self.assertEqualArray(dima, dimb)
         self.assertEqualTensor(a,b,tol=tol)
-        
+
     def assertEqualTensor(self, a, b,tol=-1e-9):
         try:
-          a = C.DM(a)
+            a = C.vec(C.DM(a))
         except:
           try:
             a = a.data()
           except:
-            a = a.ravel()
+            a = a.ravel('F')
         try:
-          b = C.DM(b)
+            b = C.vec(C.DM(b))
         except:
           try:
             b = b.data()
           except:
-            b = b.ravel()
+            b = b.ravel('F')
         self.assertTrue(float(C.norm_inf(a-b))<1e-9)
 
     def assertNotEqualTensor(self, a, b):
