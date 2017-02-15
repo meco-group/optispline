@@ -13,26 +13,27 @@ class Test_Basis_BSplineBasis(BasisTestCase):
     def test_greville(self):
         degree = 3
         knotsint = 8
-        knots = np.hstack(((degree)*[0],np.linspace(0.,1.,knotsint),(degree)*[1]))
-        dim_b = knots.length - d - 1
-        g = np_zeros(dim_b);
-        for i in range(0, dim_b-1):
-            g[i] = np.sum(knots[i+1 : i+degree]) / degree
+        knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+        dim_b = knots.shape[0] - degree - 1
+        g = np.zeros(dim_b);
+        for i in range(dim_b):
+            g[i] = np.sum(knots[i+1 : i+degree+1]) / degree
         b1 = BSplineBasis(knots,degree)
         g1 = b1.greville()
-        b2 = BSplineBasis([0,1],degree,knotsint-1)
+        b2 = BSplineBasis([0,1],degree,knotsint)
         g2 = b2.greville()
-        self.assertEqualTensor(g1,g2)
-        self.assertEqualTensor(g1,g)
+        self.assertEqualT(np.round(g1, 6),np.round(g2, 6))
+        self.assertEqualT(np.round(g1, 6),np.round(g, 6))
 
     def test_constructor(self):
         degree = 3
         knotsint = 8
-        knots = np.hstack(((degree)*[0],np.linspace(0.,1.,knotsint),(degree)*[1]))
-        b = BSplineBasis(np.fliplr(knots),degree)
-        self.assertEqualTensor(knots,b.getKnots)
+        knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+        b = BSplineBasis(np.flipud(knots),degree)
+        # self.assertEqualT(knots,b.getKnots) # test if sorted
         with self.assertRaises(Exception):
             b = BSplineBasis(np.vstack(knots,knots),degree)
+            b = BSplineBasis(np.c_[knots],degree)
 
 # TODO constructor
     # def test_getEvaluation1(self):
