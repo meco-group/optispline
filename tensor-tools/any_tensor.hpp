@@ -290,6 +290,7 @@ class AnyVector : public AnyTensor {
       return dims()[0];
     }
     std::vector<AnyScalar> to_scalar_vector() const;
+    AnyVector sort(bool ascending=true) const;
 };
 
 namespace casadi {
