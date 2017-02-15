@@ -26,11 +26,11 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         b = TensorBasis()
         b.addBasis(s1)
-        self.assertEqual(b.dimension(), 4)
+        self.assertEqual(b.dimension(), [ 4 ])
 
         b.addBasis(s2)
         b.addBasis(s1)
-        self.assertEqual(b.dimension(), 13)
+        self.assertEqual(b.dimension(), [4, 5, 4])
 
     def test_tbasis_n_inputs(self):
         s1 = MonomialBasis(3)
