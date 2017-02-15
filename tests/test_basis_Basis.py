@@ -10,24 +10,41 @@ from casadi import *
 
 class Test_Basis_Basis(BasisTestCase):
 
-    def test_getDimenstion1(self):
+    def test_tbasis_n_basis(self):
         s1 = MonomialBasis(3)
         s2 = MonomialBasis(4)
         b = TensorBasis()
         b.addBasis(s1)
-        self.assertEqual(b.getNumberOfSubBasis(), 1)
+        self.assertEqual(b.n_basis(), 1)
 
         b.addBasis(s2)
         b.addBasis(s1)
-        self.assertEqual(b.getNumberOfSubBasis(), 3)
+        self.assertEqual(b.n_basis(), 3)
 
-    def test_getDimenstion2(self):
+    def test_tbasis_dimension(self):
+        s1 = MonomialBasis(3)
+        s2 = MonomialBasis(4)
+        b = TensorBasis()
+        b.addBasis(s1)
+        self.assertEqual(b.dimension(), 4)
+
+        b.addBasis(s2)
+        b.addBasis(s1)
+        self.assertEqual(b.dimension(), 13)
+
+    def test_tbasis_n_inputs(self):
+        s1 = MonomialBasis(3)
+        b = TensorBasis()
+        b.addBasis(s1)
+        self.assertEqual(b.n_inputs(), 1)
+
+    def test_getSubBasis1(self):
         s1 = MonomialBasis(3)
         b = TensorBasis()
         b.addBasis(s1)
         self.assertEqual(len(b.getSubBasis()), 1)
 
-    def test_getDimenstion3(self):
+    def test_getSubBasis2(self):
         s1 = MonomialBasis(3)
         s2 = MonomialBasis(4)
         b = TensorBasis()

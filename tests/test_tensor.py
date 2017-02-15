@@ -86,7 +86,7 @@ class Test_Tensor(BasisTestCase):
 
       B = TensorBasis([B1,B2,B3])
 
-      a = np.random.random(B.getShape())
+      a = np.random.random(B.dimension())
 
       F = Basis.Function(B, a)
 
