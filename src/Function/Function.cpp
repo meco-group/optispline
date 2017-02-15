@@ -23,7 +23,7 @@ namespace spline {
         }
 
         basis = basis_;
-        coef = coef_.add_trival_dimention( 2 + dim_basis.size() - dim_coef.size());
+        coef = coef_.add_trival_dimension( 2 + dim_basis.size() - dim_coef.size());
     }
 
     AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const {

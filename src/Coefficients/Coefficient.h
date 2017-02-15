@@ -23,7 +23,7 @@ namespace spline {
         std::vector< int > shape() const;
         std::vector< int > dimension() const;
 
-        Coefficient add_trival_dimention(int i) const;
+        Coefficient add_trival_dimension(int i) const;
         int getNumberCoefficents() const;
         // Coefficient operator+ (Coefficient & other) const;
         AnyTensor getData() const {return data;}
@@ -43,7 +43,7 @@ namespace spline {
         CoefficientNode* get() const ;
         CoefficientNode* operator->() const ;
 
-        Coefficient add_trival_dimention(int i) const;
+        Coefficient add_trival_dimension(int i) const;
         int getNumberCoefficents() const;
     #endif // SWIG
         Coefficient();
