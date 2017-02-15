@@ -52,6 +52,27 @@ namespace spline {
         return timesSubBasis (shared_from_this<MonomialBasis>(), other);
     }
 
+    AnyTensor MonomialBasis::const_coeff_tensor(const AnyTensor& t) const {
+        //push 1 for size of tensor
+        std::vector< int > coeff_size = {1};
+        for (int i = 0; i < t.dims().size(); i++) {
+            coeff_size.push_back(t.dims()[i]);
+        }
+
+        // make single basis function coefficient and repeat
+        AnyTensor values = t.shape(coeff_size);
+        // make zero valued coefficients for higher order basis functions
+        AnyTensor zeros = repeat(AnyTensor(0),coeff_size);
+
+        std::vector< AnyTensor > coeffs;
+        coeffs.push_back(values);
+        for (int i = 1; i < getLength(); i++) {
+            coeffs.push_back(zeros);
+        }
+
+        return concat(coeffs,0);
+    }
+
    AnyTensor MonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         assert(x.size()==n_inputs());
         if (AnyScalar::is_double(x)) {

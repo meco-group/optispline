@@ -54,6 +54,7 @@ namespace spline{
 
         virtual std::string getRepresentation() const ;
 
+        AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
         virtual void foo() const {};
 
 #ifndef SWIG
