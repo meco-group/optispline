@@ -74,7 +74,6 @@ namespace spline {
 
         int dimension() const;
 
-        virtual void foo() const {};
     };
 
     template< class T >
