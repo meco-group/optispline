@@ -156,6 +156,7 @@ namespace spline{
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
 
+        AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
         virtual void foo() const {};
 
     private:

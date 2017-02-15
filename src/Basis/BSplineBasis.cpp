@@ -199,6 +199,22 @@ namespace spline {
         return ret;
     }
 
+    AnyTensor BSplineBasis::const_coeff_tensor(const AnyTensor& t) const {
+        //push 1 for size of tensor
+        std::vector< int > coeff_size = {1};
+        for (int i = 0; i < t.dims().size(); i++) {
+            coeff_size.push_back(t.dims()[i]);
+        }
+        AnyTensor values = t.shape(coeff_size);
+
+        // make single basis function coefficient and repeat
+        std::vector< AnyTensor > coeffs;
+        for (int i = 1; i< getLength(); i++) {
+            coeffs.push_back(values);
+        }
+
+        return concat(coeffs, 0);
+    }
 
 
     AnyTensor BSplineBasisNode::SubBasisEvalution(const std::vector< AnyScalar > & x_) const {
