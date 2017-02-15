@@ -23,13 +23,13 @@ class Test_Function_Function(BasisTestCase):
 
     def test_function_n_inputs2(self):
         a1 = MX.sym('a',3 + 1,1)
-        a1 = MTensor(a, [3 + 1,1,1])
-        a1 = Coefficient(a)
+        a1 = MTensor(a1, [3 + 1,1,1])
+        a1 = Coefficient(a1)
         m1 = MonomialBasis(3)
         m2 = MonomialBasis(4)
         m3 = MonomialBasis(1)
         b = TensorBasis([m1,m2,m3])
-        f = Function(b,a)
+        f = Function(b,a1)
         self.assertEqual(f.n_inputs(), 3)
 
     def test_function_shape1(self):
@@ -50,7 +50,7 @@ class Test_Function_Function(BasisTestCase):
         m3 = MonomialBasis(1)
         b = TensorBasis([m1,m2,m3])
         f = Function(b,a)
-        self.assertEqual(f.shape(), [2,3])
+        self.assertEqual(f.shape(), [1,1])
 
     def test_function_evaluation_type1(self):
         a_ = [2,0,0,1]
@@ -58,7 +58,7 @@ class Test_Function_Function(BasisTestCase):
         a_ = Coefficient(a_)
         m = MonomialBasis(3)
         b = TensorBasis([m])
-        f = Function(b,a_) 
+        f = Function(b,a_)
         x = 1.0
         self.assertEqual(type(f(x)), float)
 
@@ -68,7 +68,7 @@ class Test_Function_Function(BasisTestCase):
         a_ = Coefficient(a_)
         m = MonomialBasis(3)
         b = TensorBasis([m])
-        f = Function(b,a_) 
+        f = Function(b,a_)
         x = SX.sym('x',1,1)
         self.assertEqual(type(f(x)), casadi.SX)
 
@@ -78,7 +78,7 @@ class Test_Function_Function(BasisTestCase):
         a_ = Coefficient(a_)
         m = MonomialBasis(3)
         b = TensorBasis([m])
-        f = Function(b,a_) 
+        f = Function(b,a_)
         x = 1.0
         self.assertEqual(type(f(x)), casadi.SX)
 
@@ -88,7 +88,7 @@ class Test_Function_Function(BasisTestCase):
         a_ = Coefficient(a_)
         m = MonomialBasis(3)
         b = TensorBasis([m])
-        f = Function(b,a_) 
+        f = Function(b,a_)
         x = SX.sym('x',1,1)
         self.assertEqual(type(f(x)), casadi.SX)
 
@@ -98,7 +98,7 @@ class Test_Function_Function(BasisTestCase):
         a_ = Coefficient(a_)
         m = MonomialBasis(3)
         b = TensorBasis([m])
-        f = Function(b,a_) 
+        f = Function(b,a_)
         self.assertEqual( f(0.0), 2 )
         self.assertEqual( f(1.0), 3 )
         self.assertEqual( f(2.0), 10 )
@@ -109,7 +109,7 @@ class Test_Function_Function(BasisTestCase):
         a_ = Coefficient(a_)
         m = MonomialBasis(1)
         b = TensorBasis([m,m])
-        f = Function(b,a_) 
+        f = Function(b,a_)
         for x in range(-5, 4):
             for y in range(-5, 4):
                 self.assertEqual( f(x,y) , 1 + y + 2*x*y)
