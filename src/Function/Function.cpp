@@ -62,21 +62,21 @@ namespace spline {
       return Function(sumBasis, C);
     }
 
-    Function Function::operator+(Function f) const {
+    Function Function::operator+(const Function& f) const {
       return generic_operation(f,
           [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
 
-    Function Function::operator*(Function f) const {
+    Function Function::operator*(const Function& f) const {
       return generic_operation(f,
           [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
 
-    Function Function::operator-(Function f) const {
+    Function Function::operator-(const Function& f) const {
         return operator+(-f);
     }
 

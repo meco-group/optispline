@@ -65,10 +65,11 @@ namespace spline {
          return getDegree() + 1;
     }
 
-    void MonomialBasisNode::getEvaluationGrid(
-          std::vector< std::vector < AnyScalar > > * grid) const {
+    std::vector< std::vector < AnyScalar > > MonomialBasisNode::getEvaluationGrid() const {
+      std::vector< std::vector < AnyScalar > > ret;
         for (int i = 0; i < getLength(); i++) {
-            grid->push_back(std::vector<AnyScalar> {static_cast<double>(i)});
+            ret.push_back(std::vector<AnyScalar> {static_cast<double>(i)});
         }
+        return ret;
     }
 } // namespace spline

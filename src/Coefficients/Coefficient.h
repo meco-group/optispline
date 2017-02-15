@@ -22,7 +22,6 @@ namespace spline {
         int getNumberCoefficents() const;
 
         // Coefficient operator+ (Coefficient & other) const;
-        CoefficientNode operator-() const ;
         AnyTensor getData() const {return data;}
         std::string getRepresentation() const ;
         void repr() const { userOut() << getRepresentation() << std::endl;}

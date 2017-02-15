@@ -77,9 +77,12 @@ namespace spline {
     int Basis::getNumberOfSubBasis() const { return (*this)->getNumberOfSubBasis();}
     std::vector< int > Basis::getShape() const { return (*this)->getShape();}
 
-    void Basis::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {
-      (*this)->getEvaluationGrid(eg);
+
+    std::vector< std::vector < AnyScalar > > Basis::getEvaluationGrid() const {
+      return (*this)->getEvaluationGrid();
     }
-    void BasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {}
+    std::vector< std::vector < AnyScalar > > BasisNode::getEvaluationGrid() const {
+      return std::vector< std::vector < AnyScalar > >();
+    }
 
 } // namespace spline

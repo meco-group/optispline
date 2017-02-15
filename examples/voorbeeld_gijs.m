@@ -1,4 +1,4 @@
-meco_binaries('cpp_splines','fill_in_the_branch_you_want')
+meco_binaries('cpp_splines','develop')
 
 import Basis.*
 
