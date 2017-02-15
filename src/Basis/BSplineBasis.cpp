@@ -191,11 +191,12 @@ namespace spline {
         return SubBasisEvalution(x);
     }
 
-    void BSplineBasisNode::getEvaluationGrid(
-          std::vector< std::vector < AnyScalar > > * grid) const {
+    std::vector< std::vector < AnyScalar > > BSplineBasisNode::getEvaluationGrid() const {
+        std::vector< std::vector < AnyScalar > >ret;
         for (auto const& point : greville()) {
-            grid->push_back(std::vector<AnyScalar> {point});
+            ret.push_back(std::vector<AnyScalar> {point});
         }
+        return ret;
     }
 
 

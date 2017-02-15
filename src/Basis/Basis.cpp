@@ -74,10 +74,12 @@ namespace spline {
         return AnyTensor();
     }
 
-    void Basis::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {
-      (*this)->getEvaluationGrid(eg);
+    std::vector< std::vector < AnyScalar > > Basis::getEvaluationGrid() const {
+      return (*this)->getEvaluationGrid();
     }
-    void BasisNode::getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const {}
+    std::vector< std::vector < AnyScalar > > BasisNode::getEvaluationGrid() const {
+      return std::vector< std::vector < AnyScalar > >();
+    }
 
     int Basis::dimension() const { return (*this)->dimension();}
     int Basis::n_inputs() const { return (*this)->n_inputs();}
