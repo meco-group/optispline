@@ -44,8 +44,8 @@ coverage:
     - pushd build
     - cmake -DWITH_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
-    #- ctest -V -R python_test
-    #- gcovr -e  ".*wrap.cxx" -r ..
+    - ctest -V -R python_test
+    - gcovr -e  ".*wrap.cxx" -r ..
   after_script:
     - echo 123
 
