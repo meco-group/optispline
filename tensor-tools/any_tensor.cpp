@@ -1,5 +1,7 @@
 #include "any_tensor.hpp"
 
+#include <casadi/core/function/function_internal.hpp>
+
 int product(const std::vector<int>& a) {
   int r = 1;
   for (int i=0;i<a.size();++i) r*=a[i];
@@ -380,12 +382,90 @@ AnyScalar AnyVector::operator[](int index) const {
   return 0;
 }
 
+
 std::vector<AnyScalar> AnyVector::to_scalar_vector() const {
   std::vector<AnyScalar> ret(size());
   for (int i=0; i<size(); i++){
     ret[i] = (*this)[i];
   }
   return ret;
+}
+
+class Sorter : public casadi::FunctionInternal {
+public:
+
+  static casadi::Function create(const std::string &name, int size, bool ascending,
+      const Dict& opts=Dict()) {
+    casadi::Function ret;
+    ret.assignNode(new Sorter(name, size, ascending));
+    ret->construct(opts);
+    return ret;
+  }
+
+  Sorter(const std::string &name, int size, int ascending) : casadi::FunctionInternal(name),
+    size_(size), ascending_(ascending) {};
+
+  /** \brief  Destructor */
+  virtual ~Sorter() {};
+
+  ///@{
+  /** \brief Number of function inputs and outputs */
+  virtual size_t get_n_in() override { return 1; };
+  virtual size_t get_n_out() override { return 1; };
+  ///@}
+
+  /// @{
+  /** \brief Sparsities of function inputs and outputs */
+  virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
+  virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
+  /// @}
+
+  /** \brief  Evaluate numerically, work vectors given */
+  virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
+    if (!res[0]) return;
+    std::copy(arg[0], arg[0]+size_, res[0]);
+    
+    if (ascending_) {
+      std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b)
+      {
+          double arg1 = *static_cast<const double*>(a);
+          double arg2 = *static_cast<const double*>(b);
+
+          if(arg1 < arg2) return -1;
+          if(arg1 > arg2) return 1;
+          return 0;
+      });
+    } else {
+      std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b)
+      {
+          double arg1 = *static_cast<const double*>(a);
+          double arg2 = *static_cast<const double*>(b);
+
+          if(arg1 < arg2) return 1;
+          if(arg1 > arg2) return -1;
+          return 0;
+      });
+    }
+  }
+
+  /** \brief  Print description */
+  virtual void print(std::ostream &stream) const override {
+    stream << "Sorter(" << size_ << ")";
+  }
+
+  int size_;
+  bool ascending_;
+};
+
+AnyVector AnyVector::sort(bool ascending) const {
+  tensor_assert(!is_ST());
+
+  Function sorter = Sorter::create("sorter", dims()[0], ascending);
+  if (is_DT()) {
+    return DT(sorter(std::vector<DM>{as_DT().data()})[0], {dims()[0]});
+  } else {
+    return MT(sorter(std::vector<MX>{as_MT().data()})[0], {dims()[0]});
+  }
 }
 
 namespace casadi {
