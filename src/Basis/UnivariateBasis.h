@@ -57,6 +57,9 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
+        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
+
+        int getLength() const ;
         int getDegree () const ;
         void setDegree (int degree);
     protected:
