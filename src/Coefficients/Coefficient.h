@@ -46,8 +46,8 @@ namespace spline {
         Coefficient(const AnyTensor& t);
         Coefficient(const std::vector< double >& v);
 
-        std::vector< int > shape() const;
-        std::vector< int > dimension() const;
+        std::vector< int > shape() const;  //
+        std::vector< int > dimension() const;  // Related to the number of basis functions
 
         Coefficient operator-() const ;
         AnyTensor getData() const;

@@ -34,8 +34,8 @@ namespace spline {
         void repr() const { userOut() << getRepresentation() << std::endl;}
         // Argument& getArgument (){ return getBasis().getArgument();}
 
-        int n_inputs() const;
-        std::vector< int > shape() const;
+        int n_inputs() const;  // Number of inputs of the function
+        std::vector< int > shape() const;  // Shape result obtained after function evaluation
     public:
         TensorBasis basis;
         Coefficient coef;

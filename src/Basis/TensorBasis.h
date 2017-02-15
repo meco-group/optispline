@@ -74,9 +74,9 @@ namespace spline {
         TensorBasis(const std::vector< Basis >& allSubBasis);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
 
-        int n_basis() const;
-        int n_inputs() const;
-        std::vector<int> dimension() const;
+        int n_basis() const;  // Number of bases, building up the TensorBasis
+        int n_inputs() const; // Total number of inputs, over all bases
+        std::vector<int> dimension() const; // Vector containing number of basis functions in each basis
 
         void setArguments(const std::vector< spline::Argument >& argument);
         std::vector< spline::Argument > getArguments() const;
