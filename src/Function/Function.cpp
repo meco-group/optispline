@@ -4,12 +4,12 @@
 #include "../common.h"
 namespace spline {
 
-    Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) {
+    Function Function::Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) {
         AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
         return Function::Constant(basis, value);
     }
 
-    Function Constant(const TensorBasis& basis, const AnyTensor& t) {
+    Function Function::Constant(const TensorBasis& basis, const AnyTensor& t) {
         std::vector< Basis > subbasis = basis.getSubBasis();
         Function f = Function::Constant(subbasis[0], t);
         for (int i = 1; i < basis.n_basis(); i++) {
@@ -18,12 +18,12 @@ namespace spline {
         return f;
     }
 
-    Function Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) {
+    Function Function::Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) {
         AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
         return Function::Constant(basis, value);
     }
 
-    Function Constant(const Basis& basis, const AnyTensor& t) {
+    Function Function::Constant(const Basis& basis, const AnyTensor& t) {
         Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
         return Function(basis, coeff);
     }
