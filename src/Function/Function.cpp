@@ -111,6 +111,14 @@ namespace spline {
         return operator+(-f);
     }
 
+    Function Function::operator-(const AnyScalar& a) const {
+        return operator+(-a);
+    }
+
+    Function Function::operator-(const AnyTensor& t) const {
+        return operator+(-t);
+    }
+
     Function Function::operator-() const {
         return Function(basis, -coef);
     }

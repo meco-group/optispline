@@ -29,6 +29,8 @@ namespace spline {
         Function operator*(const Function f) const ;
         Function operator-() const ;
         Function operator-(const Function f) const ;
+        Function operator-(const AnyScalar& a) const ;
+        Function operator-(const AnyTensor& t) const ;
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;
         TensorBasis getTensorBasis() const {return basis;}
