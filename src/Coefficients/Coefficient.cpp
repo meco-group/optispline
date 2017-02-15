@@ -26,8 +26,8 @@ namespace spline {
         return dims_;
     }
 
-    std::vector< int > Coefficient::size() const { return (*this)->size(); }
-    std::vector< int > CoefficientNode::size() const {
+    std::vector< int > Coefficient::shape() const { return (*this)->shape(); }
+    std::vector< int > CoefficientNode::shape() const {
         std::vector< int > dims = data.dims();
         int d = dims.size();
         int i = dims[d-2];

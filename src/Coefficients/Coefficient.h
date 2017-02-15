@@ -18,7 +18,7 @@ namespace spline {
         CoefficientNode(const AnyTensor& t) : data(t){}
         CoefficientNode(const std::vector< double >& v);
 
-        std::vector< int > size() const;
+        std::vector< int > shape() const;
         std::vector< int > dimension() const;
 
         int getNumberCoefficents() const;
@@ -47,7 +47,7 @@ namespace spline {
         Coefficient(const AnyTensor& t);
         Coefficient(const std::vector< double >& v);
 
-        std::vector< int > size() const;
+        std::vector< int > shape() const;
         std::vector< int > dimension() const;
 
         Coefficient operator-() const ;

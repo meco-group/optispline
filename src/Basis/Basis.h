@@ -33,14 +33,14 @@ namespace spline {
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        virtual int n_inputs() const {return 0;};
 
         template< class T >
             void assertVectorLenghtCorrect( const std::vector< T >& x) const;
 
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
 
-        virtual int dimension() const {return 0;}
+        virtual int dimension() const {return 0;};
+        virtual int n_inputs() const {return 0;};
     };
 
 #endif // SWIG
@@ -67,13 +67,12 @@ namespace spline {
         virtual Basis operator*(const BSplineBasis& rhs) const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-        int n_inputs() const;
 
         virtual std::string getRepresentation() const ;
         virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
 
         int dimension() const;
-
+        int n_inputs() const;
     };
 
     template< class T >

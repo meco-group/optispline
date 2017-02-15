@@ -90,8 +90,8 @@ namespace spline {
         return basis.n_inputs();
     }
 
-    std::vector< int > Function::size() const{
-        return coef.size();
+    std::vector< int > Function::shape() const{
+        return coef.shape();
     }
 
 }  // namespace spline

@@ -35,7 +35,7 @@ namespace spline {
         // Argument& getArgument (){ return getBasis().getArgument();}
 
         int n_inputs() const;
-        std::vector< int > size() const;
+        std::vector< int > shape() const;
     public:
         TensorBasis basis;
         Coefficient coef;
