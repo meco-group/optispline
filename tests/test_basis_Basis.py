@@ -10,33 +10,67 @@ from casadi import *
 
 class Test_Basis_Basis(BasisTestCase):
 
-    def test_tbasis_n_basis(self):
-        s1 = MonomialBasis(3)
-        s2 = MonomialBasis(4)
+    def test_ubasis_n_basis(self):
+        s1 = UnivariateBasis()
+        s2 = UnivariateBasis()
+        s3 = UnivariateBasis()
         b = TensorBasis()
         b.addBasis(s1)
         self.assertEqual(b.n_basis(), 1)
 
         b.addBasis(s2)
+        b.addBasis(s3)
+        self.assertEqual(b.n_basis(), 3)
+
+    def test_tbasis_n_basis(self):
+        s1 = MonomialBasis(3)
+        s2 = MonomialBasis(4)
+        s3 = MonomialBasis(1)
+        b = TensorBasis()
         b.addBasis(s1)
+        self.assertEqual(b.n_basis(), 1)
+
+        b.addBasis(s2)
+        b.addBasis(s3)
         self.assertEqual(b.n_basis(), 3)
 
     def test_tbasis_dimension(self):
         s1 = MonomialBasis(3)
         s2 = MonomialBasis(4)
+        s3 = MonomialBasis(1)
         b = TensorBasis()
         b.addBasis(s1)
-        self.assertEqual(b.dimension(), 4)
+        self.assertEqual(b.dimension(), [4])
 
         b.addBasis(s2)
-        b.addBasis(s1)
-        self.assertEqual(b.dimension(), 13)
+        b.addBasis(s3)
+        self.assertEqual(b.dimension(), [4,5,2])
 
-    def test_tbasis_n_inputs(self):
+    def test_tbasis_n_inputs1(self):
         s1 = MonomialBasis(3)
         b = TensorBasis()
         b.addBasis(s1)
         self.assertEqual(b.n_inputs(), 1)
+
+    def test_tbasis_n_inputs2(self):
+        s1 = MonomialBasis(3)
+        s2 = MonomialBasis(4)
+        s3 = MonomialBasis(1)
+        b = TensorBasis()
+        b.addBasis(s1)
+        b.addBasis(s2)
+        b.addBasis(s3)
+        self.assertEqual(b.n_inputs(), 3)
+
+    def test_tbasis_n_inputs2(self):
+        s1 = MonomialBasis(3)
+        s2 = MonomialBasis(4)
+        s3 = MonomialBasis(1)
+        b = TensorBasis()
+        b.addBasis(s1)
+        b.addBasis(s2)
+        b.addBasis(s3)
+        self.assertEqual(b.n_inputs(), 3)
 
     def test_getSubBasis1(self):
         s1 = MonomialBasis(3)
