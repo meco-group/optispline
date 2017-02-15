@@ -213,7 +213,7 @@ namespace spline {
             coeffs.push_back(values);
         }
 
-        return concat(coeffs, 0);
+        return AnyTensor::concat(coeffs, 0);
     }
 
 

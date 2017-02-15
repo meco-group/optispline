@@ -62,7 +62,7 @@ namespace spline {
         // make single basis function coefficient and repeat
         AnyTensor values = t.shape(coeff_size);
         // make zero valued coefficients for higher order basis functions
-        AnyTensor zeros = repeat(AnyTensor(0),coeff_size);
+        AnyTensor zeros = AnyTensor::repeat(AnyTensor(AnyScalar(0)),coeff_size);
 
         std::vector< AnyTensor > coeffs;
         coeffs.push_back(values);
@@ -70,7 +70,7 @@ namespace spline {
             coeffs.push_back(zeros);
         }
 
-        return concat(coeffs,0);
+        return AnyTensor::concat(coeffs,0);
     }
 
    AnyTensor MonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
