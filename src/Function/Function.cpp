@@ -106,6 +106,17 @@ namespace spline {
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
+    Function Function::operator*(const AnyScalar& a) const {
+        AnyTensor t = AnyTensor(a*DM::eye(shape()[2]));
+        return operator*(t);
+    }
+
+    Function Function::operator*(const AnyTensor& t) const {
+        spline_assert(AnyTensor.n_dims() == 2);
+        Coefficient c = getCoefficient();
+        int dir = n_inputs() + 1; //0 based, 2nd matrix dimension
+        return Function(getTensorBasis(), c.transform(t.reorder({1,0}), dir));
+    }
 
     Function Function::operator-(const Function& f) const {
         return operator+(-f);
