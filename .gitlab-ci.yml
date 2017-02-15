@@ -31,7 +31,7 @@ after_script:
     - echo $TARGET
     
     - rclone delete dropbox:$TARGET
-    - rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
+    - rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles || rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles || rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
 
 coverage:
   stage: tests
