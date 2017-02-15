@@ -71,5 +71,5 @@ namespace spline {
          return degree ;
     }
 
-    int UnivariateBasisNode::getNumberOfSubBasis() const { return 1; }
+    int UnivariateBasisNode::n_inputs() const { return 1; }
 }  // namespace spline

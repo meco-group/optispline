@@ -187,7 +187,7 @@ namespace spline {
 
 
     AnyTensor BSplineBasisNode::operator() (const AnyVector & x) const {
-        assert(x.size()==getNumberOfSubBasis());
+        assert(x.size()==n_inputs());
         return SubBasisEvalution(x);
     }
 

@@ -74,10 +74,6 @@ namespace spline {
         return AnyTensor();
     }
 
-    int Basis::getNumberOfSubBasis() const { return (*this)->getNumberOfSubBasis();}
-    std::vector< int > Basis::getShape() const { return (*this)->getShape();}
-
-
     std::vector< std::vector < AnyScalar > > Basis::getEvaluationGrid() const {
       return (*this)->getEvaluationGrid();
     }
@@ -85,4 +81,6 @@ namespace spline {
       return std::vector< std::vector < AnyScalar > >();
     }
 
+    int Basis::dimension() const { return (*this)->dimension();}
+    int Basis::n_inputs() const { return (*this)->n_inputs();}
 } // namespace spline

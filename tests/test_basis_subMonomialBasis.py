@@ -5,13 +5,13 @@ import pdb
 
 class Test_Basis_SubMonomial(BasisTestCase):
 
-    def test_getLength(self):
+    def test_dimension(self):
         s = MonomialBasis(3)
-        self.assertEqual(s.getLength(), 4)
+        self.assertEqual(s.dimension(), 4)
 
-    def test_getDimension(self):
+    def test_n_inputs(self):
         s = MonomialBasis(3)
-        self.assertEqual(s.getNumberOfSubBasis(), 1)
+        self.assertEqual(s.n_inputs(), 1)
 
     def test_getDegree(self):
         s = MonomialBasis(3)
@@ -20,7 +20,7 @@ class Test_Basis_SubMonomial(BasisTestCase):
     def test_evaluation1(self):
         s = MonomialBasis(3)
         r = s([2.0])
-        self.assertEqual(r.shape[0],s.getLength())
+        self.assertEqual(r.shape[0], s.dimension())
 
     def test_evaluation2(self):
         s = MonomialBasis(3)

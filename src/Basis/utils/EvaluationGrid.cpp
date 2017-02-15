@@ -30,7 +30,7 @@ namespace spline{
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
         std::vector< AnyTensor > postStep ;
 
-        for(int i = 0; i < griddedBasis.getNumberOfSubBasis(); i++){
+        for(int i = 0; i < griddedBasis.n_basis(); i++){
             Basis subBasis = griddedBasis.getSubBasis()[i];
             std::vector< std::vector< AnyScalar > > evaluationGrid = subBasis.getEvaluationGrid();
             for(auto const & subPoint : evaluationGrid){
@@ -64,8 +64,8 @@ namespace spline{
                 index.push_back(basis.indexArgument(a));
             }
         }else{
-            spline_assert(griddedBasis.getNumberOfSubBasis() == basis.getNumberOfSubBasis());
-            for(int i = 0; i < griddedBasis.getNumberOfSubBasis(); i++){
+            spline_assert(griddedBasis.n_basis() == basis.n_basis());
+            for(int i = 0; i < griddedBasis.n_basis(); i++){
                 index.push_back(i);
             }
         }
