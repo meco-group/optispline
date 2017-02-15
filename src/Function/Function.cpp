@@ -107,25 +107,24 @@ namespace spline {
     }
 
     Function Function::operator*(const AnyScalar& a) const {
-        AnyTensor t = AnyTensor(a*DM::eye(shape()[2]));
+        AnyTensor t = AnyTensor(DM::eye(shape()[2]))*a;
         return operator*(t);
     }
 
     Function Function::operator*(const AnyTensor& t) const {
-        spline_assert(AnyTensor.n_dims() == 2);
+        spline_assert(t.n_dims() == 2);
         Coefficient c = getCoefficient();
         int dir = n_inputs() + 1; //0 based, 2nd matrix dimension
-        return Function(getTensorBasis(), c.transform(t.reorder({1,0}), dir));
+        return Function(getTensorBasis(), c.transform(t.reorder_dims({1,0}), dir));
     }
 
     Function Function::pow(const Function f, int power) const {
         spline_assert(power >= 0);
-        Function fpow;
+        Function fpow = f;
 
         if(power == 0){
-            fpow = Function::Constant(f.getTensorbasis(), 1, f.shape());
+            fpow = Function::Constant(f.getTensorBasis(), 1, f.shape());
         } else {
-            fpow = f;
             for (int i = 1; i < power; i++) {
                 fpow = fpow*f;
             }
@@ -139,7 +138,7 @@ namespace spline {
     }
 
     Function Function::operator-(const AnyScalar& a) const {
-        return operator+(-a);
+        return operator+((-1)*a); // ---MINUS!!
     }
 
     Function Function::operator-(const AnyTensor& t) const {
