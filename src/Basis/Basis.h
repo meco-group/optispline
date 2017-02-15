@@ -7,6 +7,7 @@
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
+#include "../common.h"
 
 // #include <tensor.hpp>
 #include <any_tensor.hpp>
