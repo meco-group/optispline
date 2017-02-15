@@ -29,7 +29,7 @@ class Test_Function_Function(BasisTestCase):
         m3 = MonomialBasis(1)
         a = Coefficient(a)
         b = TensorBasis([m1,m2,m3])
-        f = Function(b,a1)
+        f = Function(b,a)
         self.assertEqual(f.n_inputs(), 3)
 
     def test_function_shape1(self):
