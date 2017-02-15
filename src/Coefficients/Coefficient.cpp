@@ -32,10 +32,6 @@ namespace spline {
         return i*j;
     }
 
-    CoefficientNode CoefficientNode::operator-() const {
-        return CoefficientNode( -data);
-    }
-
     std::string CoefficientNode::getRepresentation() const {return "Coefficient";};
 
 
@@ -51,7 +47,7 @@ namespace spline {
     int Coefficient::getNumberCoefficents() const { return (*this)->getNumberCoefficents(); }
 
     Coefficient Coefficient::operator-() const {
-        return (*this)->operator-().shared_from_this<Coefficient>();
+        return Coefficient(-getData());
     }
     AnyTensor Coefficient::getData() const  { return (*this)->getData(); }
     std::string Coefficient::getRepresentation() const { return (*this)->getRepresentation(); }
