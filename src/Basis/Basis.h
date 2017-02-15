@@ -73,6 +73,8 @@ namespace spline {
 
         int dimension() const;
         int n_inputs() const;
+
+        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
     };
 
     template< class T >

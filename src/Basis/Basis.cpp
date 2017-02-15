@@ -83,4 +83,10 @@ namespace spline {
 
     int Basis::dimension() const { return (*this)->dimension();}
     int Basis::n_inputs() const { return (*this)->n_inputs();}
+
+    AnyTensor Basis::const_coeff_tensor(const AnyTensor& t) const {
+        spline_assert(false);
+        return AnyTensor();
+    }
+
 } // namespace spline
