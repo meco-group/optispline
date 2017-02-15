@@ -72,4 +72,14 @@ namespace spline {
     }
 
     int UnivariateBasisNode::n_inputs() const { return 1; }
+
+
+
+    Basis UnivariateBasis::univariate_derivative(int order) const {
+        return (*this)->univariate_derivative(order);
+    }
+    // UnivariateBasisNode implementation is not necessary since you will never make a UnivariateBasis?
+
+
+
 }  // namespace spline

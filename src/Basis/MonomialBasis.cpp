@@ -72,4 +72,10 @@ namespace spline {
         }
         return ret;
     }
+
+    Basis MonomialBasisNode::univariate_derivative(int order) const {
+        return shared_from_this<Basis>();
+        
+    }
+
 } // namespace spline

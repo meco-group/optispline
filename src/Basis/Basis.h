@@ -41,6 +41,8 @@ namespace spline {
 
         virtual int dimension() const {return 0;};  // Number of basis functions in the basis
         virtual int n_inputs() const {return 0;};  // Number of inputs of the basis
+        
+        virtual Basis derivative(int order, int direction) const;
     };
 
 #endif // SWIG
@@ -73,12 +75,14 @@ namespace spline {
 
         int dimension() const;
         int n_inputs() const;
+
+        virtual Basis derivative(int order, int direction) const;
     };
 
     template< class T >
-        void BasisNode::assertVectorLenghtCorrect( const std::vector< T >& x) const{
+        void BasisNode::assertVectorLenghtCorrect(const std::vector< T >& x) const {
             assert(x.size() == n_inputs());  // imput vector has wrong dimention
         }
 
-}
+}  // namespace spline
 #endif  // SUBBASIS_H_
