@@ -124,7 +124,7 @@ namespace spline{
 
         AnyTensor SubBasisEvalution(const std::vector< AnyScalar >& x ) const ;
 
-        virtual void getEvaluationGrid(std::vector< std::vector < AnyScalar > > * eg) const;
+        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
     private:
         mutable Function bspline_evaluator_;
 
