@@ -118,12 +118,13 @@ namespace spline {
         return Function(getTensorBasis(), c.transform(t.reorder_dims({1,0}), dir));
     }
 
-    Function Function::pow(const Function f, int power) const {
+    Function Function::pow(int power) const {
         spline_assert(power >= 0);
-        Function fpow = f;
+        Function f = *this;
+        Function fpow = *this;
 
         if(power == 0){
-            fpow = Function::Constant(f.getTensorBasis(), 1, f.shape());
+            fpow = Function::Constant(getTensorBasis(), 1, shape());
         } else {
             for (int i = 1; i < power; i++) {
                 fpow = fpow*f;
