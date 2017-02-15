@@ -45,10 +45,6 @@ AnyTensor AnyTensor::unity() {
   return DT(1, {});
 }
 
-
-
-
-
 TensorType AnyScalar::merge(TensorType a, TensorType b) {
   if (a == TENSOR_SX && b == TENSOR_MX) tensor_assert(0);
   if (a == TENSOR_MX && b == TENSOR_SX) tensor_assert(0);
@@ -343,6 +339,36 @@ std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<MX>& v) {
   std::vector<AnyScalar> ret(v.size());
   std::copy(v.begin(), v.end(), ret.begin());
   return ret;
+}
+
+AnyVector::AnyVector(const AnyTensor& s) : AnyTensor(s) {
+  tensor_assert_message(s.n_dims()!=1, "AnyVector can have only one dimension.")
+}
+
+AnyVector::AnyVector(const DT & s) : AnyTensor(s){
+  tensor_assert_message(s.n_dims()!=1, "AnyVector can have only one dimension.")
+}
+
+AnyVector::AnyVector(const ST & s) : AnyTensor(s){
+  tensor_assert_message(s.n_dims()!=1, "AnyVector can have only one dimension.")
+}
+
+AnyVector::AnyVector(const MT & s) : AnyTensor(s){
+  tensor_assert_message(s.n_dims()!=1, "AnyVector can have only one dimension.")
+}
+
+AnyScalar AnyVector::operator[](int index) const {
+  if ( is_DT() ){
+    return static_cast<double>(as_DT().data()[index]);
+  }
+  if ( is_ST() ){
+    return as_ST().data()[index];
+  }
+  if ( is_MT() ){
+    return as_MT().data()[index];
+  }
+  assert(false);
+  return 0;
 }
 
 namespace casadi {

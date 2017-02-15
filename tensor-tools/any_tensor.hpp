@@ -275,6 +275,15 @@ class AnyTensor {
     MT data_mx;
 };
 
+class AnyVector : public AnyTensor {
+  public:
+    AnyVector(const AnyTensor& s);
+    AnyVector(const DT & t);
+    AnyVector(const ST & t);
+    AnyVector(const MT & t);
+    AnyScalar operator[](int index) const;
+};
+
 namespace casadi {
   template<>
   class casadi_limits<AnyScalar>{
