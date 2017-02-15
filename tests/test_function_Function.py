@@ -12,6 +12,46 @@ class Test_Function_Function(BasisTestCase):
         b = TensorBasis([m])
         f = Function(b,a)
 
+    def test_function_n_inputs1(self):
+        a = MX.sym('a',3 + 1,1)
+        a = MTensor(a, [3 + 1,1,1])
+        a = Coefficient(a)
+        m = MonomialBasis(3)
+        b = TensorBasis([m])
+        f = Function(b,a)
+        self.assertEqual(f.n_inputs(), 1)
+
+    def test_function_n_inputs2(self):
+        a1 = MX.sym('a',3 + 1,1)
+        a1 = MTensor(a, [3 + 1,1,1])
+        a1 = Coefficient(a)
+        m1 = MonomialBasis(3)
+        m2 = MonomialBasis(4)
+        m3 = MonomialBasis(1)
+        b = TensorBasis([m1,m2,m3])
+        f = Function(b,a)
+        self.assertEqual(f.n_inputs(), 3)
+
+    def test_function_shape1(self):
+        a = MX.sym('a',3 + 1,1)
+        a = MTensor(a, [3 + 1,1,1])
+        a = Coefficient(a)
+        m = MonomialBasis(3)
+        b = TensorBasis([m])
+        f = Function(b,a)
+        self.assertEqual(f.shape(), [1,1])
+
+    def test_function_shape2(self):
+        a = MX.sym('a',3 + 1,1)
+        a = MTensor(a, [3 + 1,1,1])
+        a = Coefficient(a)
+        m1 = MonomialBasis(3)
+        m2 = MonomialBasis(4)
+        m3 = MonomialBasis(1)
+        b = TensorBasis([m1,m2,m3])
+        f = Function(b,a)
+        self.assertEqual(f.shape(), [2,3])
+
     def test_function_evaluation_type1(self):
         a_ = [2,0,0,1]
         a_ = DTensor(a_, [3 + 1,1,1])
@@ -21,7 +61,6 @@ class Test_Function_Function(BasisTestCase):
         f = Function(b,a_) 
         x = 1.0
         self.assertEqual(type(f(x)), float)
-
 
     def test_function_evaluation_type2(self):
         a_ = [2,0,0,1]
@@ -33,7 +72,6 @@ class Test_Function_Function(BasisTestCase):
         x = SX.sym('x',1,1)
         self.assertEqual(type(f(x)), casadi.SX)
 
-
     def test_function_evaluation_type3(self):
         a_ = SX.sym('a',3 + 1,1)
         a_ = STensor(a_, [3 + 1,1,1])
@@ -43,7 +81,6 @@ class Test_Function_Function(BasisTestCase):
         f = Function(b,a_) 
         x = 1.0
         self.assertEqual(type(f(x)), casadi.SX)
-
 
     def test_function_evaluation_type4(self):
         a_ = SX.sym('a',3 + 1,1)
