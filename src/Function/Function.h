@@ -21,7 +21,7 @@ namespace spline {
         static Function Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) ;
         static Function Constant(const Basis& basis, const AnyTensor& t);
 
-        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        AnyTensor operator()(const std::vector< AnyScalar >& x) const ;
 
         Function operator+(const Function& f) const ;
         Function operator+(const AnyScalar& a) const ;

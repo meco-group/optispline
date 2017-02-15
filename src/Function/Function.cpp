@@ -93,11 +93,11 @@ namespace spline {
     }
 
     Function Function::operator+(const AnyScalar& a) const {
-        return operator+(Function::Constant(a, this->getTensorBasis(), this->shape()));
+        return operator+(Function::Constant(this->getTensorBasis(), a, this->shape()));
     }
 
     Function Function::operator+(const AnyTensor& t) const {
-        return operator+(Function::Constant(t, this->getTensorBasis()));
+        return operator+(Function::Constant(this->getTensorBasis(), t));
     }
 
     Function Function::operator*(const Function& f) const {
