@@ -181,6 +181,8 @@ class AnyTensor {
     static AnyTensor vertcat(const std::vector<AnyScalar>& v);
     static AnyTensor concat(const std::vector<AnyTensor>& v, int axis);
 
+    static AnyTensor repeat(const AnyTensor&e, const std::vector<int>& factors);
+
     static AnyTensor pack(const std::vector<AnyTensor>& v, int axis);
     static std::vector<AnyTensor> unpack(const AnyTensor& v, int axis);
 
