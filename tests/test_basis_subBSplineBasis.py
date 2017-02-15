@@ -56,7 +56,8 @@ class Test_Basis_SubBSpline(BasisTestCase):
       N = 15
 
       B = BSplineBasis([0,0,0] + list(np.linspace(0,1,N)) + [1,1,1],3)
-      c = np.random.random(*B.dimension())
+      t = TensorBasis([B])
+      c = np.random.random(*t.dimension())
 
       f = Function(B,c)
       F = C.Function("F",[x],[f(x)])
