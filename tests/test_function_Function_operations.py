@@ -40,6 +40,20 @@ class Test_Function_Operations(BasisTestCase):
 
       #   for arg in [0,1,2,1.3]:
       #     self.assertEqualTensor(p(arg), poly(arg))
+      
+    def test_bspline_power(self):
+        knots = [0,0,1,1]
+        degree = 1
+        basis = Basis.BSplineBasis(knots,degree)
 
+        coeff = DTensor([1,2,-3,4],[2,1,2])
+        func = Function(basis,coeff)
+        
+        p = 3
+        funcp = pow(func,p)
+       
+        for v in range(0.1,0.9,0.2):
+            numpy.testing.assert_array_equal(power(func(v),p),funcp(v))
+        
 if __name__ == '__main__':
     unittest.main()
