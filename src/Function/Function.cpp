@@ -4,6 +4,30 @@
 #include "../common.h"
 namespace spline {
 
+    Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) const {
+        AnyTensor value = repeat(AnyTensor(a), size);
+        return Function::Constant(value, basis);
+    }
+
+    Function Constant(const TensorBasis& basis, const AnyTensor& t)  const {
+        std::vector< Basis > subbasis = TensorBasis.getSubBasis();
+        Function f = Function::Constant(t, subbasis[0]);
+        for (int i = 1; i < TensorBasis.getNumberOfSubBasis(); i++) {
+            f *= Function::Constant(value, size, subbasis[i]);
+        }
+        return f;
+    }
+
+    Function Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) const {
+        AnyTensor value = repeat(AnyTensor(a), size);
+        return Function:::Constant(value, basis);
+    }
+
+    Function Constant(const Basis& basis, const AnyTensor& t) const {
+        Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
+        return Function(basis, coeff);
+    }
+
     AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const {
         return basis(x).inner(coef.getData());
     }
