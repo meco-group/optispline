@@ -18,9 +18,10 @@ namespace spline {
         CoefficientNode(const AnyTensor& t) : data(t){}
         CoefficientNode(const std::vector< double >& v);
 
-        std::vector< int > getShape() const;
-        int getNumberCoefficents() const;
+        std::vector< int > shape() const;
+        std::vector< int > dimension() const;
 
+        int getNumberCoefficents() const;
         // Coefficient operator+ (Coefficient & other) const;
         AnyTensor getData() const {return data;}
         std::string getRepresentation() const ;
@@ -39,13 +40,14 @@ namespace spline {
         CoefficientNode* get() const ;
         CoefficientNode* operator->() const ;
 
+        int getNumberCoefficents() const;
     #endif // SWIG
         Coefficient();
         Coefficient(const AnyTensor& t);
         Coefficient(const std::vector< double >& v);
 
-        std::vector< int > getShape() const;
-        int getNumberCoefficents() const;
+        std::vector< int > shape() const;  //
+        std::vector< int > dimension() const;  // Related to the number of basis functions
 
         Coefficient operator-() const ;
         AnyTensor getData() const;

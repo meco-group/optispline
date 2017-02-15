@@ -38,8 +38,8 @@ namespace spline {
       : allSubBasis(allSubBasis_), allArguments(std::vector<Argument>{})
       {}
 
-    int TensorBasis::getNumberOfSubBasis() const { return (*this)->getNumberOfSubBasis(); }
-    int TensorBasisNode::getNumberOfSubBasis() const {
+    int TensorBasis::n_basis() const { return (*this)->n_basis(); }
+    int TensorBasisNode::n_basis() const {
         return allSubBasis.size();
     }
 
@@ -88,7 +88,7 @@ namespace spline {
     }
 
     Basis TensorBasis::getBasis() const {
-        spline_assert(getNumberOfSubBasis() == 1);
+        spline_assert(n_basis() == 1);
         return getSubBasis()[0];
     }
 
@@ -103,7 +103,7 @@ namespace spline {
 
     Basis TensorBasis::getBasis(const Index& index) const {
       int ind = index.concrete(getArguments());
-      spline_assert(ind<getNumberOfSubBasis());
+      spline_assert(ind < n_basis());
       return getSubBasis()[ind];
     }
 
@@ -119,13 +119,11 @@ namespace spline {
         this->allSubBasis.push_back(basis);
     }
 
-    std::vector<int> TensorBasis::getShape() const { return (*this)->getShape ();}
-    std::vector<int> TensorBasisNode::getShape() const {
+    std::vector<int> TensorBasis::dimension() const { return (*this)->dimension ();}
+    std::vector<int> TensorBasisNode::dimension() const {
         std::vector<int> shape;
         for (auto const& b : getSubBasis()) {
-            for (int s : b.getShape()) {
-                shape.push_back(s);
-            }
+            shape.push_back(b.dimension());
         }
         return shape;
     }
@@ -165,8 +163,19 @@ namespace spline {
     }
     int TensorBasisNode::totalNumberBasisFunctions() const {
         int r = 1;
-        for (int i : getShape()) {
+        for (int i : dimension()) {
             r *= i;
+        }
+        return r;
+    }
+
+    int TensorBasis::n_inputs() const {
+        return (*this)->n_inputs();
+    }
+    int TensorBasisNode::n_inputs() const {
+        int r = 0;
+        for (auto const& b : getSubBasis()) {
+            r += b.n_inputs();
         }
         return r;
     }

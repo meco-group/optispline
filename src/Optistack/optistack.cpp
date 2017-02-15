@@ -217,7 +217,7 @@ void OptiSplineSolver::value(const Tensor<MX>& t, const Tensor<DM>& d) {
 }
 
 spline::Function OptiSpline::Function(const spline::TensorBasis& b) {
-  std::vector<int> shape = b.getShape();
+  std::vector<int> shape = b.dimension();
   shape.push_back(1);
   shape.push_back(1);
 
