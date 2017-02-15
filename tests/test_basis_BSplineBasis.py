@@ -22,8 +22,8 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         g1 = b1.greville()
         b2 = BSplineBasis([0,1],degree,knotsint)
         g2 = b2.greville()
-        self.assertEqualT(np.round(g1, 6),np.round(g2, 6))
-        self.assertEqualT(np.round(g1, 6),np.round(g, 6))
+        self.assertEqualT(g1, g2, 1e-6)
+        self.assertEqualT(g1, g, 1e-6)
 
     def test_constructor(self):
         degree = 3

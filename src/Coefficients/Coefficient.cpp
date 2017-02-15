@@ -87,4 +87,13 @@ namespace spline {
         return data.einstein(T, ind1, {-1, -2}, ind2);
     }
 
+    Coefficient Coefficient::add_trival_dimention(int extra_dims) const { return (*this)->add_trival_dimention(extra_dims); }
+    Coefficient CoefficientNode::add_trival_dimention(int extra_dims) const {
+        std::vector< int > dims_ = data.dims();
+        for(int i = 0; i < extra_dims; i++){
+            dims_.push_back(1);
+        }
+        /* AnyTensor return_tensor = AnyTensor(getData(), dims_); */
+        return getData().shape(dims_);
+    }
 }  // namespace spline

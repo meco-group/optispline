@@ -30,7 +30,7 @@ namespace spline{
 
         virtual std::string getRepresentation() const ;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 
         virtual int getLength() const ;
         template<class T>

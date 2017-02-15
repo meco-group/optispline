@@ -13,8 +13,8 @@ namespace spline {
 
 
     public :
-        Function( const TensorBasis& basis, const Coefficient& coef) : basis(basis), coef(coef) {}
-        Function( const Basis& basis, const Coefficient& coef) : basis(TensorBasis(basis)), coef(coef) {}
+        Function( const TensorBasis& basis, const Coefficient& coef) ;
+        Function( const Basis& basis, const Coefficient& coef) ;
 
         static Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) ;
         static Function Constant(const TensorBasis& basis, const AnyTensor& t) ;
@@ -53,10 +53,11 @@ namespace spline {
         Coefficient coef;
 
     private:
-      typedef std::function<TensorBasis(const TensorBasis&, const TensorBasis&)> BasisComposition;
-      typedef std::function<AnyTensor(const AnyTensor&, const AnyTensor&)> TensorComposition;
-      Function generic_operation(const Function& f,
-          const BasisComposition & bc, const TensorComposition & tc) const ;
+        void init( const TensorBasis& basis, const Coefficient& coef) ;
+        typedef std::function<TensorBasis(const TensorBasis&, const TensorBasis&)> BasisComposition;
+        typedef std::function<AnyTensor(const AnyTensor&, const AnyTensor&)> TensorComposition;
+        Function generic_operation(const Function& f,
+                const BasisComposition & bc, const TensorComposition & tc) const ;
     };
 } // namespace spline
 
