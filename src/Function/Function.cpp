@@ -4,23 +4,23 @@
 #include "../common.h"
 namespace spline {
 
-        AnyTensor value = repeat(AnyTensor(a), size);
-        return Function::Constant(value, basis);
     Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) {
+        AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
+        return Function::Constant(basis, value);
     }
 
-        std::vector< Basis > subbasis = TensorBasis.getSubBasis();
-        Function f = Function::Constant(t, subbasis[0]);
-        for (int i = 1; i < TensorBasis.getNumberOfSubBasis(); i++) {
-            f *= Function::Constant(value, size, subbasis[i]);
     Function Constant(const TensorBasis& basis, const AnyTensor& t) {
+        std::vector< Basis > subbasis = basis.getSubBasis();
+        Function f = Function::Constant(subbasis[0], t);
+        for (int i = 1; i < basis.n_basis(); i++) {
+            f = f*Function::Constant(subbasis[i], t);
         }
         return f;
     }
 
-        AnyTensor value = repeat(AnyTensor(a), size);
-        return Function:::Constant(value, basis);
     Function Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) {
+        AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
+        return Function::Constant(basis, value);
     }
 
     Function Constant(const Basis& basis, const AnyTensor& t) {
