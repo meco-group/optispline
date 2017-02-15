@@ -12,9 +12,20 @@ def wrap(s, casadiType):
 
 class Test_Basis_SubBSpline(BasisTestCase):
 
-    def test_dimension(self):
+    def test_dimension1(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
+        # number of basis functions = number of knots - degree - 1
         self.assertEqual(s.dimension(), 4)
+
+    def test_dimension2(self):
+        s = BSplineBasis([0,0,0,0.25,0.5,0.75,1,1,1], 2)
+        # number of basis functions = number of knots - degree - 1
+        self.assertEqual(s.dimension(), 6)
+
+    def test_dimension2(self):
+        s = BSplineBasis([0,0,0,0,0,0.25,0.5,0.75,1,1,1,1,1], 4)
+        # number of basis functions = number of knots - degree - 1
+        self.assertEqual(s.dimension(), 8)
 
     def test_n_inputs(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
@@ -90,9 +101,6 @@ class Test_Basis_SubBSpline(BasisTestCase):
       S = [float(J(i)) for i in ts]
 
       self.assertEqualArray(s,S,tol=1e-12)
-
-
-
 
 if __name__ == '__main__':
     unittest.main()
