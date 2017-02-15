@@ -22,12 +22,12 @@ class Test_Function_Function(BasisTestCase):
         self.assertEqual(f.n_inputs(), 1)
 
     def test_function_n_inputs2(self):
-        a1 = MX.sym('a',3 + 1,1)
-        a1 = MTensor(a, [3 + 1,1,1])
-        a1 = Coefficient(a)
+        a = MX.sym('a', (3+1)*(4+1)*(1+1))
+        a = MTensor(a, [3+1,4+1,1+1,1,1])
         m1 = MonomialBasis(3)
         m2 = MonomialBasis(4)
         m3 = MonomialBasis(1)
+        a = Coefficient(a)
         b = TensorBasis([m1,m2,m3])
         f = Function(b,a)
         self.assertEqual(f.n_inputs(), 3)
@@ -42,15 +42,15 @@ class Test_Function_Function(BasisTestCase):
         self.assertEqual(f.shape(), [1,1])
 
     def test_function_shape2(self):
-        a = MX.sym('a',3 + 1,1)
-        a = MTensor(a, [3 + 1,1,1])
-        a = Coefficient(a)
+        a = MX.sym('a', (3+1)*(4+1)*(1+1)*3*2)
+        a = MTensor(a, [3+1,4+1,1+1,3,2])
         m1 = MonomialBasis(3)
         m2 = MonomialBasis(4)
         m3 = MonomialBasis(1)
+        a = Coefficient(a)
         b = TensorBasis([m1,m2,m3])
         f = Function(b,a)
-        self.assertEqual(f.shape(), [2,3])
+        self.assertEqual(f.shape(), [3,2])
 
     def test_function_evaluation_type1(self):
         a_ = [2,0,0,1]

@@ -18,6 +18,30 @@ class Test_Function_SubBasis(BasisTestCase):
         v = [0.1,0.2,0.3,0.4]
         self.assertEqualArray(testfun(v),v)
 
+    def test_coefficients_dimension1(self):
+        a = MX.sym('a',3 + 1,1)
+        a = MTensor(a, [3 + 1,1,1])
+        a = Coefficient(a)
+        self.assertEqual(a.dimension(), [4])
+
+    def test_coefficients_dimension2(self):
+        a = MX.sym('a', (3+1)*(4+1)*(1+1))
+        a = MTensor(a, [3+1,4+1,1+1,1,1])
+        a = Coefficient(a)
+        self.assertEqual(a.dimension(), [4,5,2])
+
+    def test_coefficients_shape1(self):
+        a = MX.sym('a',3 + 1,1)
+        a = MTensor(a, [3 + 1,1,1])
+        a = Coefficient(a)
+        self.assertEqual(a.shape(), [1,1])
+
+    def test_coefficients_shape2(self):
+        a = MX.sym('a', (3+1)*(4+1)*(1+1)*3*2)
+        a = MTensor(a, [3+1,4+1,1+1,3,2])
+        a = Coefficient(a)
+        self.assertEqual(a.shape(), [3,2])
+
     def test_argument_tensor_1(self):
         a = [[1,1],[0,2]]
         a = DM(a)
