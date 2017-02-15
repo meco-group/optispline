@@ -171,6 +171,7 @@ class AnyTensor {
     //bool equals(const AnyTensor&rhs) const;
 
     static TensorType type(const std::vector<AnyTensor>& v);
+    TensorType type() const {return t; } ;
 
 #ifndef SWIG
     explicit operator DT() const;
@@ -179,6 +180,8 @@ class AnyTensor {
 #endif
     static AnyTensor vertcat(const std::vector<AnyScalar>& v);
     static AnyTensor concat(const std::vector<AnyTensor>& v, int axis);
+
+    static AnyTensor repeat(const AnyTensor&e, const std::vector<int>& factors);
 
     static AnyTensor pack(const std::vector<AnyTensor>& v, int axis);
     static std::vector<AnyTensor> unpack(const AnyTensor& v, int axis);
@@ -281,7 +284,12 @@ class AnyVector : public AnyTensor {
     AnyVector(const DT & t);
     AnyVector(const ST & t);
     AnyVector(const MT & t);
+    AnyVector();
     AnyScalar operator[](int index) const;
+    int size() const {
+      return dims()[0];
+    }
+    std::vector<AnyScalar> to_scalar_vector() const;
 };
 
 namespace casadi {

@@ -123,6 +123,7 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, AnyScalar** m);
     bool to_ptr(GUESTOBJECT *p, std::vector<AnyScalar>** m);
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m);
+    bool to_ptr(GUESTOBJECT *p, AnyVector** m);
     bool to_ptr(GUESTOBJECT *p, DT** m);
     bool to_ptr(GUESTOBJECT *p, ST** m);
     bool to_ptr(GUESTOBJECT *p, MT** m);
@@ -136,6 +137,7 @@ using namespace spline;
     GUESTOBJECT * from_ptr(const std::vector<AnyScalar>* a);
     GUESTOBJECT * from_ptr(const AnyScalar *a);
     GUESTOBJECT * from_ptr(const AnyTensor *a);
+    GUESTOBJECT * from_ptr(const AnyVector *a);
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
     GUESTOBJECT * from_ptr(const spline::Basis *a);
     GUESTOBJECT * from_ptr(const spline::Coefficient *a);
@@ -231,7 +233,7 @@ using namespace spline;
       }
       return false;
     }
-    
+
     bool to_ptr(GUESTOBJECT *p, std::vector<AnyScalar>** m) {
       {
         std::vector<double> tmp, *mt=&tmp;
@@ -264,7 +266,7 @@ using namespace spline;
                                     $descriptor(spline::DT*), 0))) {
         return true;
       }
-      
+
       #ifdef SWIGMATLAB
       if (mxIsDouble(p) && !mxIsSparse(p)) {
         if (m) {
@@ -282,7 +284,7 @@ using namespace spline;
       #ifdef SWIGPYTHON
       // 1D numpy array
       if (is_array(p) && array_is_native(p)) {
-      
+
         // Make sure we have a contigous array
         int array_is_new_object;
         PyArrayObject* array;
@@ -294,7 +296,7 @@ using namespace spline;
             for (int i=0;i<dim.size();++i) dim[i] = array_size(p,i);
             std::vector<int> dim_rev = dim;
             std::reverse(dim_rev.begin(), dim_rev.end());
-            
+
             double* d = reinterpret_cast<double*>(array_data(array));
             std::vector<double> data(d, d+product(dim));
             std::vector<int> order_rev = range(n_dim);
@@ -375,9 +377,43 @@ using namespace spline;
           return true;
         }
       }
-      
+
       return false;
     }
+
+    bool to_ptr(GUESTOBJECT *p, AnyVector** m) {
+      {
+        std::vector<AnyScalar> tmp, *mt = &tmp;
+        if (casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = vertcat(*mt);
+          return true;
+        }
+      }
+      {
+        DT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+      {
+        ST tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+
+      {
+        MT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+      return false;
+    }
+
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m) {
       {
         DT tmp, *mt=&tmp;
@@ -411,7 +447,7 @@ using namespace spline;
       if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
                                     $descriptor(spline::NumericIndex*), 0))) {
         return true;
-      }   
+      }
       // Integer scalar
       {
         int tmp;
@@ -423,10 +459,10 @@ using namespace spline;
 #endif
           return true;
         }
-      }      
+      }
       return false;
     }
-    
+
     bool to_ptr(GUESTOBJECT *p, spline::Index** m) {
       // Treat Null
       if (is_null(p)) return false;
@@ -442,7 +478,7 @@ using namespace spline;
           if (m) **m=tmp;
           return true;
         }
-      }      
+      }
       // Integer scalar
       {
         int tmp;
@@ -454,7 +490,7 @@ using namespace spline;
 #endif
           return true;
         }
-      }      
+      }
       return false;
     }
 
@@ -504,12 +540,16 @@ using namespace spline;
 #endif // SWIGPYTHON
       return 0;
     }
-    
+
     GUESTOBJECT * from_ptr(const spline::NumericIndex *a) {
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
       return 0;
+    }
+
+    GUESTOBJECT * from_ptr(const AnyVector *a) {
+      return from_ptr(static_cast<const AnyTensor*>(a));
     }
 
     GUESTOBJECT * from_ptr(const AnyTensor *a) {
@@ -657,6 +697,7 @@ using namespace spline;
 
 %casadi_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
+%casadi_typemaps("AnyVector", PREC_MX, AnyVector)
 %casadi_typemaps("argument", PREC_MX, spline::Argument)
 %casadi_typemaps("index", PREC_MX, spline::Index)
 %casadi_typemaps("index", PREC_MX, spline::NumericIndex)
@@ -724,7 +765,7 @@ namespace spline {
     end
   %}
  }
- 
+
 %extend Function {
   %matlabcode %{
    function varargout = subsref(self,s)

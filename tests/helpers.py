@@ -32,7 +32,7 @@ class BasisTestCase(unittest.TestCase):
 
         self.assertTrue(np.linalg.norm(np.array(a)-np.array(b))<=tol,msg="%e > %e" % (np.linalg.norm(np.array(a)-np.array(b)),tol))
 
-    def assertEqualT(self, a, b,tol=-1e-9):
+    def assertEqualT(self, a, b,tol=1e-9):
         try:
           dima = a.dims()
         except:
@@ -44,7 +44,7 @@ class BasisTestCase(unittest.TestCase):
         self.assertEqualArray(dima, dimb)
         self.assertEqualTensor(a,b,tol=tol)
 
-    def assertEqualTensor(self, a, b,tol=-1e-9):
+    def assertEqualTensor(self, a, b,tol=1e-9):
         try:
             a = C.vec(C.DM(a))
         except:

@@ -291,6 +291,13 @@ AnyTensor AnyTensor::pack(const std::vector<AnyTensor>& v, int axis) {
   }
 }
 
+AnyTensor AnyTensor::repeat(const AnyTensor&e, const std::vector<int>& factors) {
+  if (e.is_DT()) return DT::repeat(e.as_DT(), factors);
+  if (e.is_ST()) return ST::repeat(e.as_ST(), factors);
+  if (e.is_MT()) return MT::repeat(e.as_MT(), factors);
+  return {DT()};
+}
+
 std::vector<AnyTensor> unpack(const AnyTensor& v, int axis) {
   tensor_assert_message(false, "Not implemented yet");
   return {DT()};
@@ -342,20 +349,22 @@ std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<MX>& v) {
 }
 
 AnyVector::AnyVector(const AnyTensor& s) : AnyTensor(s) {
-  tensor_assert_message(s.n_dims()!=1, "AnyVector can have only one dimension.")
+  tensor_assert_message(s.n_dims()==1, "AnyVector can have only one dimension. Got " << s.dims() << ".")
 }
 
 AnyVector::AnyVector(const DT & s) : AnyTensor(s){
-  tensor_assert_message(s.n_dims()!=1, "AnyVector can have only one dimension.")
+  tensor_assert_message(s.n_dims()==1, "AnyVector can have only one dimension.")
 }
 
 AnyVector::AnyVector(const ST & s) : AnyTensor(s){
-  tensor_assert_message(s.n_dims()!=1, "AnyVector can have only one dimension.")
+  tensor_assert_message(s.n_dims()==1, "AnyVector can have only one dimension.")
 }
 
 AnyVector::AnyVector(const MT & s) : AnyTensor(s){
-  tensor_assert_message(s.n_dims()!=1, "AnyVector can have only one dimension.")
+  tensor_assert_message(s.n_dims()==1, "AnyVector can have only one dimension.")
 }
+
+AnyVector::AnyVector() : AnyTensor() { }
 
 AnyScalar AnyVector::operator[](int index) const {
   if ( is_DT() ){
@@ -369,6 +378,14 @@ AnyScalar AnyVector::operator[](int index) const {
   }
   assert(false);
   return 0;
+}
+
+std::vector<AnyScalar> AnyVector::to_scalar_vector() const {
+  std::vector<AnyScalar> ret(size());
+  for (int i=0; i<size(); i++){
+    ret[i] = (*this)[i];
+  }
+  return ret;
 }
 
 namespace casadi {

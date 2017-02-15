@@ -98,6 +98,38 @@ class Tensor {
 
   }
 
+  static Tensor<T> repeat(const Tensor<T>&e, const std::vector<int>& factors) {
+    tensor_assert(factors.size()>= e.n_dims());
+
+    // e : {n m p q}   factors : {r1 r2 r3 r4 | r5}
+    Tensor<T> ones(DM::ones(product(factors)), factors);
+
+    // r : {n m p q r1 r2 r3 r4 | r5}
+    Tensor<T> r = e.outer_product(ones);
+
+    //userOut() << "r" << r << std::endl;
+
+    std::vector<int> order_interleave = range(e.n_dims()+factors.size());
+
+    for (int i=0;i<e.n_dims();++i) {
+      order_interleave[i] = 2*i;
+      order_interleave[i+e.n_dims()] = 2*i+1;
+    }
+    // order_leave { 0 2 4 6 1 3 5 7 | 8 }
+
+   // userOut() << "order_interleave" << order_interleave << std::endl;
+
+    r = r.reorder_dims(order_interleave);
+
+    // Eventual return dimensions
+    std::vector<int> dims = factors;
+    for (int i=0;i<e.n_dims();++i) {
+      dims[i]*= e.dims()[i];
+    }
+
+    return r.shape(dims);
+  }
+
   static Tensor<T> pack(const std::vector< Tensor<T> >& v, int axis) {
     tensor_assert(v.size()>0);
     auto dims = v[0].dims();
@@ -411,7 +443,7 @@ class Tensor {
   /**
     c_ijkm = a_ij*b_km
   */
-  Tensor outer_product(const Tensor &b) {
+  Tensor outer_product(const Tensor &b) const {
     return einstein(b, mrange(n_dims()), mrange(n_dims(), n_dims()+b.n_dims()),
                                          mrange(n_dims()+b.n_dims()));
   }
