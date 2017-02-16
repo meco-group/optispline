@@ -100,7 +100,7 @@ class Test_Function_Operations(BasisTestCase):
         m2 = func1*func2
         m3 = p1*2.0
         p = func1.pow(3)
-        
+        pp = p1.pow(4)
 
         # assertion over grid
         k = 0
@@ -117,6 +117,7 @@ class Test_Function_Operations(BasisTestCase):
             self.assertAlmostEqual(s4(v),p1_value[k]+3.3)
             self.assertAlmostEqual(d3(v),p1_value[k]-2.0)
             self.assertAlmostEqual(m3(v),p1_value[k]*2.0)
+            self.assertAlmostEqual(pp(v),p1_value[k]**4)
 
 if __name__ == '__main__':
     unittest.main()
