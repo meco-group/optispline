@@ -38,6 +38,7 @@ namespace spline {
         Basis getBasis(const Index& i) const;
         TensorBasis getTensorBasis() const {return basis;}
         Coefficient getCoefficient() const {return coef;}
+        AnyTensor getCoeffTensor() const {return coef.getData();}
 
         MX operator<=(const MX& x) const;
         MX operator>=(const MX& x) const;

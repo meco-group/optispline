@@ -114,5 +114,18 @@ class Test_Function_Function(BasisTestCase):
             for y in range(-5, 4):
                 self.assertEqual( f(x,y) , 1 + y + 2*x*y)
 
+    def test_get_coefficient_tensor(self):
+        a = DM([[1,1],[0,2]]) # 1 + y + 2xy
+        a = DTensor(a, [2,2,1,1])
+        a_ = Coefficient(a)
+        m = MonomialBasis(1)
+        b = TensorBasis([m,m])
+        f = Function(b,a_)
+        
+        print f.getCoeffTensor()
+        print a
+
+        self.assertEqualT(a,f.getCoeffTensor())
+
 if __name__ == '__main__':
     unittest.main()
