@@ -450,6 +450,12 @@ class Tensor {
   }
 
   Tensor mtimes(const Tensor &rhs) {
+    if(n_dims()==0 && rhs.n_dims()==2){
+        return einstein(rhs, {}, {-1, -2}, {-1, -2});
+    }
+    if(n_dims()==2 && rhs.n_dims()==0){
+        return einstein(rhs, {-1, -2}, {}, {-1, -2});
+    }
     tensor_assert(n_dims()==2 && rhs.n_dims()==2);
     return einstein(rhs, {-1, -2}, {-2, -3}, {-1, -3});
   }
