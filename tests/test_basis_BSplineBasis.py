@@ -82,7 +82,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         db_c = casadi.Function('db_c', [x], [db_c] )
 
         g = np.r_([b.greville(), db.greville()])
-        for i in g
+        for i in g:
             self.assertEqualT(db_c(i), db(i))
 
         db,T = b.derivative(degree)
@@ -91,7 +91,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         T = np.reshape(T, np.prod(T.shape))
         self.assertTrue(all(T == 0))
         g = b.greville()
-        for i in g
+        for i in g:
             self.assertTrue(all(db(i) == 0))
 
 
