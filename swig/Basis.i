@@ -49,6 +49,11 @@ def _swig_repr(self):
 // WORKAROUNDS END
 
 %include "exception.i"
+#ifdef WITH_STACKTRACE
+%exception {
+  $action
+}
+#else
 %exception {
   try {
     $action
@@ -56,6 +61,8 @@ def _swig_repr(self):
     SWIG_exception(SWIG_RuntimeError, e.what());
   }
 }
+#endif
+
 
 // Renameing PYTHON
 //{% if false %}
@@ -651,6 +658,12 @@ using namespace spline;
  }
 
 %import "casadi/casadi.i"
+
+#ifdef WITH_STACKTRACE
+%exception {
+  $action
+}
+#else
 %exception {
   try {
     $action
@@ -658,6 +671,7 @@ using namespace spline;
     SWIG_exception(SWIG_RuntimeError, e.what());
   }
 }
+#endif
 
 
 #ifdef SWIGPYTHON

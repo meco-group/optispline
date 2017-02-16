@@ -20,6 +20,7 @@ include_directories(
 option(WITH_MATLAB "Compile the MATLAB front-end" ON)
 option(WITH_PYTHON "Compile the Python front-end" ON)
 option(WITH_COVERAGE "Enable coverage" OFF)
+option(WITH_STACKTRACE "Enable crashing and getting a stacktrace with gdb" OFF)
 
 
 ######################################################
