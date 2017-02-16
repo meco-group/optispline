@@ -69,7 +69,6 @@ namespace spline {
       (*this)->assert_vector_lenght_correct( x );
       return (*this)->operator()(x);
     }
-
     AnyTensor BasisNode::operator() (const std::vector< AnyScalar > & x) const {
         assert(false); //Abstract
         return AnyTensor();
@@ -84,4 +83,20 @@ namespace spline {
 
     int Basis::dimension() const { return (*this)->dimension();}
     int Basis::n_inputs() const { return (*this)->n_inputs();}
+
+    // Basis Basis::derivative(int order, int direction) const {
+    //     return (*this)->derivative(order, direction);
+    // }
+
+    AnyTensor BasisNode::const_coeff_tensor(const AnyTensor& t) const {
+        spline_assert(false);
+        return AnyTensor();
+    }
+
+    AnyTensor Basis::const_coeff_tensor(const AnyTensor& t) const {
+        return (*this)->const_coeff_tensor(t);
+    }
+
+    // Todo: need to add BasisNode implementation here? No, you never will call derivative on a general Basis
+
 } // namespace spline

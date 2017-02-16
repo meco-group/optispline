@@ -198,6 +198,13 @@ class AnyTensor {
       ANYTENSOR_METHOD(operator-());
       return DT();
     }
+    AnyTensor squeeze() const {
+      std::vector<int> squeeze_dims;
+      for (int i=0;i<n_dims();++i) {
+        if (dims()[i]!=1) squeeze_dims.push_back(dims()[i]);
+      }
+      return shape(squeeze_dims);
+    }
     std::vector<int> dims() const {
       ANYTENSOR_METHOD(dims());
       return std::vector<int>();
@@ -281,9 +288,11 @@ class AnyTensor {
 class AnyVector : public AnyTensor {
   public:
     AnyVector(const AnyTensor& s);
+    AnyVector(const std::vector<AnyScalar>& s);
     AnyVector(const DT & t);
     AnyVector(const ST & t);
     AnyVector(const MT & t);
+   // AnyVector& operator=(const AnyTensor& s);
     AnyVector();
     AnyScalar operator[](int index) const;
     int size() const {

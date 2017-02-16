@@ -30,6 +30,7 @@ namespace spline{
 
         virtual std::string getRepresentation() const ;
 
+        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 
         virtual int getLength() const ;
@@ -37,6 +38,8 @@ namespace spline{
         AnyTensor SubBasisEvalution(const std::vector< T >& x ) const ;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+
+        virtual Basis derivative(int order, AnyTensor& T) const override;
     };
 
 #endif // SWIG

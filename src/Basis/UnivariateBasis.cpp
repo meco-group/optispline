@@ -56,6 +56,12 @@ namespace spline {
         return Basis();
     }
 
+
+    AnyTensor UnivariateBasisNode::const_coeff_tensor(const AnyTensor& t) const {
+        spline_assert(false);
+        return AnyTensor();
+    }
+
     int UnivariateBasis::getLength() const  { return (*this)->getLength(); }
     int UnivariateBasisNode::getLength() const {
          assert(0);
@@ -72,4 +78,9 @@ namespace spline {
     }
 
     int UnivariateBasisNode::n_inputs() const { return 1; }
+
+    Basis UnivariateBasis::derivative(int order, AnyTensor& T) const {
+        return (*this)->derivative(order, T);
+    }
+
 }  // namespace spline

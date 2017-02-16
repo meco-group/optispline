@@ -28,6 +28,8 @@ namespace spline {
 
         UnivariateBasisNode(int degree);
 
+        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
+
         virtual std::string getRepresentation() const ;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const {spline_assert(0); return DT();};
@@ -35,6 +37,8 @@ namespace spline {
         int getDegree () const ;
         void setDegree (int degree);
         int n_inputs() const;
+
+        virtual Basis derivative(int order, AnyTensor& T) const = 0;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const {spline_assert(0); return std::vector< std::vector < AnyScalar > >(); };
 
@@ -57,8 +61,12 @@ namespace spline {
 
         virtual std::string getRepresentation() const ;
 
+
         int getDegree () const ;
         void setDegree (int degree);
+
+        Basis derivative(int order, AnyTensor& T) const;
+
     protected:
         int getLength() const ;
     };

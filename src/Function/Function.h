@@ -16,18 +16,31 @@ namespace spline {
         Function( const TensorBasis& basis, const Coefficient& coef) ;
         Function( const Basis& basis, const Coefficient& coef) ;
 
-        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        static Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) ;
+        static Function Constant(const TensorBasis& basis, const AnyTensor& t) ;
+        static Function Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) ;
+        static Function Constant(const Basis& basis, const AnyTensor& t);
+
+        AnyTensor operator()(const std::vector< AnyScalar >& x) const ;
 
         Function operator+(const Function& f) const ;
+        Function operator+(const AnyScalar& a) const ;
+        Function operator+(const AnyTensor& t) const ;
         Function operator*(const Function& f) const ;
+        Function operator*(const AnyScalar& a) const ;
+        Function operator*(const AnyTensor& t) const ;
+        Function pow(int power) const ;
         Function operator-() const ;
         Function operator-(const Function& f) const ;
+        Function operator-(const AnyScalar& a) const ;
+        Function operator-(const AnyTensor& t) const ;
         Function mtimes(const Function& f) const ;
 
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;
         TensorBasis getTensorBasis() const {return basis;}
         Coefficient getCoefficient() const {return coef;}
+        AnyTensor getCoeffTensor() const {return coef.getData();}
 
         MX operator<=(const MX& x) const;
         MX operator>=(const MX& x) const;
@@ -38,6 +51,9 @@ namespace spline {
 
         int n_inputs() const;  // Number of inputs of the function
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
+
+        // Function derivative(int order, int direction) const;
+
     public:
         TensorBasis basis;
         Coefficient coef;
