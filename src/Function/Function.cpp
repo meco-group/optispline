@@ -38,12 +38,8 @@ namespace spline {
     }
 
     Function Function::Constant(const TensorBasis& basis, const AnyTensor& t) {
-        std::vector< Basis > subbasis = basis.getSubBasis();
-        Function f = Function::Constant(subbasis[0], t);
-        for (int i = 1; i < basis.n_basis(); i++) {
-            f = f*Function::Constant(subbasis[i], t);
-        }
-        return f;
+        Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
+        return Function(basis, coeff);
     }
 
     Function Function::Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) {

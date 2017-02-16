@@ -69,7 +69,8 @@ class AnyScalar {
     static std::vector<MX> as_MX(const std::vector<AnyScalar>& v);
     static TensorType merge(TensorType a, TensorType b);
 
-
+    static AnyScalar min(const AnyScalar& a, const AnyScalar& b);
+    static AnyScalar max(const AnyScalar& a, const AnyScalar& b);
 
     /// Logic greater or equal to
     friend inline AnyScalar operator>=(const AnyScalar &x, const AnyScalar &y) {

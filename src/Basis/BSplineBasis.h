@@ -128,6 +128,7 @@ namespace spline{
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
         virtual Basis derivative(int order, AnyTensor& T) const override;
+        virtual Basis insert_knots(const std::vector<AnyScalar> & new_knots, AnyTensor & T) const override;
 
     private:
         mutable Function bspline_evaluator_;
