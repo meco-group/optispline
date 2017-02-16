@@ -203,7 +203,7 @@ class Test_Function_Operations(BasisTestCase):
         c = Function.Constant(mbasis1,1)
         print 'debug'
         fm2 = func1.mtimes(c)
-        fm3 = c.mtimes(func2)
+        #fm3 = c.mtimes(func2)
 
         x = [0.1,0.35,0.4,0.5,0.8,0.99]
         y = [0.1,0.2,0.5,0.8,0.1,0.2]
