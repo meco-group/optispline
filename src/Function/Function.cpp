@@ -123,9 +123,9 @@ namespace spline {
         return coef.shape();
     }
 
-    Function derivative(int order, int direction) const {
-        AnyTensor T;
-        this->basis.derivative(order, direction, T&);
+    // Function derivative(int order, int direction) const {
+        // AnyTensor T;
+        // basis.derivative(order, direction, T&);
 
         //     if nargin == 2
         //         if self.dims == 1
@@ -146,6 +146,6 @@ namespace spline {
         //     b{coord} = dbi;
         //     d = self.cl(b, T * self.coeffs);
         // end
-    }
+    // }
 
 }  // namespace spline

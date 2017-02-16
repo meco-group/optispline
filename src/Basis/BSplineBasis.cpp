@@ -220,7 +220,7 @@ namespace spline {
         return AnyTensor();
     }
 
-    Basis BSplineBasisNode::univariate_derivative(int order, AnyTensor& T) const {
+    Basis BSplineBasisNode::univariate_derivative(int order, AnyTensor& SWIG_OUTPUT(T)) const {
 
 
         // Computes the BSplineBasis derivative using eq. (16) in [de Boor, Chapter X, 2001].
@@ -229,37 +229,38 @@ namespace spline {
         // Returns:
             // Derivative of the basis (new_basis) and transformation matrix to transform the coefficients of the function (T)
         
-        int curr_degree = this->getDegree()
-        std::vector<int> curr_knots = this->getKnots()
-        std::vector<int> new_knots(curr_knots.begin() + order, curr_knots.end() - order);
-        new_basis = BSplineBasis(new_knots, curr_degree - order)  // New basis
-        int basis_length = (*this)->dimension()
-        // T.reshape(eye(basis_length)) // Reshape transformation matrix
+        // int curr_degree = this->getDegree();;
+        // std::vector<double> curr_knots = this->getKnots();
+        // std::vector<double> new_knots(curr_knots.begin() + order, curr_knots.end() - order);
+        // Basis new_basis = BSplineBasis(new_knots, curr_degree - order);  // New basis
+        // int basis_length = (*this)->dimension()
+        // // T.reshape(eye(basis_length)) // Reshape transformation matrix
 
-        std::vector<int> delta_knots;
-        AnyTensor R;
-        std::vector<int> j;
-        for (int i=0; i<=order; i++){
-            curr_knots.erase(curr_knots.begin()); // remove first element
-            curr_knots.pop_back();  // remove last element
-            for (int l=0; l<=curr_knots.size()-curr_degree-i; l++){
-                delta_knots[l] = curr_knots[curr_degree - i + l] - curr_knots[-curr_degree + i -l];
-            }
-            // Todo: how? 
-            R = AnyTensor(DTensor([0*len],[basis_length - 1 - i, basis_length - i]))
-            for (int l=0; l<=basis_length-1-i; l++){
-                j.push_back(l);
-            }
-            for (int l=0; j.size(); l++){
-                R[(j[l], j[l])] = -1. / delta_knots[l]
-                R[(j[l], j[l] + 1)] = 1. / delta_knots[l]
-            }
-            // write in for loop
-            T = (curr_degree - i) * np.dot(R, T)
-        }
-        return new_basis;
+        // std::vector<int> delta_knots;
+        // AnyTensor R;
+        // std::vector<int> j;
+        // for (int i=0; i<=order; i++){
+        //     curr_knots.erase(curr_knots.begin()); // remove first element
+        //     curr_knots.pop_back();  // remove last element
+        //     for (int l=0; l<=curr_knots.size()-curr_degree-i; l++){
+        //         delta_knots[l] = curr_knots[curr_degree - i + l] - curr_knots[-curr_degree + i -l];
+        //     }
+        //     // Todo: how? 
+        //     R = AnyTensor(DTensor([0*len],[basis_length - 1 - i, basis_length - i]))
+        //     for (int l=0; l<=basis_length-1-i; l++){
+        //         j.push_back(l);
+        //     }
+        //     for (int l=0; j.size(); l++){
+        //         R[(j[l], j[l])] = -1. / delta_knots[l]
+        //         R[(j[l], j[l] + 1)] = 1. / delta_knots[l]
+        //     }
+        //     // write in for loop
+        //     T = (curr_degree - i) * np.dot(R, T)
+        // }
+        // T = AnyTensor(DTensor(coeffs, new_degree));  // Transformation tensor to apply on coefficients of function
+        // return new_basis;
+        return shared_from_this<BSplineBasis>();
 
-        T = AnyTensor(DTensor(coeffs, new_degree));  // Transformation tensor to apply on coefficients of function
     }
 
 } // namespace spline

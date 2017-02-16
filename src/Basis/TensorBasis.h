@@ -53,7 +53,7 @@ namespace spline {
 
         int totalNumberBasisFunctions() const;
 
-        Basis derivative(int order, int direction, AnyTensor& T) const;
+        // Basis derivative(int order, int direction, AnyTensor& T) const;
 
     // protected:
         std::vector< Basis > allSubBasis;
@@ -109,7 +109,7 @@ namespace spline {
 
         int totalNumberBasisFunctions() const;
 
-        Basis derivative(int order, int direction, AnyTensor& T) const;
+        // Basis derivative(int order, int direction, AnyTensor& T) const;
     };
 }
 #endif  // TENSORBASIS_H_

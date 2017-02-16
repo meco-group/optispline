@@ -180,9 +180,9 @@ namespace spline {
         return r;
     }
 
-    Basis TensorBasis::derivative(int order, int direction, AnyTensor& T) const {
-        // Call univariate_derivative on basis, for each direction
-    }
+    // Basis TensorBasis::derivative(int order, int direction, AnyTensor& T) const {
+    //     // Call univariate_derivative on basis, for each direction
+    // }
 
 
 } // namespace spline
