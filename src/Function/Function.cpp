@@ -32,6 +32,30 @@ namespace spline {
         coef = coef_.add_trival_dimension(2 + dim_basis.size() - dim_coef.size());
     }
 
+    Function Function::Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) {
+        AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
+        return Function::Constant(basis, value);
+    }
+
+    Function Function::Constant(const TensorBasis& basis, const AnyTensor& t) {
+        std::vector< Basis > subbasis = basis.getSubBasis();
+        Function f = Function::Constant(subbasis[0], t);
+        for (int i = 1; i < basis.n_basis(); i++) {
+            f = f*Function::Constant(subbasis[i], t);
+        }
+        return f;
+    }
+
+    Function Function::Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) {
+        AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
+        return Function::Constant(basis, value);
+    }
+
+    Function Function::Constant(const Basis& basis, const AnyTensor& t) {
+        Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
+        return Function(basis, coeff);
+    }
+
     AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const {
         return basis(x).inner(coef.getData());
     }
@@ -97,6 +121,13 @@ namespace spline {
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
+    Function Function::operator+(const AnyScalar& a) const {
+        return operator+(Function::Constant(this->getTensorBasis(), a, this->shape()));
+    }
+
+    Function Function::operator+(const AnyTensor& t) const {
+        return operator+(Function::Constant(this->getTensorBasis(), t));
+    }
 
     Function Function::operator*(const Function& f) const {
       return generic_operation(f,
@@ -104,9 +135,44 @@ namespace spline {
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
+    Function Function::operator*(const AnyScalar& a) const {
+        AnyTensor t = AnyTensor(DM::eye(shape()[2]))*a;
+        return operator*(t);
+    }
+
+    Function Function::operator*(const AnyTensor& t) const {
+        spline_assert(t.n_dims() == 2);
+        Coefficient c = getCoefficient();
+        int dir = n_inputs() + 1; //0 based, 2nd matrix dimension
+        return Function(getTensorBasis(), c.transform(t.reorder_dims({1,0}), dir));
+    }
+
+    Function Function::pow(int power) const {
+        spline_assert(power >= 0);
+        Function f = *this;
+        Function fpow = *this;
+
+        if(power == 0){
+            fpow = Function::Constant(getTensorBasis(), 1, shape());
+        } else {
+            for (int i = 1; i < power; i++) {
+                fpow = fpow*f;
+            }
+        }
+
+        return fpow;
+    }
 
     Function Function::operator-(const Function& f) const {
         return operator+(-f);
+    }
+
+    Function Function::operator-(const AnyScalar& a) const {
+        return operator+((-1)*a); // ---MINUS!!
+    }
+
+    Function Function::operator-(const AnyTensor& t) const {
+        return operator+(-t);
     }
 
     Function Function::operator-() const {
