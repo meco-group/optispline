@@ -10,6 +10,7 @@ import casadi as C
 
 class Test_Basis_BSplineBasis(BasisTestCase):
 
+
     def test_greville(self):
         degree = 3
         knotsint = 8
@@ -24,6 +25,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         g2 = b2.greville()
         self.assertEqualT(g1, g2, 1e-6)
         self.assertEqualT(g1, g, 1e-6)
+
 
     def test_constructor(self):
         degree = 3
@@ -46,6 +48,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         kn = casadi.Function('f', [sym_k1, sym_k2], b.getKnots())
         self.assertEqualT(np.sort(knots2), kn(0.8, 0.55))
 
+
     def test_insert_knots(self):
         return
         np.random.seed(0)
@@ -65,6 +68,35 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         g2 = b2.greville()
         for i in g2:
             self.assertTrue(all(s1([i]) == s2([i])))
+
+    def test_derivative(self):
+        n_der = 1
+        degree = 3
+        knotsint = 8
+        b = BSplineBasis(np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)],degree)
+        db,T = b.derivative(n_der)
+        x = casadi.SX.sym( 'x')
+        db_c = b([x])
+        for i in range(0,n_der):
+            db_c = casadi.jacobian(db_c, x)
+        db_c = casadi.Function('db_c', [x], [db_c] )
+
+        g = np.r_([b.greville(), db.greville()])
+        for i in g
+            self.assertEqualT(db_c(i), db(i))
+
+        db,T = b.derivative(degree)
+
+        db,T = b.derivative(degree+1)
+        T = np.reshape(T, np.prod(T.shape))
+        self.assertTrue(all(T == 0))
+        g = b.greville()
+        for i in g
+            self.assertTrue(all(db(i) == 0))
+
+
+
+
 
 
 # TODO constructor

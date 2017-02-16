@@ -207,7 +207,10 @@ class Tensor {
 
   static void assert_match_dim(const std::vector<int>& a, const std::vector<int>& b) {
     tensor_assert(a==b);
+  }
 
+  static void assert_match_dim_or_scalar(const std::vector<int>& a, const std::vector<int>& b) {
+    tensor_assert(a.size()==0 || b.size()==0 ||  a==b);
   }
 
   static std::vector<int> sub2ind(const std::vector<int>& dims, int sub) {
@@ -252,8 +255,9 @@ class Tensor {
   }
 
   Tensor operator+(const Tensor& rhs) const {
-    assert_match_dim(dims_, rhs.dims_);
-    return Tensor(data_+rhs.data_, dims_);
+    assert_match_dim_or_scalar(dims_, rhs.dims_);
+    std::vector< int > new_dims = dims_.size() == 0 ? rhs.dims() : dims();
+    return Tensor(data_+rhs.data_, new_dims);
   }
 
   Tensor operator-() const {
@@ -261,8 +265,9 @@ class Tensor {
   }
 
   Tensor operator*(const Tensor& rhs) const {
-    assert_match_dim(dims_, rhs.dims_);
-    return Tensor(data_*rhs.data_, dims_);
+    assert_match_dim_or_scalar(dims_, rhs.dims_);
+    std::vector< int > new_dims = dims_.size() == 0 ? rhs.dims() : dims();
+    return Tensor(data_*rhs.data_, new_dims);
   }
 
   Tensor operator<=(const Tensor& rhs) const {
@@ -450,6 +455,12 @@ class Tensor {
   }
 
   Tensor mtimes(const Tensor &rhs) {
+    if(n_dims()==0 && rhs.n_dims()==2){
+        return einstein(rhs, {}, {-1, -2}, {-1, -2});
+    }
+    if(n_dims()==2 && rhs.n_dims()==0){
+        return einstein(rhs, {-1, -2}, {}, {-1, -2});
+    }
     tensor_assert(n_dims()==2 && rhs.n_dims()==2);
     return einstein(rhs, {-1, -2}, {-2, -3}, {-1, -3});
   }

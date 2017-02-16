@@ -84,6 +84,10 @@ namespace spline {
     int Basis::dimension() const { return (*this)->dimension();}
     int Basis::n_inputs() const { return (*this)->n_inputs();}
 
+    // Basis Basis::derivative(int order, int direction) const {
+    //     return (*this)->derivative(order, direction);
+    // }
+
     AnyTensor BasisNode::const_coeff_tensor(const AnyTensor& t) const {
         spline_assert(false);
         return AnyTensor();
@@ -93,9 +97,6 @@ namespace spline {
         return (*this)->const_coeff_tensor(t);
     }
 
-    Basis Basis::derivative(int order, int direction) const {
-        return (*this)->derivative(order, direction);
-    }
     // Todo: need to add BasisNode implementation here? No, you never will call derivative on a general Basis
 
 } // namespace spline
