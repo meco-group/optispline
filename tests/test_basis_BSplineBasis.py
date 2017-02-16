@@ -50,7 +50,6 @@ class Test_Basis_BSplineBasis(BasisTestCase):
 
 
     def test_insert_knots(self):
-        return
         np.random.seed(0)
         degree = 3
         knotsint = 8
@@ -60,14 +59,14 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         s1 = Function(b1,c1)
         knots_add = np.random.rand(2)
         b2,T = b1.insert_knots(knots_add)
-        knots2 = np.sort(np.r_[knots_add, knots])
-        self.assertEqualT(knots2, b2.getKnots(), tol=1e-6)
+        knots2 = np.sort(np.r_[knots_add, knots1])
 
+        self.assertEqualT(knots2, b2.getKnots(), tol=1e-6)
         c2 = T.dot(c1)
         s2 = Function(b2,c2)
         g2 = b2.greville()
         for i in g2:
-            self.assertTrue(all(s1([i]) == s2([i])))
+            self.assertEqualT(s1(i), s2(i), 1e-6)
 
     def test_derivative(self):
         return

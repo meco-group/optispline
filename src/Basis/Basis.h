@@ -46,6 +46,7 @@ namespace spline {
         virtual int n_inputs() const {return 0;};  // Number of inputs of the basis
 
         // virtual Basis derivative(int order, int direction) const;
+        virtual Basis insert_knots(const std::vector<AnyScalar> & new_knots, AnyTensor & T) const;
     };
 
 #endif // SWIG
@@ -76,6 +77,7 @@ namespace spline {
         virtual std::string getRepresentation() const ;
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
+        Basis insert_knots(const std::vector<AnyScalar> & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;
         int dimension() const;
         int n_inputs() const;
 

@@ -40,7 +40,7 @@ B = Basis.TensorBasis({B1,B2});
 
 % create multivariate spline
 
-a = rand(B.getShape());
+a = rand(B.dimension());
 
 mvar_spline = Basis.Function(B, a);
 

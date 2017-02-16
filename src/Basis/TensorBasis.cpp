@@ -180,6 +180,20 @@ namespace spline {
         return r;
     }
 
+    AnyTensor TensorBasis::const_coeff_tensor(const AnyTensor& t) const {
+        return (*this)->const_coeff_tensor(t);
+    }
+    AnyTensor TensorBasisNode::const_coeff_tensor(const AnyTensor& t) const {
+        AnyTensor prod = AnyTensor::unity();
+
+        for (int i = 0; i < n_basis(); i++) {
+            AnyTensor temp = allSubBasis[i].const_coeff_tensor(AnyTensor(AnyScalar(1)));
+            prod = prod.outer_product(temp.shape(std::vector< int >(1,temp.numel())));
+        }
+
+        return prod.outer_product(t);
+    }
+
     // Basis TensorBasis::derivative(int order, int direction, AnyTensor& T) const {
     //     // Call univariate_derivative on basis, for each direction
     // }

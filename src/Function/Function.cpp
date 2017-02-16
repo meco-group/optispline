@@ -38,12 +38,8 @@ namespace spline {
     }
 
     Function Function::Constant(const TensorBasis& basis, const AnyTensor& t) {
-        std::vector< Basis > subbasis = basis.getSubBasis();
-        Function f = Function::Constant(subbasis[0], t);
-        for (int i = 1; i < basis.n_basis(); i++) {
-            f = f*Function::Constant(subbasis[i], t);
-        }
-        return f;
+        Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
+        return Function(basis, coeff);
     }
 
     Function Function::Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) {
@@ -91,7 +87,15 @@ namespace spline {
       otherFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(f);
 
       for (int i = 0; i < basisEvaluated.size(); i++) {
-          sumFunctionEvaluated.push_back(tc(thisFunctionEvaluated[i], otherFunctionEvaluated[i]));
+          AnyTensor lhs = thisFunctionEvaluated[i];
+          AnyTensor rhs = otherFunctionEvaluated[i];
+          if(lhs.dims() == std::vector< int > {1, 1}){
+              lhs.shape({});
+          }
+          if(rhs.dims() == std::vector< int > {1, 1}){
+              rhs.shape({});
+          }
+          sumFunctionEvaluated.push_back(tc(lhs, rhs));
       }
 
       AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
@@ -121,18 +125,24 @@ namespace spline {
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
+    Function Function::operator*(const Function& f) const {
+      return generic_operation(f,
+          [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
+          [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
+    }
+
+    Function Function::mtimes(const Function& f) const {
+      return generic_operation(f,
+          [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
+          [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs);});
+    }
+
     Function Function::operator+(const AnyScalar& a) const {
         return operator+(Function::Constant(this->getTensorBasis(), a, this->shape()));
     }
 
     Function Function::operator+(const AnyTensor& t) const {
         return operator+(Function::Constant(this->getTensorBasis(), t));
-    }
-
-    Function Function::operator*(const Function& f) const {
-      return generic_operation(f,
-          [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
-          [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
     Function Function::operator*(const AnyScalar& a) const {
