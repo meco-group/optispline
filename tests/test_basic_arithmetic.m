@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 meco_binaries('cpp_splines','develop')
 
 import Basis.*
@@ -56,12 +54,15 @@ m = 4; n = 5;
 SB11 = BSplineBasis([0 0 0 0.9 1 1 1],2);
 SB12 = BSplineBasis([0 0 0.4 1 1],1);
 B1 = Basis.TensorBasis({SB11,SB12});
-C1 = Coefficient(rand(SB11.getLength,SB12.getLength,m,n));
+
+C1 = Coefficient(rand(SB11.dimension,SB12.dimension,m,n));
+
+
 S1 = Basis.Function(B1,C1);
 SB21 = BSplineBasis([0 0 0 0.1 1 1 1],2);
 SB22 = BSplineBasis([0 0 0.7 1 1],1);
 B2 = Basis.TensorBasis({SB21,SB22});
-C2 = Coefficient(rand(SB21.getLength,SB22.getLength,m,n));
+C2 = Coefficient(rand(SB21.dimension,SB22.dimension,m,n));
 S2 = Basis.Function(B2,C2);
 S3 = S1 + S2;
 delta = abs(S3(0.3,0.5) - S2(0.3,0.5) - S1(0.3,0.5));
@@ -92,7 +93,7 @@ m = 4; n = 5;
 SB1 = BSplineBasis([0 0 0 0.9 1 1 1],2);
 SB2 = BSplineBasis([0 0 0.4 1 1],1);
 B = Basis.TensorBasis({SB1,SB2});
-C = Coefficient(rand(SB1.getLength,SB2.getLength,m,n));
+C = Coefficient(rand(SB1.dimension,SB2.dimension,m,n));
 S = Basis.Function(B,C);
 M = -S;
 assert(isequal(S.getCoefficient.getData, -M.getCoefficient.getData));
@@ -150,12 +151,12 @@ m = 4; n = 5;
 SB11 = BSplineBasis([0 0 0 0.9 1 1 1],2);
 SB12 = BSplineBasis([0 0 0.4 1 1],1);
 B1 = Basis.TensorBasis({SB1,SB2});
-C1 = Coefficient(rand(SB11.getLength,SB12.getLength,m,n));
+C1 = Coefficient(rand(SB11.dimension,SB12.dimension,m,n));
 S1 = Basis.Function(B1,C1);
 SB21 = BSplineBasis([0 0 0 0.1 1 1 1],2);
 SB22 = BSplineBasis([0 0 0.7 1 1],1);
 B2 = Basis.TensorBasis({SB1,SB2});
-C2 = Coefficient(rand(SB21.getLength,SB22.getLength,m,n));
+C2 = Coefficient(rand(SB21.dimension,SB22.dimension,m,n));
 S2 = Basis.Function(B2,C2);
 S3 = S1 - S2;
 delta = abs(S3(0.3,0.5) - S1(0.3,0.5) + S2(0.3,0.5));
@@ -169,7 +170,7 @@ assert(max(delta(:)) < 1e-14);
 
 % % product scalar spline and double
 % b = BSplineBasis([0,0,0,1,2,3,3,3],2);
-% c = Coefficient(rand(b.getLength,1,1));
+% c = Coefficient(rand(b.dimension,1,1));
 % s = Basis.Function(b,c);
 % p = 7*s;
 % delta = p.getCoefficient.getData - 7*s.getCoefficient.getData;
@@ -177,24 +178,24 @@ assert(max(delta(:)) < 1e-14);
 
 % product two scalar splines given coeffs
 b1 = BSplineBasis([0,0,0,1,2,3,3,3],2);
-c1 = Coefficient(2*ones(b1.getLength,1,1));
+c1 = Coefficient(2*ones(b1.dimension,1,1));
 s1 = Basis.Function(b1,c1);
 b2 = BSplineBasis([0,0,3,3],1);
-c2 = Coefficient(3*ones(b2.getLength,1,1));
+c2 = Coefficient(3*ones(b2.dimension,1,1));
 s2 = Basis.Function(b2,c2);
 p = s1*s2;
-delta = p.getCoefficient.getData - 6*ones(p.getBasis.getLength,1,1);
+delta = p.getCoefficient.getData - 6*ones(p.getBasis.dimension,1,1);
 assert(max(abs(delta(:))) < 1e-14);
 p = s2*s1;
-delta = p.getCoefficient.getData - 6*ones(p.getBasis.getLength,1,1);
+delta = p.getCoefficient.getData - 6*ones(p.getBasis.dimension,1,1);
 assert(max(abs(delta(:))) < 1e-14);
 
 % product two scalar splines random coeffs
 b1 = BSplineBasis([0,0,0,1,2,3,3,3],2);
-c1 = Coefficient(rand(b1.getLength,1,1));
+c1 = Coefficient(rand(b1.dimension,1,1));
 s1 = Basis.Function(b1,c1);
 b2 = BSplineBasis([0,0,3,3],1);
-c2 = Coefficient(rand(b2.getLength,1,1));
+c2 = Coefficient(rand(b2.dimension,1,1));
 s2 = Basis.Function(b2,c2);
 p = s1*s2;
 assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
@@ -206,7 +207,7 @@ assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
 % SB1 = BSplineBasis([0 0 0 0.9 1 1 1],2);
 % SB2 = BSplineBasis([0 0 0.4 1 1],1);
 % B = Basis.TensorBasis({SB1,SB2});
-% C = Coefficient(rand(SB1.getLength,SB2.getLength,m,n));
+% C = Coefficient(rand(SB1.dimension,SB2.dimension,m,n));
 % S = Basis.Function(B,C);
 % P = 8*S;
 % delta = P.getCoefficient.getData - 8*S.getCoefficient.getData;
@@ -221,7 +222,7 @@ assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
 % SB11 = BSplineBasis([0 0 0 0.9 1 1 1],2);
 % SB12 = BSplineBasis([0 0 0.4 1 1],1);
 % B1 = Basis.TensorBasis({SB11,SB12});
-% C1 = Coefficient(rand(SB11.getLength,SB12.getLength,m,n));
+% C1 = Coefficient(rand(SB11.dimension,SB12.dimension,m,n));
 % S1 = Basis.Function(B1,C1);
 % A = rand(n,m);
 % P = S1*A;
@@ -237,12 +238,12 @@ assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
 % SB11 = BSplineBasis([0 0 0 0.9 1 1 1],2);
 % SB12 = BSplineBasis([0 0 0.4 1 1],1);
 % B1 = Basis.TensorBasis({SB11,SB12});
-% C1 = Coefficient(rand(SB11.getLength,SB12.getLength,m,n));
+% C1 = Coefficient(rand(SB11.dimension,SB12.dimension,m,n));
 % S1 = Basis.Function(B1,C1);
 % SB21 = BSplineBasis([0 0 0 0.1 1 1 1],2);
 % SB22 = BSplineBasis([0 0 0.7 1 1],1);
 % B2 = Basis.TensorBasis({SB21,SB22});
-% C2 = Coefficient(rand(SB21.getLength,SB22.getLength,n,m));
+% C2 = Coefficient(rand(SB21.dimension,SB22.dimension,n,m));
 % S2 = Basis.Function(B2,C2);
 % P = S1*S2;
 % delta = abs(P(0.3,0.5) - S1(0.3,0.5)*S2(0.3,0.5));
@@ -277,9 +278,7 @@ assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
 % SB1 = BSplineBasis([0 0 0 0.9 1 1 1],2);
 % SB2 = BSplineBasis([0 0 0.4 1 1],1);
 % B = Basis.TensorBasis({SB1,SB2});
-% C = Coefficient(rand(SB1.getLength,SB2.getLength,n,n));
+% C = Coefficient(rand(SB1.dimension,SB2.dimension,n,n));
 % S = Basis.Function(B,C);
 % P = S^4;
 % assert(abs(P(0.5,0.3) - S(0.5,0.3)^4) < 1e-14);
-
->>>>>>> Stashed changes
