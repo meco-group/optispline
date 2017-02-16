@@ -121,11 +121,44 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(1)
         b = TensorBasis([m,m])
         f = Function(b,a_)
-        
+
         print f.getCoeffTensor()
         print a
 
         self.assertEqualT(a,f.getCoeffTensor())
+
+    def test_insert_knots_univariate(self):
+        np.random.seed(0)
+        degree = 3
+        knotsint = 8
+        knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+        b = BSplineBasis(knots,degree)
+        c = np.random.rand(b.dimension())
+        s = Function(b,c)
+        knots_add = np.random.rand(2)
+        s2 = s.insert_knots(knots_add)
+        b2 = s2.getBasis()
+        knots2 = np.sort(np.r_[knots_add, knots1])
+        self.assertEqualT(knots2, b2.getKnots(), 1e-6)
+        self.assertEqualT(degree, b2.getDegree(), 1e-6)
+        g2 = b2.greville()
+        for i in g2:
+            self.assertEqualT(s1(i), s2(i), 1e-6)
+
+        b = MonomialBasis(degree)
+        with self.assertRaises(Exception):
+            b.insert_knots(knots_add)
+
+    def test_insert_knots_multivariate(self):
+        return
+        np.random.seed(0)
+        degree = 3
+        knotsint = 8
+        knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+        bs = BSplineBasis(knots,degree)
+        bm = MonomialBasis(degree)
+        b = TensorBasis([m])
+
 
 if __name__ == '__main__':
     unittest.main()
