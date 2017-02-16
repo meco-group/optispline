@@ -180,6 +180,50 @@ class Test_Function_Operations(BasisTestCase):
             self.assertAlmostEqual(u1(_x,_y),-func1_value[k])
             self.assertAlmostEqual(p1(_x,_y),func1_value[k]**3)
         
+    def test_matrix_product(self):
+        knots1 = [0,0,0.4,1,1]
+        degree = 1
+        basis1 = Basis.BSplineBasis(knots1,degree)
+
+        knots2 = [0.,0.,0.5,1,1]
+        degree = 1
+        basis2 = Basis.BSplineBasis(knots2,degree)
+
+        basis3 = MonomialBasis(3);
+
+        mbasis1 = TensorBasis([basis1,basis2]);
+        mbasis2 = TensorBasis([basis2,basis3]);
+
+        coeff1 = DTensor(numpy.random.randn(9*6,1),[3,3,3,2])
+        coeff2 = DTensor(numpy.random.randn(12*4,1),[3,4,2,2])
+        func1 = Function(mbasis1,coeff1)
+        func2 = Function(mbasis2,coeff2)
+
+        fm = func1.mtimes(func2)
+        c = Function.Constant(mbasis1,1)
+        print 'debug'
+        fm2 = func1.mtimes(c)
+        fm3 = c.mtimes(func2)
+
+        x = [0.1,0.35,0.4,0.5,0.8,0.99]
+        y = [0.1,0.2,0.5,0.8,0.1,0.2]
+        func1_value = []
+        func2_value = []
+        for k in range(0,len(x)):
+            _x = x[k]
+            _y = y[k]
+            func1_value.append(func1(_x,_y))
+            func2_value.append(func2(_x,_y))
+
+        k = 0
+        for k in range(0,len(x)):
+            _x = x[k]
+            _y = y[k]
+
+            self.assertEqualT(fm(_x,_y),numpy.dot(func1_value[k], func2_value[k]))
+            self.assertEqualT(fm2(_x,_y),func1_value[k])
+            self.assertEqualT(fm3(_x,_y),func2_value[k])
+
 
 if __name__ == '__main__':
     unittest.main()
