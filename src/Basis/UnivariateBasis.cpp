@@ -57,7 +57,7 @@ namespace spline {
     }
 
 
-    AnyTensor UnivariateBasis::const_coeff_tensor(const AnyTensor& t) const {
+    AnyTensor UnivariateBasisNode::const_coeff_tensor(const AnyTensor& t) const {
         spline_assert(false);
         return AnyTensor();
     }

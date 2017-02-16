@@ -119,6 +119,8 @@ namespace spline{
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 
+        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
+
         virtual int getLength() const ;
 
         AnyTensor SubBasisEvalution(const std::vector<AnyScalar> & x ) const ;
@@ -155,7 +157,6 @@ namespace spline{
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
 
-        AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
         virtual void foo() const {};
 
 

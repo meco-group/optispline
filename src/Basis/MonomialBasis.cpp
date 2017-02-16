@@ -52,7 +52,7 @@ namespace spline {
         return timesSubBasis (shared_from_this<MonomialBasis>(), other);
     }
 
-    AnyTensor MonomialBasis::const_coeff_tensor(const AnyTensor& t) const {
+    AnyTensor MonomialBasisNode::const_coeff_tensor(const AnyTensor& t) const {
         //push 1 for size of tensor
         std::vector< int > coeff_size = {1};
         for (int i = 0; i < t.dims().size(); i++) {

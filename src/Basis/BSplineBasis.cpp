@@ -199,7 +199,7 @@ namespace spline {
         return ret;
     }
 
-    AnyTensor BSplineBasis::const_coeff_tensor(const AnyTensor& t) const {
+    AnyTensor BSplineBasisNode::const_coeff_tensor(const AnyTensor& t) const {
         //push 1 for size of tensor
         std::vector< int > coeff_size = {1};
         for (int i = 0; i < t.dims().size(); i++) {
