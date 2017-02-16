@@ -31,9 +31,12 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         knots = np.r_[np.zeros(degree),np.linspace(0., 1., knotsint), np.ones(degree)]
         b = BSplineBasis(np.flipud(knots), degree)
         self.assertEqualT(knots, b.getKnots()) # test if sorted
+        b = BSplineBasis(MX.sym('knots', 13), degree)
+        b = BSplineBasis(np.c_[knots], degree)
         with self.assertRaises(Exception):
-            b = BSplineBasis(np.c_[knots], degree)
-            b = BSplineBasis(np.vstack(knots,knots), degree)
+            b = BSplineBasis(np.vstack((knots,knots)), degree)
+        with self.assertRaises(Exception):
+            b = BSplineBasis(np.zeros((13, 2)), degree)
         # with symbolic knots
         sym_k1 = MX.sym('knot1')
         sym_k2 = MX.sym('knot2')

@@ -13,7 +13,7 @@ class Test_Function_Operations(BasisTestCase):
 
       x = Polynomial([0,1],'x')
       y = p2
-      # f = x + y
+      f = x + y
       # f = y*x
       # f = x + y*x + y*y
 

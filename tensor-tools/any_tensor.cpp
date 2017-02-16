@@ -350,21 +350,28 @@ std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<MX>& v) {
   return ret;
 }
 
-AnyVector::AnyVector(const AnyTensor& s) : AnyTensor(s) {
-  tensor_assert_message(s.n_dims()==1, "AnyVector can have only one dimension. Got " << s.dims() << ".")
+AnyVector::AnyVector(const AnyTensor& s) : AnyTensor(s.squeeze()) {
+  tensor_assert_message(n_dims()==1, "AnyVector can have only one dimension. Got " << s.dims() << ".")
 }
 
-AnyVector::AnyVector(const DT & s) : AnyTensor(s){
-  tensor_assert_message(s.n_dims()==1, "AnyVector can have only one dimension.")
+AnyVector::AnyVector(const std::vector<AnyScalar>& s) : AnyTensor(vertcat(s)) { }
+
+AnyVector::AnyVector(const DT & s) : AnyTensor(s.squeeze()){
+  tensor_assert_message(n_dims()==1, "AnyVector can have only one dimension.")
 }
 
-AnyVector::AnyVector(const ST & s) : AnyTensor(s){
-  tensor_assert_message(s.n_dims()==1, "AnyVector can have only one dimension.")
+AnyVector::AnyVector(const ST & s) : AnyTensor(s.squeeze()){
+  tensor_assert_message(n_dims()==1, "AnyVector can have only one dimension.")
 }
 
-AnyVector::AnyVector(const MT & s) : AnyTensor(s){
-  tensor_assert_message(s.n_dims()==1, "AnyVector can have only one dimension.")
+AnyVector::AnyVector(const MT & s) : AnyTensor(s.squeeze()){
+  tensor_assert_message(n_dims()==1, "AnyVector can have only one dimension.")
 }
+
+/**AnyVector& AnyVector::operator=(const AnyTensor& s)  {
+  AnyTensor::operator=(s);
+  return *this;
+}*/
 
 AnyVector::AnyVector() : AnyTensor() { }
 
@@ -424,7 +431,7 @@ public:
   virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
     if (!res[0]) return;
     std::copy(arg[0], arg[0]+size_, res[0]);
-    
+
     if (ascending_) {
       std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b)
       {

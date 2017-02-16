@@ -52,7 +52,7 @@ def _swig_repr(self):
 %exception {
   try {
     $action
-   } catch(const std::exception& e) {
+  } catch(const std::exception& e) {
     SWIG_exception(SWIG_RuntimeError, e.what());
   }
 }
@@ -382,34 +382,39 @@ using namespace spline;
     }
 
     bool to_ptr(GUESTOBJECT *p, AnyVector** m) {
-      {
-        std::vector<AnyScalar> tmp, *mt = &tmp;
-        if (casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) **m = vertcat(*mt);
-          return true;
+      try {
+        {
+          DT tmp, *mt=&tmp;
+          if(casadi::to_ptr(p, m ? &mt : 0)) {
+            if (m) **m = *mt;
+            return true;
+          }
         }
-      }
-      {
-        DT tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) **m = *mt;
-          return true;
+        {
+          ST tmp, *mt=&tmp;
+          if(casadi::to_ptr(p, m ? &mt : 0)) {
+            if (m) **m = *mt;
+            return true;
+          }
         }
-      }
-      {
-        ST tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) **m = *mt;
-          return true;
-        }
-      }
 
-      {
-        MT tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) **m = *mt;
-          return true;
+        {
+          MT tmp, *mt=&tmp;
+          if(casadi::to_ptr(p, m ? &mt : 0)) {
+            if (m) **m = *mt;
+            return true;
+          }
         }
+        {
+          std::vector<AnyScalar> tmp, *mt = &tmp;
+          if (casadi::to_ptr(p, m ? &mt : 0)) {
+            userOut() << "debug" << tmp.size() << std::endl;
+            if (m) **m = vertcat(tmp);
+            return true;
+          }
+        }
+      } catch(const std::exception& e) {
+        return false;
       }
       return false;
     }
@@ -649,7 +654,7 @@ using namespace spline;
 %exception {
   try {
     $action
-   } catch(const std::exception& e) {
+  } catch(const std::exception& e) {
     SWIG_exception(SWIG_RuntimeError, e.what());
   }
 }
