@@ -40,6 +40,11 @@ class Test_Function_Operations(BasisTestCase):
 #
 #      #   for arg in [0,1,2,1.3]:
 #      #     self.assertEqualTensor(p(arg), poly(arg))
+      x = Polynomial([0,1],'x')
+      y = p2
+      f = x + y
+      # f = y*x
+      # f = x + y*x + y*y
       
     def test_const_function(self):
         knots = [0,0,0.4,1,1]

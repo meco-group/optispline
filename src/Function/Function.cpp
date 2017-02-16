@@ -107,7 +107,7 @@ namespace spline {
       B = B.shape(shapeB);
       AnyTensor C = A.solve(B);
 
-      std::vector< int > shapeCoef = coef.dimension();
+      std::vector< int > shapeCoef = coef.shape();
       std::vector< int > shape = sumBasis.dimension();
       shape.insert(shape.end(), shapeCoef.begin(), shapeCoef.end());
 
