@@ -89,30 +89,30 @@ namespace spline {
     Basis MonomialBasisNode::derivative(int order, AnyTensor& T) const {
         if (order > getDegree()){
             // User tries to take a derivative which is of higher order than the basis, returns all 0
-            int curr_degree = getDegree();
-            std::vector<double> entries(curr_degree*(curr_degree+1), 0);
-            T = vertcat(entries).reorder_dims({curr_degree, curr_degree+1});  // Transformation tensor to apply on coefficients of function, all zero
+            int dim = dimension();
+            std::vector<double> entries(dim*(dim+1), 0);
+            T = vertcat(entries).shape({dim, dim+1});  // Transformation tensor to apply on coefficients of function, all zero
             return MonomialBasis(0);
         }
         else{
             // Derivative is of lower order than basis
             int dim = dimension();  // number of basis functions in the basis
+            int curr_degree = getDegree();
             int dim_new = dim-1;  // dimension
             std::vector<AnyScalar> entries(dim*dim,0);  // initialization of entries of transformation matrix
             for(int i=0; i<dim; i++){
-                entries[i*dim] = 1;  // to make eye matrix
+                entries[i*(dim+1)] = 1;  // to make eye matrix
             }
-            AnyTensor T_ = vertcat(entries);  // initialize tensor to multiply
-            Basis new_basis = MonomialBasis(dim_new);  // basis to return
+            AnyTensor T_ = vertcat(entries).shape({dim,dim});  // initialize tensor to multiply
+            Basis new_basis = MonomialBasis(curr_degree-order);  // basis to return
             for (int j = 0; j<order; j++){  // loop over order
-                new_basis = MonomialBasis(dim_new);
                 entries.resize((dim_new)*(dim));
                 std::fill(entries.begin(), entries.end(), 0);
                 for (int i=1; i<dim; i++){
                     entries[i*(dim) -1] = i;
                     // Makes e.g. matrix [0 1 0 0 ; 0 0 2 0 ; 0 0 0 3] for degree 3 basis, order 1
                 }
-                T_ = mtimes(vertcat(entries).reorder_dims({dim_new, dim}), T_);  // multiply transformation matrices, for higher order
+                T_ = mtimes(vertcat(entries).shape({dim_new, dim}), T_);  // multiply transformation matrices, for higher order
                 dim -= 1;
                 dim_new -= 1;
             }

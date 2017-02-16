@@ -5,11 +5,11 @@ import Basis.*
 %% plus
 
 % % scalar spline random coeffs + double
-% b1 = BSplineBasis([0,0,1/2,1,1],1);
-% c1 = Coefficient(rand(3,1,1));
-% s1 = Basis.Function(b1, c1);
-% s2 = s1 + 5; % spline + double % does not work yet
-% assert(abs(s2(0.6) - s1(0.6) - 5) <= eps); 
+b1 = BSplineBasis([0,0,1/2,1,1],1);
+c1 = Coefficient(rand(3,1,1));
+s1 = Basis.Function(b1, c1);
+s2 = s1 + 5; % spline + double % does not work yet
+assert(abs(s2(0.6) - s1(0.6) - 5) <= eps); 
 % s2 = 5 + s1; % double + spline % does not work yet
 % assert(abs(s2(0.6) - s1(0.6) - 5) <= eps);
 
@@ -102,11 +102,11 @@ assert(isequal(S.getCoefficient.getData, -M.getCoefficient.getData));
 %% minus
 
 % % difference scalar spline random coeffs and double
-% b1 = BSplineBasis([0,0,1/2,1,1],1);
-% c1 = Coefficient(rand(3,1,1));
-% s1 = Basis.Function(b1, c1);
-% s2 = s1 - 5; % spline + double % does not work yet
-% assert(abs(s2(0.6) - s1(0.6) + 5) <= eps); 
+b1 = BSplineBasis([0,0,1/2,1,1],1);
+c1 = Coefficient(rand(3,1,1));
+s1 = Basis.Function(b1, c1);
+s2 = s1 - 5; % spline + double % does not work yet
+assert(abs(s2(0.6) - s1(0.6) + 5) <= eps); 
 % s2 = 5 - s1; % double + spline % does not work yet
 % assert(abs(s2(0.6) + s1(0.6) - 5) <= eps);
 
@@ -168,13 +168,20 @@ assert(max(delta(:)) < 1e-14);
 
 %% mtimes
 
-% % product scalar spline and double
-% b = BSplineBasis([0,0,0,1,2,3,3,3],2);
-% c = Coefficient(rand(b.dimension,1,1));
-% s = Basis.Function(b,c);
-% p = 7*s;
-% delta = p.getCoefficient.getData - 7*s.getCoefficient.getData;
-% assert(max(abs(delta(:))) < 1e-14);
+% product scalar spline and double
+b = BSplineBasis([0,0,0,1,2,3,3,3],2);
+c = Coefficient(rand(b.dimension,1,1));
+s = Basis.Function(b,c);
+p = s*7;
+
+size(p.getCoefficient.getData)
+size(s.getCoefficient.getData)
+
+delta = p.getCoefficient.getData - 7*s.getCoefficient.getData;
+assert(max(abs(delta(:))) < 1e-14);
+%p = 7*s;
+%delta = p.getCoefficient.getData - 7*s.getCoefficient.getData;
+%assert(max(abs(delta(:))) < 1e-14);
 
 % product two scalar splines given coeffs
 b1 = BSplineBasis([0,0,0,1,2,3,3,3],2);
@@ -202,8 +209,20 @@ assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
 p = s2*s1;
 assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
 
+m = 4; n = 5;
+b1 = BSplineBasis([0,0,0,1,2,3,3,3],2);
+c1 = Coefficient(rand(b1.dimension,m,n));
+s1 = Basis.Function(b1,c1);
+b2 = BSplineBasis([0,0,3,3],1);
+c2 = Coefficient(rand(b2.dimension,n,m));
+s2 = Basis.Function(b2,c2);
+%p = mtimes(s1,s2);
+%assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
+%p = s2*s1;
+%assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
+
 % % product bivariate matrix-valued spline and double
-% m = 4; n = 5;
+%m = 4; n = 5;
 % SB1 = BSplineBasis([0 0 0 0.9 1 1 1],2);
 % SB2 = BSplineBasis([0 0 0.4 1 1],1);
 % B = Basis.TensorBasis({SB1,SB2});
