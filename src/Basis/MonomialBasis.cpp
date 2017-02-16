@@ -73,9 +73,19 @@ namespace spline {
         return ret;
     }
 
-    Basis MonomialBasisNode::univariate_derivative(int order) const {
-        return shared_from_this<Basis>();
-        
+    Basis MonomialBasisNode::univariate_derivative(int order, AnyTensor& T) const {
+        int curr_degree = this->getDegree();
+        Basis new_basis = MonomialBasis(curr_degree-1);
+
+        std::vector<int> coeffs;  // Get coeffs of new basis
+        int count = 1;
+        for (int i = 0; i<=curr_degree-1; i++){
+            coeffs.push_back(count);
+            count++;
+        }
+        std::vector<int> new_degree = {curr_degree-1};
+        T = AnyTensor(DTensor(coeffs, new_degree));  // Transformation tensor to apply on coefficients of function
+        return new_basis;
     }
 
 } // namespace spline

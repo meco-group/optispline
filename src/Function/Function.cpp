@@ -86,12 +86,37 @@ namespace spline {
 
     std::string Function::getRepresentation() const {return "Function";};
 
-    int Function::n_inputs() const{
+    int Function::n_inputs() const {
         return basis.n_inputs();
     }
 
-    std::vector< int > Function::shape() const{
+    std::vector< int > Function::shape() const {
         return coef.shape();
+    }
+
+    Function derivative(int order, int direction) const {
+        AnyTensor T;
+        this->basis.derivative(order, direction, T&);
+
+        //     if nargin == 2
+        //         if self.dims == 1
+        //             coord = 1;
+        //         else
+        //             error('A coordinate must be supplied')
+        //         end
+        //     end
+        //     if self.basis{coord}.degree < ord
+        //         d = 0;
+        //         return
+        //     end
+        //     b = self.basis;
+        //     bi = self.basis{coord};
+        //     [dbi, P] = bi.derivative(ord);
+        //     T = cellfun(@(p) speye(length(p)), b, 'UniformOutput', false);
+        //     T{coord} = P;
+        //     b{coord} = dbi;
+        //     d = self.cl(b, T * self.coeffs);
+        // end
     }
 
 }  // namespace spline

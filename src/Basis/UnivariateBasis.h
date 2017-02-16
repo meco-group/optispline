@@ -36,7 +36,7 @@ namespace spline {
         void setDegree (int degree);
         int n_inputs() const;
 
-        virtual Basis univariate_derivative(int order) const;
+        virtual Basis univariate_derivative(int order, AnyTensor& T) const;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const {spline_assert(0); return std::vector< std::vector < AnyScalar > >(); };
 
@@ -62,7 +62,8 @@ namespace spline {
         int getDegree () const ;
         void setDegree (int degree);
 
-        Basis univariate_derivative(int order) const;
+        Basis derivative(int order, AnyTensor& T) const;
+        Basis univariate_derivative(int order, AnyTensor& T) const;
 
     protected:
         int getLength() const ;

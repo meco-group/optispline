@@ -36,6 +36,9 @@ namespace spline {
 
         int n_inputs() const;  // Number of inputs of the function
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
+
+        Function derivative(int order, int direction) const;
+
     public:
         TensorBasis basis;
         Coefficient coef;

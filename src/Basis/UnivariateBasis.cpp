@@ -74,9 +74,11 @@ namespace spline {
     int UnivariateBasisNode::n_inputs() const { return 1; }
 
 
-
-    Basis UnivariateBasis::univariate_derivative(int order) const {
-        return (*this)->univariate_derivative(order);
+    Basis UnivariateBasis::derivative(int order, AnyTensor& T) const {
+        return (*this)->univariate_derivative(order, T);
+    }
+    Basis UnivariateBasis::univariate_derivative(int order, AnyTensor& T) const {
+        return (*this)->univariate_derivative(order, T);
     }
     // UnivariateBasisNode implementation is not necessary since you will never make a UnivariateBasis?
 
