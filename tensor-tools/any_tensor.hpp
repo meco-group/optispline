@@ -195,6 +195,18 @@ class AnyTensor {
       ANYTENSOR_METHOD(shape(dims));
       return DT();
     }
+    bool is_scalar() const {
+      if (is_DT()) return as_DT().is_scalar();
+      if (is_ST()) return as_ST().is_scalar();
+      if (is_MT()) return as_MT().is_scalar();
+      return true;
+    }
+    AnyScalar as_scalar() const {
+      if (is_DT()) return as_scalar();
+      if (is_ST()) return as_scalar();
+      if (is_MT()) return as_scalar();
+      return 0;
+    }
     AnyTensor operator-() const {
       ANYTENSOR_METHOD(operator-());
       return DT();

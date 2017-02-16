@@ -150,6 +150,11 @@ namespace spline {
         return operator*(t);
     }
 
+    Function Function::mtimes(const AnyTensor& t) const {
+        if (t.is_scalar()) return operator*(t);
+        return mtimes(Function::Constant(this->getTensorBasis(), t));
+    }
+
     Function Function::operator*(const AnyTensor& t) const {
         spline_assert(t.n_dims() == 2);
         Coefficient c = getCoefficient();

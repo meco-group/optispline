@@ -772,6 +772,10 @@ using namespace spline;
 %rename(_shape) spline::Function::shape;
 #endif
 
+#ifdef SWIGMATLAB
+%rename(times) spline::Function::operator*;
+#endif
+
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
 %include <src/Optistack/optistack.h>

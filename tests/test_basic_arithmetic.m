@@ -173,9 +173,13 @@ b = BSplineBasis([0,0,0,1,2,3,3,3],2);
 c = Coefficient(rand(b.dimension,1,1));
 s = Basis.Function(b,c);
 p = s*7;
+
+size(p.getCoefficient.getData)
+size(s.getCoefficient.getData)
+
 delta = p.getCoefficient.getData - 7*s.getCoefficient.getData;
 assert(max(abs(delta(:))) < 1e-14);
-p = 7*s;
+%p = 7*s;
 %delta = p.getCoefficient.getData - 7*s.getCoefficient.getData;
 %assert(max(abs(delta(:))) < 1e-14);
 
@@ -204,6 +208,18 @@ p = s1*s2;
 assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
 p = s2*s1;
 assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
+
+m = 4; n = 5;
+b1 = BSplineBasis([0,0,0,1,2,3,3,3],2);
+c1 = Coefficient(rand(b1.dimension,m,n));
+s1 = Basis.Function(b1,c1);
+b2 = BSplineBasis([0,0,3,3],1);
+c2 = Coefficient(rand(b2.dimension,n,m));
+s2 = Basis.Function(b2,c2);
+%p = mtimes(s1,s2);
+%assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
+%p = s2*s1;
+%assert(abs(p(1.5)-s1(1.5)*s2(1.5)) < 1e-14);
 
 % % product bivariate matrix-valued spline and double
 %m = 4; n = 5;
