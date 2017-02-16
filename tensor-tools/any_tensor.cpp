@@ -163,6 +163,34 @@ AnyTensor& AnyTensor::operator=(const AnyTensor& s) {
   return *this;
 }
 
+AnyScalar AnyScalar::min(const AnyScalar& a, const AnyScalar& b) {
+  switch (AnyScalar::merge(a.type(), b.type())) {
+    case TENSOR_DOUBLE:
+      return std::fmin(a.as_double(), b.as_double());
+    case TENSOR_SX:
+      return fmin(a.as_SX(), b.as_SX());
+    case TENSOR_MX:
+      return fmin(a.as_MX(), b.as_MX());
+    default:
+      tensor_assert(false);
+      return AnyScalar();
+  }
+}
+
+AnyScalar AnyScalar::max(const AnyScalar& a, const AnyScalar& b) {
+  switch (AnyScalar::merge(a.type(), b.type())) {
+    case TENSOR_DOUBLE:
+      return std::fmax(a.as_double(), b.as_double());
+    case TENSOR_SX:
+      return fmax(a.as_SX(), b.as_SX());
+    case TENSOR_MX:
+      return fmax(a.as_MX(), b.as_MX());
+    default:
+      tensor_assert(false);
+      return AnyScalar();
+  }
+}
+
 AnyTensor::AnyTensor(const AnyScalar& s) : data_double(0), data_sx(0), data_mx(0) {
   t = s.type();
   switch (t) {

@@ -280,4 +280,41 @@ namespace spline {
         return shared_from_this<BSplineBasis>();
     }
 
+    Basis BSplineBasisNode::insert_knots(const std::vector<AnyScalar> & new_knots,
+      AnyTensor & T) const {
+      // construct coefficient transformation matrix
+      int n_dim = getLength();
+      int n_dim_new = n_dim;
+      int deg = getDegree();
+      std::vector<AnyScalar> data(n_dim*n_dim, 0);
+      for (int i=0; i<n_dim; i++) {
+        data[i*(n_dim+1)] = 1.;
+      }
+      AnyTensor T_ = vertcat(data).shape({n_dim, n_dim});
+      AnyScalar val;
+      std::vector<AnyScalar> knots;
+      BSplineBasis ret = shared_from_this<BSplineBasis>();
+      // std::vector<AnyScalar> knots;
+      for (int k=0; k<new_knots.size(); k++) {
+        std::vector<AnyScalar> knots = ret.getKnots();
+        n_dim_new++;
+        data.resize(n_dim_new*n_dim);
+        std::fill(data.begin(), data.end(), 0);
+        for (int i=1; i<n_dim; i++) {
+          val = (new_knots[k] - knots[i])/(knots[i+deg] - knots[i]);
+          data[i*(n_dim_new+1)] = AnyScalar::max(0., AnyScalar::min(1., val));
+          val = (knots[i+deg] - new_knots[k])/(knots[i+deg] - knots[i]);
+          data[(i-1)*(n_dim_new+1)+1] = AnyScalar::max(0., AnyScalar::min(1., val));
+        }
+        data[0] = AnyScalar(1);
+        data[n_dim_new*n_dim-1] = AnyScalar(1);
+        T_ = mtimes(vertcat(data).shape({n_dim_new, n_dim}), T_);
+        n_dim++;
+        // construct new basis
+        knots.push_back(new_knots[k]);
+        ret = BSplineBasis(knots, getDegree());
+      }
+      T = T_;
+      return ret;
+    }
 } // namespace spline
