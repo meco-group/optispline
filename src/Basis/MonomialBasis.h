@@ -37,6 +37,9 @@ namespace spline{
         AnyTensor SubBasisEvalution(const std::vector< T >& x ) const ;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+
+
+        virtual Basis univariate_derivative(int order, AnyTensor& T) const override;
     };
 
 #endif // SWIG
