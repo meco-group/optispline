@@ -54,21 +54,26 @@ namespace spline {
 
     AnyTensor MonomialBasisNode::const_coeff_tensor(const AnyTensor& t) const {
         //push 1 for size of tensor
-        std::vector< int > coeff_size = {1};
-        for (int i = 0; i < t.dims().size(); i++) {
-            coeff_size.push_back(t.dims()[i]);
-        }
+        //std::vector< int > coeff_size = {1};
+        //for (int i = 0; i < t.dims().size(); i++) {
+        //    coeff_size.push_back(t.dims()[i]);
+        //}
+
+        std::vector< int > coeff_size = t.dims();
+        coeff_size.insert(coeff_size.begin(),1)
 
         // make single basis function coefficient and repeat
         AnyTensor values = t.shape(coeff_size);
         // make zero valued coefficients for higher order basis functions
         AnyTensor zeros = AnyTensor::repeat(AnyTensor(AnyScalar(0)),coeff_size);
 
-        std::vector< AnyTensor > coeffs;
-        coeffs.push_back(values);
-        for (int i = 1; i < getLength(); i++) {
-            coeffs.push_back(zeros);
-        }
+
+        std::vector< AnyTensor > coeffs = std::vector< AnyTensor >(dimension(), zeros);
+        coeffs[0] = values;
+//        coeffs.push_back(values);
+//        for (int i = 1; i < getLength(); i++) {
+//            coeffs.push_back(zeros);
+//        }
 
         return AnyTensor::concat(coeffs,0);
     }
