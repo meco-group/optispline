@@ -208,7 +208,7 @@ namespace spline {
 
         // make single basis function coefficient and repeat
         std::vector< AnyTensor > coeffs;
-        for (int i = 1; i< getLength(); i++) {
+        for (int i = 0; i < dimension(); i++) {
             coeffs.push_back(values);
         }
 
