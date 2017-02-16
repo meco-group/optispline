@@ -56,10 +56,10 @@ class Test_Function_SubBasis(BasisTestCase):
         self.assertEqualT(a_cfs.transform(Tf, 0), Tf.dot(a))
         self.assertEqualT(a_cfs.transform(Tf, 1), a.dot(Tf.T))
         with self.assertRaises(Exception):
-            a_cfs.transform(Tf, 0)
-            a_cfs.transform(np.random.rand(2))
+            a_cfs.transform(np.random.rand(2), 0)
+        with self.assertRaises(Exception):
             Tf = np.random.rand(2, 3)
-            a_cfs.test_transformsform(Tf)
+            a_cfs.transform(Tf, 0)
 
 if __name__ == '__main__':
     unittest.main()

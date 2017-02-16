@@ -17,7 +17,7 @@ namespace spline {
     class CoefficientNode : public SharedObjectNode {
     public:
 
-        CoefficientNode(const AnyTensor& t) : data(t){}
+        CoefficientNode(const AnyTensor& t) : data(t) {}
         CoefficientNode(const std::vector< double >& v);
 
         std::vector< int > shape() const;
