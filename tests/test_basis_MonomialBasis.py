@@ -26,6 +26,14 @@ class Test_Basis_MonomialBasis(BasisTestCase):
         for i in g
             self.assertEqualT(db_c(i), db(i))
 
+        db,T = b.derivative(degree)
+
+        db,T = b.derivative(degree+1)
+        T = np.reshape(T, np.prod(T.shape))
+        self.assertTrue(all(T == 0))
+        for i in g
+            self.assertTrue(all(db(i) == 0))
+
 # TODO constructor
     # def test_getEvaluation1(self):
     # def test_getEvaluation2(self):
