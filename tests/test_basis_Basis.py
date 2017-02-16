@@ -15,11 +15,11 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = UnivariateBasis()
         s3 = UnivariateBasis()
         b = TensorBasis()
-        b.addBasis(s1)
+        b = b.addBasis(s1)
         self.assertEqual(b.n_basis(), 1)
 
-        b.addBasis(s2)
-        b.addBasis(s3)
+        b = b.addBasis(s2)
+        b = b.addBasis(s3)
         self.assertEqual(b.n_basis(), 3)
 
     def test_tbasis_n_basis(self):
@@ -27,11 +27,11 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         s3 = MonomialBasis(1)
         b = TensorBasis()
-        b.addBasis(s1)
+        b = b.addBasis(s1)
         self.assertEqual(b.n_basis(), 1)
 
-        b.addBasis(s2)
-        b.addBasis(s3)
+        b = b.addBasis(s2)
+        b = b.addBasis(s3)
         self.assertEqual(b.n_basis(), 3)
 
     def test_tbasis_dimension(self):
@@ -39,17 +39,17 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         s3 = MonomialBasis(1)
         b = TensorBasis()
-        b.addBasis(s1)
+        b = b.addBasis(s1)
         self.assertEqual(b.dimension(), [4])
 
-        b.addBasis(s2)
-        b.addBasis(s3)
+        b = b.addBasis(s2)
+        b = b.addBasis(s3)
         self.assertEqual(b.dimension(), [4,5,2])
 
     def test_tbasis_n_inputs1(self):
         s1 = MonomialBasis(3)
         b = TensorBasis()
-        b.addBasis(s1)
+        b = b.addBasis(s1)
         self.assertEqual(b.n_inputs(), 1)
 
     def test_tbasis_n_inputs2(self):
@@ -57,9 +57,9 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         s3 = MonomialBasis(1)
         b = TensorBasis()
-        b.addBasis(s1)
-        b.addBasis(s2)
-        b.addBasis(s3)
+        b = b.addBasis(s1)
+        b = b.addBasis(s2)
+        b = b.addBasis(s3)
         self.assertEqual(b.n_inputs(), 3)
 
     def test_tbasis_n_inputs2(self):
@@ -67,30 +67,30 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         s3 = MonomialBasis(1)
         b = TensorBasis()
-        b.addBasis(s1)
-        b.addBasis(s2)
-        b.addBasis(s3)
+        b = b.addBasis(s1)
+        b = b.addBasis(s2)
+        b = b.addBasis(s3)
         self.assertEqual(b.n_inputs(), 3)
 
     def test_getSubBasis1(self):
         s1 = MonomialBasis(3)
         b = TensorBasis()
-        b.addBasis(s1)
+        b = b.addBasis(s1)
         self.assertEqual(len(b.getSubBasis()), 1)
 
     def test_getSubBasis2(self):
         s1 = MonomialBasis(3)
         s2 = MonomialBasis(4)
         b = TensorBasis()
-        b.addBasis(s1)
-        b.addBasis(s2)
-        b.addBasis(s1)
+        b = b.addBasis(s1)
+        b = b.addBasis(s2)
+        b = b.addBasis(s1)
         self.assertEqual(len(b.getSubBasis()), 3)
 
     def test_getEvaluation1(self):
         s1 = MonomialBasis(3)
         b = TensorBasis()
-        b.addBasis(s1)
+        b = b.addBasis(s1)
         x = [0.1]
         for _ in range(10):
             x = [random.random()]
@@ -100,8 +100,8 @@ class Test_Basis_Basis(BasisTestCase):
         s1 = MonomialBasis(2)
         s2 = MonomialBasis(3)
         b = TensorBasis()
-        b.addBasis(s1)
-        b.addBasis(s2)
+        b = b.addBasis(s1)
+        b = b.addBasis(s2)
         x = [0.1]
         with self.assertRaises(Exception):
             b(x)
@@ -110,8 +110,8 @@ class Test_Basis_Basis(BasisTestCase):
         s1 = MonomialBasis(2)
         s2 = MonomialBasis(3)
         b = TensorBasis()
-        b.addBasis(s1)
-        b.addBasis(s2)
+        b = b.addBasis(s1)
+        b = b.addBasis(s2)
         x = [0.1,2]
         self.assertEqualTensor(b(x),np.array([[1,2,4,8],[0.1,0.2,0.4,0.8],[0.01,0.02,0.04,0.08]]))
 
@@ -122,6 +122,9 @@ class Test_Basis_Basis(BasisTestCase):
     def test_hasArgument2(self):
         a = Argument()
         b = TensorBasis()
+        s1 = MonomialBasis(2)
+        b = b.addBasis(s1)
+        b = b.addBasis(s1)
         b.setArguments([a,a])
         self.assertTrue(b.hasArguments())
 
