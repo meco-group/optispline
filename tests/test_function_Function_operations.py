@@ -46,20 +46,28 @@ class Test_Function_Operations(BasisTestCase):
 #        # f = y*x
 #        # f = x + y*x + y*y
       
-#    def test_const_function(self):
-#        knots = [0,0,0.4,1,1]
-#        degree = 1
-#        basis = Basis.BSplineBasis(knots,degree)
-#        
-#        c = Function.Constant(basis,1)
-#        self.assertEqualT(c(0.5),DTensor(1))
-#
-#        c2 = Function.Constant(basis,DTensor([2,2],[1,2]))
-#        self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
-#        
-#        basis2 = Basis.MonomialBasis(3)
-#        c3 = Function.Constant(basis2,1)
-#        self.assertEqualT(c3(0.5),DTensor(1))
+    def test_const_function(self):
+        knots = [0,0,0.4,1,1]
+        degree = 1
+        basis = Basis.BSplineBasis(knots,degree)
+        basis2 = Basis.MonomialBasis(3)
+        
+        c = Function.Constant(basis,1)
+        self.assertEqualT(c(0.5),DTensor(1))
+
+        c2 = Function.Constant(basis,DTensor([2,2],[1,2]))
+        self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
+        
+        basis2 = Basis.MonomialBasis(3)
+        c3 = Function.Constant(basis2,1)
+        self.assertEqualT(c3(0.5),DTensor(1))
+
+        mbasis = TensorBasis([basis,basis2]);
+        f = Function.Constant(mbasis,2);
+        f2 = Function.Constant(mbasis,[2,2]);
+
+        self.assertEqualT(f(0.1,0.1), 2)
+        self.assertEqualT(f2(0.2,0.2), DTensor([2,2]))
 
     def test_bspline_operation(self):
         knots1 = [0,0,0.4,1,1]
@@ -152,9 +160,11 @@ class Test_Function_Operations(BasisTestCase):
         y = [0.1,0.2,0.5,0.8,0.1,0.2]
         func1_value = []
         func2_value = []
-        for v in x:
-            func1_value.append(func1(v))
-            func2_value.append(func2(v))
+        for k in range(0,len(x)):
+            _x = x[k]
+            _y = y[k]
+            func1_value.append(func1(_x,_y))
+            func2_value.append(func2(_x,_y))
 
         k = 0
         for k in range(0,len(x)):
@@ -164,11 +174,11 @@ class Test_Function_Operations(BasisTestCase):
             self.assertAlmostEqual(s1(_x,_y),func1_value[k] + func2_value[k])
             self.assertAlmostEqual(s2(_x,_y),func1_value[k] + 2.0)
             self.assertAlmostEqual(d1(_x,_y),func1_value[k] - func2_value[k])
-            self.assertAlmostEqual(s2(_x,_y),func1_value[k] - 3.0)
-            self.assertAlmostEqual(s1(_x,_y),func1_value[k]*func2_value[k])
-            self.assertAlmostEqual(s2(_x,_y),func1_value[k]*2.0)
-            self.assertAlmostEqual(s2(_x,_y),-func1_value[k])
-            self.assertAlmostEqual(s2(_x,_y),func1_value[k]**3)
+            self.assertAlmostEqual(d2(_x,_y),func1_value[k] - 3.0)
+            self.assertAlmostEqual(m1(_x,_y),func1_value[k]*func2_value[k])
+            self.assertAlmostEqual(m2(_x,_y),func1_value[k]*2.0)
+            self.assertAlmostEqual(u1(_x,_y),-func1_value[k])
+            self.assertAlmostEqual(p1(_x,_y),func1_value[k]**3)
         
 
 if __name__ == '__main__':
