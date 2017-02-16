@@ -5,6 +5,8 @@ import Basis.*
 p1 = Polynomial([0,0,1],'x');
 p2 = Polynomial([0,1],'y');
 
+assert(all(size(p1)==[1 1]))
+
 p = p1+p2
 
 p(2,3)
