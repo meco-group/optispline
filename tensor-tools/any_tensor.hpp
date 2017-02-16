@@ -209,6 +209,10 @@ class AnyTensor {
       ANYTENSOR_METHOD(dims());
       return std::vector<int>();
     }
+    int numel() const {
+      ANYTENSOR_METHOD(numel());
+      return 0;
+    }
     int n_dims() const {
       ANYTENSOR_METHOD(n_dims());
       return 0;
