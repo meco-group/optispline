@@ -67,7 +67,15 @@ namespace spline {
       otherFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(f);
 
       for (int i = 0; i < basisEvaluated.size(); i++) {
-          sumFunctionEvaluated.push_back(tc(thisFunctionEvaluated[i], otherFunctionEvaluated[i]));
+          AnyTensor lhs = thisFunctionEvaluated[i];
+          AnyTensor rhs = otherFunctionEvaluated[i];
+          if(lhs.dims() == std::vector< int > {1, 1}){
+              lhs.shape({});
+          }
+          if(rhs.dims() == std::vector< int > {1, 1}){
+              rhs.shape({});
+          }
+          sumFunctionEvaluated.push_back(tc(lhs, rhs));
       }
 
       AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
