@@ -280,6 +280,4 @@ namespace spline {
         return shared_from_this<BSplineBasis>();
     }
 
-    }
-
 } // namespace spline
