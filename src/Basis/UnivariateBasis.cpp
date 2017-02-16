@@ -79,6 +79,11 @@ namespace spline {
 
     int UnivariateBasisNode::n_inputs() const { return 1; }
 
+    Basis UnivariateBasis::derivative(AnyTensor& T) const {
+        // default derivative is with order = 1
+        return (*this)->derivative(1, T);
+    }
+
     Basis UnivariateBasis::derivative(int order, AnyTensor& T) const {
         return (*this)->derivative(order, T);
     }

@@ -65,7 +65,9 @@ namespace spline {
         int getDegree () const ;
         void setDegree (int degree);
 
-        Basis derivative(int order, AnyTensor& T) const;
+        Basis derivative(AnyTensor& SWIG_OUTPUT(T)) const;  // for default order = 1
+        Basis derivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
+
 
     protected:
         int getLength() const ;

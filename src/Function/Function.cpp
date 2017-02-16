@@ -38,12 +38,8 @@ namespace spline {
     }
 
     Function Function::Constant(const TensorBasis& basis, const AnyTensor& t) {
-        std::vector< Basis > subbasis = basis.getSubBasis();
-        Function f = Function::Constant(subbasis[0], t);
-        for (int i = 1; i < basis.n_basis(); i++) {
-            f = f*Function::Constant(subbasis[i], t);
-        }
-        return f;
+        Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
+        return Function(basis, coeff);
     }
 
     Function Function::Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size) {
@@ -152,6 +148,11 @@ namespace spline {
     Function Function::operator*(const AnyScalar& a) const {
         AnyTensor t = AnyTensor(DM::eye(shape()[2]))*a;
         return operator*(t);
+    }
+
+    Function Function::mtimes(const AnyTensor& t) const {
+        if (t.is_scalar()) return operator*(t);
+        return mtimes(Function::Constant(this->getTensorBasis(), t));
     }
 
     Function Function::operator*(const AnyTensor& t) const {

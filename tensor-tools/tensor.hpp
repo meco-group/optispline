@@ -179,6 +179,9 @@ class Tensor {
   }
 #endif
 
+  bool is_scalar() const { return squeeze().n_dims()==0; }
+  T as_scalar() const { if (is_scalar()) return data_[0]; }
+  
   T data() const { return data_; }
   T matrix() const {
     tensor_assert(n_dims()<=2);

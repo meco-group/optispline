@@ -49,6 +49,11 @@ def _swig_repr(self):
 // WORKAROUNDS END
 
 %include "exception.i"
+#ifdef WITH_STACKTRACE
+%exception {
+  $action
+}
+#else
 %exception {
   try {
     $action
@@ -56,6 +61,8 @@ def _swig_repr(self):
     SWIG_exception(SWIG_RuntimeError, e.what());
   }
 }
+#endif
+
 
 // Renameing PYTHON
 //{% if false %}
@@ -651,6 +658,12 @@ using namespace spline;
  }
 
 %import "casadi/casadi.i"
+
+#ifdef WITH_STACKTRACE
+%exception {
+  $action
+}
+#else
 %exception {
   try {
     $action
@@ -658,6 +671,7 @@ using namespace spline;
     SWIG_exception(SWIG_RuntimeError, e.what());
   }
 }
+#endif
 
 
 #ifdef SWIGPYTHON
@@ -755,6 +769,11 @@ using namespace spline;
 
 #ifdef SWIGPYTHON
 %rename(call) spline::Function::operator();
+%rename(_shape) spline::Function::shape;
+#endif
+
+#ifdef SWIGMATLAB
+%rename(times) spline::Function::operator*;
 #endif
 
 %include <src/Function/Function.h>
@@ -780,6 +799,9 @@ namespace spline {
         [varargout{1:nargout}] = builtin('subsref',self,s);
       end
    end
+  function r = size(self)
+    r = shape(self);
+  end
   %}
 }
 }
@@ -791,6 +813,9 @@ namespace spline {
   %pythoncode %{
     def __call__(self, *args):
       return self.call(args)
+    @property
+    def shape(self):
+      return self._shape()
   %}
 }
 }

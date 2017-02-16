@@ -69,7 +69,8 @@ class AnyScalar {
     static std::vector<MX> as_MX(const std::vector<AnyScalar>& v);
     static TensorType merge(TensorType a, TensorType b);
 
-
+    static AnyScalar min(const AnyScalar& a, const AnyScalar& b);
+    static AnyScalar max(const AnyScalar& a, const AnyScalar& b);
 
     /// Logic greater or equal to
     friend inline AnyScalar operator>=(const AnyScalar &x, const AnyScalar &y) {
@@ -194,6 +195,18 @@ class AnyTensor {
       ANYTENSOR_METHOD(shape(dims));
       return DT();
     }
+    bool is_scalar() const {
+      if (is_DT()) return as_DT().is_scalar();
+      if (is_ST()) return as_ST().is_scalar();
+      if (is_MT()) return as_MT().is_scalar();
+      return true;
+    }
+    AnyScalar as_scalar() const {
+      if (is_DT()) return as_scalar();
+      if (is_ST()) return as_scalar();
+      if (is_MT()) return as_scalar();
+      return 0;
+    }
     AnyTensor operator-() const {
       ANYTENSOR_METHOD(operator-());
       return DT();
@@ -208,6 +221,10 @@ class AnyTensor {
     std::vector<int> dims() const {
       ANYTENSOR_METHOD(dims());
       return std::vector<int>();
+    }
+    int numel() const {
+      ANYTENSOR_METHOD(numel());
+      return 0;
     }
     int n_dims() const {
       ANYTENSOR_METHOD(n_dims());

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from helpers import *
-from Basis import *
 
 from numpy.polynomial.polynomial import polyval
 
@@ -54,6 +53,15 @@ class Test_Function_Operations(BasisTestCase):
 #        # f = y*x
 #        # f = x + y*x + y*y
 
+    def test_const_function(self):
+        knots = [0,0,0.4,1,1]
+        degree = 1
+        basis = Basis.BSplineBasis(knots,degree)
+        basis2 = Basis.MonomialBasis(3)
+
+        c = Function.Constant(basis,1)
+        self.assertEqualT(c(0.5),DTensor(1))
+
 #    def test_const_function(self):
 #        knots = [0,0,0.4,1,1]
 #        degree = 1
@@ -68,6 +76,29 @@ class Test_Function_Operations(BasisTestCase):
 #        basis2 = Basis.MonomialBasis(3)
 #        c3 = Function.Constant(basis2,1)
 #        self.assertEqualT(c3(0.5),DTensor(1))
+
+    def test_const_function(self):
+        knots = [0,0,0.4,1,1]
+        degree = 1
+        basis = Basis.BSplineBasis(knots,degree)
+        basis2 = Basis.MonomialBasis(3)
+
+        c = Function.Constant(basis,1)
+        self.assertEqualT(c(0.5),DTensor(1))
+
+        c2 = Function.Constant(basis,DTensor([2,2],[1,2]))
+        self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
+
+        basis2 = Basis.MonomialBasis(3)
+        c3 = Function.Constant(basis2,1)
+        self.assertEqualT(c3(0.5),DTensor(1))
+
+        mbasis = TensorBasis([basis,basis2]);
+        f = Function.Constant(mbasis,2);
+        f2 = Function.Constant(mbasis,[2,2]);
+
+        self.assertEqualT(f(0.1,0.1), 2)
+        self.assertEqualT(f2(0.2,0.2), DTensor([2,2]))
 
     def test_bspline_operation(self):
         knots1 = [0,0,0.4,1,1]
@@ -84,9 +115,9 @@ class Test_Function_Operations(BasisTestCase):
         func2 = Function(basis2,coeff2)
 
         p1 = Polynomial([0,0,1],'x')
-        
+
         # function evaluations
-        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10) 
+        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10)
         func1_value = []
         func2_value = []
         p1_value = []
@@ -156,7 +187,7 @@ class Test_Function_Operations(BasisTestCase):
         p1 = func1.pow(3)
 
         # function evaluations
-        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10) 
+        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10)
         y = [0.1,0.2,0.5,0.8,0.1,0.2]
         func1_value = []
         func2_value = []
@@ -179,7 +210,7 @@ class Test_Function_Operations(BasisTestCase):
             self.assertAlmostEqual(m2(_x,_y),func1_value[k]*2.0)
             self.assertAlmostEqual(u1(_x,_y),-func1_value[k])
             self.assertAlmostEqual(p1(_x,_y),func1_value[k]**3)
-        
+
     def test_matrix_product(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
@@ -200,7 +231,7 @@ class Test_Function_Operations(BasisTestCase):
         func2 = Function(mbasis2,coeff2)
 
         fm = func1.mtimes(func2)
-        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10) 
+        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10)
         y = [0.1,0.2,0.5,0.8,0.1,0.2]
         func1_value = []
         func2_value = []
@@ -218,8 +249,5 @@ class Test_Function_Operations(BasisTestCase):
             self.assertAlmostEqual(fm(_x,_y),func1_value[k].mtimes(func2_value[k]))
 
 
->>>>>>> Stashed changes
-=======
->>>>>>> d24cd6a70b2848affda941528ff7f926de461112
 if __name__ == '__main__':
     unittest.main()
