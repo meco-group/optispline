@@ -119,5 +119,57 @@ class Test_Function_Operations(BasisTestCase):
             self.assertAlmostEqual(m3(v),p1_value[k]*2.0)
             self.assertAlmostEqual(pp(v),p1_value[k]**4)
 
+    def test_multivariate_operations(self):
+        knots1 = [0,0,0.4,1,1]
+        degree = 1
+        basis1 = Basis.BSplineBasis(knots1,degree)
+
+        knots2 = [0.,0.,0.5,1,1]
+        degree = 1
+        basis2 = Basis.BSplineBasis(knots2,degree)
+
+        basis3 = MonomialBasis(3);
+
+        mbasis1 = TensorBasis([basis1,basis2]);
+        mbasis2 = TensorBasis([basis2,basis3]);
+
+        coeff1 = DTensor(numpy.random.randn(9,1),[3,3,1,1])
+        coeff2 = DTensor(numpy.random.randn(12,1),[3,4,1,1])
+        func1 = Function(mbasis1,coeff1)
+        func2 = Function(mbasis2,coeff2)
+
+        s1 = func1 + func2
+        s2 = func1 + 2.0
+        d1 = func1 - func2
+        d2 = func1 - 3.0
+        m1 = func1*func2
+        m2 = func1*2.0
+        u1 = -func1
+        p1 = func1.pow(3)
+
+        # function evaluations
+        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10) 
+        y = [0.1,0.2,0.5,0.8,0.1,0.2]
+        func1_value = []
+        func2_value = []
+        for v in x:
+            func1_value.append(func1(v))
+            func2_value.append(func2(v))
+
+        k = 0
+        for k in range(0,len(x)):
+            _x = x[k]
+            _y = y[k]
+
+            self.assertAlmostEqual(s1(_x,_y),func1_value[k] + func2_value[k])
+            self.assertAlmostEqual(s2(_x,_y),func1_value[k] + 2.0)
+            self.assertAlmostEqual(d1(_x,_y),func1_value[k] - func2_value[k])
+            self.assertAlmostEqual(s2(_x,_y),func1_value[k] - 3.0)
+            self.assertAlmostEqual(s1(_x,_y),func1_value[k]*func2_value[k])
+            self.assertAlmostEqual(s2(_x,_y),func1_value[k]*2.0)
+            self.assertAlmostEqual(s2(_x,_y),-func1_value[k])
+            self.assertAlmostEqual(s2(_x,_y),func1_value[k]**3)
+        
+
 if __name__ == '__main__':
     unittest.main()
