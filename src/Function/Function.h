@@ -22,6 +22,8 @@ namespace spline {
         Function operator*(const Function& f) const ;
         Function operator-() const ;
         Function operator-(const Function& f) const ;
+        Function mtimes(const Function& f) const ;
+
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;
         TensorBasis getTensorBasis() const {return basis;}
@@ -47,6 +49,7 @@ namespace spline {
         Function generic_operation(const Function& f,
                 const BasisComposition & bc, const TensorComposition & tc) const ;
     };
+
 } // namespace spline
 
 #endif //CPP_SPLINE_FUNCTION_FUNCTION_H
