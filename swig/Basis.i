@@ -675,8 +675,18 @@ using namespace spline;
 
 
 #ifdef SWIGPYTHON
-%define %tensor_helpers()
+%define %tensor_helpers(arraypriority)
 %pythoncode %{
+
+    __array_priority__ = arraypriority
+    
+    def __add__(self, a) : return spline_plus(self, a)
+    def __radd__(self, a) : return spline_plus(a, self)
+    def __sub__(self, a) : return spline_minus(self, a)
+    def __rsub__(self, a) : return spline_minus(a, self)
+    def __mul__(self, a) : return spline_times(self, a)
+    def __rmul__(self, a) : return spline_times(a, self)
+    
     def __getitem__(self, s):
           ind = []
           for i in s:
@@ -823,14 +833,31 @@ namespace spline {
 
 
 %extend Tensor<DM> {
-  %tensor_helpers()
+  %tensor_helpers(2000.0)
 }
 %extend Tensor<SX> {
-  %tensor_helpers()
+  %tensor_helpers(2001.0)
 }
 %extend Tensor<MX> {
-  %tensor_helpers()
+  %tensor_helpers(2002.0)
 }
+
+
+%define SPLINE_OPERATIONS(T)
+  inline Tensor<T> spline_plus(const Tensor<T>& lhs, const Tensor<T>& rhs) { return lhs+rhs; }
+  inline Tensor<T> spline_minus(const Tensor<T>& lhs, const Tensor<T>& rhs) { return lhs-rhs; }
+  inline Tensor<T> spline_times(const Tensor<T>& lhs, const Tensor<T>& rhs) { return lhs*rhs; }
+  inline Tensor<T> spline_mtimes(const Tensor<T>& lhs, const Tensor<T>& rhs) { return lhs.mtimes(rhs); }
+%enddef
+
+%inline {
+  namespace casadi {
+    SPLINE_OPERATIONS(DM)
+    SPLINE_OPERATIONS(SX)
+    SPLINE_OPERATIONS(MX)
+  }
+}
+
 
 #ifdef WINMAT64
 %begin %{

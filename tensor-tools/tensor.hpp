@@ -263,6 +263,10 @@ class Tensor {
     return Tensor(data_+rhs.data_, new_dims);
   }
 
+  Tensor operator-(const Tensor& rhs) const {
+    return operator+(-rhs);
+  }
+
   Tensor operator-() const {
     return Tensor(-data_, dims_);
   }
@@ -457,7 +461,7 @@ class Tensor {
                                          mrange(n_dims()+b.n_dims()));
   }
 
-  Tensor mtimes(const Tensor &rhs) {
+  Tensor mtimes(const Tensor &rhs) const {
     if(n_dims()==0 && rhs.n_dims()==2){
         return einstein(rhs, {}, {-1, -2}, {-1, -2});
     }
