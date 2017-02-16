@@ -44,8 +44,8 @@ namespace spline {
         // Basis getBasis( int index ) const;
         // Basis getSubBasis( Argument a) const;
 
-        void addBasis(TensorBasis basis);
-        void addBasis(Basis basis);
+        TensorBasis addBasis(TensorBasis basis) const ;
+        TensorBasis addBasis(Basis basis) const ;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
@@ -103,8 +103,8 @@ namespace spline {
         std::vector< Basis > getSubBasis() const;
         // TensorBasis getTensorBasis() const;
 
-        void addBasis(TensorBasis basis);
-        void addBasis(Basis basis);
+        TensorBasis addBasis(TensorBasis basis) const ;
+        TensorBasis addBasis(Basis basis) const ;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;

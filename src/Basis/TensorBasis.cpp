@@ -125,16 +125,20 @@ namespace spline {
       return getSubBasis()[ind];
     }
 
-    void TensorBasis::addBasis(TensorBasis basis) { (*this)->addBasis(basis);}
-    void TensorBasisNode::addBasis(TensorBasis basis) {
+    TensorBasis TensorBasis::addBasis(TensorBasis basis) const {return (*this)->addBasis(basis);}
+    TensorBasis TensorBasisNode::addBasis(TensorBasis basis) const {
+        std::vector< Basis > all_basis = getSubBasis();
         for ( auto &subBasis : basis.getSubBasis() ) {
-            allSubBasis.push_back(subBasis);
+            all_basis.push_back(subBasis);
         }
+        return TensorBasis(all_basis, getArguments());
     }
 
-    void TensorBasis::addBasis(Basis basis) { (*this)->addBasis(basis);}
-    void TensorBasisNode::addBasis(Basis basis) {
-        this->allSubBasis.push_back(basis);
+    TensorBasis TensorBasis::addBasis(Basis basis) const {return (*this)->addBasis(basis);}
+    TensorBasis TensorBasisNode::addBasis(Basis basis) const {
+        std::vector< Basis > all_basis = getSubBasis();
+        all_basis.push_back(basis);
+        return TensorBasis(all_basis, getArguments());
     }
 
     std::vector<int> TensorBasis::dimension() const { return (*this)->dimension ();}

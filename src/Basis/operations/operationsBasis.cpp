@@ -34,7 +34,7 @@ namespace spline {
                 Basis subBasis1 = b1.getBasis(a);
                 Basis subBasis2 = b2.getBasis(a);
                 Basis sum = bc(subBasis1, subBasis2);
-                returnBasis.addBasis(sum);
+                returnBasis = returnBasis.addBasis(sum);
             }
 
             returnBasis.setArguments(allArguments);
@@ -46,7 +46,7 @@ namespace spline {
                 Basis subBasis1 = b1.getBasis(i);
                 Basis subBasis2 = b2.getBasis(i);
                 Basis sum = bc(subBasis1, subBasis2);
-                returnBasis.addBasis(sum);
+                returnBasis = returnBasis.addBasis(sum);
             }
 
             if (b1.hasArguments()) {
