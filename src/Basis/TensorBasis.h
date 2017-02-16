@@ -52,6 +52,7 @@ namespace spline {
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         int totalNumberBasisFunctions() const;
+        AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
         // Basis derivative(int order, int direction, AnyTensor& T) const;
 
@@ -108,6 +109,8 @@ namespace spline {
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         int totalNumberBasisFunctions() const;
+
+        AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
         // Basis derivative(int order, int direction, AnyTensor& T) const;
     };
