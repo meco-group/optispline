@@ -755,6 +755,7 @@ using namespace spline;
 
 #ifdef SWIGPYTHON
 %rename(call) spline::Function::operator();
+%rename(_shape) spline::Function::shape;
 #endif
 
 %include <src/Function/Function.h>
@@ -780,6 +781,9 @@ namespace spline {
         [varargout{1:nargout}] = builtin('subsref',self,s);
       end
    end
+  function r = size(self)
+    r = shape(self);
+  end
   %}
 }
 }
@@ -791,6 +795,9 @@ namespace spline {
   %pythoncode %{
     def __call__(self, *args):
       return self.call(args)
+    @property
+    def shape(self):
+      return self._shape()
   %}
 }
 }

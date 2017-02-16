@@ -23,7 +23,7 @@ B3 = MonomialBasis(4);
 
 B = Basis.TensorBasis({B1,B2,B3});
 
-a = rand(B.getShape());
+a = rand(B.dimension());
 
 F = Basis.Function(B, a);
 

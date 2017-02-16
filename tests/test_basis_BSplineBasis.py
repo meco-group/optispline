@@ -68,6 +68,35 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
+    def test_derivative(self):
+        n_der = 1
+        degree = 3
+        knotsint = 8
+        b = BSplineBasis(np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)],degree)
+        db,T = b.derivative(n_der)
+        x = casadi.SX.sym( 'x')
+        db_c = b([x])
+        for i in range(0,n_der):
+            db_c = casadi.jacobian(db_c, x)
+        db_c = casadi.Function('db_c', [x], [db_c] )
+
+        g = np.r_([b.greville(), db.greville()])
+        for i in g
+            self.assertEqualT(db_c(i), db(i))
+
+        db,T = b.derivative(degree)
+
+        db,T = b.derivative(degree+1)
+        T = np.reshape(T, np.prod(T.shape))
+        self.assertTrue(all(T == 0))
+        g = b.greville()
+        for i in g
+            self.assertTrue(all(db(i) == 0))
+
+
+
+
+
 
 # TODO constructor
     # def test_getEvaluation1(self):

@@ -39,7 +39,7 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(3)
         b = TensorBasis([m])
         f = Function(b,a)
-        self.assertEqual(f.shape(), [1,1])
+        self.assertEqual(f.shape, [1,1])
 
     def test_function_shape2(self):
         a = MX.sym('a', (3+1)*(4+1)*(1+1)*3*2)
@@ -50,7 +50,7 @@ class Test_Function_Function(BasisTestCase):
         a = Coefficient(a)
         b = TensorBasis([m1,m2,m3])
         f = Function(b,a)
-        self.assertEqual(f.shape(), [3,2])
+        self.assertEqual(f.shape, [3,2])
 
     def test_function_evaluation_type1(self):
         a_ = [2,0,0,1]
