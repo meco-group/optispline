@@ -125,7 +125,7 @@ namespace spline{
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
-        Basis univariate_derivative(int order, AnyTensor& T) const;
+        virtual Basis derivative(int order, AnyTensor& T) const override;
 
     private:
         mutable Function bspline_evaluator_;
@@ -163,8 +163,6 @@ namespace spline{
         //
 
         virtual void foo() const {};
-
-        Basis univariate_derivative(int order, AnyTensor& T) const;
 
     private:
         //  std::vector<bool> indector(int i, double x);

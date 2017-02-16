@@ -72,9 +72,9 @@ namespace spline {
         return ret;
     }
 
-    Basis MonomialBasisNode::univariate_derivative(int order, AnyTensor& SWIG_OUTPUT(T)) const {
+    Basis MonomialBasisNode::derivative(int order, AnyTensor& T) const {
         if (order > getDegree()){
-            // User tries to take a derivative which is of higher order than the basis, returns all 0 
+            // User tries to take a derivative which is of higher order than the basis, returns all 0
             int curr_degree = getDegree();
             std::vector<double> entries(curr_degree*(curr_degree+1), 0);
             T = vertcat(entries).reorder_dims({curr_degree, curr_degree+1});  // Transformation tensor to apply on coefficients of function, all zero
@@ -83,7 +83,7 @@ namespace spline {
         else{
             // Derivative is of lower order than basis
             int dim = dimension();  // number of basis functions in the basis
-            int dim_new = dim-1;  // dimension 
+            int dim_new = dim-1;  // dimension
             std::vector<AnyScalar> entries(dim*dim,0);  // initialization of entries of transformation matrix
             for(int i=0; i<dim; i++){
                 entries[i*dim] = 1;  // to make eye matrix
@@ -103,7 +103,7 @@ namespace spline {
                 dim_new -= 1;
             }
             T = T_;
-            return new_basis;                
+            return new_basis;
         }
     }
 

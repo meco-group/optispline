@@ -38,8 +38,7 @@ namespace spline{
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
-
-        virtual Basis univariate_derivative(int order, AnyTensor& T) const override;
+        virtual Basis derivative(int order, AnyTensor& T) const override;
     };
 
 #endif // SWIG

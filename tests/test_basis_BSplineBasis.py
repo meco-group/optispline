@@ -10,6 +10,7 @@ import casadi as C
 
 class Test_Basis_BSplineBasis(BasisTestCase):
 
+
     def test_greville(self):
         degree = 3
         knotsint = 8
@@ -24,6 +25,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         g2 = b2.greville()
         self.assertEqualT(g1, g2, 1e-6)
         self.assertEqualT(g1, g, 1e-6)
+
 
     def test_constructor(self):
         degree = 3
@@ -45,6 +47,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         b = BSplineBasis(knots1, degree)
         kn = casadi.Function('f', [sym_k1, sym_k2], b.getKnots())
         self.assertEqualT(np.sort(knots2), kn(0.8, 0.55))
+
 
     def test_insert_knots(self):
         return
