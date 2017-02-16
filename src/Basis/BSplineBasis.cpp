@@ -144,7 +144,10 @@ namespace spline {
         return knots_.size() - degree - 1;
     }
 
+
     BSplineBasis::BSplineBasis(const std::vector<AnyScalar>& knots, int degree) {
+        spline_assert_message(knots.size()>degree+1, "Incompatible dimensions." <<
+            " Got " << knots.size() << " knots and degree "  << degree << ".");
         assign_node(new BSplineBasisNode(knots, degree));
     }
 
@@ -199,6 +202,23 @@ namespace spline {
         return ret;
     }
 
+    AnyTensor BSplineBasisNode::const_coeff_tensor(const AnyTensor& t) const {
+        //push 1 for size of tensor
+        std::vector< int > coeff_size = {1};
+        for (int i = 0; i < t.dims().size(); i++) {
+            coeff_size.push_back(t.dims()[i]);
+        }
+        AnyTensor values = t.shape(coeff_size);
+
+        // make single basis function coefficient and repeat
+        std::vector< AnyTensor > coeffs;
+        for (int i = 0; i < dimension(); i++) {
+            coeffs.push_back(values);
+        }
+
+        return AnyTensor::concat(coeffs, 0);
+    }
+
     AnyTensor BSplineBasisNode::SubBasisEvalution(const std::vector< AnyScalar > & x_) const {
         AnyScalar x = x_[0];
         TensorType t = AnyScalar::merge(AnyScalar::type(knots_), x.type());
@@ -220,15 +240,13 @@ namespace spline {
         return AnyTensor();
     }
 
-    Basis BSplineBasisNode::univariate_derivative(int order, AnyTensor& SWIG_OUTPUT(T)) const {
-
-
+    Basis BSplineBasisNode::derivative(int order, AnyTensor& T) const {
         // Computes the BSplineBasis derivative using eq. (16) in [de Boor, Chapter X, 2001].
         // Args:
             // o (int): order of the derivative (default is 1)
         // Returns:
             // Derivative of the basis (new_basis) and transformation matrix to transform the coefficients of the function (T)
-        
+
         // int curr_degree = this->getDegree();;
         // std::vector<double> curr_knots = this->getKnots();
         // std::vector<double> new_knots(curr_knots.begin() + order, curr_knots.end() - order);
@@ -245,7 +263,7 @@ namespace spline {
         //     for (int l=0; l<=curr_knots.size()-curr_degree-i; l++){
         //         delta_knots[l] = curr_knots[curr_degree - i + l] - curr_knots[-curr_degree + i -l];
         //     }
-        //     // Todo: how? 
+        //     // Todo: how?
         //     R = AnyTensor(DTensor([0*len],[basis_length - 1 - i, basis_length - i]))
         //     for (int l=0; l<=basis_length-1-i; l++){
         //         j.push_back(l);
@@ -260,7 +278,6 @@ namespace spline {
         // T = AnyTensor(DTensor(coeffs, new_degree));  // Transformation tensor to apply on coefficients of function
         // return new_basis;
         return shared_from_this<BSplineBasis>();
-
     }
 
 } // namespace spline
