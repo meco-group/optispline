@@ -44,6 +44,8 @@ namespace spline {
 
         virtual int dimension() const {return 0;};  // Number of basis functions in the basis
         virtual int n_inputs() const {return 0;};  // Number of inputs of the basis
+        
+        virtual Basis derivative(int order, int direction) const;
     };
 
 #endif // SWIG
@@ -78,6 +80,8 @@ namespace spline {
         int n_inputs() const;
 
         AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
+
+        virtual Basis derivative(int order, int direction) const;
     };
 
     template< class T >
@@ -85,5 +89,5 @@ namespace spline {
             spline_assert_message(x.size() == n_inputs(), "imput vector has wrong dimention");  // imput vector has wrong dimention
         }
 
-}
+}  // namespace spline
 #endif  // SUBBASIS_H_

@@ -125,7 +125,10 @@ namespace spline{
 
         AnyTensor SubBasisEvalution(const std::vector<AnyScalar> & x ) const ;
 
-        virtual std::vector< std::vector<AnyScalar> > getEvaluationGrid() const;
+        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+
+        Basis univariate_derivative(int order, AnyTensor& T) const;
+
     private:
         mutable Function bspline_evaluator_;
 
@@ -144,10 +147,14 @@ namespace spline{
         BSplineBasis(){};
         BSplineBasisNode* get() const ;
         BSplineBasisNode* operator->() const ;
-#endif // SWIG
-
         BSplineBasis(const std::vector<AnyScalar>& knots, int degree);
         BSplineBasis(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals);
+#endif // SWIG
+
+        BSplineBasis(const AnyVector& knots, int degree) :
+        BSplineBasis(knots.to_scalar_vector(), degree) {};
+        BSplineBasis(const AnyVector& bounds, int degree, int numberOfIntervals) :
+        BSplineBasis(bounds.to_scalar_vector(), degree, numberOfIntervals) {};
 
         std::vector<AnyScalar> getKnots() const;
         void setKnots(const std::vector<AnyScalar>& knots) ;
@@ -159,6 +166,7 @@ namespace spline{
 
         virtual void foo() const {};
 
+        Basis univariate_derivative(int order, AnyTensor& T) const;
 
     private:
         //  std::vector<bool> indector(int i, double x);
