@@ -184,15 +184,14 @@ namespace spline {
         return (*this)->const_coeff_tensor(t);
     }
     AnyTensor TensorBasisNode::const_coeff_tensor(const AnyTensor& t) const {
-        AnyTensor prod = DTensor({1},{});
+        AnyTensor prod = AnyTensor::unity();
 
         for (int i = 0; i < n_basis(); i++) {
-            AnyTensor temp = allSubBasis[0].const_coeff_tensor(AnyTensor(AnyScalar(1)));
-            temp.shape({temp.numel()});
-            prod = outer_product(prod,temp);
+            AnyTensor temp = allSubBasis[i].const_coeff_tensor(AnyTensor(AnyScalar(1)));
+            prod = prod.outer_product(temp.shape(std::vector< int >(1,temp.numel())));
         }
 
-        return outer_product(prod, t)
+        return prod.outer_product(t);
     }
 
     // Basis TensorBasis::derivative(int order, int direction, AnyTensor& T) const {
