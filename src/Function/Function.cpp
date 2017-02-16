@@ -90,10 +90,10 @@ namespace spline {
           AnyTensor lhs = thisFunctionEvaluated[i];
           AnyTensor rhs = otherFunctionEvaluated[i];
           if(lhs.dims() == std::vector< int > {1, 1}){
-              lhs.shape({});
+              lhs = lhs.shape({});
           }
           if(rhs.dims() == std::vector< int > {1, 1}){
-              rhs.shape({});
+              rhs = rhs.shape({});
           }
           sumFunctionEvaluated.push_back(tc(lhs, rhs));
       }
