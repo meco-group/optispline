@@ -66,6 +66,7 @@ namespace spline {
     }
 
     AnyTensor Basis::operator() (const std::vector< AnyScalar > & x) const {
+      (*this)->assert_vector_lenght_correct( x );
       return (*this)->operator()(x);
     }
 

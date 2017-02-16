@@ -28,7 +28,10 @@ after_script:
     - export TARGET=meco_binaries_${BUILD_OS}/${BUILD_LANG}/${CI_PROJECT_NAME}/$CI_BUILD_REF_NAME
     - TZ=CET touch swig/build_`date -Iseconds`.log
     - rm -rf swig/*.pyc swig/CMakeFiles
-    - rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
+    - echo $TARGET
+    
+    - rclone delete dropbox:$TARGET
+    - rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles || rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles || rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
 
 coverage:
   stage: tests

@@ -186,7 +186,6 @@ namespace spline {
 
 
     AnyTensor BSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
-        assert(x.size()==n_inputs());
         return SubBasisEvalution(x);
     }
 
@@ -199,7 +198,6 @@ namespace spline {
     }
 
     AnyTensor BSplineBasisNode::SubBasisEvalution(const std::vector< AnyScalar > & x_) const {
-        spline_assert(x_.size()>0);
         AnyScalar x = x_[0];
         TensorType t = AnyScalar::merge(AnyScalar::type(knots_), x.type());
 
