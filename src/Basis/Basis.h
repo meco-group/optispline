@@ -7,6 +7,7 @@
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
+#include "../common.h"
 
 // #include <tensor.hpp>
 #include <any_tensor.hpp>
@@ -35,7 +36,7 @@ namespace spline {
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         template< class T >
-            void assertVectorLenghtCorrect( const std::vector< T >& x) const;
+            void assert_vector_lenght_correct( const std::vector< T >& x) const;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 

@@ -17,10 +17,9 @@ namespace spline {
     }
 
     std::vector< int > Coefficient::dimension() const { return (*this)->dimension(); }
-    std::vector< int > CoefficientNode::dimension () const {
+    std::vector< int > CoefficientNode::dimension() const {
         std::vector< int > dims_ = data.dims();
-        for (size_t i=0; i<2; i++)
-        {
+        for (size_t i=0; i<2; i++) {
             dims_.pop_back();
         }
         return dims_;
@@ -62,20 +61,20 @@ namespace spline {
 
     AnyTensor Coefficient::transform(const AnyTensor& T, const NumericIndex& direction) const {
         // check dimension of transformation matrix
-        tensor_assert(T.n_dims()==2);
+        tensor_assert_message(T.n_dims()==2, "Transformation matrix should have 2 dimensions.");
         AnyTensor data = getData();
         // check compatibility
         tensor_assert_message(T.dims()[1]==data.dims()[direction],
             "Incompatible dimensions: 2nd dimension of transformation matrix is "
-            << T.dims() << "while dimensions of direction " << direction <<
-            " of coefficient is " << data.dims()[direction] << ".");
+            << T.dims()[1] << " while transformed direction has dimension "
+            << data.dims()[direction] << ".");
         // construct index vectors
         int n_dims = data.n_dims();
         std::vector<int> ind1(n_dims);
         std::vector<int> ind2(n_dims);
         int cnt = -3;
-        for (int i=0; i<data.n_dims(); i++){
-            if (i == direction){
+        for (int i=0; i<data.n_dims(); i++) {
+            if (i == direction) {
                 ind1[i] = -2;
                 ind2[i] = -1;
             } else {
@@ -87,4 +86,16 @@ namespace spline {
         return data.einstein(T, ind1, {-1, -2}, ind2);
     }
 
+    Coefficient Coefficient::add_trival_dimension(int extra_dims) const {
+        return (*this)->add_trival_dimension(extra_dims);
+    }
+
+    Coefficient CoefficientNode::add_trival_dimension(int extra_dims) const {
+        std::vector< int > dims_ = data.dims();
+        for (int i = 0; i < extra_dims; i++) {
+            dims_.push_back(1);
+        }
+        /* AnyTensor return_tensor = AnyTensor(getData(), dims_); */
+        return getData().shape(dims_);
+    }
 }  // namespace spline

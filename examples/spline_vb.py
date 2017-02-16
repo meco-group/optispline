@@ -81,7 +81,7 @@ for k, via_pnt in enumerate(via_pnts):
     g.append(y([t_via[k]])== via_pnt[1])
     g.append(t_via[k]>=0.4)
     g.append(t_via[k]<=0.6)
-    
+
 print g
 
 g.append(vx<=T*vmax)
@@ -91,8 +91,8 @@ g.append(vy>=-T*vmax)
 
 sol = opti.solver(T,g,"ipopt")
 
-sol.value(x.getCoefficient(),np.linspace(start_pnt[0], end_pnt[0], m.getLength()))
-sol.value(y.getCoefficient(),np.linspace(start_pnt[0], end_pnt[0], m.getLength()))
+sol.value(x.getCoefficient(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
+sol.value(y.getCoefficient(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
 
 sol.value(T,2)
 

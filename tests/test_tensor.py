@@ -87,11 +87,21 @@ class Test_Tensor(BasisTestCase):
       B = TensorBasis([B1,B2,B3])
 
       a = np.random.random(B.dimension())
-
-      F = Basis.Function(B, a)
+      a = DTensor(a)
+      print a
+      a_ = Coefficient(a)
+      F = Basis.Function(B, a_)
 
       c = F.getCoefficient()
       r = c.getData()
+
+      # a = DTensor(a ,  B.dimension() + [1, 1])
+      print "------"
+      a = a.shape(a.dims()+[1,1])
+
+
+      print a[:,:,0,0,0]
+      print r[:,:,0,0,0]
 
       self.assertEqualT( r, a )
 
@@ -101,6 +111,10 @@ class Test_Tensor(BasisTestCase):
 
       a = np.array(A.matrix())
       b = np.array(B.matrix())
+
+      print "test"
+      print A.mtimes(B)
+      print a.dot(b)
 
       self.assertEqualT(A.mtimes(B), a.dot(b))
 

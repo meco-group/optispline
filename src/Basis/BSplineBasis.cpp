@@ -123,20 +123,20 @@ namespace spline {
         return timesSubBasis (shared_from_this<BSplineBasis>(), other);
     }
 
-    AnyVector BSplineBasis::greville() const { return (*this)->greville(); }
-    AnyVector BSplineBasisNode::greville() const {
+    std::vector<AnyScalar> BSplineBasis::greville() const { return (*this)->greville(); }
+    std::vector<AnyScalar> BSplineBasisNode::greville() const {
         int degree = getDegree();
         if (degree == 0) {
             degree = 1;
         }
-
-        AnyVector grevillePoints(getLength());
+        std::vector<AnyScalar> grevillePoints(getLength());
         for (int i = 0; i < getLength(); ++i) {
-            grevillePoints[i] = std::accumulate(
-                                  knots_.begin()+i+1, knots_.begin()+i+degree+1, AnyScalar(0.0))
-                                / degree;
+          grevillePoints[i] = AnyScalar(0.0);
+          for (int j = 0; j < degree; j++){
+            grevillePoints[i] += knots_[i+1+j];
+          }
+          grevillePoints[i] = grevillePoints[i] / degree;
         }
-
         return grevillePoints;
     }
 
@@ -144,65 +144,62 @@ namespace spline {
         return knots_.size() - degree - 1;
     }
 
-    BSplineBasis::BSplineBasis(const AnyVector& knots, int degree) {
+    BSplineBasis::BSplineBasis(const std::vector<AnyScalar>& knots, int degree) {
         assign_node(new BSplineBasisNode(knots, degree));
     }
 
-    BSplineBasisNode::BSplineBasisNode(const AnyVector& knots, int degree)
+    BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree)
         : UnivariateBasisNode(degree),
-      bspline_evaluator_(BSplineEvaluator::create("f", knots.size(), degree) ),
-      knots_(knots) { }
+      bspline_evaluator_(BSplineEvaluator::create("f", knots.size(), degree) ){
+        setKnots(knots);
+    }
 
-    BSplineBasis::BSplineBasis(const AnyVector& bounds, int degree, int numberOfIntervals)  {
+    BSplineBasis::BSplineBasis(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals)  {
       assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals));
     };
 
-    BSplineBasisNode::BSplineBasisNode(const AnyVector& bounds, int degree, int numberOfIntervals)
+    BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals)
           : UnivariateBasisNode(degree) {
         int numberOfKnots = 2*degree + numberOfIntervals;
-        knots_.resize(numberOfKnots, 0);
+        std::vector<AnyScalar> knot_vector(numberOfKnots);
 
         for (int i = 0; i < degree; ++i) {
-            knots_[i] = bounds[0];
-            knots_[numberOfKnots - i - 1] = bounds[1];
+            knot_vector[i] = bounds[0];
+            knot_vector[numberOfKnots - i - 1] = bounds[1];
         }
 
         for (int i = 0; i < numberOfIntervals; ++i) {
             double f = static_cast<double>(i)/(numberOfIntervals-1);
-            knots_[degree + i] = bounds[0] + (bounds[1] - bounds[0])*f;
+            knot_vector[degree + i] = bounds[0] + (bounds[1] - bounds[0])*f;
         }
-
-        setKnots(knots_);
+        setKnots(knot_vector);
     }
 
-    AnyVector BSplineBasis::getKnots() const { return (*this)->getKnots(); }
-    AnyVector BSplineBasisNode::getKnots() const {
+    std::vector<AnyScalar> BSplineBasis::getKnots() const { return (*this)->getKnots(); }
+    std::vector<AnyScalar> BSplineBasisNode::getKnots() const {
         return knots_;
     }
 
-    void BSplineBasis::setKnots(const AnyVector& knots) { return (*this)->setKnots (knots); }
-    void BSplineBasisNode::setKnots(const AnyVector& knots) {
-        knots_ = knots;
+    void BSplineBasis::setKnots(const std::vector<AnyScalar>& knots) { return (*this)->setKnots (knots); }
+    void BSplineBasisNode::setKnots(const std::vector<AnyScalar>& knots) {
+        AnyVector kn(vertcat(knots));
+        knots_ = kn.sort().to_scalar_vector();
     }
 
 
-    AnyTensor BSplineBasisNode::operator() (const AnyVector & x) const {
-        assert(x.size()==n_inputs());
+    AnyTensor BSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         return SubBasisEvalution(x);
     }
 
-    std::vector< std::vector < AnyScalar > > BSplineBasisNode::getEvaluationGrid() const {
-        std::vector< std::vector < AnyScalar > >ret;
+    std::vector< std::vector<AnyScalar> > BSplineBasisNode::getEvaluationGrid() const {
+        std::vector< std::vector<AnyScalar> > ret;
         for (auto const& point : greville()) {
-            ret.push_back(std::vector<AnyScalar> {point});
+          ret.push_back(std::vector<AnyScalar> {point});
         }
         return ret;
     }
 
-
-
     AnyTensor BSplineBasisNode::SubBasisEvalution(const std::vector< AnyScalar > & x_) const {
-        spline_assert(x_.size()>0);
         AnyScalar x = x_[0];
         TensorType t = AnyScalar::merge(AnyScalar::type(knots_), x.type());
 

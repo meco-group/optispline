@@ -1,5 +1,5 @@
-#ifndef BASIS_H_
-#define BASIS_H_
+#ifndef TENSORBASIS_H_
+#define TENSORBASIS_H_
 
 #include <iostream>
 #include <string>
@@ -112,4 +112,4 @@ namespace spline {
         Basis derivative(int order, int direction, AnyTensor& T) const;
     };
 }
-#endif  // BASIS_H_
+#endif  // TENSORBASIS_H_

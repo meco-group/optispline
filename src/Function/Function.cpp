@@ -3,6 +3,34 @@
 #include "../Basis/utils/EvaluationGrid.h"
 #include "../common.h"
 namespace spline {
+    Function::Function(const TensorBasis& basis, const Coefficient& coef) {
+        init(basis, coef);
+    }
+
+    Function::Function(const Basis& basis, const Coefficient& coef) {
+        init(TensorBasis(basis), coef);
+    }
+
+    void Function::init(const TensorBasis& basis_, const Coefficient& coef_) {
+        std::vector< int > dim_basis = basis_.dimension();
+        std::vector< int > dim_coef = coef_.getData().dims();
+
+        int total_size_coef = dim_coef.size();
+        spline_assert_message(dim_basis.size() <= total_size_coef,
+          "Dimensions of basis " << dim_basis << " and coefficient " <<
+          dim_coef << " can not be connected.");
+        spline_assert_message(dim_basis.size() + 2 >= total_size_coef,
+          "Dimensions of basis " << dim_basis << " and coefficient " <<
+          dim_coef << " can not be connected.");
+        for (int i = 0; i < dim_basis.size(); i++) {
+            spline_assert_message(dim_basis[i] == dim_coef[i],
+                "Mismatch of dimention " + std::to_string(i) + " between basis and coefficient: "
+                << "Got basis " << dim_basis << " and coefficient.");
+        }
+
+        basis = basis_;
+        coef = coef_.add_trival_dimension(2 + dim_basis.size() - dim_coef.size());
+    }
 
     AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const {
         return basis(x).inner(coef.getData());
@@ -58,6 +86,7 @@ namespace spline {
       std::vector< int > shapeCoef = coef.dimension();
       std::vector< int > shape = sumBasis.dimension();
       shape.insert(shape.end(), shapeCoef.begin(), shapeCoef.end());
+
       C = C.shape(shape);
       return Function(sumBasis, C);
     }

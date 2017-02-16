@@ -12,15 +12,18 @@
 namespace spline {
 
 #ifndef SWIG
+    class Coefficient;
+
     class CoefficientNode : public SharedObjectNode {
     public:
 
-        CoefficientNode(const AnyTensor& t) : data(t){}
+        CoefficientNode(const AnyTensor& t) : data(t) {}
         CoefficientNode(const std::vector< double >& v);
 
         std::vector< int > shape() const;
         std::vector< int > dimension() const;
 
+        Coefficient add_trival_dimension(int i) const;
         int getNumberCoefficents() const;
         // Coefficient operator+ (Coefficient & other) const;
         AnyTensor getData() const {return data;}
@@ -40,6 +43,7 @@ namespace spline {
         CoefficientNode* get() const ;
         CoefficientNode* operator->() const ;
 
+        Coefficient add_trival_dimension(int i) const;
         int getNumberCoefficents() const;
     #endif // SWIG
         Coefficient();

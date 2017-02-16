@@ -10,7 +10,6 @@
 #include "UnivariateBasis.h"
 
 namespace spline{
-    typedef std::vector<AnyScalar> AnyVector;
     class MonomialBasis;
 
 #ifndef SWIG
@@ -96,8 +95,8 @@ namespace spline{
     class BSplineBasisNode : public UnivariateBasisNode {
 
     public:
-        BSplineBasisNode(const AnyVector& knots, int degree);
-        BSplineBasisNode(const AnyVector& bounds, int degree, int numberOfIntervals);
+        BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree);
+        BSplineBasisNode(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals);
 
         virtual Basis operator+(const MonomialBasis& other) const ;
         virtual Basis operator+(const BSplineBasis& other) const ;
@@ -109,20 +108,20 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const ;
         virtual Basis operator*(const DummyBasis& other) const ;
 
-        AnyVector getKnots() const;
-        void setKnots(const AnyVector& knots) ;
+        void setKnots(const std::vector<AnyScalar>& knots) ;
+        std::vector<AnyScalar> getKnots() const;
 
-        AnyVector greville() const;
+        std::vector<AnyScalar> greville() const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
         virtual std::string getRepresentation() const ;
 
-        virtual AnyTensor operator()(const AnyVector& x) const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 
         virtual int getLength() const ;
 
-        AnyTensor SubBasisEvalution(const std::vector< AnyScalar >& x ) const ;
+        AnyTensor SubBasisEvalution(const std::vector<AnyScalar> & x ) const ;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
@@ -133,7 +132,7 @@ namespace spline{
 
 
         //  std::vector<bool> indector(int i, double x);
-        AnyVector knots_;
+        std::vector<AnyScalar> knots_;
     };
 
 #endif // SWIG
@@ -148,13 +147,13 @@ namespace spline{
         BSplineBasisNode* operator->() const ;
 #endif // SWIG
 
-        BSplineBasis(const AnyVector& knots, int degree);
-        BSplineBasis(const AnyVector& bounds, int degree, int numberOfIntervals);
+        BSplineBasis(const std::vector<AnyScalar>& knots, int degree);
+        BSplineBasis(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals);
 
-        AnyVector getKnots() const;
-        void setKnots(const AnyVector& knots) ;
+        std::vector<AnyScalar> getKnots() const;
+        void setKnots(const std::vector<AnyScalar>& knots) ;
 
-        AnyVector greville() const;
+        std::vector<AnyScalar> greville() const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
