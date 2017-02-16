@@ -75,7 +75,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         knotsint = 8
         b = BSplineBasis(np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)],degree)
         db,T = b.derivative(n_der)
-        x = casadi.SX.sym( 'x')
+        x = casadi.SX.sym('x')
         db_c = b([x])
         for i in range(0,n_der):
             db_c = casadi.jacobian(db_c, x)
@@ -83,16 +83,12 @@ class Test_Basis_BSplineBasis(BasisTestCase):
 
         g = np.r_([b.greville(), db.greville()])
         for i in g:
-            self.assertEqualT(db_c(i), db(i))
+            self.assertEqualT(np.array(db_c(i)).reshape(degree+1,), np.dot(T.transpose(),db([i])))
 
-        db,T = b.derivative(degree)
-
+        # test degreet'th+1 derivative, should give 0 T-matrix
         db,T = b.derivative(degree+1)
         T = np.reshape(T, np.prod(T.shape))
         self.assertTrue(all(T == 0))
-        g = b.greville()
-        for i in g:
-            self.assertTrue(all(db(i) == 0))
 
 
 
