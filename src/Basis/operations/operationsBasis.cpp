@@ -37,7 +37,7 @@ namespace spline {
                 returnBasis = returnBasis.addBasis(sum);
             }
 
-            returnBasis.setArguments(allArguments);
+            returnBasis = TensorBasis(returnBasis, allArguments);
 
         } else {
             spline_assert_message(b1.n_basis() == b2.n_basis(),
@@ -50,11 +50,11 @@ namespace spline {
             }
 
             if (b1.hasArguments()) {
-                returnBasis.setArguments(b1.getArguments());
+                returnBasis = TensorBasis(returnBasis, b1.getArguments());
             }
 
             if (b2.hasArguments()) {
-                returnBasis.setArguments(b2.getArguments());
+                returnBasis = TensorBasis(returnBasis, b2.getArguments());
             }
 
         }
