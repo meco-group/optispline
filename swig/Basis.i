@@ -140,6 +140,7 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, spline::Basis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
+    bool to_ptr(GUESTOBJECT *p, spline::Function** m);
 
     GUESTOBJECT * from_ptr(const std::vector<AnyScalar>* a);
     GUESTOBJECT * from_ptr(const AnyScalar *a);
@@ -148,6 +149,7 @@ using namespace spline;
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
     GUESTOBJECT * from_ptr(const spline::Basis *a);
     GUESTOBJECT * from_ptr(const spline::Coefficient *a);
+    GUESTOBJECT * from_ptr(const spline::Function *a);
     GUESTOBJECT *from_ptr(const DT *a);
     GUESTOBJECT *from_ptr(const ST *a);
     GUESTOBJECT *from_ptr(const MT *a);
@@ -501,6 +503,16 @@ using namespace spline;
       return false;
     }
 
+    bool to_ptr(GUESTOBJECT *p, spline::Function** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::Function*), 0))) {
+        return true;
+      }
+      return false;
+      }
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
       // Treat Null
       if (is_null(p)) return false;
@@ -631,6 +643,9 @@ using namespace spline;
     GUESTOBJECT* from_ptr(const spline::Coefficient *a) {
       return SWIG_NewPointerObj(new spline::Coefficient(*a), $descriptor(spline::Coefficient *), SWIG_POINTER_OWN);
     }
+    GUESTOBJECT* from_ptr(const spline::Function *a) {
+      return SWIG_NewPointerObj(new spline::Function(*a), $descriptor(spline::Function *), SWIG_POINTER_OWN);
+    }
 
     GUESTOBJECT* from_ptr(const spline::Basis *a) {
       if (dynamic_cast<const spline::MonomialBasisNode*>(a->get())) {;
@@ -739,6 +754,8 @@ using namespace spline;
 %casadi_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %casadi_template("[DTensor]", PREC_MXVector, std::vector< Tensor<casadi::DM> >)
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
+%casadi_template("[Function]", PREC_MXVector, std::vector< spline::Function >)
+%casadi_typemaps("Function", PREC_MX, spline::Function)
 
 %casadi_template("[int]", PREC_IVector, std::vector<int>)
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Index >)
