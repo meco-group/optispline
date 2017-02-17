@@ -311,7 +311,7 @@ namespace spline {
         return (*this)->derivative(orders, direction_ind, T);
     }    
 
-    TensorBasis TensorBasis::derivative(const std::vector<int> orders, const std::vector<Argument>& directions, std::vector<AnyTensor>& T) const {
+    TensorBasis TensorBasis::derivative(const std::vector<int>& orders, const std::vector<Argument>& directions, std::vector<AnyTensor>& T) const {
         std::vector<NumericIndex> direction_ind(directions.size());
         for (int i=0; i<directions.size(); i++){
             direction_ind[i] = indexArgument(directions[i]);
@@ -319,11 +319,11 @@ namespace spline {
         return (*this)->derivative(orders, direction_ind, T);
     }
 
-    TensorBasis TensorBasis::derivative(const std::vector<int> orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
+    TensorBasis TensorBasis::derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
         return (*this)->derivative(orders, direction_ind, T);
     }
 
-    TensorBasis TensorBasisNode::derivative(const std::vector<int> orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
+    TensorBasis TensorBasisNode::derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
         // Call derivative on basis, for corresponding direction
 
         std::vector<Basis> new_bases(direction_ind.size());
