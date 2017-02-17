@@ -724,17 +724,16 @@ using namespace spline;
               ind.append(i)
           return self.index(ind)
 %}
+
 %enddef
+%define %tensor_like_helpers(arraypriority)
+   %tensor_helpers(arraypriority)
+%enddef
+
+
 #else
-%define %tensor_helpers(arraypriority)
+%define %tensor_like_helpers(arraypriority)
 %matlabcode %{
-   function varargout = subsref(self,s)
-      if numel(s)==1 & s.type=='()'
-        [varargout{1:nargout}]= index_helper(self, s.subs{:});
-      else
-        [varargout{1:nargout}] = builtin('subsref',self,s);
-      end
-   end
    function out = index_helper(self, varargin)
       args = [];
       for i=1:numel(varargin)
@@ -747,6 +746,20 @@ using namespace spline;
       out = index(self,args);
    end
 %}
+%enddef
+
+%define %tensor_helpers(arraypriority)
+%matlabcode %{
+   function varargout = subsref(self,s)
+      if numel(s)==1 & s.type=='()'
+        [varargout{1:nargout}]= index_helper(self, s.subs{:});
+      else
+        [varargout{1:nargout}] = builtin('subsref',self,s);
+      end
+   end
+%}
+
+%tensor_like_helpers(arraypriority)
 %enddef
 #endif
 
@@ -880,7 +893,7 @@ namespace spline {
 
 namespace spline {
 %extend Function {
-  %tensor_helpers(2003.0)
+  %tensor_like_helpers(2003.0)
 }
 }
 
@@ -904,11 +917,36 @@ namespace spline {
     Function spline_plus(const AnyTensor& lhs, const Function& rhs) { return rhs+lhs; }
     Function spline_minus(const AnyTensor& lhs, const Function& rhs) { return (-rhs)+lhs; }
     Function spline_times(const AnyTensor& lhs, const Function& rhs) { return rhs*lhs; }
-    Function spline_mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(lhs); }
+    Function spline_mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.rmtimes(lhs); }
     Function spline_rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
   }
 }
 
+
+#ifdef SWIGMATLAB
+// Wrap (static) member functions
+%feature("nonstatic");
+namespace spline {
+  %extend Function {
+    static Function plus(const Function& lhs, const Function& rhs) { return lhs+rhs; }
+    static Function minus(const Function& lhs, const Function& rhs) { return lhs-rhs; }
+    static Function times(const Function& lhs, const Function& rhs) { return lhs*rhs; }
+    static Function mtimes(const Function& lhs, const Function& rhs) { return lhs.mtimes(rhs); }
+    static Function rmtimes(const Function& lhs, const Function& rhs) { return rhs.mtimes(lhs); }
+    static Function plus(const Function& lhs, const AnyTensor& rhs) { return lhs+rhs; }
+    static Function minus(const Function& lhs, const AnyTensor& rhs) { return lhs-rhs; }
+    static Function times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
+    static Function mtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
+    static Function rmtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.rmtimes(rhs); }
+    static Function plus(const AnyTensor& lhs, const Function& rhs) { return rhs+lhs; }
+    static Function minus(const AnyTensor& lhs, const Function& rhs) { return (-rhs)+lhs; }
+    static Function times(const AnyTensor& lhs, const Function& rhs) { return rhs*lhs; }
+    static Function mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.rmtimes(lhs); }
+    static Function rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
+  }
+} // namespace casadi
+%feature("nonstatic", "");
+#endif // SWIGMATLAB
 
 #ifdef WINMAT64
 %begin %{

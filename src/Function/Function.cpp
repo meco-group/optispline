@@ -178,7 +178,7 @@ namespace spline {
     }
 
     Function Function::mtimes(const AnyTensor& t) const {
-        if (t.is_scalar() && t.dims()!=shape()) return operator*(AnyTensor::repeat(t.as_scalar(), t.dims()));
+        if (t.is_scalar()) return operator*(t);
         spline_assert(t.n_dims() == 2);
         Coefficient c = getCoefficient();
         int dir = n_inputs() + 1; //0 based, 2nd matrix dimension
@@ -421,7 +421,7 @@ namespace spline {
         std::vector<Function> Jacobian(n_inputs());
         for (int i=0; i<n_inputs(); i++){
             Jacobian[i] = derivative(1,i);
-        }   
+        }
         return Jacobian;
     }
 

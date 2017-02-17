@@ -13,7 +13,7 @@ p(2,3)
 
 s1 = MonomialBasis(2);
 s2 = MonomialBasis(3);
-b = TensorBasis({s1,s2});
+b = TensorBasis({s1,s2},{'x','y'});
 
 fail = false;
 try,p = b.getBasis(0),catch,fail = true;end
@@ -27,8 +27,6 @@ p = b.getBasis(1);
 assert(p.getDegree()== 2);
 p = b.getBasis(2);
 assert(p.getDegree()== 3);
-
-b.setArguments({'x','y'});
 
 p = b.getBasis(1);
 assert(p.getDegree()== 2);

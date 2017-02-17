@@ -470,6 +470,7 @@ class Tensor {
   }
 
   Tensor mtimes(const Tensor &rhs) const {
+    if (rhs.is_scalar() || is_scalar()) return operator*(rhs);
     if(n_dims()==0 && rhs.n_dims()==2){
         return einstein(rhs, {}, {-1, -2}, {-1, -2});
     }
