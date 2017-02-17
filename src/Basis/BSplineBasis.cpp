@@ -248,7 +248,7 @@ namespace spline {
         std::vector<AnyScalar> knots = getKnots();
         std::vector<AnyScalar> new_knots(knots.begin() + order, knots.end() - order);
         Basis new_basis = BSplineBasis(new_knots, deg - order);  // New basis
-               
+
         std::vector<AnyScalar> data(n_dim*n_dim,0);  // initialization of data of transformation matrix
         for(int i=0; i<n_dim; i++){
             data[i*(n_dim+1)] = 1.;  // to make eye matrix
@@ -259,7 +259,7 @@ namespace spline {
         for (int i=0; i<order; i++){
             knots.erase(knots.begin()); // remove first element
             knots.pop_back();  // remove last element
-            
+
             data.resize(n_dim_new*n_dim);
             std::fill(data.begin(), data.end(), 0);
 
@@ -273,7 +273,7 @@ namespace spline {
                     c_j = deg/(knots[j+deg]-knots[j]);
                 }
                 data[j*(n_dim-1)+j] = c_j*(-1);
-                data[(j+1)*(n_dim-1)+j] = c_j;                                
+                data[(j+1)*(n_dim-1)+j] = c_j;
             }
             T_ = mtimes(vertcat(data).shape({n_dim_new, n_dim}), T_);  // multiply transformation matrices, for higher order
             n_dim_new--;

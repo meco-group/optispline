@@ -25,7 +25,7 @@ namespace spline {
         for (int i = 0; i < dim_basis.size(); i++) {
             spline_assert_message(dim_basis[i] == dim_coef[i],
                 "Mismatch of dimention " + std::to_string(i) + " between basis and coefficient: "
-                << "Got basis " << dim_basis << " and coefficient.");
+                << "Got basis " << dim_basis << " and coefficient" << dim_coef <<".");
         }
 
         basis = basis_;
@@ -222,7 +222,7 @@ namespace spline {
       const std::vector<Argument> & arg) const {
       std::vector<NumericIndex> arg_ind(arg.size());
       for (int i=0; i<arg.size(); i++) {
-        arg_ind[0] = getTensorBasis().indexArgument(arg[i]);
+        arg_ind[i] = getTensorBasis().indexArgument(arg[i]);
       }
       return insert_knots(new_knots, arg_ind);
     }
@@ -233,7 +233,6 @@ namespace spline {
       std::vector<AnyTensor> T;
       TensorBasis tbasis = getTensorBasis();
       TensorBasis new_tbasis = tbasis.insert_knots(new_knots, T, arg_ind);
-      std::vector<NumericIndex> directions(arg_ind.size());
       Coefficient new_coefficient = getCoefficient().transform(T, arg_ind);
       return Function(new_tbasis, new_coefficient);
     }
@@ -242,7 +241,7 @@ namespace spline {
       // apply on all directions
       std::vector<NumericIndex> arg_ind(getTensorBasis().n_basis());
       std::vector<int> refs(getTensorBasis().n_basis());
-      for (int k=0; k<arg_ind.size(); k++){
+      for (int k=0; k<arg_ind.size(); k++) {
         arg_ind[k] = k;
         refs[k] = refinement;
       }
@@ -261,7 +260,7 @@ namespace spline {
       const std::vector<Argument> & arg) const {
       std::vector<NumericIndex> arg_ind(arg.size());
       for (int i=0; i<arg.size(); i++) {
-        arg_ind[0] = getTensorBasis().indexArgument(arg[i]);
+        arg_ind[i] = getTensorBasis().indexArgument(arg[i]);
       }
       return midpoint_refinement(refinement, arg_ind);
     }
@@ -272,7 +271,6 @@ namespace spline {
       std::vector<AnyTensor> T;
       TensorBasis tbasis = getTensorBasis();
       TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement, T, arg_ind);
-      std::vector<NumericIndex> directions(arg_ind.size());
       Coefficient new_coefficient = getCoefficient().transform(T, arg_ind);
       return Function(new_tbasis, new_coefficient);
     }
