@@ -264,6 +264,32 @@ class Test_Function_Operations(BasisTestCase):
             self.assertEqualT(fm4(_x,_y),func1_value[k]*M)
             self.assertEqualT(fm5(_x,_y),numpy.dot(func1_value[k],N))
             
+    def test_trace(self):
+        knots1 = [0,0,0.4,1,1]
+        degree = 1
+        basis1 = Basis.BSplineBasis(knots1,degree)
+
+        basis2 = MonomialBasis(2);
+
+        mbasis = TensorBasis([basis1,basis2]);
+
+        coeff1 = DTensor(numpy.random.randn(81,1),[3,3,3,3])
+        coeff2 = DTensor(numpy.random.randn(9*12,1),[3,3,3,4])
+        func1 = Function(mbasis,coeff1)
+        func2 = Function(mbasis,coeff2)
+        tr = func1.trace()
+
+        with self.assertRaises(Exception):
+            DTensor.concat(func2.trace())
+
+        N = 10
+        x = numpy.random.random(N)
+        y = numpy.random.random(N)
+        for k in range(0,N):
+            _x = x[k]
+            _y = y[k]
+            self.assertAlmostEqual(numpy.trace(func1(_x,_y)), tr(_x,_y))
+        self.assertEqualT(tr.shape, [1,1])
 
 if __name__ == '__main__':
     unittest.main()
