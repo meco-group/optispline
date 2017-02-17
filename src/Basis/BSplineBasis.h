@@ -129,6 +129,7 @@ namespace spline{
 
         virtual Basis derivative(int order, AnyTensor& T) const override;
         virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const override;
+        virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const override;
 
     private:
         mutable Function bspline_evaluator_;

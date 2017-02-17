@@ -60,6 +60,8 @@ namespace spline {
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
         TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & T, const std::vector<NumericIndex>& arg_ind) const;
+        TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & T, const std::vector<NumericIndex>& arg_ind) const;
+
         // Basis derivative(int order, int direction, AnyTensor& T) const;
 
     // protected:
@@ -122,6 +124,10 @@ namespace spline {
 
         TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<Argument>& args) const;
         TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<NumericIndex>& arg_ind) const;
+
+        TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<Argument>& args) const;
+        TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<NumericIndex>& arg_ind) const;
+
         // Basis derivative(int order, int direction, AnyTensor& T) const;
     };
 }

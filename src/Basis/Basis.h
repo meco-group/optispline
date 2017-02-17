@@ -47,6 +47,8 @@ namespace spline {
 
         // virtual Basis derivative(int order, int direction) const;
         virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const;
+        virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const;
+
     };
 
 #endif // SWIG
@@ -78,6 +80,8 @@ namespace spline {
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;
+        Basis midpoint_refinement(int refinement, AnyTensor& SWIG_OUTPUT(T)) const;
+
         int dimension() const;
         int n_inputs() const;
 

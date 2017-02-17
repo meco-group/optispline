@@ -310,4 +310,30 @@ namespace spline {
       T = T_;
       return ret;
     }
+
+    Basis BSplineBasisNode::midpoint_refinement(int refinement, AnyTensor& T) const {
+      // check if numeric knots
+      spline_assert_message(AnyScalar::is_double(getKnots()),
+        "Midpoint refinement only possible with numeric knot sequence.");
+      std::vector<double> knots = AnyScalar::as_double(getKnots());
+      // build inserted knot vector
+      std::vector<AnyScalar> new_knots(0);
+      int j;
+      for (int i=0; i<knots.size(); i+=j) {
+          j = 1;
+          while ((i+j < knots.size()) && (knots[i+j] == knots[i])) {
+            j++;
+          }
+          if (i+j < knots.size()) {
+            double den = pow(2, refinement);
+            for (int num=1; num<den; num++) {
+                new_knots.push_back(((den - 1.*num)/den)*knots[i]+((1.*num)/den)*knots[i+j]);
+            }
+          }
+      }
+
+
+      // invoke knot insertion
+      return insert_knots(vertcat(new_knots), T);
+    }
 } // namespace spline

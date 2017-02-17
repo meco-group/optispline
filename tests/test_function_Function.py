@@ -155,13 +155,23 @@ class Test_Function_Function(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), float(s2_ev(knots_add, i)), 1e-6)
 
+    def test_midpoint_refinement(self):
         np.random.seed(0)
         degree = 3
         knotsint = 8
-        knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
-        bs = BSplineBasis(knots,degree)
-        bm = MonomialBasis(degree)
-        b = TensorBasis([m])
+        knots1 = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+        b1 = BSplineBasis(knots1,degree)
+        c1 = np.random.rand(b1.dimension())
+        s1 = Function(b1,c1)
+        ref = 2
+        s2 = s1.midpoint_refinement(ref)
+        b2 = s2.getBasis()
+        knots2 = np.r_[np.zeros(degree),np.linspace(0., 1., 2*ref*(knotsint-1)+1), np.ones(degree)]
+        self.assertEqualT(knots2, b2.getKnots(), 1e-6)
+        self.assertEqualT(degree, b2.getDegree(), 1e-6)
+        g2 = b2.greville()
+        for i in g2:
+            self.assertEqualT(s1(i), s2(i), 1e-6)
 
     # def test_insert_knots_multivariate(self):
     #     return

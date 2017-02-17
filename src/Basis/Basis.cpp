@@ -86,10 +86,19 @@ namespace spline {
         return Basis();
     }
 
+    Basis BasisNode::midpoint_refinement(int refinement, AnyTensor& T) const {
+        spline_assert_message(false, getRepresentation() << " can not refine knots.");
+        return Basis();
+    }
 
     Basis Basis::insert_knots(const AnyVector & new_knots, AnyTensor & T) const {
         return (*this)->insert_knots(new_knots, T);
     }
+
+    Basis Basis::midpoint_refinement(int refinement, AnyTensor& T) const {
+        return (*this)->midpoint_refinement(refinement, T);
+    }
+
 
     int Basis::dimension() const { return (*this)->dimension();}
     int Basis::n_inputs() const { return (*this)->n_inputs();}

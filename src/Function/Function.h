@@ -60,6 +60,15 @@ namespace spline {
             const std::vector<Argument> & arg) const;
         Function insert_knots(const std::vector<AnyVector> & new_knots,
             const std::vector<NumericIndex> & arg_ind) const;
+
+        Function midpoint_refinement(int refinement) const;
+        Function midpoint_refinement(int refinement, const NumericIndex & arg_ind) const;
+        Function midpoint_refinement(int refinement, const Argument & arg) const;
+        Function midpoint_refinement(const std::vector<int> & refinement,
+            const std::vector<Argument> & arg) const;
+        Function midpoint_refinement(const std::vector<int> & refinement,
+            const std::vector<NumericIndex> & arg_ind) const;
+
         // Function derivative(int order, int direction) const;
 
     public:
