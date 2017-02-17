@@ -284,9 +284,44 @@ namespace spline {
         return substitute_bases(NumericIndex::as_index(arg_ind), new_bases);
     }
 
-    // Basis TensorBasis::derivative(int order, int direction, AnyTensor& T) const {
-        // Call univariate_derivative on basis, for each direction
-    // }
+    TensorBasis TensorBasis::derivative(const std::vector<Argument>& directions, std::vector<AnyTensor>& T) const {
+        // default derivative is with order = 1
+        std::vector<NumericIndex> direction_ind(directions.size());
+        std::vector<int> orders(directions.size(), 1);
+        for (int i=0; i<directions.size(); i++){
+            direction_ind[i] = indexArgument(directions[i]);
+        }
+        return (*this)->derivative(orders, direction_ind, T);
+    }
 
+    TensorBasis TensorBasis::derivative(const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
+        // default derivative is with order = 1
+        std::vector<int> orders(direction_ind.size(), 1);
+        return (*this)->derivative(orders, direction_ind, T);
+    }    
+
+    TensorBasis TensorBasis::derivative(const std::vector<int> orders, const std::vector<Argument>& directions, std::vector<AnyTensor>& T) const {
+        std::vector<NumericIndex> direction_ind(directions.size());
+        for (int i=0; i<directions.size(); i++){
+            direction_ind[i] = indexArgument(directions[i]);
+        }
+        return (*this)->derivative(orders, direction_ind, T);
+    }
+
+    TensorBasis TensorBasis::derivative(const std::vector<int> orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
+        return (*this)->derivative(orders, direction_ind, T);
+    }
+
+    TensorBasis TensorBasisNode::derivative(const std::vector<int> orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
+        // Call derivative on basis, for corresponding direction
+
+        std::vector<Basis> new_bases(direction_ind.size());
+        std::vector<AnyTensor> T_(direction_ind.size());
+        for (int i=0; i < direction_ind.size(); i++){
+            new_bases[i] = getBasis(direction_ind[i].index()).derivative(orders[i], T_[i]);
+        }
+        T = T_;
+        return substitute_bases(NumericIndex::as_index(direction_ind), new_bases);
+    }
 
 } // namespace spline
