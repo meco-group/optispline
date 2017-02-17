@@ -723,6 +723,7 @@ using namespace spline;
 %casadi_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
 %casadi_typemaps("AnyVector", PREC_MX, AnyVector)
+%casadi_typemaps("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_typemaps("argument", PREC_MX, spline::Argument)
 %casadi_typemaps("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_typemaps("index", PREC_MX, spline::Index)
