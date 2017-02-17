@@ -23,6 +23,7 @@ namespace spline {
         virtual Basis operator*(const BSplineBasis& other) const ;
 
         virtual std::string getRepresentation() const ;
+        virtual Basis derivative(int order, AnyTensor& T) const override ;
     };
 
 

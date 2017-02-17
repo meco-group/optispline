@@ -41,4 +41,10 @@ namespace spline {
     Basis DummyBasisNode::operator* (const BSplineBasis& other) const  {
         return other.get()->shared_from_this< BSplineBasis >();
     }
+
+    Basis DummyBasisNode::derivative(int order, AnyTensor& T) const {
+        spline_assert(false) ;
+        return shared_from_this< Basis >();
+    }
+
 }  // namespace spline
