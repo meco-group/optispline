@@ -103,7 +103,8 @@ namespace spline {
 
       int numberEval = basisEvaluated.size();
       int numberBasis = sumBasis.totalNumberBasisFunctions();
-      int numberCoef = coef.getNumberCoefficents();
+      std::vector< int > elemShape = sumFunctionEvaluated[0].dims();
+      int numberCoef = (elemShape.size() == 0)? 1: elemShape[0]*elemShape[1];
 
       std::vector< int > shapeA = {numberEval, numberBasis};
       std::vector< int > shapeB = {numberBasis, numberCoef};
@@ -111,7 +112,7 @@ namespace spline {
       B = B.shape(shapeB);
       AnyTensor C = A.solve(B);
 
-      std::vector< int > shapeCoef = coef.shape();
+      std::vector< int > shapeCoef = elemShape;
       std::vector< int > shapeBasis = sumBasis.dimension();
       shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
 
