@@ -23,9 +23,6 @@ namespace spline {
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const ;
 
-
-        static int foo(const AnyVector& a) { return 1;}
-
         Function operator+(const Function& f) const ;
         Function operator+(const AnyScalar& a) const ;
         Function operator+(const AnyTensor& t) const ;

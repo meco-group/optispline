@@ -182,7 +182,7 @@ class Tensor {
   bool is_scalar() const { return squeeze().n_dims()==0; }
   T as_scalar() const { if (is_scalar()) return data_[0]; }
 
-  bool is_vector() const { return squeeze().n_dims()==1; }
+  bool is_vector() const { return squeeze().n_dims()<=1; }
 
   T data() const { return data_; }
   T matrix() const {
