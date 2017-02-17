@@ -202,6 +202,21 @@ namespace spline {
         return Function(getTensorBasis(), getCoefficient().transpose());
     }
 
+    Function Function::trace() const {
+        std::vector< int > shape_ = shape();
+        spline_assert_message(shape_[0] == shape_[1], "Trace only defined for square matrices. Dimensions are " << shape_ << ".");
+
+        AnyTensor t = DT(DM::densify(DM::eye(shape_[0])));
+        Function fdiag = operator*(t); //keep diagonal entries only
+        
+        Coefficient cdiag = fdiag.getCoefficient();
+        AnyTensor ones = AnyTensor::repeat(AnyScalar(1), std::vector< int >{1,shape_[0]});
+        cdiag = cdiag.transform(ones, cdiag.dimension().size()); //sum over all columns
+        cdiag = cdiag.transform(ones, cdiag.dimension().size()+1); //sum over all rows
+
+        return Function(getTensorBasis(), cdiag);
+    }
+
     std::string Function::getRepresentation() const {return "Function";};
 
     int Function::n_inputs() const {
