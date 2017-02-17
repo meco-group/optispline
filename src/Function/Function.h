@@ -53,6 +53,8 @@ namespace spline {
         void repr() const { userOut() << getRepresentation() << std::endl;}
         // Argument& getArgument (){ return getBasis().getArgument();}
 
+        static void homogenize_args(Function& f, AnyTensor& t);
+
         int n_inputs() const;  // Number of inputs of the function
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
 
@@ -72,13 +74,23 @@ namespace spline {
         Function midpoint_refinement(const std::vector<int> & refinement,
             const std::vector<NumericIndex> & arg_ind) const;
 
-        Function derivative(const std::vector<NumericIndex>& direction_ind) const;
-        Function derivative(const std::vector<Argument>& directions) const;
+        Function derivative() const;
+        Function derivative(int order) const;
+        Function derivative(int order, const Argument& direction) const;
+        Function derivative(int order, const NumericIndex& direction) const;
         Function derivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const;
         Function derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
 
+        Function antiderivative() const;
+        Function antiderivative(int order) const;
+        Function antiderivative(int order, const Argument& direction) const;
+        Function antiderivative(int order, const NumericIndex& direction) const;
+        Function antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const;
+        Function antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
+
         Function transform_to(const TensorBasis& basis) const ;
 
+        Function cat(const NumericIndex& index, const std::vector< spline::Function >& f) const;
     public:
         TensorBasis basis;
         Coefficient coef;
