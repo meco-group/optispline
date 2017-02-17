@@ -209,6 +209,35 @@ class Test_Function_Function(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
+    # def test_insert_knots_multivariate(self):
+    #     return
+    #     np.random.seed(0)
+    #     degree = 3
+    #     knotsint = 8
+    #     knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+    #     bs = BSplineBasis(knots,degree)
+    #     bm = MonomialBasis(degree)
+    #     b = TensorBasis([m])
+
+    def test_derivative_univariate(self):
+        # Make one spline and compute derivative
+        np.random.seed(0)
+        degree = 3
+        knotsint = 8
+        knots1 = np.r_[np.zeros(degree),np.linspace(0., 1., knotsint), np.ones(degree)]
+        b1 = BSplineBasis(knots1, degree)
+        c1 = np.random.rand(b1.dimension())
+        s1 = Function(b1, c1)
+
+    def test_derivative_univariate(self):
+        # Make one spline and compute derivative
+        np.random.seed(0)
+        degree = 3
+        knotsint = 8
+        knots1 = np.r_[np.zeros(degree),np.linspace(0., 1., knotsint), np.ones(degree)]
+        b1 = BSplineBasis(knots1, degree)
+        c1 = np.random.rand(b1.dimension())
+        s1 = Function(b1, c1)
 
 if __name__ == '__main__':
     unittest.main()
