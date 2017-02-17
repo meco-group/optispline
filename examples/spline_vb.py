@@ -107,7 +107,7 @@ t_via = sol.value(t_via)
 time = np.linspace(0, T, 101)
 
 x = sol.value(x)
-
+"""
 x.getBasis().setKnots(list(T*knots))
 
 y = sol.value(y)
@@ -140,3 +140,4 @@ plt.subplot(2, 1, 2)
 plt.plot(time, vy_s)
 
 plt.show(block=True)
+"""
