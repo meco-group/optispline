@@ -219,24 +219,13 @@ class Test_Function_Function(BasisTestCase):
     #     bm = MonomialBasis(degree)
     #     b = TensorBasis([m])
 
-    # def test_derivative_univariate(self):
-    #     # Make one spline and compute derivative
-    #     np.random.seed(0)
-    #     degree = 3
-    #     knotsint = 8
-    #     knots1 = np.r_[np.zeros(degree),np.linspace(0., 1., knotsint), np.ones(degree)]
-    #     b1 = BSplineBasis(knots1, degree)
-    #     c1 = np.random.rand(b1.dimension())
-    #     s1 = Function(b1, c1)
-
     def test_derivative_multivariate(self):
-        return
         d0 = 4
         k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,8),np.ones(d0)]
         b0 = BSplineBasis(k0,d0)
         n_der0 = 2
         db0,T0 = b0.derivative(n_der0)
-        g0 = db0.greville
+        g0 = db0.greville()
         x0 = casadi.SX.sym('x0')
         db0_c = b0([x0])
         for i in range(0,n_der0):
@@ -247,7 +236,7 @@ class Test_Function_Function(BasisTestCase):
         b1 = MonomialBasis(d1)
         n_der1 = 1
         db1 = b1.derivative(n_der1)
-        g0 = db0.greville
+        g1 = db0.greville()
         x1 = casadi.SX.sym('x1')
         db1_c = b1([x1])
         for i in range(0,n_der1):
@@ -256,11 +245,11 @@ class Test_Function_Function(BasisTestCase):
 
         c = np.random.rand(b0.dimension(),b1.dimension())
         f = Function(TensorBasis([b0,b1]), c)
-        df = f.derivative([n_der0, n_der1])
+        df = f.derivative([n_der0, n_der1], [0,1])
 
         for i0 in g0:
             for i1 in g1:
-                self.assertEqual(np.array(db0_c(i0)).T.dot(c).dot(db1_c(i1)), df(i0,i1))
+                self.assertEqualT(np.array(db0_c(i0)).T.dot(c).dot(db1_c(i1))[0][0], df(i0,i1))
 
     def test_transform_to(self):
         b = BSplineBasis([0, 1], 3, 2)
