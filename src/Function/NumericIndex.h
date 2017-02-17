@@ -19,14 +19,14 @@ namespace spline {
         static std::vector<int> as_int(const std::vector<NumericIndex>& ind){
             std::vector<int> ret(ind.size());
             for (int i=0; i<ind.size(); i++){
-                ret[i] = ind[0].index();
+                ret[i] = ind[i].index();
             }
             return ret;
         }
         static std::vector<Index> as_index(const std::vector<NumericIndex>& ind){
             std::vector<Index> ret(ind.size());
             for (int i=0; i<ind.size(); i++){
-                ret[i] = ind[0].index();
+                ret[i] = ind[i].index();
             }
             return ret;
         }

@@ -154,15 +154,11 @@ namespace spline {
     BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree)
         : UnivariateBasisNode(degree),
       bspline_evaluator_(BSplineEvaluator::create("f", knots.size(), degree) ){
-        setKnots(knots);
-    }
+        AnyVector kn(vertcat(knots));
+        knots_ = kn.sort().to_scalar_vector();
+      }
 
     BSplineBasis::BSplineBasis(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals)  {
-      assign_node(new BSplineBasisNode(bounds, degree, numberOfIntervals));
-    };
-
-    BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals)
-          : UnivariateBasisNode(degree) {
         int numberOfKnots = 2*degree + numberOfIntervals;
         std::vector<AnyScalar> knot_vector(numberOfKnots);
 
@@ -175,20 +171,13 @@ namespace spline {
             double f = static_cast<double>(i)/(numberOfIntervals-1);
             knot_vector[degree + i] = bounds[0] + (bounds[1] - bounds[0])*f;
         }
-        setKnots(knot_vector);
-    }
+      assign_node(new BSplineBasisNode(knot_vector, degree));
+    };
 
     std::vector<AnyScalar> BSplineBasis::getKnots() const { return (*this)->getKnots(); }
     std::vector<AnyScalar> BSplineBasisNode::getKnots() const {
         return knots_;
     }
-
-    void BSplineBasis::setKnots(const std::vector<AnyScalar>& knots) { return (*this)->setKnots (knots); }
-    void BSplineBasisNode::setKnots(const std::vector<AnyScalar>& knots) {
-        AnyVector kn(vertcat(knots));
-        knots_ = kn.sort().to_scalar_vector();
-    }
-
 
     AnyTensor BSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         return SubBasisEvalution(x);
@@ -248,7 +237,7 @@ namespace spline {
         std::vector<AnyScalar> knots = getKnots();
         std::vector<AnyScalar> new_knots(knots.begin() + order, knots.end() - order);
         Basis new_basis = BSplineBasis(new_knots, deg - order);  // New basis
-               
+
         std::vector<AnyScalar> data(n_dim*n_dim,0);  // initialization of data of transformation matrix
         for(int i=0; i<n_dim; i++){
             data[i*(n_dim+1)] = 1.;  // to make eye matrix
@@ -259,7 +248,7 @@ namespace spline {
         for (int i=0; i<order; i++){
             knots.erase(knots.begin()); // remove first element
             knots.pop_back();  // remove last element
-            
+
             data.resize(n_dim_new*n_dim);
             std::fill(data.begin(), data.end(), 0);
 
@@ -273,7 +262,7 @@ namespace spline {
                     c_j = deg/(knots[j+deg]-knots[j]);
                 }
                 data[j*(n_dim-1)+j] = c_j*(-1);
-                data[(j+1)*(n_dim-1)+j] = c_j;                                
+                data[(j+1)*(n_dim-1)+j] = c_j;
             }
             T_ = mtimes(vertcat(data).shape({n_dim_new, n_dim}), T_);  // multiply transformation matrices, for higher order
             n_dim_new--;

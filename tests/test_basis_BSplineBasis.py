@@ -58,7 +58,6 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         c1 = np.random.rand(b1.dimension())
         s1 = Function(b1,c1)
         knots_add = np.random.rand(2)
-        # knots_add = 0.1
         b2,T = b1.insert_knots(knots_add)
         knots2 = np.sort(np.r_[knots_add, knots1])
         self.assertEqualT(knots2, b2.getKnots(), tol=1e-6)
@@ -67,6 +66,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         g2 = b2.greville()
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
+        b2,T = b1.insert_knots(0.1)
 
     def test_midpoint_refinement(self):
         np.random.seed(0)
@@ -87,7 +87,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
     def test_derivative(self):
-        
+
         # Check first derivative
         n_der = 1
         degree = 3
