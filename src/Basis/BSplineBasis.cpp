@@ -273,6 +273,39 @@ namespace spline {
         return new_basis;
     }
 
+    Basis BSplineBasisNode::antiderivative(int order, AnyTensor& T) const {
+        int n_dim = getLength();
+        int n_dim_new = n_dim;
+        int deg = getDegree();
+        std::vector<AnyScalar> knots = getKnots();
+        // construct coefficient transformation matrix
+        std::vector<AnyScalar> data(n_dim*n_dim,0);
+        for(int i=0; i<n_dim; i++) {
+            data[i*(n_dim+1)] = 1.;
+        }
+        AnyTensor T_ = vertcat(data).shape({n_dim, n_dim});
+        AnyScalar val;
+        for (int k=0; k<order; k++) {
+        	deg++;
+        	n_dim_new++;
+            data.resize(n_dim_new*n_dim);
+            std::fill(data.begin(), data.end(), 0);
+            for (int i=0;  i<n_dim; i++) {
+            	val = (knots[i+deg] - knots[i])/deg;
+            	for (int j=i*(n_dim+1)+i+1; j<=i*(n_dim+1)+n_dim; j++) {
+            		data[j] = val;
+            	}
+            }
+            T_ = mtimes(vertcat(data).shape({n_dim_new, n_dim}), T_);
+            knots.insert(knots.begin(), knots[0]);
+            knots.insert(knots.end(), knots[knots.size()-1]);
+           	n_dim++;
+        }
+        T = T_;
+        // construct new basis
+        return BSplineBasis(knots, deg);
+    }
+
     Basis BSplineBasisNode::insert_knots(const AnyVector & new_knots,
       AnyTensor & T) const {
       // construct coefficient transformation matrix

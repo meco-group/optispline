@@ -121,4 +121,31 @@ namespace spline {
         }
     }
 
+    Basis MonomialBasisNode::antiderivative(int order, AnyTensor& T) const {
+        int dim = dimension();
+        int dim_new = dim;
+        int deg = getDegree();
+        // construct coefficient transformation matrix
+        std::vector<AnyScalar> data(dim*dim,0);
+        for(int i=0; i<dim; i++) {
+            data[i*(dim+1)] = 1.;
+        }
+        AnyTensor T_ = vertcat(data).shape({dim, dim});
+        AnyScalar val;
+        for (int k=0; k<order; k++){
+            deg++;
+            dim_new++;
+            data.resize(dim_new*dim);
+            std::fill(data.begin(), data.end(), 0);
+            for (int i=0; i<dim; i++) {
+                data[i*(dim_new+1)+1] = 1./(i+1);
+            }
+            T_ = mtimes(vertcat(data).shape({dim_new, dim}), T_);
+            dim++;
+        }
+        T = T_;
+        // construct new basis
+        return MonomialBasis(deg);
+    }
+
 } // namespace spline

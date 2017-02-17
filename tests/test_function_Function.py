@@ -278,11 +278,16 @@ class Test_Function_Function(BasisTestCase):
         init1 = np.random.rand(n1);
 
         c = np.random.rand(b0.dimension(),b1.dimension())
-        f = Function(TensorBasis([b0,b1]), c)
+        f = Function(TensorBasis([b0,b1], ['x', 'y']), c)
         ff = f.antiderivative([n0, n1], [0,1]).derivative([n0, n1], [0,1])
         for i0 in g0:
             for i1 in g1:
-                self.assertEqual(f(i0,i1), ff(i0,i1))
+                self.assertEqualT(f(i0,i1), ff(i0,i1), 1e-6)
+        f.antiderivative(n0, 0)
+        f.antiderivative(n0, 'x')
+        f.antiderivative([n0, n1], ['x', 'y'])
+        with self.assertRaises(Exception):
+            f.antiderivative(n0)
 
 
 if __name__ == '__main__':

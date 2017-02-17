@@ -79,6 +79,13 @@ namespace spline {
         Function derivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const;
         Function derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
 
+        Function antiderivative() const;
+        Function antiderivative(int order) const;
+        Function antiderivative(int order, const Argument& direction) const;
+        Function antiderivative(int order, const NumericIndex& direction) const;
+        Function antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const;
+        Function antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
+
         Function transform_to(const TensorBasis& basis) const ;
 
     public:

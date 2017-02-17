@@ -39,6 +39,7 @@ namespace spline {
         int n_inputs() const;
 
         virtual Basis derivative(int order, AnyTensor& T) const = 0;
+        virtual Basis antiderivative(int order, AnyTensor& T) const = 0;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const {spline_assert(0); return std::vector< std::vector < AnyScalar > >(); };
 
