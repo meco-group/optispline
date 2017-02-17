@@ -681,11 +681,11 @@ using namespace spline;
     __array_priority__ = arraypriority
     
     def __add__(self, a) : return spline_plus(self, a)
-    def __radd__(self, a) : return spline_plus(a, self)
+    def __radd__(self, a) : return spline_plus(self, a)
     def __sub__(self, a) : return spline_minus(self, a)
-    def __rsub__(self, a) : return spline_minus(a, self)
+    def __rsub__(self, a) : return spline_plus(-self, a)
     def __mul__(self, a) : return spline_times(self, a)
-    def __rmul__(self, a) : return spline_times(a, self)
+    def __rmul__(self, a) : return spline_times(self, a)
     
     def __getitem__(self, s):
           ind = []
@@ -842,19 +842,25 @@ namespace spline {
   %tensor_helpers(2002.0)
 }
 
-
-%define SPLINE_OPERATIONS(T)
-  inline Tensor<T> spline_plus(const Tensor<T>& lhs, const Tensor<T>& rhs) { return lhs+rhs; }
-  inline Tensor<T> spline_minus(const Tensor<T>& lhs, const Tensor<T>& rhs) { return lhs-rhs; }
-  inline Tensor<T> spline_times(const Tensor<T>& lhs, const Tensor<T>& rhs) { return lhs*rhs; }
-  inline Tensor<T> spline_mtimes(const Tensor<T>& lhs, const Tensor<T>& rhs) { return lhs.mtimes(rhs); }
-%enddef
+namespace spline {
+%extend Function {
+  %tensor_helpers(2003.0)
+}
+}
 
 %inline {
-  namespace casadi {
-    SPLINE_OPERATIONS(DM)
-    SPLINE_OPERATIONS(SX)
-    SPLINE_OPERATIONS(MX)
+  namespace spline {
+    AnyTensor spline_plus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs+rhs; }
+    AnyTensor spline_minus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs-rhs; }
+    AnyTensor spline_times(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs*rhs; }
+    AnyTensor spline_mtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
+    AnyTensor spline_rmtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.mtimes(lhs); }
+    Function spline_plus(const Function& lhs, const AnyTensor& rhs) { return lhs+rhs; }
+    Function spline_minus(const Function& lhs, const AnyTensor& rhs) { return lhs-rhs; }
+    Function spline_times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
+    Function spline_mtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
+    Function spline_rmtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.rmtimes(rhs); }
+    
   }
 }
 

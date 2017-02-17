@@ -155,6 +155,11 @@ namespace spline {
         return mtimes(Function::Constant(this->getTensorBasis(), t));
     }
 
+    Function Function::rmtimes(const AnyTensor& t) const {
+        if (t.is_scalar()) return operator*(t);
+        return Function::Constant(this->getTensorBasis(), t).mtimes(*this);
+    }
+
     Function Function::operator*(const AnyTensor& t) const {
         spline_assert(t.n_dims() == 2);
         Coefficient c = getCoefficient();

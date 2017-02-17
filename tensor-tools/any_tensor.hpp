@@ -249,6 +249,9 @@ class AnyTensor {
     AnyTensor operator+(const AnyTensor&b) const {
       ANYTENSOR_BINARY((*this), b, operator+);
     }
+    AnyTensor operator-(const AnyTensor&b) const {
+      ANYTENSOR_BINARY((*this), b, operator-);
+    }
     AnyTensor operator*(const AnyTensor&b) const {
       ANYTENSOR_BINARY((*this), b, operator*);
     }
