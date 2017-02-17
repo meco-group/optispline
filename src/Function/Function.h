@@ -35,6 +35,7 @@ namespace spline {
         Function mtimes(const AnyTensor& f) const ;
         Function rmtimes(const AnyTensor& f) const ;
         Function transpose() const ;
+        Function trace() const ;
 
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;
@@ -74,6 +75,8 @@ namespace spline {
         Function derivative(const std::vector<Argument>& directions) const;
         Function derivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const;
         Function derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
+
+        Function transform_to(const TensorBasis& basis) const ;
 
     public:
         TensorBasis basis;

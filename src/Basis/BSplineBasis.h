@@ -96,7 +96,6 @@ namespace spline{
 
     public:
         BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree);
-        BSplineBasisNode(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals);
 
         virtual Basis operator+(const MonomialBasis& other) const ;
         virtual Basis operator+(const BSplineBasis& other) const ;
@@ -108,7 +107,6 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const ;
         virtual Basis operator*(const DummyBasis& other) const ;
 
-        void setKnots(const std::vector<AnyScalar>& knots) ;
         std::vector<AnyScalar> getKnots() const;
 
         std::vector<AnyScalar> greville() const;
@@ -132,11 +130,8 @@ namespace spline{
         virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const override;
 
     private:
-        mutable Function bspline_evaluator_;
-
-
-        //  std::vector<bool> indector(int i, double x);
         std::vector<AnyScalar> knots_;
+        mutable Function bspline_evaluator_;
     };
 
 #endif // SWIG
@@ -159,7 +154,6 @@ namespace spline{
         BSplineBasis(bounds.to_scalar_vector(), degree, numberOfIntervals) {};
 
         std::vector<AnyScalar> getKnots() const;
-        void setKnots(const std::vector<AnyScalar>& knots) ;
 
         std::vector<AnyScalar> greville() const;
         //

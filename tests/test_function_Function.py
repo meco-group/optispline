@@ -228,16 +228,13 @@ class Test_Function_Function(BasisTestCase):
         b1 = BSplineBasis(knots1, degree)
         c1 = np.random.rand(b1.dimension())
         s1 = Function(b1, c1)
-
-    def test_derivative_univariate(self):
-        # Make one spline and compute derivative
-        np.random.seed(0)
-        degree = 3
-        knotsint = 8
-        knots1 = np.r_[np.zeros(degree),np.linspace(0., 1., knotsint), np.ones(degree)]
-        b1 = BSplineBasis(knots1, degree)
-        c1 = np.random.rand(b1.dimension())
-        s1 = Function(b1, c1)
+        
+    def test_transform_to(self):
+        b = BSplineBasis([0, 1], 3, 2)
+        p = Polynomial(np.random.randn(4))
+        f = p.transform_to(TensorBasis(b))
+        for x in np.random.random(10):
+            self.assertAlmostEqual(f(x), p(x))
 
 if __name__ == '__main__':
     unittest.main()
