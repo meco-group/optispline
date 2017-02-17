@@ -244,12 +244,18 @@ class Test_Function_Function(BasisTestCase):
         db1_c = casadi.Function('db1_c', [x1], [db1_c])
 
         c = np.random.rand(b0.dimension(),b1.dimension())
-        f = Function(TensorBasis([b0,b1]), c)
+        f = Function(TensorBasis([b0,b1], ['x', 'y']), c)
         df = f.derivative([n_der0, n_der1], [0,1])
 
         for i0 in g0:
             for i1 in g1:
                 self.assertEqualT(np.array(db0_c(i0)).T.dot(c).dot(db1_c(i1))[0][0], df(i0,i1))
+
+        f.derivative(n_der0, 0)
+        f.derivative(n_der0, 'x')
+        f.derivative([n_der0, n_der1], ['x', 'y'])
+        with self.assertRaises(Exception):
+            f.derivative(n_der0)
 
     def test_transform_to(self):
         b = BSplineBasis([0, 1], 3, 2)
