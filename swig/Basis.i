@@ -695,7 +695,7 @@ using namespace spline;
 %}
 %enddef
 #else
-%define %tensor_helpers()
+%define %tensor_helpers(arraypriority)
 %matlabcode %{
    function varargout = subsref(self,s)
       if numel(s)==1 & s.type=='()'
