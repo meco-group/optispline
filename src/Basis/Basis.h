@@ -1,5 +1,5 @@
-#ifndef SUBBASIS_H_
-#define SUBBASIS_H_
+#ifndef BASIS_H_
+#define BASIS_H_
 
 #include <iostream>
 #include <string>
@@ -46,6 +46,7 @@ namespace spline {
         virtual int n_inputs() const {return 0;};  // Number of inputs of the basis
 
         virtual Basis derivative(int order, AnyTensor& T) const;
+        virtual Basis antiderivative(int order, AnyTensor& T) const;
 
         virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const;
         virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const;
@@ -88,6 +89,10 @@ namespace spline {
 
         virtual Basis derivative(AnyTensor& SWIG_OUTPUT(T)) const;  // default order = 1
         virtual Basis derivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
+
+        virtual Basis antiderivative(AnyTensor& SWIG_OUTPUT(T)) const;  // default order = 1
+        virtual Basis antiderivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
+
         AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
     };
 
@@ -97,4 +102,4 @@ namespace spline {
         }
 
 }  // namespace spline
-#endif  // SUBBASIS_H_
+#endif  // BASIS_H_

@@ -180,6 +180,14 @@ using namespace spline;
                                     $descriptor(spline::TensorBasis*), 0))) {
         return true;
       }
+      
+      {
+        std::vector<Basis> tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
       return false;
     }
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m) {
@@ -751,6 +759,7 @@ using namespace spline;
 %casadi_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
 %casadi_typemaps("Basis", PREC_MX, spline::Basis)
 %casadi_typemaps("Coefficient", PREC_MX, spline::Coefficient)
+%casadi_typemaps("TensorBasis", PREC_MX, spline::TensorBasis)
 %casadi_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %casadi_template("[DTensor]", PREC_MXVector, std::vector< Tensor<casadi::DM> >)
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)

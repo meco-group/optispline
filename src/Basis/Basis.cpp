@@ -105,7 +105,6 @@ namespace spline {
     int Basis::n_inputs() const { return (*this)->n_inputs();}
 
     Basis Basis::derivative(AnyTensor& T) const {
-        // default derivative is with order = 1
         return (*this)->derivative(1, T);
     }
 
@@ -114,6 +113,19 @@ namespace spline {
     }
 
     Basis BasisNode::derivative(int order, AnyTensor& T) const {
+        spline_assert(false);
+        return Basis();
+    }
+
+    Basis Basis::antiderivative(AnyTensor& T) const {
+        return (*this)->antiderivative(1, T);
+    }
+
+    Basis Basis::antiderivative(int order, AnyTensor& T) const {
+        return (*this)->antiderivative(order, T);
+    }
+
+    Basis BasisNode::antiderivative(int order, AnyTensor& T) const {
         spline_assert(false);
         return Basis();
     }
