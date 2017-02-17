@@ -35,35 +35,35 @@ class Test_Function_Function_shape(BasisTestCase):
         self.assertEqualT(func2t.shape,[3,3])
         self.assertEqualT(func2t.transpose().shape,func2.shape)
 
-#    def test_concatenation(self):
-#        knots1 = [0,0,0.4,1,1]
-#        degree = 1
-#        basis1 = BSplineBasis(knots1,degree)
-#
-#        knots2 = [0.,0.,0.5,1,1]
-#        degree = 1
-#        basis2 = BSplineBasis(knots2,degree)
-#
-#        basis3 = MonomialBasis(3);
-#
-#        mbasis1 = TensorBasis([basis1,basis2]);
-#        mbasis2 = TensorBasis([basis2,basis3]);
-#
-#        shape1 = [3,3,1,1]
-#        shape2 = [3,4,1,1]
-#        coeff1 = DTensor(numpy.random.randn(prod(shape1),1),shape1)
-#        coeff2 = DTensor(numpy.random.randn(prod(shape2),1),shape2)
-#        func1 = Function(mbasis1,coeff1)
-#        func2 = Function(mbasis2,coeff2)
-#        
-#        func3 = func1.vertcat(func2)
-#        self.assertEqual(func3.shape(),[1,2])
-#        self.assertEqualT(func3(0.5),DTensor([func1(0.5),func2(0.5)],[1,2]))
-#        func4 = func3.horzcat([2,2])
-#        self.assertEqual(func4.shape(),[2,2])
-#        self.assertEqualT(func4(0.5),DTensor([func1(0.5),func2(0.5),2,2],[2,2]))
-#        func5 = func1.vertcat([]).horzcat([])
-#        self.assertEqual(func5.shape(),[1,1])
+    def test_concatenation(self):
+        knots1 = [0,0,0.4,1,1]
+        degree = 1
+        basis1 = BSplineBasis(knots1,degree)
+
+        knots2 = [0.,0.,0.5,1,1]
+        degree = 1
+        basis2 = BSplineBasis(knots2,degree)
+
+        basis3 = MonomialBasis(3);
+
+        mbasis1 = TensorBasis([basis1,basis2]);
+        mbasis2 = TensorBasis([basis2,basis3]);
+
+        shape1 = [3,3,1,1]
+        shape2 = [3,4,1,1]
+        coeff1 = DTensor(numpy.random.randn(prod(shape1),1),shape1)
+        coeff2 = DTensor(numpy.random.randn(prod(shape2),1),shape2)
+        func1 = Function(mbasis1,coeff1)
+        func2 = Function(mbasis2,coeff2)
+        
+        func3 = func1.vertcat([func2])
+        self.assertEqual(func3.shape,[1,2])
+        self.assertEqualT(func3(0.5),DTensor([func1(0.5),func2(0.5)],[1,2]))
+        func4 = func3.horzcat([DTensor([2,2],[1,2])])
+        self.assertEqual(func4.shape,[2,2])
+        self.assertEqualT(func4(0.5),DTensor([func1(0.5),func2(0.5),2,2],[2,2]))
+        func5 = func1.vertcat([DTensor([],[0,1])]).horzcat([DTensor([],[1,0])])
+        self.assertEqual(func5.shape,[1,1])
 #
 #    def test_blockdiagonal(self):
 #        knots1 = [0,0,0.4,1,1]

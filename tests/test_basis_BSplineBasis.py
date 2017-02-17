@@ -134,6 +134,18 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         T = np.reshape(T, np.prod(T.shape))
         self.assertTrue(all(T == 0))
 
+    def test_antiderivative(self):
+        order = 2
+        degree = 3
+        knotsint = 8
+        b = BSplineBasis(np.r_[np.zeros(degree), np.linspace(0.,1.,knotsint), np.ones(degree)],degree)
+        banti, Tanti = b.antiderivative(order)
+        b_, Tder = banti.derivative(order)
+        self.assertEqualT(b_.getDegree(), b.getDegree())
+        self.assertEqualT(b_.getKnots(), b.getKnots())
+        self.assertEqualT(Tder.dot(Tanti), np.eye(Tder.shape[0]))
+
+
 # TODO constructor
     # def test_getEvaluation1(self):
     # def test_getEvaluation2(self):

@@ -38,11 +38,20 @@ class Test_Basis_MonomialBasis(BasisTestCase):
         db_c = casadi.Function('db_c', [x], [db_c] )
         for i in g:
             self.assertEqualT(np.array(db_c(i)).reshape(degree+1,), np.dot(T.transpose(),db([i])))
-            
+
         # test degreet'th+1 derivative, should give 0 T-matrix
         db,T = b.derivative(degree+1)
         T = np.reshape(T, np.prod(T.shape))
         self.assertTrue(all(T == 0))
+
+    def test_antiderivative(self):
+        order = 2
+        degree = 3
+        b = MonomialBasis(degree)
+        banti, Tanti = b.antiderivative(order)
+        b_, Tder = banti.derivative(order)
+        self.assertEqualT(b_.getDegree(), b.getDegree())
+        self.assertEqualT(Tder.dot(Tanti), np.eye(Tder.shape[0]))
 
 # TODO constructor
     # def test_getEvaluation1(self):

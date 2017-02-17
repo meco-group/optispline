@@ -244,12 +244,33 @@ class Test_Function_Function(BasisTestCase):
         db1_c = casadi.Function('db1_c', [x1], [db1_c])
 
         c = np.random.rand(b0.dimension(),b1.dimension())
-        f = Function(TensorBasis([b0,b1]), c)
+        f = Function(TensorBasis([b0,b1], ['x', 'y']), c)
         df = f.derivative([n_der0, n_der1], [0,1])
 
         for i0 in g0:
             for i1 in g1:
                 self.assertEqualT(np.array(db0_c(i0)).T.dot(c).dot(db1_c(i1))[0][0], df(i0,i1))
+
+        f.derivative(n_der0, 0)
+        f.derivative(n_der0, 'x')
+        f.derivative([n_der0, n_der1], ['x', 'y'])
+        with self.assertRaises(Exception):
+            f.derivative(n_der0)
+
+    def test_derivative_polynomial(self):
+        deg = 4
+        p = Polynomial([1,2,3,4])
+        dp = p.derivative([1],[0])
+        ddp = p.derivative([2],[0])
+        dddp = p.derivative([3],[0])
+        ddddp = p.derivative([deg],[0])
+
+        self.assertEqualT(p.getCoefficient().getData().reshape(p.getBasis().getDegree()+1,), [1,2,3,4])
+        self.assertEqualT(dp.getCoefficient().getData().reshape(dp.getBasis().getDegree()+1,), [2,6,12])
+        self.assertEqualT(ddp.getCoefficient().getData().reshape(ddp.getBasis().getDegree()+1,), [6,24])
+        self.assertEqualT(dddp.getCoefficient().getData().reshape(dddp.getBasis().getDegree()+1,), [24])
+        self.assertEqualT(ddddp.getCoefficient().getData().reshape(dddp.getBasis().getDegree()+1,), [0])
+
 
     def test_transform_to(self):
         b = BSplineBasis([0, 1], 3, 2)
@@ -278,11 +299,16 @@ class Test_Function_Function(BasisTestCase):
         init1 = np.random.rand(n1);
 
         c = np.random.rand(b0.dimension(),b1.dimension())
-        f = Function(TensorBasis([b0,b1]), c)
+        f = Function(TensorBasis([b0,b1], ['x', 'y']), c)
         ff = f.antiderivative([n0, n1], [0,1]).derivative([n0, n1], [0,1])
         for i0 in g0:
             for i1 in g1:
-                self.assertEqual(f(i0,i1), ff(i0,i1))
+                self.assertEqualT(f(i0,i1), ff(i0,i1), 1e-6)
+        f.antiderivative(n0, 0)
+        f.antiderivative(n0, 'x')
+        f.antiderivative([n0, n1], ['x', 'y'])
+        with self.assertRaises(Exception):
+            f.antiderivative(n0)
 
 #    def test_jacobian(self):
 #        d0 = 4

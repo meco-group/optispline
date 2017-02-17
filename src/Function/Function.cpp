@@ -3,6 +3,7 @@
 #include "../Basis/utils/EvaluationGrid.h"
 #include "../Basis/MonomialBasis.h"
 #include "../common.h"
+
 namespace spline {
     Function::Function(const TensorBasis& basis, const Coefficient& coef) {
         init(basis, coef);
@@ -227,13 +228,38 @@ namespace spline {
 
         AnyTensor t = DT(DM::densify(DM::eye(shape_[0])));
         Function fdiag = operator*(t); //keep diagonal entries only
-        
+
         Coefficient cdiag = fdiag.getCoefficient();
         AnyTensor ones = AnyTensor::repeat(AnyScalar(1), std::vector< int >{1,shape_[0]});
         cdiag = cdiag.transform(ones, cdiag.dimension().size()); //sum over all columns
         cdiag = cdiag.transform(ones, cdiag.dimension().size()+1); //sum over all rows
 
         return Function(getTensorBasis(), cdiag);
+    }
+
+    Function Function::vertcat(const std::vector< spline::Function >& f) const {
+        return cat(0, f);
+    }
+
+    Function Function::horzcat(const std::vector< spline::Function >& f) const {
+        return cat(1, f);
+    }
+
+    Function Function::blkdiag(const std::vector< spline::Function >& f) const {
+        Function b = *this;
+        for (int i = 0; i < f.size(); i++) {
+            std::vector< int > shape12 = std::vector< int >{b.shape()[0],f[i].shape()[1]};
+            std::vector< int > shape21 = std::vector< int >{b.shape()[1],f[i].shape()[0]};
+            Function zero12 = Function(AnyTensor::repeat(AnyScalar(0), shape12));
+            Function zero21 = Function(AnyTensor::repeat(AnyScalar(0), shape21));
+
+            Function upper = b.horzcat(std::vector< Function >{zero12});
+            Function lower = zero21.horzcat(std::vector< Function >{f});
+
+            b = upper.vertcat(std::vector< Function >{lower});
+        }
+
+        return b;
     }
 
     std::string Function::getRepresentation() const {return "Function";};
@@ -318,20 +344,22 @@ namespace spline {
       return Function(new_tbasis, new_coefficient);
     }
 
-    Function Function::derivative(const std::vector<NumericIndex>& direction_ind) const {
-        // default derivative is with order = 1
-        std::vector<int> orders(direction_ind.size(), 1);
-        return derivative(orders, direction_ind);
+    Function Function::derivative() const {
+      return derivative(1);
     }
 
-    Function Function::derivative(const std::vector<Argument>& directions) const {
-        // default derivative is with order = 1
-        std::vector<int> orders(directions.size(), 1);
-        std::vector<NumericIndex> direction_ind(directions.size());
-        for (int i=0; i<directions.size(); i++){
-            direction_ind[i] = getTensorBasis().indexArgument(directions[i]);
-        }
-        return derivative(orders, direction_ind);
+    Function Function::derivative(int order) const {
+      spline_assert_message(getTensorBasis().n_basis() == 1,
+        "I don't know the direction for derivation. Please supply argument.");
+      return derivative(std::vector<int>{order}, std::vector<NumericIndex>{0});
+    }
+
+    Function Function::derivative(int order, const Argument& direction) const {
+      return derivative(std::vector<int>{order}, std::vector<Argument>{direction});
+    }
+
+    Function Function::derivative(int order, const NumericIndex& direction) const {
+      return derivative(std::vector<int>{order}, std::vector<NumericIndex>{direction});
     }
 
     Function Function::derivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const {
@@ -350,6 +378,42 @@ namespace spline {
         std::vector<NumericIndex> directions(direction_ind.size());
         Coefficient new_coefficient = getCoefficient().transform(T, direction_ind);
         return Function(new_tbasis, new_coefficient);
+    }
+
+    Function Function::antiderivative() const {
+      return antiderivative(1);
+    }
+
+    Function Function::antiderivative(int order) const {
+      spline_assert_message(getTensorBasis().n_basis() == 1,
+        "I don't know the direction for derivation. Please supply argument.");
+      return antiderivative(std::vector<int>{order}, std::vector<NumericIndex>{0});
+    }
+
+    Function Function::antiderivative(int order, const Argument& direction) const {
+      return antiderivative(std::vector<int>{order}, std::vector<Argument>{direction});
+    }
+
+    Function Function::antiderivative(int order, const NumericIndex& direction) const {
+      return antiderivative(std::vector<int>{order}, std::vector<NumericIndex>{direction});
+    }
+
+    Function Function::antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const {
+      std::vector<NumericIndex> direction_ind(directions.size());
+      for (int i=0; i<directions.size(); i++){
+          direction_ind[i] = getTensorBasis().indexArgument(directions[i]);
+      }
+      return antiderivative(orders, direction_ind);
+    }
+
+    Function Function::antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const {
+      spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
+      std::vector<AnyTensor> T;
+      TensorBasis tbasis = getTensorBasis();
+      TensorBasis new_tbasis = tbasis.antiderivative(orders, direction_ind, T);
+      std::vector<NumericIndex> directions(direction_ind.size());
+      Coefficient new_coefficient = getCoefficient().transform(T, direction_ind);
+      return Function(new_tbasis, new_coefficient);
     }
 
     Function Function::transform_to(const TensorBasis& basis) const {
@@ -382,4 +446,20 @@ namespace spline {
       C = C.shape(shapeBasis);
       return Function(unionBasis, C);
     }
+
+    Function Function::cat(const NumericIndex& index, const std::vector< spline::Function >& functions) const {
+        TensorBasis unionBasis = getTensorBasis();
+        for(auto& f : functions){
+            unionBasis = unionBasis + f.getTensorBasis();
+        }
+
+        std::vector< Coefficient > coefVec;
+        for(auto& f : functions){
+            coefVec.push_back(f.transform_to(unionBasis).getCoefficient());
+        }
+
+        Coefficient coef = this->transform_to(unionBasis).getCoefficient();
+        return Function(unionBasis, coef.cat(index, coefVec));
+    }
+
 }  // namespace spline
