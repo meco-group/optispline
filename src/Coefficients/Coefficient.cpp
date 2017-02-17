@@ -59,31 +59,43 @@ namespace spline {
     AnyTensor Coefficient::getData() const  { return (*this)->getData(); }
     std::string Coefficient::getRepresentation() const { return (*this)->getRepresentation(); }
 
-    AnyTensor Coefficient::transform(const AnyTensor& T, const NumericIndex& direction) const {
-        // check dimension of transformation matrix
-        tensor_assert_message(T.n_dims()==2, "Transformation matrix should have 2 dimensions.");
+    AnyTensor Coefficient::transform(const AnyTensor& T, const NumericIndex& directions) const {
+        return (*this)->transform(std::vector<AnyTensor>{T}, std::vector<NumericIndex>{directions});
+    }
+
+    AnyTensor Coefficient::transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& directions) const {
+        return (*this)->transform(T, directions);
+    }
+
+    AnyTensor CoefficientNode::transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& directions) const {
+        tensor_assert(T.size() == directions.size());
         AnyTensor data = getData();
-        // check compatibility
-        tensor_assert_message(T.dims()[1]==data.dims()[direction],
-            "Incompatible dimensions: 2nd dimension of transformation matrix is "
-            << T.dims()[1] << " while transformed direction has dimension "
-            << data.dims()[direction] << ".");
-        // construct index vectors
-        int n_dims = data.n_dims();
-        std::vector<int> ind1(n_dims);
-        std::vector<int> ind2(n_dims);
-        int cnt = -3;
-        for (int i=0; i<data.n_dims(); i++) {
-            if (i == direction) {
-                ind1[i] = -2;
-                ind2[i] = -1;
-            } else {
-                ind1[i] = cnt;
-                ind2[i] = cnt;
-                cnt--;
+        for (int k=0; k<T.size(); k++){
+            // check dimension of transformation matrix
+            tensor_assert_message(T[k].n_dims()==2, "Transformation matrix should have 2 dimensions.");
+            // check compatibility
+            tensor_assert_message(T[k].dims()[1]==data.dims()[directions[k]],
+                "Incompatible dimensions: 2nd dimension of transformation matrix is "
+                << T[k].dims()[1] << " while transformed direction has dimension "
+                << data.dims()[directions[k]] << ".");
+            // construct index vectors
+            int n_dims = data.n_dims();
+            std::vector<int> ind1(n_dims);
+            std::vector<int> ind2(n_dims);
+            int cnt = -3;
+            for (int i=0; i<data.n_dims(); i++) {
+                if (i == directions[k]) {
+                    ind1[i] = -2;
+                    ind2[i] = -1;
+                } else {
+                    ind1[i] = cnt;
+                    ind2[i] = cnt;
+                    cnt--;
+                }
             }
+            data = data.einstein(T[k], ind1, {-1, -2}, ind2);
         }
-        return data.einstein(T, ind1, {-1, -2}, ind2);
+        return data;
     }
 
     Coefficient Coefficient::add_trival_dimension(int extra_dims) const {

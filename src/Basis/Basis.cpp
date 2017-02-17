@@ -81,13 +81,13 @@ namespace spline {
       return std::vector< std::vector < AnyScalar > >();
     }
 
-    Basis BasisNode::insert_knots(const std::vector<AnyScalar> & new_knots, AnyTensor & T) const {
+    Basis BasisNode::insert_knots(const AnyVector & new_knots, AnyTensor & T) const {
         spline_assert_message(false, getRepresentation() << " can not insert knots.");
         return Basis();
     }
 
 
-    Basis Basis::insert_knots(const std::vector<AnyScalar> & new_knots, AnyTensor & T) const {
+    Basis Basis::insert_knots(const AnyVector & new_knots, AnyTensor & T) const {
         return (*this)->insert_knots(new_knots, T);
     }
 

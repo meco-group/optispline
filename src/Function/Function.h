@@ -53,6 +53,13 @@ namespace spline {
         int n_inputs() const;  // Number of inputs of the function
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
 
+        Function insert_knots(const AnyVector & new_knots) const;
+        Function insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const;
+        Function insert_knots(const AnyVector & new_knots, const Argument & arg) const;
+        Function insert_knots(const std::vector<AnyVector> & new_knots,
+            const std::vector<Argument> & arg) const;
+        Function insert_knots(const std::vector<AnyVector> & new_knots,
+            const std::vector<NumericIndex> & arg_ind) const;
         // Function derivative(int order, int direction) const;
 
     public:

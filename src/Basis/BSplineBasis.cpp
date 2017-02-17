@@ -274,7 +274,7 @@ namespace spline {
         return shared_from_this<BSplineBasis>();
     }
 
-    Basis BSplineBasisNode::insert_knots(const std::vector<AnyScalar> & new_knots,
+    Basis BSplineBasisNode::insert_knots(const AnyVector & new_knots,
       AnyTensor & T) const {
       // construct coefficient transformation matrix
       int n_dim = getLength();
@@ -288,7 +288,6 @@ namespace spline {
       AnyScalar val;
       std::vector<AnyScalar> knots;
       BSplineBasis ret = shared_from_this<BSplineBasis>();
-      // std::vector<AnyScalar> knots;
       for (int k=0; k<new_knots.size(); k++) {
         std::vector<AnyScalar> knots = ret.getKnots();
         n_dim_new++;
