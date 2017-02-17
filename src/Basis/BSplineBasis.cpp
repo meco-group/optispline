@@ -261,7 +261,7 @@ namespace spline {
                 else{
                     c_j = deg/(knots[j+deg]-knots[j]);
                 }
-                data[j*(n_dim-1)+j] = c_j*(-1);
+                data[j*(n_dim-1)+j] = -c_j;
                 data[(j+1)*(n_dim-1)+j] = c_j;
             }
             T_ = mtimes(vertcat(data).shape({n_dim_new, n_dim}), T_);  // multiply transformation matrices, for higher order
