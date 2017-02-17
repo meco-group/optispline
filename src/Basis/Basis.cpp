@@ -65,9 +65,10 @@ namespace spline {
         return Basis();
     }
 
-    AnyTensor Basis::operator() (const std::vector< AnyScalar > & x) const {
-      (*this)->assert_vector_lenght_correct( x );
-      return (*this)->operator()(x);
+    AnyTensor Basis::operator() (const AnyVector & x) const {
+      std::vector<AnyScalar> a = x.to_scalar_vector();
+      (*this)->assert_vector_lenght_correct( a );
+      return (*this)->operator()(a);
     }
     AnyTensor BasisNode::operator() (const std::vector< AnyScalar > & x) const {
         assert(false); //Abstract
@@ -103,9 +104,19 @@ namespace spline {
     int Basis::dimension() const { return (*this)->dimension();}
     int Basis::n_inputs() const { return (*this)->n_inputs();}
 
-    // Basis Basis::derivative(int order, int direction) const {
-    //     return (*this)->derivative(order, direction);
-    // }
+    Basis Basis::derivative(AnyTensor& T) const {
+        // default derivative is with order = 1
+        return (*this)->derivative(1, T);
+    }
+
+    Basis Basis::derivative(int order, AnyTensor& T) const {
+        return (*this)->derivative(order, T);
+    }
+
+    Basis BasisNode::derivative(int order, AnyTensor& T) const {
+        spline_assert(false);
+        return Basis();
+    }
 
     AnyTensor BasisNode::const_coeff_tensor(const AnyTensor& t) const {
         spline_assert(false);
@@ -116,6 +127,6 @@ namespace spline {
         return (*this)->const_coeff_tensor(t);
     }
 
-    // Todo: need to add BasisNode implementation here? No, you never will call derivative on a general Basis
+
 
 } // namespace spline

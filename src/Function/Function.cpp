@@ -286,31 +286,39 @@ namespace spline {
       return Function(new_tbasis, new_coefficient);
     }
 
-
-
     // Function derivative(int order, int direction) const {
-        // AnyTensor T;
-        // basis.derivative(order, direction, T&);
 
-        //     if nargin == 2
-        //         if self.dims == 1
-        //             coord = 1;
-        //         else
-        //             error('A coordinate must be supplied')
-        //         end
-        //     end
-        //     if self.basis{coord}.degree < ord
-        //         d = 0;
-        //         return
-        //     end
-        //     b = self.basis;
-        //     bi = self.basis{coord};
-        //     [dbi, P] = bi.derivative(ord);
-        //     T = cellfun(@(p) speye(length(p)), b, 'UniformOutput', false);
-        //     T{coord} = P;
-        //     b{coord} = dbi;
-        //     d = self.cl(b, T * self.coeffs);
-        // end
+    //     // AnyTensor T;
+    //     // basis.derivative(order, direction, T&);
+
+    //     //     if nargin == 2
+    //     //         if self.dims == 1
+    //     //             coord = 1;
+    //     //         else
+    //     //             error('A coordinate must be supplied')
+    //     //         end
+    //     //     end
+    //     //     if self.basis{coord}.degree < ord
+    //     //         d = 0;
+    //     //         return
+    //     //     end
+    //     //     b = self.basis;
+    //     //     bi = self.basis{coord};
+    //     //     [dbi, P] = bi.derivative(ord);
+    //     //     T = cellfun(@(p) speye(length(p)), b, 'UniformOutput', false);
+    //     //     T{coord} = P;
+    //     //     b{coord} = dbi;
+    //     //     d = self.cl(b, T * self.coeffs);
+    //     // end
+
+    //     // Check if direction is provided
+
+    //     AnyTensor T;
+    //     Basis new_basis = getBasis().derivative(order, direction, T&);
+    //     Coef new_coeffs = getCoeff();
+    //     new_coeffss = mtimes(new_coeffs, T);
+
+    //     return Function(new_basis, new_coeffs);
     // }
 
 }  // namespace spline

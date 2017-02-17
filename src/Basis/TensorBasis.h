@@ -62,7 +62,7 @@ namespace spline {
         TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & T, const std::vector<NumericIndex>& arg_ind) const;
         TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & T, const std::vector<NumericIndex>& arg_ind) const;
 
-        // Basis derivative(int order, int direction, AnyTensor& T) const;
+        TensorBasis derivative(const std::vector<int> orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
 
     // protected:
         std::vector< Basis > allSubBasis;
@@ -130,7 +130,10 @@ namespace spline {
         TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<Argument>& args) const;
         TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<NumericIndex>& arg_ind) const;
 
-        // Basis derivative(int order, int direction, AnyTensor& T) const;
+        TensorBasis derivative(const std::vector<Argument>& directions, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
+        TensorBasis derivative(const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
+        TensorBasis derivative(const std::vector<int> orders, const std::vector<Argument>& directions, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+        TensorBasis derivative(const std::vector<int> orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
     };
 }
 #endif  // TENSORBASIS_H_
