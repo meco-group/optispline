@@ -1,6 +1,7 @@
 #include <vector>
 #include "Function.h"
 #include "../Basis/utils/EvaluationGrid.h"
+#include "../Basis/MonomialBasis.h"
 #include "../common.h"
 namespace spline {
     Function::Function(const TensorBasis& basis, const Coefficient& coef) {
@@ -9,6 +10,13 @@ namespace spline {
 
     Function::Function(const Basis& basis, const Coefficient& coef) {
         init(TensorBasis(basis), coef);
+    }
+
+    Function::Function(const AnyTensor& c) {
+        Basis basis = MonomialBasis(0);
+        std::vector< int > dims_ = c.dims();
+        dims_.insert(dims_.begin(), 1);
+        init(basis, c.shape(dims_));
     }
 
     void Function::init(const TensorBasis& basis_, const Coefficient& coef_) {
