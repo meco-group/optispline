@@ -195,15 +195,14 @@ class Test_Function_Operations(BasisTestCase):
         mbasis2 = TensorBasis([basis2,basis3]);
 
         coeff1 = DTensor(numpy.random.randn(9*6,1),[3,3,3,2])
-        coeff2 = DTensor(numpy.random.randn(12*4,1),[3,4,2,2])
+        coeff2 = DTensor(numpy.random.randn(12*8,1),[3,4,2,4])
         func1 = Function(mbasis1,coeff1)
         func2 = Function(mbasis2,coeff2)
 
         fm = func1.mtimes(func2)
         c = Function.Constant(mbasis1,1)
-        print 'debug'
         fm2 = func1.mtimes(c)
-        #fm3 = c.mtimes(func2)
+        fm3 = c.mtimes(func2)
 
         x = [0.1,0.35,0.4,0.5,0.8,0.99]
         y = [0.1,0.2,0.5,0.8,0.1,0.2]
@@ -222,7 +221,7 @@ class Test_Function_Operations(BasisTestCase):
 
             self.assertEqualT(fm(_x,_y),numpy.dot(func1_value[k], func2_value[k]))
             self.assertEqualT(fm2(_x,_y),func1_value[k])
-            #self.assertEqualT(fm3(_x,_y),func2_value[k])
+            self.assertEqualT(fm3(_x,_y),func2_value[k])
 
 
 if __name__ == '__main__':
