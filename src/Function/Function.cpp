@@ -216,7 +216,7 @@ namespace spline {
 
         AnyTensor t = DT(DM::densify(DM::eye(shape_[0])));
         Function fdiag = operator*(t); //keep diagonal entries only
-        
+
         Coefficient cdiag = fdiag.getCoefficient();
         AnyTensor ones = AnyTensor::repeat(AnyScalar(1), std::vector< int >{1,shape_[0]});
         cdiag = cdiag.transform(ones, cdiag.dimension().size()); //sum over all columns
@@ -371,4 +371,20 @@ namespace spline {
       C = C.shape(shapeBasis);
       return Function(unionBasis, C);
     }
+
+    Function Function::cat(const NumericIndex& index, const std::vector< spline::Function >& functions) const {
+        TensorBasis unionBasis = getTensorBasis();
+        for(auto& f : functions){
+            unionBasis = unionBasis + f.getTensorBasis();
+        }
+
+        std::vector< Coefficient > coefVec;
+        for(auto& f : functions){
+            coefVec.push_back(f.transform_to(unionBasis).getCoefficient());
+        }
+
+        Coefficient coef = this->transform_to(unionBasis).getCoefficient();
+        return Function(unionBasis, coef.cat(index, coefVec));
+    }
+
 }  // namespace spline
