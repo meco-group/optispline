@@ -213,6 +213,10 @@ class AnyTensor {
       ANYTENSOR_METHOD(operator-());
       return DT();
     }
+    AnyTensor as_vector() const {
+      ANYTENSOR_METHOD(as_vector());
+      return DT();
+    }
     AnyTensor squeeze() const {
       std::vector<int> squeeze_dims;
       for (int i=0;i<n_dims();++i) {

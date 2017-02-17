@@ -75,7 +75,7 @@ namespace spline {
         virtual Basis operator*(const MonomialBasis& rhs) const;
         virtual Basis operator*(const BSplineBasis& rhs) const;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        AnyTensor operator()(const AnyVector& x) const;
 
         virtual std::string getRepresentation() const ;
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
