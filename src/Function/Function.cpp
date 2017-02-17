@@ -244,13 +244,13 @@ namespace spline {
         return concat(f, 1);
     }
 
-    Function Function::blkdiag(const std::vector< Function >& f) const {
+    Function Function::blkdiag(const std::vector< spline::Function >& f) const {
         Function b = *this;
         for (int i = 0; i < f.size(); i++) {
             std::vector< int > shape12 = std::vector< int >{b.shape()[0],f[i].shape()[1]};
             std::vector< int > shape21 = std::vector< int >{b.shape()[1],f[i].shape()[0]};
-            Function zero12 = Function(AnyTensor::repeat(AnyScalar(0), shape12))
-            Function zero21 = Function(AnyTensor::repeat(AnyScalar(0), shape21))
+            Function zero12 = Function(AnyTensor::repeat(AnyScalar(0), shape12));
+            Function zero21 = Function(AnyTensor::repeat(AnyScalar(0), shape21));
 
             Function upper = b.horzcat(std::vector< Function >{zero12});
             Function lower = zero21.horzcat(std::vector< Function >{f});
@@ -258,7 +258,7 @@ namespace spline {
             b = upper.vertcat(std::vector< Function >{lower});
         }
 
-        returrn b;
+        return b;
     }
 
     std::string Function::getRepresentation() const {return "Function";};
