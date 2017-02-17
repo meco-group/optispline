@@ -414,7 +414,6 @@ using namespace spline;
       {
         std::vector<AnyScalar> tmp, *mt = &tmp;
         if (casadi::to_ptr(p, m ? &mt : 0)) {
-          userOut() << "debug" << tmp.size() << std::endl;
           if (m) **m = vertcat(tmp);
           return true;
         }
@@ -722,13 +721,16 @@ using namespace spline;
 
 %casadi_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
+%casadi_template("[AnyTensor]", PREC_MX, std::vector<AnyTensor>)
 %casadi_typemaps("AnyVector", PREC_MX, AnyVector)
-%casadi_typemaps("[AnyVector]", PREC_MX, std::vector<AnyVector>)
+%casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_typemaps("argument", PREC_MX, spline::Argument)
-%casadi_typemaps("[AnyVector]", PREC_MX, std::vector<AnyVector>)
+%casadi_template("[argument]", PREC_MX, std::vector<spline::Argument>)
+%casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_typemaps("index", PREC_MX, spline::Index)
 %casadi_typemaps("index", PREC_MX, spline::NumericIndex)
-%casadi_typemaps("[index]", PREC_MX, std::vector<spline::NumericIndex >)
+%casadi_template("[index]", PREC_MX, std::vector<spline::NumericIndex >)
+%casadi_template("[index]", PREC_MX, std::vector<spline::Index >)
 %casadi_typemaps("STensor", PREC_MX, Tensor<casadi::SX>)
 %casadi_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
 %casadi_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
@@ -864,7 +866,11 @@ namespace spline {
     Function spline_times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
     Function spline_mtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
     Function spline_rmtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.rmtimes(rhs); }
-
+    Function spline_plus(const AnyTensor& lhs, const Function& rhs) { return rhs+lhs; }
+    Function spline_minus(const AnyTensor& lhs, const Function& rhs) { return (-rhs)+lhs; }
+    Function spline_times(const AnyTensor& lhs, const Function& rhs) { return rhs*lhs; }
+    Function spline_mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(lhs); }
+    Function spline_rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
   }
 }
 

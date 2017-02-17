@@ -15,6 +15,7 @@ namespace spline {
     public :
         Function( const TensorBasis& basis, const Coefficient& coef) ;
         Function( const Basis& basis, const Coefficient& coef) ;
+        Function( const AnyTensor& c) ;
 
         static Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) ;
         static Function Constant(const TensorBasis& basis, const AnyTensor& t) ;
@@ -56,6 +57,8 @@ namespace spline {
         void repr() const { userOut() << getRepresentation() << std::endl;}
         // Argument& getArgument (){ return getBasis().getArgument();}
 
+        static void homogenize_args(Function& f, AnyTensor& t);
+
         int n_inputs() const;  // Number of inputs of the function
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
 
@@ -82,6 +85,7 @@ namespace spline {
 
         Function transform_to(const TensorBasis& basis) const ;
 
+        Function cat(const NumericIndex& index, const std::vector< spline::Function >& f) const;
     public:
         TensorBasis basis;
         Coefficient coef;

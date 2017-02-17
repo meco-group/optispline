@@ -209,12 +209,81 @@ class Test_Function_Function(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
+    # def test_insert_knots_multivariate(self):
+    #     return
+    #     np.random.seed(0)
+    #     degree = 3
+    #     knotsint = 8
+    #     knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+    #     bs = BSplineBasis(knots,degree)
+    #     bm = MonomialBasis(degree)
+    #     b = TensorBasis([m])
+
+    def test_derivative_multivariate(self):
+        d0 = 4
+        k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,8),np.ones(d0)]
+        b0 = BSplineBasis(k0,d0)
+        n_der0 = 2
+        db0,T0 = b0.derivative(n_der0)
+        g0 = db0.greville()
+        x0 = casadi.SX.sym('x0')
+        db0_c = b0([x0])
+        for i in range(0,n_der0):
+            db0_c = casadi.jacobian(db0_c, x0)
+        db0_c = casadi.Function('db0_c', [x0], [db0_c])
+
+        d1 = 3
+        b1 = MonomialBasis(d1)
+        n_der1 = 1
+        db1 = b1.derivative(n_der1)
+        g1 = db0.greville()
+        x1 = casadi.SX.sym('x1')
+        db1_c = b1([x1])
+        for i in range(0,n_der1):
+            db1_c = casadi.jacobian(db1_c, x1)
+        db1_c = casadi.Function('db1_c', [x1], [db1_c])
+
+        c = np.random.rand(b0.dimension(),b1.dimension())
+        f = Function(TensorBasis([b0,b1]), c)
+        df = f.derivative([n_der0, n_der1], [0,1])
+
+        for i0 in g0:
+            for i1 in g1:
+                self.assertEqualT(np.array(db0_c(i0)).T.dot(c).dot(db1_c(i1))[0][0], df(i0,i1))
+
     def test_transform_to(self):
         b = BSplineBasis([0, 1], 3, 2)
         p = Polynomial(np.random.randn(4))
         f = p.transform_to(TensorBasis(b))
         for x in np.random.random(10):
             self.assertAlmostEqual(f(x), p(x))
+
+    def test_function_constant(self):
+        f = Function(2)
+        for x in np.random.random(10):
+            self.assertAlmostEqual(f(x), 2)
+
+    def test_antiderivative(self):
+        d0 = 4
+        k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,7),np.ones(d0)]
+        b0 = BSplineBasis(k0,d0)
+        g0 = b0.greville()
+        n0 = 2
+        init0 = np.random.rand(n0);
+
+        d1 = 3
+        b1 = MonomialBasis(d1)
+        g1 = range(d1+1)
+        n1 = 1
+        init1 = np.random.rand(n1);
+
+        c = np.random.rand(b0.dimension(),b1.dimension())
+        f = Function(TensorBasis([b0,b1]), c)
+        ff = f.antiderivative([n0, n1], [0,1]).derivative([n0, n1], [0,1])
+        for i0 in g0:
+            for i1 in g1:
+                self.assertEqual(f(i0,i1), ff(i0,i1))
+
 
 if __name__ == '__main__':
     unittest.main()

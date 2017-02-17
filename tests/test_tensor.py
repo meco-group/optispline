@@ -6,11 +6,9 @@ from helpers import *
 class Test_Tensor(BasisTestCase):
 
     def test_operations_cast(self):
-    
+        
         scalars = [4, 4.0, np.ones((1,1))*4, DM(4), DTensor([4],[]), SX(4)]
         matrices = [np.ones((2,2))*4, DM.ones(2,2)*4, SX(DM.ones(2,2)*4), DTensor([4]*4,[2,2])]
-
-
 
         for A in [DTensor(3,[]), STensor(3,[])]:
           for s in scalars:
@@ -19,13 +17,12 @@ class Test_Tensor(BasisTestCase):
               lhs*rhs
               lhs-rhs
                  
-        """for A in [Polynomial([0,1],'x')]:
-          for s in scalars:
+        for A in [Polynomial([0,1],'x')]:
+          for s in scalars+matrices:
             for lhs, rhs in [(A,s),(s,A)]:
               lhs+rhs
               lhs*rhs
-              lhs-rhs
-        """      
+              lhs-rhs      
 
         for A in [DTensor(range(4),[2,2]), STensor(range(4),[2,2])]:
           for s in matrices:
@@ -33,7 +30,29 @@ class Test_Tensor(BasisTestCase):
               lhs+rhs
               lhs*rhs
               lhs-rhs
-              
+
+        knots1 = [0,0,0.4,1,1]
+        degree = 1
+        basis1 = Basis.BSplineBasis(knots1,degree)
+
+        knots2 = [0.,0.,0.5,1,1]
+        degree = 1
+        basis2 = Basis.BSplineBasis(knots2,degree)
+
+        basis3 = MonomialBasis(3);
+
+        mbasis1 = TensorBasis([basis1,basis2]);
+        coeff1 = DTensor(numpy.random.randn(9*4,1),[3,3,2,2])
+        
+        func1 = Function(mbasis1,coeff1)
+
+        for A in [func1]:
+          for s in matrices+scalars:
+            for lhs, rhs in [(A,s),(s,A)]:
+              lhs+rhs
+              lhs*rhs
+              lhs-rhs
+                        
     def test_concat(self):
 
         A = DTensor(1,[])

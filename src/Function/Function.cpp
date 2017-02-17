@@ -1,6 +1,7 @@
 #include <vector>
 #include "Function.h"
 #include "../Basis/utils/EvaluationGrid.h"
+#include "../Basis/MonomialBasis.h"
 #include "../common.h"
 namespace spline {
     Function::Function(const TensorBasis& basis, const Coefficient& coef) {
@@ -9,6 +10,13 @@ namespace spline {
 
     Function::Function(const Basis& basis, const Coefficient& coef) {
         init(TensorBasis(basis), coef);
+    }
+
+    Function::Function(const AnyTensor& c) {
+        Basis basis = MonomialBasis(0);
+        std::vector< int > dims_ = c.dims();
+        dims_.insert(dims_.begin(), 1);
+        init(basis, c.shape(dims_));
     }
 
     void Function::init(const TensorBasis& basis_, const Coefficient& coef_) {
@@ -127,7 +135,7 @@ namespace spline {
     }
 
     Function Function::operator+(const AnyTensor& t) const {
-        if (t.is_scalar() && !is_scalar()) return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
+        if (t.is_scalar() && t.dims()!=shape()) return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
         return operator+(Function::Constant(this->getTensorBasis(), t));
     }
 
@@ -137,18 +145,29 @@ namespace spline {
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
-    Function Function::operator*(const AnyTensor& t) const {
-        if (t.is_scalar() && !is_scalar()) return operator*(AnyTensor::repeat(t.as_scalar(), shape()));
+    void Function::homogenize_args(Function& f, AnyTensor& t) {
+      if (t.is_scalar() && t.dims()!=f.shape()) t = AnyTensor::repeat(t.as_scalar(), f.shape());
+      if (f.is_scalar() && !t.is_scalar()) {
+        AnyTensor ones = AnyTensor::repeat(AnyScalar(1), t.dims());
+        Coefficient C = f.getCoefficient();
+        f =  Function(f.getTensorBasis(), C.getData().shape(C.dimension()).outer_product(ones)).operator*(t);
+      }
+    }
 
-        std::vector< int > tdims = getCoeffTensor().dims();
+    Function Function::operator*(const AnyTensor& rhs) const {
+        Function f = *this;
+        AnyTensor t = rhs;
+        homogenize_args(f, t);
+
+        std::vector< int > tdims = f.getCoeffTensor().dims();
         tdims.pop_back();
         tdims.pop_back();
 
         AnyTensor transf = AnyTensor::repeat(AnyScalar(1), tdims);
         transf = transf.outer_product(t);
-        AnyTensor data = getCoeffTensor()*transf;
+        AnyTensor data = f.getCoeffTensor()*transf;
 
-        return Function(getTensorBasis(), Coefficient(data));
+        return Function(f.getTensorBasis(), Coefficient(data));
     }
 
     Function Function::mtimes(const Function& f) const {
@@ -158,7 +177,7 @@ namespace spline {
     }
 
     Function Function::mtimes(const AnyTensor& t) const {
-        if (t.is_scalar() && !is_scalar()) return operator*(AnyTensor::repeat(t.as_scalar(), t.dims()));
+        if (t.is_scalar() && t.dims()!=shape()) return operator*(AnyTensor::repeat(t.as_scalar(), t.dims()));
         spline_assert(t.n_dims() == 2);
         Coefficient c = getCoefficient();
         int dir = n_inputs() + 1; //0 based, 2nd matrix dimension
@@ -208,7 +227,7 @@ namespace spline {
 
         AnyTensor t = DT(DM::densify(DM::eye(shape_[0])));
         Function fdiag = operator*(t); //keep diagonal entries only
-        
+
         Coefficient cdiag = fdiag.getCoefficient();
         AnyTensor ones = AnyTensor::repeat(AnyScalar(1), std::vector< int >{1,shape_[0]});
         cdiag = cdiag.transform(ones, cdiag.dimension().size()); //sum over all columns
@@ -388,4 +407,20 @@ namespace spline {
       C = C.shape(shapeBasis);
       return Function(unionBasis, C);
     }
+
+    Function Function::cat(const NumericIndex& index, const std::vector< spline::Function >& functions) const {
+        TensorBasis unionBasis = getTensorBasis();
+        for(auto& f : functions){
+            unionBasis = unionBasis + f.getTensorBasis();
+        }
+
+        std::vector< Coefficient > coefVec;
+        for(auto& f : functions){
+            coefVec.push_back(f.transform_to(unionBasis).getCoefficient());
+        }
+
+        Coefficient coef = this->transform_to(unionBasis).getCoefficient();
+        return Function(unionBasis, coef.cat(index, coefVec));
+    }
+
 }  // namespace spline

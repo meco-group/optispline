@@ -101,13 +101,11 @@ namespace spline {
     Coefficient Coefficient::add_trival_dimension(int extra_dims) const {
         return (*this)->add_trival_dimension(extra_dims);
     }
-
     Coefficient CoefficientNode::add_trival_dimension(int extra_dims) const {
         std::vector< int > dims_ = data.dims();
         for (int i = 0; i < extra_dims; i++) {
             dims_.push_back(1);
         }
-        /* AnyTensor return_tensor = AnyTensor(getData(), dims_); */
         return getData().shape(dims_);
     }
 
@@ -123,6 +121,20 @@ namespace spline {
         order[order.size()-1] = order.size()-2;
 
         return Coefficient(getData().reorder_dims(order));
+    }
+
+    Coefficient Coefficient::cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const {
+        return (*this)->cat(index, coefs);
+    }
+
+    Coefficient CoefficientNode::cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const {
+        std::vector< AnyTensor > all_tensor = {getData()};
+        for(auto& c : coefs){
+            tensor_assert_message(shape()[index] == c.shape()[index], "cat has mismatched coefficients");
+            all_tensor.push_back(c.getData());
+        }
+
+       return AnyTensor::concat(all_tensor, dimension().size() + index);
     }
 
 }  // namespace spline

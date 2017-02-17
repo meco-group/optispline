@@ -159,6 +159,36 @@ class Test_Basis_Basis(BasisTestCase):
         p = b.getBasis("y")
         self.assertEqual( p.getDegree(), 3)
 
+    def test_derivative(self):
+        # Test derivative of TensorBasis
+
+        d0 = 4
+        b0 = MonomialBasis(d0)
+        d1 = 3
+        k1 = np.r_[np.zeros(d1), np.linspace(0.,1.,4.), np.ones(d1)]
+        b1 = BSplineBasis(k1,d1)
+        
+        # Derivative of bases
+        nd0 = 1
+        db0,T0 = b0.derivative(nd0)
+        nd1=2
+        db1,T1 = b1.derivative(nd1)
+        
+        # Derivative of TensorBasis
+        B = TensorBasis([b0,b1], ['x', 'y'])
+        dB,T = B.derivative([nd0,nd1],[0,1])
+        dB,T = B.derivative([nd0,nd1],['x','y'])
+
+        # Same T's and same Bases
+        self.assertEqualT(T[0], T0)
+        self.assertEqualT(T[1], T1)
+        db00 = dB.getBasis(0)
+        db11 = dB.getBasis(1)
+
+        self.assertEqual(db1.getKnots(),db11.getKnots())
+        self.assertEqual(db1.getDegree(),db11.getDegree())
+        self.assertEqual(db0.getDegree(),db00.getDegree())
+
 # TODO constructor
     # def test_getEvaluation1(self):
     # def test_getEvaluation2(self):
