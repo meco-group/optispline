@@ -416,6 +416,14 @@ namespace spline {
       return Function(new_tbasis, new_coefficient);
     }
 
+    std::vector<Function> Function::jacobian() const {
+        std::vector<Function> Jacobian(n_inputs());
+        for (int i=0; i<n_inputs(); i++){
+            Jacobian[i] = derivative(1,i);
+        }   
+        return Jacobian;
+    }
+
     Function Function::transform_to(const TensorBasis& basis) const {
 
       TensorBasis unionBasis = getTensorBasis() + basis;

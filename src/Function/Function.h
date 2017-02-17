@@ -92,6 +92,8 @@ namespace spline {
         Function antiderivative(int order, const NumericIndex& direction) const;
         Function antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const;
         Function antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
+        
+        std::vector<spline::Function> jacobian() const;
 
         Function transform_to(const TensorBasis& basis) const ;
 
