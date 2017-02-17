@@ -126,11 +126,19 @@ AnyScalar::AnyScalar(double s) {
 AnyScalar::AnyScalar(const SX& s) {
   t = TENSOR_SX;
   data_sx = s;
+  tensor_assert(s.is_scalar());
+}
+
+AnyScalar::AnyScalar(const DM& s) {
+  t = TENSOR_DOUBLE;
+  tensor_assert(s.is_scalar());
+  data_double = static_cast<double>(s);
 }
 
 AnyScalar::AnyScalar(const MX& s) {
   t = TENSOR_MX;
   data_mx = s;
+  tensor_assert(s.is_scalar());
 }
 
 AnyScalar::AnyScalar() {

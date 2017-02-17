@@ -46,6 +46,7 @@ class AnyScalar {
 #endif
     AnyScalar(const AnyScalar& s);
     AnyScalar(double s);
+    AnyScalar(const DM& s);
     AnyScalar(const SX& s);
     AnyScalar(const MX& s);
     AnyScalar();
@@ -203,9 +204,9 @@ class AnyTensor {
       return true;
     }
     AnyScalar as_scalar() const {
-      if (is_DT()) return as_scalar();
-      if (is_ST()) return as_scalar();
-      if (is_MT()) return as_scalar();
+      if (is_DT()) return as_DT().as_scalar();
+      if (is_ST()) return as_ST().as_scalar();
+      if (is_MT()) return as_MT().as_scalar();
       return 0;
     }
     AnyTensor operator-() const {
