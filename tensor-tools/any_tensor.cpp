@@ -548,4 +548,8 @@ namespace casadi {
     return false;
   }
 
+template <>
+Tensor<SX> Tensor<SX>::solve(const Tensor<SX>& B) const {
+  return SX::solve(matrix(), B.matrix());
+}
 } //namespace casadi

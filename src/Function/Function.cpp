@@ -135,7 +135,7 @@ namespace spline {
     }
 
     Function Function::operator+(const AnyTensor& t) const {
-        if (t.is_scalar() && !is_scalar()) return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
+        if (t.is_scalar() && t.dims()!=shape()) return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
         return operator+(Function::Constant(this->getTensorBasis(), t));
     }
 
@@ -145,18 +145,29 @@ namespace spline {
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
-    Function Function::operator*(const AnyTensor& t) const {
-        if (t.is_scalar() && !is_scalar()) return operator*(AnyTensor::repeat(t.as_scalar(), shape()));
+    void Function::homogenize_args(Function& f, AnyTensor& t) {
+      if (t.is_scalar() && t.dims()!=f.shape()) t = AnyTensor::repeat(t.as_scalar(), f.shape());
+      if (f.is_scalar() && !t.is_scalar()) {
+        AnyTensor ones = AnyTensor::repeat(AnyScalar(1), t.dims());
+        Coefficient C = f.getCoefficient();
+        f =  Function(f.getTensorBasis(), C.getData().shape(C.dimension()).outer_product(ones)).operator*(t);
+      }
+    }
 
-        std::vector< int > tdims = getCoeffTensor().dims();
+    Function Function::operator*(const AnyTensor& rhs) const {
+        Function f = *this;
+        AnyTensor t = rhs;
+        homogenize_args(f, t);
+
+        std::vector< int > tdims = f.getCoeffTensor().dims();
         tdims.pop_back();
         tdims.pop_back();
 
         AnyTensor transf = AnyTensor::repeat(AnyScalar(1), tdims);
         transf = transf.outer_product(t);
-        AnyTensor data = getCoeffTensor()*transf;
+        AnyTensor data = f.getCoeffTensor()*transf;
 
-        return Function(getTensorBasis(), Coefficient(data));
+        return Function(f.getTensorBasis(), Coefficient(data));
     }
 
     Function Function::mtimes(const Function& f) const {
@@ -166,7 +177,7 @@ namespace spline {
     }
 
     Function Function::mtimes(const AnyTensor& t) const {
-        if (t.is_scalar() && !is_scalar()) return operator*(AnyTensor::repeat(t.as_scalar(), t.dims()));
+        if (t.is_scalar() && t.dims()!=shape()) return operator*(AnyTensor::repeat(t.as_scalar(), t.dims()));
         spline_assert(t.n_dims() == 2);
         Coefficient c = getCoefficient();
         int dir = n_inputs() + 1; //0 based, 2nd matrix dimension
