@@ -69,7 +69,8 @@ class Test_Basis_BSplineBasis(BasisTestCase):
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
     def test_derivative(self):
-        return
+        
+        # Check first derivative
         n_der = 1
         degree = 3
         knotsint = 8
@@ -81,18 +82,39 @@ class Test_Basis_BSplineBasis(BasisTestCase):
             db_c = casadi.jacobian(db_c, x)
         db_c = casadi.Function('db_c', [x], [db_c] )
 
-        g = np.r_([b.greville(), db.greville()])
-        for i in g:
-            self.assertEqualT(np.array(db_c(i)).reshape(degree+1,), np.dot(T.transpose(),db([i])))
+        g = np.r_[b.greville(), db.greville()]
 
-        # test degreet'th+1 derivative, should give 0 T-matrix
+        for i in g:
+            self.assertEqualT(np.array(db_c(i)).reshape(knotsint+degree-1,), np.dot(T.transpose(),db([i])))
+
+        # Check second derivative
+        n_der = 2
+        db,T = b.derivative(n_der)
+        x = casadi.SX.sym('x')
+        db_c = b([x])
+        for i in range(0,n_der):
+            db_c = casadi.jacobian(db_c, x)
+        db_c = casadi.Function('db_c', [x], [db_c] )
+
+        for i in g:
+            self.assertEqualT(np.array(db_c(i)).reshape(knotsint+degree-1,), np.dot(T.transpose(),db([i])))
+
+        # Check degree'th derivative
+        n_der = degree
+        db,T = b.derivative(n_der)
+        x = casadi.SX.sym('x')
+        db_c = b([x])
+        for i in range(0,n_der):
+            db_c = casadi.jacobian(db_c, x)
+        db_c = casadi.Function('db_c', [x], [db_c] )
+
+        for i in g:
+            self.assertEqualT(np.array(db_c(i)).reshape(knotsint+degree-1,), np.dot(T.transpose(),db([i])))
+
+        # Check degree'th+1 derivative, should give T-matrix = 0
         db,T = b.derivative(degree+1)
         T = np.reshape(T, np.prod(T.shape))
         self.assertTrue(all(T == 0))
-
-
-
-
 
 
 # TODO constructor
