@@ -23,6 +23,9 @@ namespace spline {
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const ;
 
+
+        static int foo(const AnyVector& a) { return 1;}
+
         Function operator+(const Function& f) const ;
         Function operator+(const AnyScalar& a) const ;
         Function operator+(const AnyTensor& t) const ;
@@ -53,6 +56,22 @@ namespace spline {
 
         int n_inputs() const;  // Number of inputs of the function
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
+
+        Function insert_knots(const AnyVector & new_knots) const;
+        Function insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const;
+        Function insert_knots(const AnyVector & new_knots, const Argument & arg) const;
+        Function insert_knots(const std::vector<AnyVector> & new_knots,
+            const std::vector<Argument> & arg) const;
+        Function insert_knots(const std::vector<AnyVector> & new_knots,
+            const std::vector<NumericIndex> & arg_ind) const;
+
+        Function midpoint_refinement(int refinement) const;
+        Function midpoint_refinement(int refinement, const NumericIndex & arg_ind) const;
+        Function midpoint_refinement(int refinement, const Argument & arg) const;
+        Function midpoint_refinement(const std::vector<int> & refinement,
+            const std::vector<Argument> & arg) const;
+        Function midpoint_refinement(const std::vector<int> & refinement,
+            const std::vector<NumericIndex> & arg_ind) const;
 
         // Function derivative(int order, int direction) const;
 

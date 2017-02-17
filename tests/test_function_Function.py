@@ -122,8 +122,8 @@ class Test_Function_Function(BasisTestCase):
         b = TensorBasis([m,m])
         f = Function(b,a_)
 
-        print f.getCoeffTensor()
-        print a
+        # print f.getCoeffTensor()
+        # print a
 
         self.assertEqualT(a,f.getCoeffTensor())
 
@@ -131,12 +131,12 @@ class Test_Function_Function(BasisTestCase):
         np.random.seed(0)
         degree = 3
         knotsint = 8
-        knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
-        b = BSplineBasis(knots,degree)
-        c = np.random.rand(b.dimension())
-        s = Function(b,c)
+        knots1 = np.r_[np.zeros(degree),np.linspace(0., 1., knotsint), np.ones(degree)]
+        b1 = BSplineBasis(knots1, degree)
+        c1 = np.random.rand(b1.dimension())
+        s1 = Function(b1, c1)
         knots_add = np.random.rand(2)
-        s2 = s.insert_knots(knots_add)
+        s2 = s1.insert_knots(knots_add)
         b2 = s2.getBasis()
         knots2 = np.sort(np.r_[knots_add, knots1])
         self.assertEqualT(knots2, b2.getKnots(), 1e-6)
@@ -144,20 +144,44 @@ class Test_Function_Function(BasisTestCase):
         g2 = b2.greville()
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
-
         b = MonomialBasis(degree)
         with self.assertRaises(Exception):
             b.insert_knots(knots_add)
+        # symbolic knot insertion
+        knots_add_sym = MX.sym('knots_add', 2)
+        eval_sym = MX.sym('eval')
+        s2_sym = s1.insert_knots(knots_add_sym)
+        s2_ev = casadi.Function('s2', [knots_add_sym, eval_sym], [s2_sym(eval_sym)])
+        for i in g2:
+            self.assertEqualT(s1(i), float(s2_ev(knots_add, i)), 1e-6)
 
-    def test_insert_knots_multivariate(self):
-        return
+    def test_midpoint_refinement(self):
         np.random.seed(0)
         degree = 3
         knotsint = 8
-        knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
-        bs = BSplineBasis(knots,degree)
-        bm = MonomialBasis(degree)
-        b = TensorBasis([m])
+        knots1 = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+        b1 = BSplineBasis(knots1,degree)
+        c1 = np.random.rand(b1.dimension())
+        s1 = Function(b1,c1)
+        ref = 2
+        s2 = s1.midpoint_refinement(ref)
+        b2 = s2.getBasis()
+        knots2 = np.r_[np.zeros(degree),np.linspace(0., 1., 2*ref*(knotsint-1)+1), np.ones(degree)]
+        self.assertEqualT(knots2, b2.getKnots(), 1e-6)
+        self.assertEqualT(degree, b2.getDegree(), 1e-6)
+        g2 = b2.greville()
+        for i in g2:
+            self.assertEqualT(s1(i), s2(i), 1e-6)
+
+    # def test_insert_knots_multivariate(self):
+    #     return
+    #     np.random.seed(0)
+    #     degree = 3
+    #     knotsint = 8
+    #     knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+    #     bs = BSplineBasis(knots,degree)
+    #     bm = MonomialBasis(degree)
+    #     b = TensorBasis([m])
 
 
 if __name__ == '__main__':

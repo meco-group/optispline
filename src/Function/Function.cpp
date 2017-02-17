@@ -209,6 +209,82 @@ namespace spline {
         return coef.shape();
     }
 
+    Function Function::insert_knots(const AnyVector & new_knots) const {
+      spline_assert_message(getTensorBasis().n_basis() == 1,
+        "I don't know the direction for knot insertion. Please supply argument.")
+      return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<NumericIndex>{0});
+    }
+
+    Function Function::insert_knots(const AnyVector & new_knots,
+      const NumericIndex & arg_ind) const {
+      return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<NumericIndex>{arg_ind});
+    }
+
+    Function Function::insert_knots(const AnyVector & new_knots, const Argument & arg) const {
+      return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<Argument>{arg});
+    }
+
+    Function Function::insert_knots(const std::vector<AnyVector> & new_knots,
+      const std::vector<Argument> & arg) const {
+      std::vector<NumericIndex> arg_ind(arg.size());
+      for (int i=0; i<arg.size(); i++) {
+        arg_ind[0] = getTensorBasis().indexArgument(arg[i]);
+      }
+      return insert_knots(new_knots, arg_ind);
+    }
+
+    Function Function::insert_knots(const std::vector<AnyVector> & new_knots,
+      const std::vector<NumericIndex> & arg_ind) const {
+      spline_assert(arg_ind.size() == new_knots.size())
+      std::vector<AnyTensor> T;
+      TensorBasis tbasis = getTensorBasis();
+      TensorBasis new_tbasis = tbasis.insert_knots(new_knots, T, arg_ind);
+      std::vector<NumericIndex> directions(arg_ind.size());
+      Coefficient new_coefficient = getCoefficient().transform(T, arg_ind);
+      return Function(new_tbasis, new_coefficient);
+    }
+
+    Function Function::midpoint_refinement(int refinement) const {
+      // apply on all directions
+      std::vector<NumericIndex> arg_ind(getTensorBasis().n_basis());
+      std::vector<int> refs(getTensorBasis().n_basis());
+      for (int k=0; k<arg_ind.size(); k++){
+        arg_ind[k] = k;
+        refs[k] = refinement;
+      }
+      return midpoint_refinement(refs, arg_ind);
+    }
+
+    Function Function::midpoint_refinement(int refinement, const NumericIndex & arg_ind) const {
+      return midpoint_refinement(std::vector<int>{refinement}, std::vector<NumericIndex>{arg_ind});
+    }
+
+    Function Function::midpoint_refinement(int refinement, const Argument & arg) const {
+      return midpoint_refinement(std::vector<int>{refinement}, std::vector<Argument>{arg});
+    }
+
+    Function Function::midpoint_refinement(const std::vector<int> & refinement,
+      const std::vector<Argument> & arg) const {
+      std::vector<NumericIndex> arg_ind(arg.size());
+      for (int i=0; i<arg.size(); i++) {
+        arg_ind[0] = getTensorBasis().indexArgument(arg[i]);
+      }
+      return midpoint_refinement(refinement, arg_ind);
+    }
+
+    Function Function::midpoint_refinement(const std::vector<int> & refinement,
+      const std::vector<NumericIndex> & arg_ind) const {
+      spline_assert(arg_ind.size() == refinement.size())
+      std::vector<AnyTensor> T;
+      TensorBasis tbasis = getTensorBasis();
+      TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement, T, arg_ind);
+      std::vector<NumericIndex> directions(arg_ind.size());
+      Coefficient new_coefficient = getCoefficient().transform(T, arg_ind);
+      return Function(new_tbasis, new_coefficient);
+    }
+
+
+
     // Function derivative(int order, int direction) const {
         // AnyTensor T;
         // basis.derivative(order, direction, T&);

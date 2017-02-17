@@ -58,10 +58,28 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         c1 = np.random.rand(b1.dimension())
         s1 = Function(b1,c1)
         knots_add = np.random.rand(2)
+        # knots_add = 0.1
         b2,T = b1.insert_knots(knots_add)
         knots2 = np.sort(np.r_[knots_add, knots1])
-
         self.assertEqualT(knots2, b2.getKnots(), tol=1e-6)
+        c2 = T.dot(c1)
+        s2 = Function(b2,c2)
+        g2 = b2.greville()
+        for i in g2:
+            self.assertEqualT(s1(i), s2(i), 1e-6)
+
+    def test_midpoint_refinement(self):
+        np.random.seed(0)
+        degree = 3
+        knotsint = 8
+        knots1 = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+        b1 = BSplineBasis(knots1,degree)
+        c1 = np.random.rand(b1.dimension())
+        s1 = Function(b1,c1)
+        ref = 2
+        b2,T = b1.midpoint_refinement(ref)
+        knots2 = np.r_[np.zeros(degree),np.linspace(0., 1., 2*ref*(knotsint-1)+1), np.ones(degree)]
+        self.assertEqualT(knots2, b2.getKnots(), 1e-6)
         c2 = T.dot(c1)
         s2 = Function(b2,c2)
         g2 = b2.greville()
@@ -89,10 +107,6 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         db,T = b.derivative(degree+1)
         T = np.reshape(T, np.prod(T.shape))
         self.assertTrue(all(T == 0))
-
-
-
-
 
 
 # TODO constructor
