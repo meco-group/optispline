@@ -30,6 +30,7 @@ namespace spline {
         std::string getRepresentation() const ;
         void repr() const { userOut() << getRepresentation() << std::endl;}
     public:
+    private:
         AnyTensor data;
         AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;
         AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;
