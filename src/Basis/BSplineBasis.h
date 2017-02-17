@@ -108,7 +108,6 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const ;
         virtual Basis operator*(const DummyBasis& other) const ;
 
-        void setKnots(const std::vector<AnyScalar>& knots) ;
         std::vector<AnyScalar> getKnots() const;
 
         std::vector<AnyScalar> greville() const;
@@ -159,7 +158,6 @@ namespace spline{
         BSplineBasis(bounds.to_scalar_vector(), degree, numberOfIntervals) {};
 
         std::vector<AnyScalar> getKnots() const;
-        void setKnots(const std::vector<AnyScalar>& knots) ;
 
         std::vector<AnyScalar> greville() const;
         //

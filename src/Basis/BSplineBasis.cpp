@@ -183,13 +183,6 @@ namespace spline {
         return knots_;
     }
 
-    void BSplineBasis::setKnots(const std::vector<AnyScalar>& knots) { return (*this)->setKnots (knots); }
-    void BSplineBasisNode::setKnots(const std::vector<AnyScalar>& knots) {
-        AnyVector kn(vertcat(knots));
-        knots_ = kn.sort().to_scalar_vector();
-    }
-
-
     AnyTensor BSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         return SubBasisEvalution(x);
     }
