@@ -38,5 +38,25 @@ class Test_Function_Argument(BasisTestCase):
         b = Argument("b")
         self.assertEqual(b.getName(), "b")
 
+    def test_sum_arguments(self):
+        x = Argument("x")
+        y = Argument("y")
+
+        b1 = TensorBasis(BSplineBasis([0,0,1,1],1), x)
+
+        b2 = b1
+        b2 = TensorBasis(b1, [y])
+
+        self.assertEqual(b1.getArguments()[0].getName(), "x")
+        self.assertEqual(b2.getArguments()[0].getName(), "y")
+
+        # with self.assertRaises(Exception):
+        #     b1.setArguments([x,y])
+
+        # c = Coefficient(np.random.random((2,3,5)));
+        # s = Function(b,c);
+
+
+
 if __name__ == '__main__':
     unittest.main()

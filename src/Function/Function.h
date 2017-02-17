@@ -24,19 +24,17 @@ namespace spline {
         AnyTensor operator()(const std::vector< AnyScalar >& x) const ;
 
         Function operator+(const Function& f) const ;
-        Function operator+(const AnyScalar& a) const ;
         Function operator+(const AnyTensor& t) const ;
         Function operator*(const Function& f) const ;
-        Function operator*(const AnyScalar& a) const ;
         Function operator*(const AnyTensor& t) const ;
         Function pow(int power) const ;
         Function operator-() const ;
         Function operator-(const Function& f) const ;
-        Function operator-(const AnyScalar& a) const ;
         Function operator-(const AnyTensor& t) const ;
         Function mtimes(const Function& f) const ;
         Function mtimes(const AnyTensor& f) const ;
         Function rmtimes(const AnyTensor& f) const ;
+        Function transpose() const ;
 
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;
@@ -46,6 +44,8 @@ namespace spline {
 
         MX operator<=(const MX& x) const;
         MX operator>=(const MX& x) const;
+
+        bool is_scalar() const { return shape()[0]==1 && shape()[1]==1; };
 
         std::string getRepresentation() const ;
         void repr() const { userOut() << getRepresentation() << std::endl;}

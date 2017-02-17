@@ -103,7 +103,8 @@ namespace spline {
 
       int numberEval = basisEvaluated.size();
       int numberBasis = sumBasis.totalNumberBasisFunctions();
-      int numberCoef = coef.getNumberCoefficents();
+      std::vector< int > elemShape = sumFunctionEvaluated[0].dims();
+      int numberCoef = (elemShape.size() == 0)? 1: elemShape[0]*elemShape[1];
 
       std::vector< int > shapeA = {numberEval, numberBasis};
       std::vector< int > shapeB = {numberBasis, numberCoef};
@@ -111,7 +112,7 @@ namespace spline {
       B = B.shape(shapeB);
       AnyTensor C = A.solve(B);
 
-      std::vector< int > shapeCoef = coef.shape();
+      std::vector< int > shapeCoef = elemShape;
       std::vector< int > shapeBasis = sumBasis.dimension();
       shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
 
@@ -137,17 +138,9 @@ namespace spline {
           [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs);});
     }
 
-    Function Function::operator+(const AnyScalar& a) const {
-        return operator+(Function::Constant(this->getTensorBasis(), a, this->shape()));
-    }
-
     Function Function::operator+(const AnyTensor& t) const {
+        if (t.is_scalar() && !is_scalar()) return operator+(t.repeat(t.as_scalar(), t.dims()));
         return operator+(Function::Constant(this->getTensorBasis(), t));
-    }
-
-    Function Function::operator*(const AnyScalar& a) const {
-        AnyTensor t = AnyTensor(DM::eye(shape()[2]))*a;
-        return operator*(t);
     }
 
     Function Function::mtimes(const AnyTensor& t) const {
@@ -161,6 +154,7 @@ namespace spline {
     }
 
     Function Function::operator*(const AnyTensor& t) const {
+        if (t.is_scalar() && !is_scalar()) return operator*(t.repeat(t.as_scalar(), t.dims()));
         spline_assert(t.n_dims() == 2);
         Coefficient c = getCoefficient();
         int dir = n_inputs() + 1; //0 based, 2nd matrix dimension
@@ -187,16 +181,16 @@ namespace spline {
         return operator+(-f);
     }
 
-    Function Function::operator-(const AnyScalar& a) const {
-        return operator+((-1)*a); // ---MINUS!!
-    }
-
     Function Function::operator-(const AnyTensor& t) const {
         return operator+(-t);
     }
 
     Function Function::operator-() const {
         return Function(basis, -coef);
+    }
+
+    Function Function::transpose() const {
+        return Function(getTensorBasis(), getCoefficient().transpose());
     }
 
     std::string Function::getRepresentation() const {return "Function";};

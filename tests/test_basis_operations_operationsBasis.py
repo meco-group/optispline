@@ -16,7 +16,7 @@ class Test_Basis_Operations(BasisTestCase):
         S2 = s2 + s3
 
         b = b1 + b2
-        
+
 
 if __name__ == '__main__':
     s1 = MonomialBasis(2)
@@ -37,16 +37,15 @@ if __name__ == '__main__':
     x2 = Argument('x2')
     x3 = Argument('x3')
 
-    b1.setArguments([x1,x2])
-    b2.setArguments([x2,x1])
+    b1 = TensorBasis(b1, [x1,x2])
+    b2 = TensorBasis(b2, [x2,x1])
 
     print "SWAP"
     b = b1 + b2
     print b
     print b.getSubBasis()
 
-    b3 = TensorBasis([s3,s4])
-    b3.setArguments([x2,x3])
+    b3 = TensorBasis([s3,s4], [x2,x3])
 
     print "ARGUMENT COMBINE"
     b = b1 + b3

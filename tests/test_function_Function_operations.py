@@ -6,17 +6,24 @@ from numpy.polynomial.polynomial import polyval
 
 class Test_Function_Operations(BasisTestCase):
 
-#    def test_polynomial_operations(self):
-#
-#      p1 = Polynomial([0,0,1],'x')
-#      p2 = Polynomial([0,1],'y')
-#
-#      x = Polynomial([0,1],'x')
-#      y = p2
-#      # f = x + y
-#      # f = y*x
-#      # f = x + y*x + y*y
-#
+    def test_polynomial_operations(self):
+
+      t = DTensor([0, 1, 1, 0, 1, 0, 0, 1], [2, 2, 2])
+
+      x = Polynomial([0,1],'x')
+      b = x.getBasis()
+      f = Function(b, t)
+      f([0.2])
+
+      p1 = Polynomial([0,0,1],'x')
+      p2 = Polynomial([0,1],'y')
+
+      x = Polynomial([0,1],'x')
+      y = p2
+      # f = x + y
+      # f = y*x
+      # f = x + y*x + y*y
+
 #
 #      # for p,poly in [
 #      #                 (p1+p2, lambda x,y: x**2+y),
@@ -45,19 +52,43 @@ class Test_Function_Operations(BasisTestCase):
 #        f = x + y
 #        # f = y*x
 #        # f = x + y*x + y*y
-      
+
     def test_const_function(self):
         knots = [0,0,0.4,1,1]
         degree = 1
         basis = Basis.BSplineBasis(knots,degree)
         basis2 = Basis.MonomialBasis(3)
-        
+
+        c = Function.Constant(basis,1)
+        self.assertEqualT(c(0.5),DTensor(1))
+
+#    def test_const_function(self):
+#        knots = [0,0,0.4,1,1]
+#        degree = 1
+#        basis = Basis.BSplineBasis(knots,degree)
+#
+#        c = Function.Constant(basis,1)
+#        self.assertEqualT(c(0.5),DTensor(1))
+#
+#        c2 = Function.Constant(basis,DTensor([2,2],[1,2]))
+#        self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
+#
+#        basis2 = Basis.MonomialBasis(3)
+#        c3 = Function.Constant(basis2,1)
+#        self.assertEqualT(c3(0.5),DTensor(1))
+
+    def test_const_function(self):
+        knots = [0,0,0.4,1,1]
+        degree = 1
+        basis = Basis.BSplineBasis(knots,degree)
+        basis2 = Basis.MonomialBasis(3)
+
         c = Function.Constant(basis,1)
         self.assertEqualT(c(0.5),DTensor(1))
 
         c2 = Function.Constant(basis,DTensor([2,2],[1,2]))
         self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
-        
+
         basis2 = Basis.MonomialBasis(3)
         c3 = Function.Constant(basis2,1)
         self.assertEqualT(c3(0.5),DTensor(1))
@@ -84,9 +115,9 @@ class Test_Function_Operations(BasisTestCase):
         func2 = Function(basis2,coeff2)
 
         p1 = Polynomial([0,0,1],'x')
-        
+
         # function evaluations
-        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10) 
+        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10)
         func1_value = []
         func2_value = []
         p1_value = []
@@ -156,7 +187,7 @@ class Test_Function_Operations(BasisTestCase):
         p1 = func1.pow(3)
 
         # function evaluations
-        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10) 
+        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10)
         y = [0.1,0.2,0.5,0.8,0.1,0.2]
         func1_value = []
         func2_value = []
@@ -179,7 +210,8 @@ class Test_Function_Operations(BasisTestCase):
             self.assertAlmostEqual(m2(_x,_y),func1_value[k]*2.0)
             self.assertAlmostEqual(u1(_x,_y),-func1_value[k])
             self.assertAlmostEqual(p1(_x,_y),func1_value[k]**3)
-        
+
+
     def test_matrix_product(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
@@ -195,15 +227,15 @@ class Test_Function_Operations(BasisTestCase):
         mbasis2 = TensorBasis([basis2,basis3]);
 
         coeff1 = DTensor(numpy.random.randn(9*6,1),[3,3,3,2])
-        coeff2 = DTensor(numpy.random.randn(12*4,1),[3,4,2,2])
+        coeff2 = DTensor(numpy.random.randn(12*8,1),[3,4,2,4])
         func1 = Function(mbasis1,coeff1)
         func2 = Function(mbasis2,coeff2)
 
         fm = func1.mtimes(func2)
+
         c = Function.Constant(mbasis1,1)
-        print 'debug'
         fm2 = func1.mtimes(c)
-        #fm3 = c.mtimes(func2)
+        fm3 = c.mtimes(func2)
 
         x = [0.1,0.35,0.4,0.5,0.8,0.99]
         y = [0.1,0.2,0.5,0.8,0.1,0.2]
@@ -222,7 +254,7 @@ class Test_Function_Operations(BasisTestCase):
 
             self.assertEqualT(fm(_x,_y),numpy.dot(func1_value[k], func2_value[k]))
             self.assertEqualT(fm2(_x,_y),func1_value[k])
-            #self.assertEqualT(fm3(_x,_y),func2_value[k])
+            self.assertEqualT(fm3(_x,_y),func2_value[k])
 
 
 if __name__ == '__main__':

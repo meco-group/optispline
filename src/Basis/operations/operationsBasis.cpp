@@ -34,10 +34,10 @@ namespace spline {
                 Basis subBasis1 = b1.getBasis(a);
                 Basis subBasis2 = b2.getBasis(a);
                 Basis sum = bc(subBasis1, subBasis2);
-                returnBasis.addBasis(sum);
+                returnBasis = returnBasis.addBasis(sum);
             }
 
-            returnBasis.setArguments(allArguments);
+            returnBasis = TensorBasis(returnBasis, allArguments);
 
         } else {
             spline_assert_message(b1.n_basis() == b2.n_basis(),
@@ -46,15 +46,15 @@ namespace spline {
                 Basis subBasis1 = b1.getBasis(i);
                 Basis subBasis2 = b2.getBasis(i);
                 Basis sum = bc(subBasis1, subBasis2);
-                returnBasis.addBasis(sum);
+                returnBasis = returnBasis.addBasis(sum);
             }
 
             if (b1.hasArguments()) {
-                returnBasis.setArguments(b1.getArguments());
+                returnBasis = TensorBasis(returnBasis, b1.getArguments());
             }
 
             if (b2.hasArguments()) {
-                returnBasis.setArguments(b2.getArguments());
+                returnBasis = TensorBasis(returnBasis, b2.getArguments());
             }
 
         }
