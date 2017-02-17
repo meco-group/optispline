@@ -90,10 +90,10 @@ namespace spline {
           AnyTensor lhs = thisFunctionEvaluated[i];
           AnyTensor rhs = otherFunctionEvaluated[i];
           if(lhs.dims() == std::vector< int > {1, 1}){
-              lhs.shape({});
+              lhs = lhs.shape({});
           }
           if(rhs.dims() == std::vector< int > {1, 1}){
-              rhs.shape({});
+              rhs = rhs.shape({});
           }
           sumFunctionEvaluated.push_back(tc(lhs, rhs));
       }
@@ -112,10 +112,10 @@ namespace spline {
       AnyTensor C = A.solve(B);
 
       std::vector< int > shapeCoef = coef.shape();
-      std::vector< int > shape = sumBasis.dimension();
-      shape.insert(shape.end(), shapeCoef.begin(), shapeCoef.end());
+      std::vector< int > shapeBasis = sumBasis.dimension();
+      shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
 
-      C = C.shape(shape);
+      C = C.shape(shapeBasis);
       return Function(sumBasis, C);
     }
 
@@ -153,6 +153,11 @@ namespace spline {
     Function Function::mtimes(const AnyTensor& t) const {
         if (t.is_scalar()) return operator*(t);
         return mtimes(Function::Constant(this->getTensorBasis(), t));
+    }
+
+    Function Function::rmtimes(const AnyTensor& t) const {
+        if (t.is_scalar()) return operator*(t);
+        return Function::Constant(this->getTensorBasis(), t).mtimes(*this);
     }
 
     Function Function::operator*(const AnyTensor& t) const {

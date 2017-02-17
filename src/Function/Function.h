@@ -36,6 +36,7 @@ namespace spline {
         Function operator-(const AnyTensor& t) const ;
         Function mtimes(const Function& f) const ;
         Function mtimes(const AnyTensor& f) const ;
+        Function rmtimes(const AnyTensor& f) const ;
 
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;
