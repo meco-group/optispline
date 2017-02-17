@@ -3,6 +3,7 @@
 #include "../Basis/utils/EvaluationGrid.h"
 #include "../Basis/MonomialBasis.h"
 #include "../common.h"
+
 namespace spline {
     Function::Function(const TensorBasis& basis, const Coefficient& coef) {
         init(basis, coef);

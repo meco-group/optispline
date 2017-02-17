@@ -1,5 +1,5 @@
-#ifndef CPP_SPLINE_SUBUNIVARIATEBASIS_H
-#define CPP_SPLINE_SUBUNIVARIATEBASIS_H
+#ifndef CPP_SPLINE_UNIVARIATEBASIS_H
+#define CPP_SPLINE_UNIVARIATEBASIS_H
 
 #include <casadi/casadi.hpp>
 #include <string>
@@ -72,4 +72,4 @@ namespace spline {
     };
 } // namespace spline
 
-#endif //CPP_SPLINE_SUBUNIVARIATEBASIS_H
+#endif //CPP_SPLINE_UNIVARIATEBASIS_H

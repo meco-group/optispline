@@ -1,5 +1,5 @@
-#ifndef SUBBASIS_H_
-#define SUBBASIS_H_
+#ifndef BASIS_H_
+#define BASIS_H_
 
 #include <iostream>
 #include <string>
@@ -102,4 +102,4 @@ namespace spline {
         }
 
 }  // namespace spline
-#endif  // SUBBASIS_H_
+#endif  // BASIS_H_
