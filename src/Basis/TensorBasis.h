@@ -23,13 +23,13 @@ namespace spline {
 
     class TensorBasisNode : public SharedObjectNode {
     public:
-        TensorBasisNode(const std::vector< Basis >& allBasis);
+        TensorBasisNode(const std::vector< Basis >& allSubBasis);
+        TensorBasisNode(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args);
 
         int n_basis() const;
         std::vector<int> dimension() const;
         int n_inputs() const;
 
-        void setArguments(const std::vector< Argument >& argument);
         std::vector< Argument > getArguments() const;
 
         Argument getSubArgument(int index) const;
@@ -46,8 +46,8 @@ namespace spline {
         Basis getBasis(const Index& index) const;
         // Basis getSubBasis( Argument a) const;
 
-        void addBasis(TensorBasis basis);
-        void addBasis(Basis basis);
+        TensorBasis addBasis(TensorBasis basis) const ;
+        TensorBasis addBasis(Basis basis) const ;
 
         TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
 
@@ -81,15 +81,17 @@ namespace spline {
 
 #endif // SWIG
         TensorBasis();
-        TensorBasis(const Basis & allSubBasis);
+        TensorBasis(const Basis& allSubBasis);
+        TensorBasis(const Basis& allSubBasis, const Argument& args);
+        TensorBasis(const TensorBasis& tensor, const std::vector< Argument >& args);
         TensorBasis(const std::vector< Basis >& allSubBasis);
+        TensorBasis(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
 
         int n_basis() const;  // Number of bases, building up the TensorBasis
         int n_inputs() const; // Total number of inputs, over all bases
         std::vector<int> dimension() const; // Vector containing number of basis functions in each basis
 
-        void setArguments(const std::vector< spline::Argument >& argument);
         std::vector< spline::Argument > getArguments() const;
 
         spline::Argument getSubArgument(int index) const;
@@ -108,8 +110,8 @@ namespace spline {
         std::vector< Basis > getSubBasis() const;
         // TensorBasis getTensorBasis() const;
 
-        void addBasis(TensorBasis basis);
-        void addBasis(Basis basis);
+        TensorBasis addBasis(TensorBasis basis) const ;
+        TensorBasis addBasis(Basis basis) const ;
 
         TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
 
