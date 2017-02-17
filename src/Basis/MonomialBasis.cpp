@@ -90,8 +90,8 @@ namespace spline {
         if (order > getDegree()){
             // User tries to take a derivative which is of higher order than the basis, returns all 0
             int dim = dimension();
-            std::vector<double> entries(dim*(dim+1), 0);
-            T = vertcat(entries).shape({dim, dim+1});  // Transformation tensor to apply on coefficients of function, all zero
+            std::vector<double> entries(1*(dim), 0);
+            T = vertcat(entries).shape({1, dim});  // Transformation tensor to apply on coefficients of function, all zero
             return MonomialBasis(0);
         }
         else{
