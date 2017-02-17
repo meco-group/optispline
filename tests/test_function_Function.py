@@ -236,5 +236,11 @@ class Test_Function_Function(BasisTestCase):
         for x in np.random.random(10):
             self.assertAlmostEqual(f(x), p(x))
 
+    def test_funnction_constant(self):
+        f = Function(2)
+        for x in np.random.random(10):
+            self.assertAlmostEqual(f(x), 2)
+
+
 if __name__ == '__main__':
     unittest.main()

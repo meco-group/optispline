@@ -107,7 +107,6 @@ namespace spline {
         for (int i = 0; i < extra_dims; i++) {
             dims_.push_back(1);
         }
-        /* AnyTensor return_tensor = AnyTensor(getData(), dims_); */
         return getData().shape(dims_);
     }
 
