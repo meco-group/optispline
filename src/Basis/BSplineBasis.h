@@ -96,7 +96,6 @@ namespace spline{
 
     public:
         BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree);
-        BSplineBasisNode(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals);
 
         virtual Basis operator+(const MonomialBasis& other) const ;
         virtual Basis operator+(const BSplineBasis& other) const ;
