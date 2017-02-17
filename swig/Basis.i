@@ -414,7 +414,6 @@ using namespace spline;
       {
         std::vector<AnyScalar> tmp, *mt = &tmp;
         if (casadi::to_ptr(p, m ? &mt : 0)) {
-          userOut() << "debug" << tmp.size() << std::endl;
           if (m) **m = vertcat(tmp);
           return true;
         }
@@ -867,7 +866,11 @@ namespace spline {
     Function spline_times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
     Function spline_mtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
     Function spline_rmtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.rmtimes(rhs); }
-
+    Function spline_plus(const AnyTensor& lhs, const Function& rhs) { return rhs+lhs; }
+    Function spline_minus(const AnyTensor& lhs, const Function& rhs) { return (-rhs)+lhs; }
+    Function spline_times(const AnyTensor& lhs, const Function& rhs) { return rhs*lhs; }
+    Function spline_mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(lhs); }
+    Function spline_rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
   }
 }
 
