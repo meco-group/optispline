@@ -53,6 +53,8 @@ namespace spline {
         void repr() const { userOut() << getRepresentation() << std::endl;}
         // Argument& getArgument (){ return getBasis().getArgument();}
 
+        static void homogenize_args(Function& f, AnyTensor& t);
+
         int n_inputs() const;  // Number of inputs of the function
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
 

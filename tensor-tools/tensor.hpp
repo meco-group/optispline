@@ -550,6 +550,9 @@ class Tensor {
     std::vector<int> dims_;
 };
 
+template <>
+Tensor<SX> Tensor<SX>::solve(const Tensor<SX>& B) const;
+
 template <class T>
 std::pair<int, int> Tensor<T>::normalize_dim(const std::vector<int> & dims) {
     if (dims.size()==0) {
