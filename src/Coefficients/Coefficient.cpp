@@ -130,7 +130,7 @@ namespace spline {
     Coefficient CoefficientNode::cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const {
         std::vector< AnyTensor > all_tensor = {getData()};
         for(auto& c : coefs){
-            tensor_assert_message(shape()[index] == c.shape()[index], "cat has mismatched coefficients");
+            tensor_assert_message(shape()[1-index] == c.shape()[1-index], "cat has mismatched coefficients" << shape()[1-index] << " != " << c.shape()[1-index] << ".");
             all_tensor.push_back(c.getData());
         }
 
