@@ -200,10 +200,17 @@ namespace spline {
         return (*this)->operator()(x);
     }
     AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x) const {
-        spline_assert(x.size()==allSubBasis.size());
+        spline_assert(x.size() == n_inputs());
         AnyTensor ret = AnyTensor::unity();
-        for (int i = 0; i < x.size(); ++i) {
-            ret = ret.outer_product(allSubBasis[i](std::vector< AnyScalar >{x[i]}));
+        std::vector< AnyScalar > remaining_inputs = x;
+
+        for (auto& b : allSubBasis) {
+            std::vector< AnyScalar > input = {};
+            for (int i = 0; i < b.n_inputs(); ++i) {
+                input.push_back(remaining_inputs.front());
+                remaining_inputs.erase(remaining_inputs.begin());
+            }
+            ret = ret.outer_product(b(input));
         }
         return ret;
     }
