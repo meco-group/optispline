@@ -209,6 +209,12 @@ class Test_Function_Function(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
+    def test_transform_to(self):
+        b = BSplineBasis([0, 1], 3, 2)
+        p = Polynomial(np.random.randn(4))
+        f = p.transform_to(TensorBasis(b))
+        for x in np.random.random(10):
+            self.assertAlmostEqual(f(x), p(x))
 
 if __name__ == '__main__':
     unittest.main()
