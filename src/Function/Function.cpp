@@ -301,13 +301,13 @@ namespace spline {
     }
 
     Function Function::derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const {
-      spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
-      std::vector<AnyTensor> T;
-      TensorBasis tbasis = getTensorBasis();
-      TensorBasis new_tbasis = tbasis.derivative(orders, direction_ind, T);
-      std::vector<NumericIndex> directions(direction_ind.size());
-      Coefficient new_coefficient = getCoefficient().transform(T, direction_ind);
-      return Function(new_tbasis, new_coefficient);
+        spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
+        std::vector<AnyTensor> T;
+        TensorBasis tbasis = getTensorBasis();
+        TensorBasis new_tbasis = tbasis.derivative(orders, direction_ind, T);
+        std::vector<NumericIndex> directions(direction_ind.size());
+        Coefficient new_coefficient = getCoefficient().transform(T, direction_ind);
+        return Function(new_tbasis, new_coefficient);
     }
 
 }  // namespace spline
