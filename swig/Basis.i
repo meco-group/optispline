@@ -389,39 +389,35 @@ using namespace spline;
     }
 
     bool to_ptr(GUESTOBJECT *p, AnyVector** m) {
-      try {
-        {
-          DT tmp, *mt=&tmp;
-          if(casadi::to_ptr(p, m ? &mt : 0)) {
-            if (m) **m = *mt;
-            return true;
-          }
+      {
+        DT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_vector())) {
+          if (m) **m = *mt;
+          return true;
         }
-        {
-          ST tmp, *mt=&tmp;
-          if(casadi::to_ptr(p, m ? &mt : 0)) {
-            if (m) **m = *mt;
-            return true;
-          }
+      }
+      {
+        ST tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_vector())) {
+          if (m) **m = *mt;
+          return true;
         }
+      }
 
-        {
-          MT tmp, *mt=&tmp;
-          if(casadi::to_ptr(p, m ? &mt : 0)) {
-            if (m) **m = *mt;
-            return true;
-          }
+      {
+        MT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_vector())) {
+          if (m) **m = *mt;
+          return true;
         }
-        {
-          std::vector<AnyScalar> tmp, *mt = &tmp;
-          if (casadi::to_ptr(p, m ? &mt : 0)) {
-            userOut() << "debug" << tmp.size() << std::endl;
-            if (m) **m = vertcat(tmp);
-            return true;
-          }
+      }
+      {
+        std::vector<AnyScalar> tmp, *mt = &tmp;
+        if (casadi::to_ptr(p, m ? &mt : 0)) {
+          userOut() << "debug" << tmp.size() << std::endl;
+          if (m) **m = vertcat(tmp);
+          return true;
         }
-      } catch(const std::exception& e) {
-        return false;
       }
       return false;
     }
@@ -855,6 +851,11 @@ namespace spline {
     AnyTensor spline_times(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs*rhs; }
     AnyTensor spline_mtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
     AnyTensor spline_rmtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.mtimes(lhs); }
+    Function spline_plus(const Function& lhs, const Function& rhs) { return lhs+rhs; }
+    Function spline_minus(const Function& lhs, const Function& rhs) { return lhs-rhs; }
+    Function spline_times(const Function& lhs, const Function& rhs) { return lhs*rhs; }
+    Function spline_mtimes(const Function& lhs, const Function& rhs) { return lhs.mtimes(rhs); }
+    Function spline_rmtimes(const Function& lhs, const Function& rhs) { return rhs.mtimes(lhs); }
     Function spline_plus(const Function& lhs, const AnyTensor& rhs) { return lhs+rhs; }
     Function spline_minus(const Function& lhs, const AnyTensor& rhs) { return lhs-rhs; }
     Function spline_times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
