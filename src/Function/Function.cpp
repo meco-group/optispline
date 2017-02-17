@@ -139,7 +139,7 @@ namespace spline {
 
     Function Function::operator*(const AnyTensor& t) const {
         if (t.is_scalar() && !is_scalar()) return operator*(AnyTensor::repeat(t.as_scalar(), shape()));
-        
+
         std::vector< int > tdims = getCoeffTensor().dims();
         tdims.pop_back();
         tdims.pop_back();
@@ -147,7 +147,7 @@ namespace spline {
         AnyTensor transf = AnyTensor::repeat(AnyScalar(1), tdims);
         transf = transf.outer_product(t);
         AnyTensor data = getCoeffTensor()*transf;
-        
+
         return Function(getTensorBasis(), Coefficient(data));
     }
 
@@ -318,4 +318,34 @@ namespace spline {
         return Function(new_tbasis, new_coefficient);
     }
 
+    Function Function::transform_to(const TensorBasis& basis) const {
+
+      TensorBasis unionBasis = getTensorBasis() + basis;
+      EvaluationGrid evaluationGrid = EvaluationGrid(unionBasis);
+      std::vector< AnyTensor > basisEvaluated;
+      std::vector< AnyTensor > thisFunctionEvaluated;
+
+      basisEvaluated = evaluationGrid.evaluateEvaluationGrid();
+      thisFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(*this);
+
+      AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
+      AnyTensor B = AnyTensor::pack(thisFunctionEvaluated, 0);
+      int numberEval = basisEvaluated.size();
+      int numberBasis = unionBasis.totalNumberBasisFunctions();
+      std::vector< int > elemShape = thisFunctionEvaluated[0].dims();
+      int numberCoef = elemShape[0]*elemShape[1];
+
+      std::vector< int > shapeA = {numberEval, numberBasis};
+      std::vector< int > shapeB = {numberBasis, numberCoef};
+      A = A.shape(shapeA);
+      B = B.shape(shapeB);
+      AnyTensor C = A.solve(B);
+
+      std::vector< int > shapeCoef = elemShape;
+      std::vector< int > shapeBasis = unionBasis.dimension();
+      shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
+
+      C = C.shape(shapeBasis);
+      return Function(unionBasis, C);
+    }
 }  // namespace spline
