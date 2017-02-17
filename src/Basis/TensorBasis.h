@@ -12,6 +12,7 @@
 #include "Basis.h"
 #include "../Function/Argument.h"
 #include "../Function/Index.h"
+#include "../Function/NumericIndex.h"
 
 namespace spline {
     class TensorBasis;
@@ -40,11 +41,15 @@ namespace spline {
 
         std::vector< Basis > getSubBasis() const;
         TensorBasis getSubBasis(int index) const;
-        // Basis getBasis( int index ) const;
+        Basis getBasis() const;
+        Basis getBasis(const Argument& a) const;
+        Basis getBasis(const Index& index) const;
         // Basis getSubBasis( Argument a) const;
 
         void addBasis(TensorBasis basis);
         void addBasis(Basis basis);
+
+        TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
@@ -92,7 +97,7 @@ namespace spline {
         virtual std::string getRepresentation() const ;
 
         Basis getBasis() const;
-        Basis getBasis(Argument a) const;
+        Basis getBasis(const Argument& a) const;
         Basis getBasis(const Index& index) const;
         // Basis operator[](Argument a) const;
         // Basis operator[](int index) const;
@@ -102,6 +107,8 @@ namespace spline {
 
         void addBasis(TensorBasis basis);
         void addBasis(Basis basis);
+
+        TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
