@@ -70,7 +70,10 @@ namespace spline {
         Function midpoint_refinement(const std::vector<int> & refinement,
             const std::vector<NumericIndex> & arg_ind) const;
 
-        // Function derivative(int order, int direction) const;
+        Function derivative(const std::vector<NumericIndex>& direction_ind) const;
+        Function derivative(const std::vector<Argument>& directions) const;
+        Function derivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const;
+        Function derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
 
     public:
         TensorBasis basis;

@@ -675,14 +675,14 @@ using namespace spline;
 %pythoncode %{
 
     __array_priority__ = arraypriority
-    
+
     def __add__(self, a) : return spline_plus(self, a)
     def __radd__(self, a) : return spline_plus(self, a)
     def __sub__(self, a) : return spline_minus(self, a)
     def __rsub__(self, a) : return spline_plus(-self, a)
     def __mul__(self, a) : return spline_times(self, a)
     def __rmul__(self, a) : return spline_times(self, a)
-    
+
     def __getitem__(self, s):
           ind = []
           for i in s:
@@ -723,9 +723,12 @@ using namespace spline;
 %casadi_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
 %casadi_typemaps("AnyVector", PREC_MX, AnyVector)
+%casadi_typemaps("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_typemaps("argument", PREC_MX, spline::Argument)
+%casadi_typemaps("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_typemaps("index", PREC_MX, spline::Index)
 %casadi_typemaps("index", PREC_MX, spline::NumericIndex)
+%casadi_typemaps("[index]", PREC_MX, std::vector<spline::NumericIndex >)
 %casadi_typemaps("STensor", PREC_MX, Tensor<casadi::SX>)
 %casadi_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
 %casadi_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
@@ -861,7 +864,7 @@ namespace spline {
     Function spline_times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
     Function spline_mtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
     Function spline_rmtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.rmtimes(rhs); }
-    
+
   }
 }
 

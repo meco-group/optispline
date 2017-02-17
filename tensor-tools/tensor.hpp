@@ -184,6 +184,12 @@ class Tensor {
 
   bool is_vector() const { return squeeze().n_dims()<=1; }
 
+  Tensor as_vector() const {
+    Tensor ret = squeeze();
+    tensor_assert_message(ret.n_dims()<=1, "Vector can have only one dimension.");
+    return ret.shape({numel()});
+  }
+
   T data() const { return data_; }
   T matrix() const {
     tensor_assert(n_dims()<=2);

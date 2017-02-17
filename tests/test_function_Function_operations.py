@@ -236,6 +236,12 @@ class Test_Function_Operations(BasisTestCase):
         c = Function.Constant(mbasis1,1)
         fm2 = func1.mtimes(c)
         fm3 = c.mtimes(func2)
+        
+        M = numpy.random.randn(3,2);
+        N = numpy.random.randn(2,2);
+        fm4 = func1*M;
+        fm5 = func1.mtimes(N);
+        #fm6 = M*func2;
 
         x = [0.1,0.35,0.4,0.5,0.8,0.99]
         y = [0.1,0.2,0.5,0.8,0.1,0.2]
@@ -255,7 +261,9 @@ class Test_Function_Operations(BasisTestCase):
             self.assertEqualT(fm(_x,_y),numpy.dot(func1_value[k], func2_value[k]))
             self.assertEqualT(fm2(_x,_y),func1_value[k])
             self.assertEqualT(fm3(_x,_y),func2_value[k])
-
+            self.assertEqualT(fm4(_x,_y),func1_value[k]*M)
+            self.assertEqualT(fm5(_x,_y),numpy.dot(func1_value[k],N))
+            
 
 if __name__ == '__main__':
     unittest.main()
