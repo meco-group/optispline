@@ -16,6 +16,7 @@ namespace spline {
         Function( const TensorBasis& basis, const Coefficient& coef) ;
         Function( const Basis& basis, const Coefficient& coef) ;
         Function( const AnyTensor& c) ;
+        Function() {};
 
         static Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) ;
         static Function Constant(const TensorBasis& basis, const AnyTensor& t) ;
@@ -38,9 +39,9 @@ namespace spline {
         Function transpose() const ;
         Function trace() const ;
 
-        Function vertcat(const std::vector< Function >& f) const ;
-        Function horzcat(const std::vector< Function >& f) const ;
-        Function blkdiag(const std::vector< Function >& f) const ;
+        Function vertcat(const std::vector< spline::Function >& f) const ;
+        Function horzcat(const std::vector< spline::Function >& f) const ;
+        Function blkdiag(const std::vector< spline::Function >& f) const ;
 
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;

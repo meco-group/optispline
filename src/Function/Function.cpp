@@ -236,12 +236,12 @@ namespace spline {
         return Function(getTensorBasis(), cdiag);
     }
 
-    Function Function::vertcat(const std::vector< Function >& f) const {
-        return concat(f, 0);
+    Function Function::vertcat(const std::vector< spline::Function >& f) const {
+        return cat(0, f);
     }
 
-    Function Function::horzcat(const std::vector< Function >& f) const {
-        return concat(f, 1);
+    Function Function::horzcat(const std::vector< spline::Function >& f) const {
+        return cat(1, f);
     }
 
     Function Function::blkdiag(const std::vector< spline::Function >& f) const {
