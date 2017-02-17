@@ -37,6 +37,7 @@ namespace spline {
         Function mtimes(const Function& f) const ;
         Function mtimes(const AnyTensor& f) const ;
         Function rmtimes(const AnyTensor& f) const ;
+        Function transpose() const ;
 
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;

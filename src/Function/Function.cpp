@@ -200,6 +200,10 @@ namespace spline {
         return Function(basis, -coef);
     }
 
+    Function Function::transpose() const {
+        return Function(getTensorBasis(), getCoefficient().transpose());
+    }
+
     std::string Function::getRepresentation() const {return "Function";};
 
     int Function::n_inputs() const {

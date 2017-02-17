@@ -110,4 +110,19 @@ namespace spline {
         /* AnyTensor return_tensor = AnyTensor(getData(), dims_); */
         return getData().shape(dims_);
     }
+
+    Coefficient Coefficient::transpose() const {
+        return (*this)->transpose();
+    }
+    Coefficient CoefficientNode::transpose() const {
+        std::vector< int > order = std::vector< int >(getData().n_dims(), 0);
+        for (int i=1; i<order.size(); i++) {
+            order[i] = i;
+        }
+        order[order.size()-2] = order.size()-1;
+        order[order.size()-1] = order.size()-2;
+
+        return Coefficient(getData().reorder_dims(order));
+    }
+
 }  // namespace spline
