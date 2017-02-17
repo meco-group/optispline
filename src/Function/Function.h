@@ -90,6 +90,7 @@ namespace spline {
 
         Function transform_to(const TensorBasis& basis) const ;
 
+        Function cat(const NumericIndex& index, const std::vector< spline::Function >& f) const;
     public:
         TensorBasis basis;
         Coefficient coef;
