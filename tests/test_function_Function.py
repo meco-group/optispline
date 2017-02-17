@@ -310,6 +310,35 @@ class Test_Function_Function(BasisTestCase):
         with self.assertRaises(Exception):
             f.antiderivative(n0)
 
+#    def test_jacobian(self):
+#        d0 = 4
+#        k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,7),np.ones(d0)]
+#        b0 = BSplineBasis(k0,d0)
+#        g0 = np.sort(np.r_[b0.greville(), b0.derivative()[0].greville()])
+#
+#        d1 = 6
+#        k1 = np.r_[np.zeros(d1),np.linspace(0.,1.,7),np.ones(d1)]
+#        b1 = BSplineBasis(k1,d1)
+#        g1 = np.sort(np.r_[b1.greville(), b1.derivative()[0].greville()])
+#
+#        d2 = 3
+#        b2 = MonomialBasis(d2)
+#        g2 = range(d2+1)
+#
+#        c = np.random.rand(b0.dimension(),b1.dimension(),b2.dimension())
+#        f = Function(TensorBasis([b0,b1,b2]), c)
+#        Jf = f.jacobian()
+#
+#        x = casadi.SX.sym('x',3)
+#        f_c = f(x[0], x[1], x[2])
+#        Jf_c = casadi.jacobian(f_c, x)
+#        Jf_c = casadi.Function('Jf_c', [x], [Jf_c])
+#
+#        for i0 in g0:
+#            for i1 in g1:
+#                for i2 in g2:
+#                    self.assertEqualT(Jf(i0,i1,i2), Jf_c([i0,i1,i2]))
+
 
 if __name__ == '__main__':
     unittest.main()

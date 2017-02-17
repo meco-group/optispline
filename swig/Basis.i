@@ -519,6 +519,15 @@ using namespace spline;
                                     $descriptor(spline::Function*), 0))) {
         return true;
       }
+      
+      {
+        AnyTensor tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m=tmp;
+          return true;
+        }
+      }
+      
       return false;
       }
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
@@ -763,8 +772,8 @@ using namespace spline;
 %casadi_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %casadi_template("[DTensor]", PREC_MXVector, std::vector< Tensor<casadi::DM> >)
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
-%casadi_template("[Function]", PREC_MXVector, std::vector< spline::Function >)
-%casadi_typemaps("Function", PREC_MX, spline::Function)
+%casadi_template("[Function]", PREC_FUNCTION, std::vector< spline::Function >)
+%casadi_typemaps("Function", PREC_FUNCTION, spline::Function)
 
 %casadi_template("[int]", PREC_IVector, std::vector<int>)
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Index >)
