@@ -29,12 +29,14 @@ namespace spline {
         AnyTensor getData() const {return data;}
         std::string getRepresentation() const ;
         void repr() const { userOut() << getRepresentation() << std::endl;}
-    public:
-    private:
-        AnyTensor data;
+
         AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;
         AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;
         Coefficient transpose() const;
+
+        Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const;
+    private:
+        AnyTensor data;
 
     };
 #endif
@@ -65,7 +67,7 @@ namespace spline {
         AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;
         AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;
         Coefficient transpose() const;
-
+        Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const;
     };
 } // namespace spline
 
