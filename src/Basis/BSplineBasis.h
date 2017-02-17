@@ -131,11 +131,8 @@ namespace spline{
         virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const override;
 
     private:
-        mutable Function bspline_evaluator_;
-
-
-        //  std::vector<bool> indector(int i, double x);
         std::vector<AnyScalar> knots_;
+        mutable Function bspline_evaluator_;
     };
 
 #endif // SWIG
