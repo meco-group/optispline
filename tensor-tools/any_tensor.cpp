@@ -379,21 +379,21 @@ std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<MX>& v) {
 }
 
 AnyVector::AnyVector(const AnyTensor& s) : AnyTensor(s.squeeze()) {
-  tensor_assert_message(n_dims()==1, "AnyVector can have only one dimension. Got " << s.dims() << ".")
+  tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension. Got " << s.dims() << ".")
 }
 
 AnyVector::AnyVector(const std::vector<AnyScalar>& s) : AnyTensor(vertcat(s)) { }
 
 AnyVector::AnyVector(const DT & s) : AnyTensor(s.squeeze()){
-  tensor_assert_message(n_dims()==1, "AnyVector can have only one dimension.")
+  tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension.")
 }
 
 AnyVector::AnyVector(const ST & s) : AnyTensor(s.squeeze()){
-  tensor_assert_message(n_dims()==1, "AnyVector can have only one dimension.")
+  tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension.")
 }
 
 AnyVector::AnyVector(const MT & s) : AnyTensor(s.squeeze()){
-  tensor_assert_message(n_dims()==1, "AnyVector can have only one dimension.")
+  tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension.")
 }
 
 /**AnyVector& AnyVector::operator=(const AnyTensor& s)  {
