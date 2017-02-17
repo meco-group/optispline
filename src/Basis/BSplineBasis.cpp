@@ -237,44 +237,54 @@ namespace spline {
     Basis BSplineBasisNode::derivative(int order, AnyTensor& T) const {
         // Computes the BSplineBasis derivative using eq. (16) in [de Boor, Chapter X, 2001].
         // Args:
-            // o (int): order of the derivative (default is 1)
+        //     o (int): order of the derivative (default is 1)
         // Returns:
-            // Derivative of the basis (new_basis) and transformation matrix to transform the coefficients of the function (T)
+        //     Derivative of the basis (new_basis) and transformation matrix to transform the coefficients of the function (T)
 
-        // int curr_degree = this->getDegree();;
-        // std::vector<double> curr_knots = this->getKnots();
-        // std::vector<double> new_knots(curr_knots.begin() + order, curr_knots.end() - order);
-        // Basis new_basis = BSplineBasis(new_knots, curr_degree - order);  // New basis
-        // int basis_length = (*this)->dimension()
-        // // T.reshape(eye(basis_length)) // Reshape transformation matrix
+        int n_dim = getLength();  // Number of basis functions in the basis
+        int n_dim_new = n_dim-1;
+        int deg = getDegree();;
 
-        // std::vector<int> delta_knots;
-        // AnyTensor R;
-        // std::vector<int> j;
-        // for (int i=0; i<=order; i++){
-        //     curr_knots.erase(curr_knots.begin()); // remove first element
-        //     curr_knots.pop_back();  // remove last element
-        //     for (int l=0; l<=curr_knots.size()-curr_degree-i; l++){
-        //         delta_knots[l] = curr_knots[curr_degree - i + l] - curr_knots[-curr_degree + i -l];
-        //     }
-        //     // Todo: how?
-        //     R = AnyTensor(DTensor([0*len],[basis_length - 1 - i, basis_length - i]))
-        //     for (int l=0; l<=basis_length-1-i; l++){
-        //         j.push_back(l);
-        //     }
-        //     for (int l=0; j.size(); l++){
-        //         R[(j[l], j[l])] = -1. / delta_knots[l]
-        //         R[(j[l], j[l] + 1)] = 1. / delta_knots[l]
-        //     }
-        //     // write in for loop
-        //     T = (curr_degree - i) * np.dot(R, T)
-        // }
-        // T = AnyTensor(DTensor(coeffs, new_degree));  // Transformation tensor to apply on coefficients of function
-        // return new_basis;
-        return shared_from_this<BSplineBasis>();
+        std::vector<AnyScalar> knots = getKnots();
+        std::vector<AnyScalar> new_knots(knots.begin() + order, knots.end() - order);
+        Basis new_basis = BSplineBasis(new_knots, deg - order);  // New basis
+               
+        std::vector<AnyScalar> data(n_dim*n_dim,0);  // initialization of data of transformation matrix
+        for(int i=0; i<n_dim; i++){
+            data[i*(n_dim+1)] = 1.;  // to make eye matrix
+        }
+        AnyTensor T_ = vertcat(data).shape({n_dim,n_dim});  // initialize matrix to multiply
+
+        AnyScalar c_j;
+        for (int i=0; i<order; i++){
+            knots.erase(knots.begin()); // remove first element
+            knots.pop_back();  // remove last element
+            
+            data.resize(n_dim_new*n_dim);
+            std::fill(data.begin(), data.end(), 0);
+
+            for (int j=0; j<=n_dim-2; j++){
+                if (deg <= 0){
+                    //  This is the case if taking the degree+n'th derivative
+                    //  In that case the T-matrix is all zero
+                    c_j = 0;
+                }
+                else{
+                    c_j = deg/(knots[j+deg]-knots[j]);
+                }
+                data[j*(n_dim-1)+j] = c_j*(-1);
+                data[(j+1)*(n_dim-1)+j] = c_j;                                
+            }
+            T_ = mtimes(vertcat(data).shape({n_dim_new, n_dim}), T_);  // multiply transformation matrices, for higher order
+            n_dim_new--;
+            n_dim--;
+            deg--;
+        }
+        T = T_;
+        return new_basis;
     }
 
-    Basis BSplineBasisNode::insert_knots(const std::vector<AnyScalar> & new_knots,
+    Basis BSplineBasisNode::insert_knots(const AnyVector & new_knots,
       AnyTensor & T) const {
       // construct coefficient transformation matrix
       int n_dim = getLength();
@@ -288,7 +298,6 @@ namespace spline {
       AnyScalar val;
       std::vector<AnyScalar> knots;
       BSplineBasis ret = shared_from_this<BSplineBasis>();
-      // std::vector<AnyScalar> knots;
       for (int k=0; k<new_knots.size(); k++) {
         std::vector<AnyScalar> knots = ret.getKnots();
         n_dim_new++;
@@ -310,5 +319,31 @@ namespace spline {
       }
       T = T_;
       return ret;
+    }
+
+    Basis BSplineBasisNode::midpoint_refinement(int refinement, AnyTensor& T) const {
+      // check if numeric knots
+      spline_assert_message(AnyScalar::is_double(getKnots()),
+        "Midpoint refinement only possible with numeric knot sequence.");
+      std::vector<double> knots = AnyScalar::as_double(getKnots());
+      // build inserted knot vector
+      std::vector<AnyScalar> new_knots(0);
+      int j;
+      for (int i=0; i<knots.size(); i+=j) {
+          j = 1;
+          while ((i+j < knots.size()) && (knots[i+j] == knots[i])) {
+            j++;
+          }
+          if (i+j < knots.size()) {
+            double den = pow(2, refinement);
+            for (int num=1; num<den; num++) {
+                new_knots.push_back(((den - 1.*num)/den)*knots[i]+((1.*num)/den)*knots[i+j]);
+            }
+          }
+      }
+
+
+      // invoke knot insertion
+      return insert_knots(vertcat(new_knots), T);
     }
 } // namespace spline

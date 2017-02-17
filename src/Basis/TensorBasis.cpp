@@ -97,11 +97,19 @@ namespace spline {
     }
 
     Basis TensorBasis::getBasis() const {
+        return (*this)->getBasis();
+    }
+
+    Basis TensorBasisNode::getBasis() const {
         spline_assert(n_basis() == 1);
         return getSubBasis()[0];
     }
 
-    Basis TensorBasis::getBasis(Argument a) const {
+    Basis TensorBasis::getBasis(const Argument& a) const {
+        return (*this)->getBasis(a);
+    }
+
+    Basis TensorBasisNode::getBasis(const Argument& a) const {
         int index = indexArgument(a);
         if (index < 0) {
             return DummyBasis();
@@ -111,9 +119,13 @@ namespace spline {
     }
 
     Basis TensorBasis::getBasis(const Index& index) const {
-      int ind = index.concrete(getArguments());
-      spline_assert(ind < n_basis());
-      return getSubBasis()[ind];
+        return (*this)->getBasis(index);
+    }
+
+    Basis TensorBasisNode::getBasis(const Index& index) const {
+        int ind = index.concrete(getArguments());
+        spline_assert(ind < n_basis());
+        return getSubBasis()[ind];
     }
 
     TensorBasis TensorBasis::addBasis(TensorBasis basis) const {return (*this)->addBasis(basis);}
@@ -130,6 +142,30 @@ namespace spline {
         std::vector< Basis > all_basis = getSubBasis();
         all_basis.push_back(basis);
         return TensorBasis(all_basis, getArguments());
+    }
+
+    TensorBasis TensorBasis::substitute_bases(const std::vector<Index>& indices, const std::vector<Basis>& bases) const {
+        return (*this)->substitute_bases(indices, bases);
+    }
+
+    TensorBasis TensorBasisNode::substitute_bases(const std::vector<Index>& indices, const std::vector<Basis>& bases) const {
+        spline_assert(indices.size() == bases.size());
+        std::vector<Basis> new_bases(0);
+        for (int i=0; i<n_basis(); i++){
+            int j;
+            for (j=0; j<indices.size(); j++){
+                if (i == indices[i].concrete(getArguments())){
+                    break;
+                }
+            }
+            if ( j < indices.size()){
+                new_bases.push_back(bases[j]);
+            }
+            else {
+                new_bases.push_back(allSubBasis[i]);
+            }
+        }
+        return TensorBasis(new_bases, allArguments);
     }
 
     std::vector<int> TensorBasis::dimension() const { return (*this)->dimension ();}
@@ -207,8 +243,60 @@ namespace spline {
         return prod.outer_product(t);
     }
 
+    TensorBasis TensorBasis::insert_knots(const std::vector<AnyVector> & new_knots,
+        std::vector<AnyTensor> & T, const std::vector<Argument>& args) const {
+        std::vector<NumericIndex> arg_ind(args.size());
+        for (int i=0; i<args.size(); i++){
+            arg_ind[i] = indexArgument(args[i]);
+        }
+        return (*this)->insert_knots(new_knots, T, arg_ind);
+    }
+
+    TensorBasis TensorBasis::insert_knots(const std::vector<AnyVector> & new_knots,
+        std::vector<AnyTensor> & T, const std::vector<NumericIndex>& arg_ind) const {
+        return (*this)->insert_knots(new_knots, T, arg_ind);
+    }
+
+    TensorBasis TensorBasisNode::insert_knots(const std::vector<AnyVector>& new_knots,
+        std::vector<AnyTensor>& T, const std::vector<NumericIndex>& arg_ind) const{
+        spline_assert(arg_ind.size() == new_knots.size());
+        std::vector<Basis> new_bases(0);
+        std::vector<AnyTensor> T_(arg_ind.size());
+        for (int i=0; i < arg_ind.size(); i++){
+            new_bases.push_back(getBasis(arg_ind[i].index()).insert_knots(new_knots[i], T_[i]));
+        }
+        T = T_;
+        return substitute_bases(NumericIndex::as_index(arg_ind), new_bases);
+    }
+
+    TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
+        std::vector<AnyTensor> & T, const std::vector<Argument>& args) const {
+        std::vector<NumericIndex> arg_ind(args.size());
+        for (int i=0; i<args.size(); i++){
+            arg_ind[i] = indexArgument(args[i]);
+        }
+        return (*this)->midpoint_refinement(refinement, T, arg_ind);
+    }
+
+    TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
+        std::vector<AnyTensor> & T, const std::vector<NumericIndex>& arg_ind) const {
+        return (*this)->midpoint_refinement(refinement, T, arg_ind);
+    }
+
+    TensorBasis TensorBasisNode::midpoint_refinement(const std::vector<int>& refinement,
+        std::vector<AnyTensor>& T, const std::vector<NumericIndex>& arg_ind) const{
+        spline_assert(arg_ind.size() == refinement.size());
+        std::vector<Basis> new_bases(0);
+        std::vector<AnyTensor> T_(arg_ind.size());
+        for (int i=0; i < arg_ind.size(); i++){
+            new_bases.push_back(getBasis(arg_ind[i].index()).midpoint_refinement(refinement[i], T_[i]));
+        }
+        T = T_;
+        return substitute_bases(NumericIndex::as_index(arg_ind), new_bases);
+    }
+
     // Basis TensorBasis::derivative(int order, int direction, AnyTensor& T) const {
-    //     // Call univariate_derivative on basis, for each direction
+        // Call univariate_derivative on basis, for each direction
     // }
 
 

@@ -181,7 +181,9 @@ class Tensor {
 
   bool is_scalar() const { return squeeze().n_dims()==0; }
   T as_scalar() const { if (is_scalar()) return data_[0]; }
-  
+
+  bool is_vector() const { return squeeze().n_dims()==1; }
+
   T data() const { return data_; }
   T matrix() const {
     tensor_assert(n_dims()<=2);
@@ -261,6 +263,10 @@ class Tensor {
     assert_match_dim_or_scalar(dims_, rhs.dims_);
     std::vector< int > new_dims = dims_.size() == 0 ? rhs.dims() : dims();
     return Tensor(data_+rhs.data_, new_dims);
+  }
+
+  Tensor operator-(const Tensor& rhs) const {
+    return operator+(-rhs);
   }
 
   Tensor operator-() const {
@@ -457,7 +463,7 @@ class Tensor {
                                          mrange(n_dims()+b.n_dims()));
   }
 
-  Tensor mtimes(const Tensor &rhs) {
+  Tensor mtimes(const Tensor &rhs) const {
     if(n_dims()==0 && rhs.n_dims()==2){
         return einstein(rhs, {}, {-1, -2}, {-1, -2});
     }

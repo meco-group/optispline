@@ -211,6 +211,7 @@ class Test_Function_Operations(BasisTestCase):
             self.assertAlmostEqual(u1(_x,_y),-func1_value[k])
             self.assertAlmostEqual(p1(_x,_y),func1_value[k]**3)
 
+
     def test_matrix_product(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
@@ -231,7 +232,13 @@ class Test_Function_Operations(BasisTestCase):
         func2 = Function(mbasis2,coeff2)
 
         fm = func1.mtimes(func2)
-        x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10)
+
+        c = Function.Constant(mbasis1,1)
+        print 'debug'
+        fm2 = func1.mtimes(c)
+        #fm3 = c.mtimes(func2)
+
+        x = [0.1,0.35,0.4,0.5,0.8,0.99]
         y = [0.1,0.2,0.5,0.8,0.1,0.2]
         func1_value = []
         func2_value = []
@@ -246,7 +253,9 @@ class Test_Function_Operations(BasisTestCase):
             _x = x[k]
             _y = y[k]
 
-            self.assertAlmostEqual(fm(_x,_y),func1_value[k].mtimes(func2_value[k]))
+            self.assertEqualT(fm(_x,_y),numpy.dot(func1_value[k], func2_value[k]))
+            self.assertEqualT(fm2(_x,_y),func1_value[k])
+            #self.assertEqualT(fm3(_x,_y),func2_value[k])
 
 
 if __name__ == '__main__':

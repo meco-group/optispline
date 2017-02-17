@@ -389,39 +389,35 @@ using namespace spline;
     }
 
     bool to_ptr(GUESTOBJECT *p, AnyVector** m) {
-      try {
-        {
-          DT tmp, *mt=&tmp;
-          if(casadi::to_ptr(p, m ? &mt : 0)) {
-            if (m) **m = *mt;
-            return true;
-          }
+      {
+        DT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_vector())) {
+          if (m) **m = *mt;
+          return true;
         }
-        {
-          ST tmp, *mt=&tmp;
-          if(casadi::to_ptr(p, m ? &mt : 0)) {
-            if (m) **m = *mt;
-            return true;
-          }
+      }
+      {
+        ST tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_vector())) {
+          if (m) **m = *mt;
+          return true;
         }
+      }
 
-        {
-          MT tmp, *mt=&tmp;
-          if(casadi::to_ptr(p, m ? &mt : 0)) {
-            if (m) **m = *mt;
-            return true;
-          }
+      {
+        MT tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_vector())) {
+          if (m) **m = *mt;
+          return true;
         }
-        {
-          std::vector<AnyScalar> tmp, *mt = &tmp;
-          if (casadi::to_ptr(p, m ? &mt : 0)) {
-            userOut() << "debug" << tmp.size() << std::endl;
-            if (m) **m = vertcat(tmp);
-            return true;
-          }
+      }
+      {
+        std::vector<AnyScalar> tmp, *mt = &tmp;
+        if (casadi::to_ptr(p, m ? &mt : 0)) {
+          userOut() << "debug" << tmp.size() << std::endl;
+          if (m) **m = vertcat(tmp);
+          return true;
         }
-      } catch(const std::exception& e) {
-        return false;
       }
       return false;
     }
@@ -675,8 +671,18 @@ using namespace spline;
 
 
 #ifdef SWIGPYTHON
-%define %tensor_helpers()
+%define %tensor_helpers(arraypriority)
 %pythoncode %{
+
+    __array_priority__ = arraypriority
+    
+    def __add__(self, a) : return spline_plus(self, a)
+    def __radd__(self, a) : return spline_plus(self, a)
+    def __sub__(self, a) : return spline_minus(self, a)
+    def __rsub__(self, a) : return spline_plus(-self, a)
+    def __mul__(self, a) : return spline_times(self, a)
+    def __rmul__(self, a) : return spline_times(self, a)
+    
     def __getitem__(self, s):
           ind = []
           for i in s:
@@ -689,7 +695,7 @@ using namespace spline;
 %}
 %enddef
 #else
-%define %tensor_helpers()
+%define %tensor_helpers(arraypriority)
 %matlabcode %{
    function varargout = subsref(self,s)
       if numel(s)==1 & s.type=='()'
@@ -823,14 +829,42 @@ namespace spline {
 
 
 %extend Tensor<DM> {
-  %tensor_helpers()
+  %tensor_helpers(2000.0)
 }
 %extend Tensor<SX> {
-  %tensor_helpers()
+  %tensor_helpers(2001.0)
 }
 %extend Tensor<MX> {
-  %tensor_helpers()
+  %tensor_helpers(2002.0)
 }
+
+namespace spline {
+%extend Function {
+  %tensor_helpers(2003.0)
+}
+}
+
+%inline {
+  namespace spline {
+    AnyTensor spline_plus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs+rhs; }
+    AnyTensor spline_minus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs-rhs; }
+    AnyTensor spline_times(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs*rhs; }
+    AnyTensor spline_mtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
+    AnyTensor spline_rmtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.mtimes(lhs); }
+    Function spline_plus(const Function& lhs, const Function& rhs) { return lhs+rhs; }
+    Function spline_minus(const Function& lhs, const Function& rhs) { return lhs-rhs; }
+    Function spline_times(const Function& lhs, const Function& rhs) { return lhs*rhs; }
+    Function spline_mtimes(const Function& lhs, const Function& rhs) { return lhs.mtimes(rhs); }
+    Function spline_rmtimes(const Function& lhs, const Function& rhs) { return rhs.mtimes(lhs); }
+    Function spline_plus(const Function& lhs, const AnyTensor& rhs) { return lhs+rhs; }
+    Function spline_minus(const Function& lhs, const AnyTensor& rhs) { return lhs-rhs; }
+    Function spline_times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
+    Function spline_mtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
+    Function spline_rmtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.rmtimes(rhs); }
+    
+  }
+}
+
 
 #ifdef WINMAT64
 %begin %{
