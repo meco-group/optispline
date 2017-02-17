@@ -125,7 +125,7 @@ class Test_Basis_Basis(BasisTestCase):
         s1 = MonomialBasis(2)
         b = b.addBasis(s1)
         b = b.addBasis(s1)
-        b.setArguments([a,a])
+        b = TensorBasis(b, [a,a])
         self.assertTrue(b.hasArguments())
 
     def test_Index(self):
@@ -147,7 +147,7 @@ class Test_Basis_Basis(BasisTestCase):
         s1 = MonomialBasis(2)
         s2 = MonomialBasis(3)
         b = TensorBasis([s1,s2])
-        b.setArguments(["x","y"])
+        b = TensorBasis(b, ["x","y"])
 
         p = b.getBasis(0)
         self.assertEqual( p.getDegree(), 2)
