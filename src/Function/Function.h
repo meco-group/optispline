@@ -37,6 +37,10 @@ namespace spline {
         Function transpose() const ;
         Function trace() const ;
 
+        Function vertcat(const std::vector< Function >& f) const ;
+        Function horzcat(const std::vector< Function >& f) const ;
+        Function blkdiag(const std::vector< Function >& f) const ;
+
         Basis getBasis() const;
         Basis getBasis(const Index& i) const;
         TensorBasis getTensorBasis() const {return basis;}
