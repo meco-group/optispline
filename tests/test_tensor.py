@@ -5,6 +5,35 @@ from helpers import *
 
 class Test_Tensor(BasisTestCase):
 
+    def test_operations_cast(self):
+    
+        scalars = [4, 4.0, np.ones((1,1))*4, DM(4), DTensor([4],[]), SX(4)]
+        matrices = [np.ones((2,2))*4, DM.ones(2,2)*4, SX(DM.ones(2,2)*4), DTensor([4]*4,[2,2])]
+
+
+
+        for A in [DTensor(3,[]), STensor(3,[])]:
+          for s in scalars:
+            for lhs, rhs in [(A,s),(s,A)]:
+              lhs+rhs
+              lhs*rhs
+              lhs-rhs
+                 
+        """for A in [Polynomial([0,1],'x')]:
+          for s in scalars:
+            for lhs, rhs in [(A,s),(s,A)]:
+              lhs+rhs
+              lhs*rhs
+              lhs-rhs
+        """      
+
+        for A in [DTensor(range(4),[2,2]), STensor(range(4),[2,2])]:
+          for s in matrices:
+            for lhs, rhs in [(A,s),(s,A)]:
+              lhs+rhs
+              lhs*rhs
+              lhs-rhs
+              
     def test_concat(self):
 
         A = DTensor(1,[])

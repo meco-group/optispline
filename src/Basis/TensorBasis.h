@@ -12,6 +12,7 @@
 #include "Basis.h"
 #include "../Function/Argument.h"
 #include "../Function/Index.h"
+#include "../Function/NumericIndex.h"
 
 namespace spline {
     class TensorBasis;
@@ -40,11 +41,15 @@ namespace spline {
 
         std::vector< Basis > getSubBasis() const;
         TensorBasis getSubBasis(int index) const;
-        // Basis getBasis( int index ) const;
+        Basis getBasis() const;
+        Basis getBasis(const Argument& a) const;
+        Basis getBasis(const Index& index) const;
         // Basis getSubBasis( Argument a) const;
 
         void addBasis(TensorBasis basis);
         void addBasis(Basis basis);
+
+        TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
@@ -53,6 +58,9 @@ namespace spline {
 
         int totalNumberBasisFunctions() const;
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
+
+        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & T, const std::vector<NumericIndex>& arg_ind) const;
+        TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & T, const std::vector<NumericIndex>& arg_ind) const;
 
         // Basis derivative(int order, int direction, AnyTensor& T) const;
 
@@ -92,7 +100,7 @@ namespace spline {
         virtual std::string getRepresentation() const ;
 
         Basis getBasis() const;
-        Basis getBasis(Argument a) const;
+        Basis getBasis(const Argument& a) const;
         Basis getBasis(const Index& index) const;
         // Basis operator[](Argument a) const;
         // Basis operator[](int index) const;
@@ -103,6 +111,8 @@ namespace spline {
         void addBasis(TensorBasis basis);
         void addBasis(Basis basis);
 
+        TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
+
         TensorBasis operator+(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
 
@@ -111,6 +121,12 @@ namespace spline {
         int totalNumberBasisFunctions() const;
 
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
+
+        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<Argument>& args) const;
+        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<NumericIndex>& arg_ind) const;
+
+        TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<Argument>& args) const;
+        TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<NumericIndex>& arg_ind) const;
 
         // Basis derivative(int order, int direction, AnyTensor& T) const;
     };

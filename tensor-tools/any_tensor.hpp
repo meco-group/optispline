@@ -105,6 +105,7 @@ class AnyScalar {
       ANYSCALAR_BINARY_OP(+)
     }
 
+    AnyScalar operator-() const { return operator*(*this,-1); }
     AnyScalar& operator+=(const AnyScalar& rhs);
 
     TensorType type() const {return t;}
@@ -248,6 +249,9 @@ class AnyTensor {
     }
     AnyTensor operator+(const AnyTensor&b) const {
       ANYTENSOR_BINARY((*this), b, operator+);
+    }
+    AnyTensor operator-(const AnyTensor&b) const {
+      ANYTENSOR_BINARY((*this), b, operator-);
     }
     AnyTensor operator*(const AnyTensor&b) const {
       ANYTENSOR_BINARY((*this), b, operator*);

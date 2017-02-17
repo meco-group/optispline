@@ -284,7 +284,7 @@ namespace spline {
         return new_basis;
     }
 
-    Basis BSplineBasisNode::insert_knots(const std::vector<AnyScalar> & new_knots,
+    Basis BSplineBasisNode::insert_knots(const AnyVector & new_knots,
       AnyTensor & T) const {
       // construct coefficient transformation matrix
       int n_dim = getLength();
@@ -298,7 +298,6 @@ namespace spline {
       AnyScalar val;
       std::vector<AnyScalar> knots;
       BSplineBasis ret = shared_from_this<BSplineBasis>();
-      // std::vector<AnyScalar> knots;
       for (int k=0; k<new_knots.size(); k++) {
         std::vector<AnyScalar> knots = ret.getKnots();
         n_dim_new++;
@@ -320,5 +319,31 @@ namespace spline {
       }
       T = T_;
       return ret;
+    }
+
+    Basis BSplineBasisNode::midpoint_refinement(int refinement, AnyTensor& T) const {
+      // check if numeric knots
+      spline_assert_message(AnyScalar::is_double(getKnots()),
+        "Midpoint refinement only possible with numeric knot sequence.");
+      std::vector<double> knots = AnyScalar::as_double(getKnots());
+      // build inserted knot vector
+      std::vector<AnyScalar> new_knots(0);
+      int j;
+      for (int i=0; i<knots.size(); i+=j) {
+          j = 1;
+          while ((i+j < knots.size()) && (knots[i+j] == knots[i])) {
+            j++;
+          }
+          if (i+j < knots.size()) {
+            double den = pow(2, refinement);
+            for (int num=1; num<den; num++) {
+                new_knots.push_back(((den - 1.*num)/den)*knots[i]+((1.*num)/den)*knots[i+j]);
+            }
+          }
+      }
+
+
+      // invoke knot insertion
+      return insert_knots(vertcat(new_knots), T);
     }
 } // namespace spline
