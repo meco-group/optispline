@@ -251,6 +251,20 @@ class Test_Function_Function(BasisTestCase):
             for i1 in g1:
                 self.assertEqualT(np.array(db0_c(i0)).T.dot(c).dot(db1_c(i1))[0][0], df(i0,i1))
 
+    def test_derivative_polynomial(self):
+        deg = 4
+        p = Polynomial([1,2,3,4])
+        dp = p.derivative([1],[0])
+        ddp = p.derivative([2],[0])
+        dddp = p.derivative([3],[0])
+        ddddp = p.derivative([deg],[0])
+
+        self.assertEqualT(p.getCoefficient().getData().reshape(p.getBasis().getDegree()+1,), [1,2,3,4])
+        self.assertEqualT(dp.getCoefficient().getData().reshape(dp.getBasis().getDegree()+1,), [2,6,12])
+        self.assertEqualT(ddp.getCoefficient().getData().reshape(ddp.getBasis().getDegree()+1,), [6,24])
+        self.assertEqualT(dddp.getCoefficient().getData().reshape(dddp.getBasis().getDegree()+1,), [24])
+        self.assertEqualT(ddddp.getCoefficient().getData().reshape(dddp.getBasis().getDegree()+1,), [0])
+
     def test_transform_to(self):
         b = BSplineBasis([0, 1], 3, 2)
         p = Polynomial(np.random.randn(4))
