@@ -258,10 +258,31 @@ class Test_Function_Function(BasisTestCase):
         for x in np.random.random(10):
             self.assertAlmostEqual(f(x), p(x))
 
-    def test_funnction_constant(self):
+    def test_function_constant(self):
         f = Function(2)
         for x in np.random.random(10):
             self.assertAlmostEqual(f(x), 2)
+
+    def test_antiderivative(self):
+        d0 = 4
+        k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,7),np.ones(d0)]
+        b0 = BSplineBasis(k0,d0)
+        g0 = b0.greville()
+        n0 = 2
+        init0 = np.random.rand(n0);
+
+        d1 = 3
+        b1 = MonomialBasis(d1)
+        g1 = range(d1+1)
+        n1 = 1
+        init1 = np.random.rand(n1);
+
+        c = np.random.rand(b0.dimension(),b1.dimension())
+        f = Function(TensorBasis([b0,b1]), c)
+        ff = f.antiderivative([n0, n1], [0,1]).derivative([n0, n1], [0,1])
+        for i0 in g0:
+            for i1 in g1:
+                self.assertEqual(f(i0,i1), ff(i0,i1))
 
 
 if __name__ == '__main__':
