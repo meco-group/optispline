@@ -70,13 +70,13 @@ namespace spline {
         }
     }
 
-    int MonomialBasisNode::getLength() const {
+    int MonomialBasisNode::length() const {
          return degree() + 1;
     }
 
     std::vector< std::vector < AnyScalar > > MonomialBasisNode::getEvaluationGrid() const {
       std::vector< std::vector < AnyScalar > > ret;
-        for (int i = 0; i < getLength(); i++) {
+        for (int i = 0; i < length(); i++) {
             ret.push_back(std::vector<AnyScalar> {static_cast<double>(i)});
         }
         return ret;

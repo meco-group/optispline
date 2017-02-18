@@ -29,8 +29,8 @@ namespace spline {
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const = 0;
 
-        int dimension() const {return getLength();}
-        virtual int getLength() const = 0;
+        int dimension() const {return length();}
+        virtual int length() const = 0;
     protected:
         int degree_;
     };
@@ -49,7 +49,7 @@ namespace spline {
         int degree () const ;
 
     protected:
-        int getLength() const ;
+        int length() const ;
     };
 } // namespace spline
 

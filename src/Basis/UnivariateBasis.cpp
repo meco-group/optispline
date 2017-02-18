@@ -11,7 +11,7 @@ namespace spline {
     };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
 
-    int UnivariateBasis::getLength() const  { return (*this)->getLength(); }
+    int UnivariateBasis::length() const  { return (*this)->length(); }
 
     int  UnivariateBasis::degree() const { return (*this)->degree (); }
     int  UnivariateBasisNode::degree() const { return degree_ ; }

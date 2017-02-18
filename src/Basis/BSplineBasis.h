@@ -116,7 +116,7 @@ namespace spline{
 
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
 
-        virtual int getLength() const override;
+        virtual int length() const override;
 
         AnyTensor SubBasisEvalution(const std::vector<AnyScalar> & x ) const;
 
