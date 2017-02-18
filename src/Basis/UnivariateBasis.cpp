@@ -66,11 +66,6 @@ namespace spline {
          assert(0);
     }
 
-    void UnivariateBasis::setDegree(int degree) { (*this)->setDegree(degree); }
-    void UnivariateBasisNode::setDegree(int degree) {
-         degree_ = degree;
-    }
-
     int  UnivariateBasis::degree() const { return (*this)->degree (); }
     int  UnivariateBasisNode::degree() const {
          return degree_ ;

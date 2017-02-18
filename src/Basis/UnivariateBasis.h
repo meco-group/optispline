@@ -35,7 +35,6 @@ namespace spline {
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const {spline_assert(0); return DT();};
 
         int degree () const ;
-        void setDegree (int degree);
         int n_inputs() const;
 
         virtual Basis derivative(int order, AnyTensor& T) const = 0;
@@ -61,8 +60,6 @@ namespace spline {
 #endif // SWIG
 
         int degree () const ;
-        void setDegree (int degree);
-
 
     protected:
         int getLength() const ;
