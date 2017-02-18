@@ -63,16 +63,19 @@ namespace spline {
         return (*this)->transform(std::vector<AnyTensor>{T}, std::vector<NumericIndex>{directions});
     }
 
-    AnyTensor Coefficient::transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& directions) const {
-        return (*this)->transform(T, directions);
+    AnyTensor Coefficient::transform(const std::vector<AnyTensor>& T,
+          const std::vector<NumericIndex>& directions) const {
+      return (*this)->transform(T, directions);
     }
 
-    AnyTensor CoefficientNode::transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& directions) const {
+    AnyTensor CoefficientNode::transform(const std::vector<AnyTensor>& T,
+          const std::vector<NumericIndex>& directions) const {
         tensor_assert(T.size() == directions.size());
         AnyTensor ret_data = data();
-        for (int k=0; k<T.size(); k++){
+        for (int k=0; k<T.size(); k++) {
             // check dimension of transformation matrix
-            tensor_assert_message(T[k].n_dims()==2, "Transformation matrix should have 2 dimensions.");
+            tensor_assert_message(T[k].n_dims()==2,
+              "Transformation matrix should have 2 dimensions.");
             // check compatibility
             tensor_assert_message(T[k].dims()[1]==ret_data.dims()[directions[k]],
                 "Incompatible dimensions: 2nd dimension of transformation matrix is "
@@ -123,14 +126,18 @@ namespace spline {
         return Coefficient(data().reorder_dims(order));
     }
 
-    Coefficient Coefficient::cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const {
+    Coefficient Coefficient::cat(const NumericIndex& index,
+          const std::vector< Coefficient >& coefs) const {
         return (*this)->cat(index, coefs);
     }
 
-    Coefficient CoefficientNode::cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const {
+    Coefficient CoefficientNode::cat(const NumericIndex& index,
+          const std::vector< Coefficient >& coefs) const {
         std::vector< AnyTensor > all_tensor = {data()};
-        for(auto& c : coefs){
-            tensor_assert_message(shape()[1-index] == c.shape()[1-index], "cat has mismatched coefficients" << shape()[1-index] << " != " << c.shape()[1-index] << ".");
+        for (auto& c : coefs) {
+            tensor_assert_message(shape()[1-index] == c.shape()[1-index],
+              "cat has mismatched coefficients" << shape()[1-index] <<
+              " != " << c.shape()[1-index] << ".");
             all_tensor.push_back(c.data());
         }
 

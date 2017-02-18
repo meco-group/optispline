@@ -387,20 +387,21 @@ std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<MX>& v) {
 }
 
 AnyVector::AnyVector(const AnyTensor& s) : AnyTensor(s.as_vector()) {
-  tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension. Got " << s.dims() << ".")
+  tensor_assert_message(n_dims()<=1,
+    "AnyVector can have only one dimension. Got " << s.dims() << ".")
 }
 
 AnyVector::AnyVector(const std::vector<AnyScalar>& s) : AnyTensor(vertcat(s)) { }
 
-AnyVector::AnyVector(const DT & s) : AnyTensor(s.as_vector()){
+AnyVector::AnyVector(const DT & s) : AnyTensor(s.as_vector()) {
   tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension.")
 }
 
-AnyVector::AnyVector(const ST & s) : AnyTensor(s.as_vector()){
+AnyVector::AnyVector(const ST & s) : AnyTensor(s.as_vector()) {
   tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension.")
 }
 
-AnyVector::AnyVector(const MT & s) : AnyTensor(s.as_vector()){
+AnyVector::AnyVector(const MT & s) : AnyTensor(s.as_vector()) {
   tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension.")
 }
 
@@ -412,13 +413,13 @@ AnyVector::AnyVector(const MT & s) : AnyTensor(s.as_vector()){
 AnyVector::AnyVector() : AnyTensor() { }
 
 AnyScalar AnyVector::operator[](int index) const {
-  if ( is_DT() ){
+  if (is_DT()) {
     return static_cast<double>(as_DT().data()[index]);
   }
-  if ( is_ST() ){
+  if (is_ST()) {
     return as_ST().data()[index];
   }
-  if ( is_MT() ){
+  if (is_MT()) {
     return as_MT().data()[index];
   }
   assert(false);
@@ -428,7 +429,7 @@ AnyScalar AnyVector::operator[](int index) const {
 
 std::vector<AnyScalar> AnyVector::to_scalar_vector() const {
   std::vector<AnyScalar> ret(size());
-  for (int i=0; i<size(); i++){
+  for (int i=0; i<size(); i++) {
     ret[i] = (*this)[i];
   }
   return ret;
@@ -469,23 +470,21 @@ public:
     std::copy(arg[0], arg[0]+size_, res[0]);
 
     if (ascending_) {
-      std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b)
-      {
+      std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b) {
           double arg1 = *static_cast<const double*>(a);
           double arg2 = *static_cast<const double*>(b);
 
-          if(arg1 < arg2) return -1;
-          if(arg1 > arg2) return 1;
+          if (arg1 < arg2) return -1;
+          if (arg1 > arg2) return 1;
           return 0;
       });
     } else {
-      std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b)
-      {
+      std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b) {
           double arg1 = *static_cast<const double*>(a);
           double arg2 = *static_cast<const double*>(b);
 
-          if(arg1 < arg2) return 1;
-          if(arg1 > arg2) return -1;
+          if (arg1 < arg2) return 1;
+          if (arg1 > arg2) return -1;
           return 0;
       });
     }

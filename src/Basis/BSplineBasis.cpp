@@ -153,22 +153,22 @@ namespace spline {
 
     BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree)
         : UnivariateBasisNode(degree),
-      bspline_evaluator_(BSplineEvaluator::create("f", knots.size(), degree) ){
+      bspline_evaluator_(BSplineEvaluator::create("f", knots.size(), degree)) {
         AnyVector kn(vertcat(knots));
         knots_ = kn.sort().to_scalar_vector();
       }
 
-    BSplineBasis::BSplineBasis(const std::vector<AnyScalar>& bounds, int degree, int numberOfIntervals)  {
-        int numberOfKnots = 2*degree + numberOfIntervals;
-        std::vector<AnyScalar> knot_vector(numberOfKnots);
+    BSplineBasis::BSplineBasis(const std::vector<AnyScalar>& bounds, int degree, int n_intervals)  {
+        int n_knots = 2*degree + n_intervals;
+        std::vector<AnyScalar> knot_vector(n_knots);
 
         for (int i = 0; i < degree; ++i) {
             knot_vector[i] = bounds[0];
-            knot_vector[numberOfKnots - i - 1] = bounds[1];
+            knot_vector[n_knots - i - 1] = bounds[1];
         }
 
-        for (int i = 0; i < numberOfIntervals; ++i) {
-            double f = static_cast<double>(i)/(numberOfIntervals-1);
+        for (int i = 0; i < n_intervals; ++i) {
+            double f = static_cast<double>(i)/(n_intervals-1);
             knot_vector[degree + i] = bounds[0] + (bounds[1] - bounds[0])*f;
         }
       assign_node(new BSplineBasisNode(knot_vector, degree));
@@ -193,7 +193,7 @@ namespace spline {
 
     AnyTensor BSplineBasisNode::const_coeff_tensor(const AnyTensor& t) const {
         std::vector< int > coeff_size = t.dims();
-        coeff_size.insert(coeff_size.begin(),1);
+        coeff_size.insert(coeff_size.begin(), 1);
 
         AnyTensor values = t.shape(coeff_size);
 
@@ -224,12 +224,13 @@ namespace spline {
     }
 
     Basis BSplineBasisNode::derivative(int order, AnyTensor& T) const {
-        // Computes the BSplineBasis derivative using eq. (16) in [de Boor, Chapter X, 2001].
-        // Args:
-        //     o (int): order of the derivative (default is 1)
-        // Returns:
-        //     Derivative of the basis (new_basis) and transformation matrix to transform the coefficients of the function (T)
-
+        /* Computes the BSplineBasis derivative using eq. (16) in [de Boor, Chapter X, 2001].
+        * Args:
+        *     o (int): order of the derivative (default is 1)
+        * Returns:
+        *     Derivative of the basis (new_basis) and transformation matrix to transform
+        *     the coefficients of the function (T)
+        */
         int n_dim = length();  // Number of basis functions in the basis
         int n_dim_new = n_dim-1;
         int deg = degree();;
@@ -292,10 +293,10 @@ namespace spline {
             data.resize(n_dim_new*n_dim);
             std::fill(data.begin(), data.end(), 0);
             for (int i=0;  i<n_dim; i++) {
-            	val = (kn[i+deg] - kn[i])/deg;
-            	for (int j=i*(n_dim+1)+i+1; j<=i*(n_dim+1)+n_dim; j++) {
-            		data[j] = val;
-            	}
+              val = (kn[i+deg] - kn[i])/deg;
+              for (int j=i*(n_dim+1)+i+1; j<=i*(n_dim+1)+n_dim; j++) {
+                data[j] = val;
+              }
             }
             T_ = mtimes(vertcat(data).shape({n_dim_new, n_dim}), T_);
             kn.insert(kn.begin(), kn[0]);

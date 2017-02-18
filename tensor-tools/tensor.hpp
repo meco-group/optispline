@@ -43,7 +43,7 @@ class Tensor {
   public:
 
   template<class S>
-  Tensor(const Tensor<S>& a) : data_(vec( T(a.data())) ), dims_(a.dims()) {
+  Tensor(const Tensor<S>& a) : data_(vec(T(a.data()))), dims_(a.dims()) {
 
   }
 
@@ -150,17 +150,17 @@ class Tensor {
 
   }
 
-  Tensor(const T& data, const std::vector<int>& dims) : data_(vec( data )), dims_(dims) {
+  Tensor(const T& data, const std::vector<int>& dims) : data_(vec(data)), dims_(dims) {
     tensor_assert(data.is_dense());
     tensor_assert_message(data.numel()==product(dims), "Data of length " << data.numel()
       << " and dims " << dims << " are incompatible.");
   }
 
-  Tensor(const T& data) : data_(vec( data )), dims_({data.size1(), data.size2()}) {
+  Tensor(const T& data) : data_(vec(data)), dims_({data.size1(), data.size2()}) {
     tensor_assert(data.is_dense());
   }
 
-  Tensor(const Tensor& t) : data_(vec( t.data() )), dims_(t.dims()) {
+  Tensor(const Tensor& t) : data_(vec(t.data())), dims_(t.dims()) {
   }
 
   Tensor(double a) : data_({a}), dims_({}) {
@@ -471,10 +471,10 @@ class Tensor {
 
   Tensor mtimes(const Tensor &rhs) const {
     if (rhs.is_scalar() || is_scalar()) return operator*(rhs);
-    if(n_dims()==0 && rhs.n_dims()==2){
+    if (n_dims()==0 && rhs.n_dims()==2) {
         return einstein(rhs, {}, {-1, -2}, {-1, -2});
     }
-    if(n_dims()==2 && rhs.n_dims()==0){
+    if (n_dims()==2 && rhs.n_dims()==0) {
         return einstein(rhs, {-1, -2}, {}, {-1, -2});
     }
     tensor_assert(n_dims()==2 && rhs.n_dims()==2);

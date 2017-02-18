@@ -12,7 +12,7 @@ namespace spline {
     }
 
     Basis timesSubBasis(const BSplineBasis& b1, const MonomialBasis& b2) {
-        //    TODO experimantal implementation
+        // TODO experimantal implementation
         int newDegree = b1.degree() + b2.degree();
         std::vector<AnyScalar> v = unionKnots(b1.knots(), b1.knots(), newDegree,
           b1.degree(), b2.degree());

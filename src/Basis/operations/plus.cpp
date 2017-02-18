@@ -12,7 +12,7 @@ namespace spline {
     }
 
     Basis plusSubBasis(const BSplineBasis &b1, const MonomialBasis &b2) {
-        //    TODO experimantal implementation
+        // TODO experimantal implementation
         int newDegree = std::max(b1.degree(), b2.degree());
         std::vector<AnyScalar> v = increaseMultiplicityKnots(b1.knots(), newDegree - b1.degree());
         return BSplineBasis(v, newDegree);
