@@ -22,9 +22,9 @@ b2 = Basis.BSplineBasis([0,0,1,1],1);
 c2 = Basis.Coefficient(2*ones(2,1,1));
 s2 = Basis.Function(b2, c2);
 s3 = s1 + s2;
-assert(isequal(s3.getCoefficient.getData,3*ones(3,1,1)));
+assert(isequal(s3.coeff.data,3*ones(3,1,1)));
 s3 = s2 + s1;
-assert(isequal(s3.getCoefficient.getData,3*ones(3,1,1)));
+assert(isequal(s3.coeff.data,3*ones(3,1,1)));
 
 % sum two scalar splines random coeffs
 b1 = BSplineBasis([0,0,1/2,1,1],1);
@@ -80,14 +80,14 @@ b = BSplineBasis([0,0,1/2,1,1],1);
 c = Coefficient(ones(3,1,1));
 s = Basis.Function(b, c);
 m = -s;
-assert(isequal(m.getCoefficient.getData,-ones(3,1,1)));
+assert(isequal(m.coeff.data,-ones(3,1,1)));
 
 % scalar spline random coeffs
 b = BSplineBasis([0,0,1/2,1,1],1);
 c = Coefficient(rand(3,1,1));
 s = Basis.Function(b, c);
 m = -s;
-assert(isequal(s.getCoefficient.getData, -m.getCoefficient.getData));
+assert(isequal(s.coeff.data, -m.coeff.data));
 
 % bivariate matrix-valued spline random coeffs
 m = 4; n = 5;
@@ -97,7 +97,7 @@ B = Basis.TensorBasis({SB1,SB2});
 C = Coefficient(rand(SB1.dimension,SB2.dimension,m,n));
 S = Basis.Function(B,C);
 M = -S;
-assert(isequal(S.getCoefficient.getData, -M.getCoefficient.getData));
+assert(isequal(S.coeff.data, -M.coeff.data));
 
 
 %% minus
@@ -119,9 +119,9 @@ b2 = BSplineBasis([0,0,1,1],1);
 c2 = Coefficient(2*ones(2,1,1));
 s2 = Basis.Function(b2, c2);
 s3 = s1 - s2;
-assert(isequal(s3.getCoefficient.getData,-ones(3,1,1)));
+assert(isequal(s3.coeff.data,-ones(3,1,1)));
 s3 = s2 - s1;
-assert(isequal(s3.getCoefficient.getData,ones(3,1,1)));
+assert(isequal(s3.coeff.data,ones(3,1,1)));
 
 % difference two scalar splines random coeffs
 b1 = BSplineBasis([0,0,1/2,1,1],1);
@@ -174,10 +174,10 @@ b = BSplineBasis([0,0,0,1,2,3,3,3],2);
 c = Coefficient(rand(b.dimension,1,1));
 s = Basis.Function(b,c);
 p = s*7;
-delta = p.getCoefficient.getData - 7*s.getCoefficient.getData;
+delta = p.coeff.data - 7*s.coeff.data;
 assert(max(abs(delta(:))) < 1e-14);
 p = 7*s;
-delta = p.getCoefficient.getData - 7*s.getCoefficient.getData;
+delta = p.coeff.data - 7*s.coeff.data;
 assert(max(abs(delta(:))) < 1e-14);
 
 % product two scalar splines given coeffs
@@ -188,10 +188,10 @@ b2 = BSplineBasis([0,0,3,3],1);
 c2 = Coefficient(3*ones(b2.dimension,1,1));
 s2 = Basis.Function(b2,c2);
 p = s1*s2;
-delta = p.getCoefficient.getData - 6*ones(p.getBasis.dimension,1,1);
+delta = p.coeff.data - 6*ones(p.basis.dimension,1,1);
 assert(max(abs(delta(:))) < 1e-14);
 p = s2*s1;
-delta = p.getCoefficient.getData - 6*ones(p.getBasis.dimension,1,1);
+delta = p.coeff.data - 6*ones(p.basis.dimension,1,1);
 assert(max(abs(delta(:))) < 1e-14);
 
 % product two scalar splines random coeffs
@@ -226,10 +226,10 @@ B = Basis.TensorBasis({SB1,SB2});
 C = Coefficient(rand(SB1.dimension,SB2.dimension,m,n));
 S = Basis.Function(B,C);
 P = 8*S;
-delta = P.getCoefficient.getData - 8*S.getCoefficient.getData;
+delta = P.coeff.data - 8*S.coeff.data;
 assert(norm(delta(:)) < 1e-14);
 P = S*8;
-delta = P.getCoefficient.getData - 8*S.getCoefficient.getData;
+delta = P.coeff.data - 8*S.coeff.data;
 assert(norm(delta(:)) < 1e-14);
 
 % % product bivariate matrix-valued spline and constant matrix
@@ -274,7 +274,7 @@ assert(norm(delta(:)) < 1e-14);
 % c1 = Coefficient(3*ones(3,1,1));
 % s1 = Basis.Function(b1, c1);
 % s0 = s1^0; % to the power 0
-% assert(isequal(s0.getCoefficient.getData,ones(3,1,1)));
+% assert(isequal(s0.coeff.data,ones(3,1,1)));
 % s4 = s1^4;
 % assert(abs(s4(0.2)-81) < 1e-14);
 

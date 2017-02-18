@@ -16,25 +16,25 @@ s2 = MonomialBasis(3);
 b = TensorBasis({s1,s2},{'x','y'});
 
 fail = false;
-try,p = b.getBasis(0),catch,fail = true;end
+try,p = b.basis(0),catch,fail = true;end
 assert(fail);
 
 fail = false;
-try,p = b.getBasis(3),catch,fail = true;end
+try,p = b.basis(3),catch,fail = true;end
 assert(fail);
 
-p = b.getBasis(1);
-assert(p.getDegree()== 2);
-p = b.getBasis(2);
-assert(p.getDegree()== 3);
+p = b.basis(1);
+assert(p.degree()== 2);
+p = b.basis(2);
+assert(p.degree()== 3);
 
-p = b.getBasis(1);
-assert(p.getDegree()== 2);
-p = b.getBasis(2);
-assert(p.getDegree()== 3);
+p = b.basis(1);
+assert(p.degree()== 2);
+p = b.basis(2);
+assert(p.degree()== 3);
 
-p = b.getBasis('x');
-assert(p.getDegree()== 2);
-p = b.getBasis('y');
-assert(p.getDegree()== 3);
+p = b.basis('x');
+assert(p.degree()== 2);
+p = b.basis('y');
+assert(p.degree()== 3);
 

@@ -187,16 +187,16 @@ void OptistackSolver::value(const MX& x, const DM& v) {
 }
 
 spline::Function OptiSplineSolver::value(const spline::Function& f) const {
-  return spline::Function(f.getTensorBasis(), value(f.getCoefficient()));
+  return spline::Function(f.tensor_basis(), value(f.coeff()));
 }
 
 spline::Coefficient OptiSplineSolver::value(const spline::Coefficient& c) const {
-  return spline::Coefficient(value(c.getData()));
+  return spline::Coefficient(value(c.data()));
 }
 
 void OptiSplineSolver::value(const spline::Coefficient& c, const Tensor<DM>& d) {
-  spline_assert_message(c.getData().is_MT(), "Value only supported for MX");
-  value(c.getData().as_MT(), d);
+  spline_assert_message(c.data().is_MT(), "Value only supported for MX");
+  value(c.data().as_MT(), d);
 }
 
 AnyTensor OptiSplineSolver::value(const AnyTensor& t) const {

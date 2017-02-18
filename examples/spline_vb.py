@@ -9,7 +9,7 @@ import casadi as cas
 opti = OptiSpline()
 
 def derivative(coeffs, knots1, degree, o=1):
-    coeffs = coeffs.getData()
+    coeffs = coeffs.data()
     try:
       n = coeffs.shape[0]
     except:
@@ -35,7 +35,7 @@ def derivative(coeffs, knots1, degree, o=1):
     return coeffs_out, knots_out
 
 def FunDerivative(self):
-  vx_cfs_, knots2 = derivative(self.getCoefficient(), knots, degree)
+  vx_cfs_, knots2 = derivative(self.coeff(), knots, degree)
   m2 = BSplineBasis(knots2, degree-1)
   basis2 = TensorBasis([m2])
   return Function(basis2, vx_cfs_)
@@ -91,8 +91,8 @@ g.append(vy>=-T*vmax)
 
 sol = opti.solver(T,g,"ipopt")
 
-sol.value(x.getCoefficient(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
-sol.value(y.getCoefficient(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
+sol.value(x.coeff(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
+sol.value(y.coeff(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
 
 sol.value(T,2)
 
@@ -108,11 +108,11 @@ time = np.linspace(0, T, 101)
 
 x = sol.value(x)
 """
-x.getBasis().setKnots(list(T*knots))
+x.basis().setKnots(list(T*knots))
 
 y = sol.value(y)
 
-y.getBasis().setKnots(list(T*knots))
+y.basis().setKnots(list(T*knots))
 
 vx = x.derivative()
 vy = y.derivative()

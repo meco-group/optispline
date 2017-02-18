@@ -5,16 +5,16 @@
 namespace spline {
 
     Basis plusSubBasis(const BSplineBasis &b1, const BSplineBasis &b2) {
-        int newDegree = std::max(b1.getDegree(), b2.getDegree());
-        std::vector<AnyScalar> v = unionKnots(b1.getKnots(), b2.getKnots(), newDegree,
-          b1.getDegree(), b2.getDegree());
+        int newDegree = std::max(b1.degree(), b2.degree());
+        std::vector<AnyScalar> v = unionKnots(b1.knots(), b2.knots(), newDegree,
+          b1.degree(), b2.degree());
         return BSplineBasis(v, newDegree);
     }
 
     Basis plusSubBasis(const BSplineBasis &b1, const MonomialBasis &b2) {
         //    TODO experimantal implementation
-        int newDegree = std::max(b1.getDegree(), b2.getDegree());
-        std::vector<AnyScalar> v = increaseMultiplicityKnots(b1.getKnots(), newDegree - b1.getDegree());
+        int newDegree = std::max(b1.degree(), b2.degree());
+        std::vector<AnyScalar> v = increaseMultiplicityKnots(b1.knots(), newDegree - b1.degree());
         return BSplineBasis(v, newDegree);
     }
 
@@ -23,7 +23,7 @@ namespace spline {
     }
 
     Basis plusSubBasis(const MonomialBasis &b1, const MonomialBasis &b2) {
-        int newDegree = std::max(b1.getDegree(), b2.getDegree());
+        int newDegree = std::max(b1.degree(), b2.degree());
         return MonomialBasis(newDegree);
     }
 

@@ -17,16 +17,16 @@ namespace spline {
     class CoefficientNode : public SharedObjectNode {
     public:
 
-        CoefficientNode(const AnyTensor& t) : data(t) {}
+        CoefficientNode(const AnyTensor& t) : data_(t) {}
         CoefficientNode(const std::vector< double >& v);
 
         std::vector< int > shape() const;
         std::vector< int > dimension() const;
 
         Coefficient add_trival_dimension(int i) const;
-        int getNumberCoefficents() const;
+        int n_coeff() const;
         // Coefficient operator+ (Coefficient & other) const;
-        AnyTensor getData() const {return data;}
+        AnyTensor data() const {return data_;}
         std::string getRepresentation() const ;
         void repr() const { userOut() << getRepresentation() << std::endl;}
 
@@ -36,7 +36,7 @@ namespace spline {
 
         Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const;
     private:
-        AnyTensor data;
+        AnyTensor data_;
 
     };
 #endif
@@ -51,7 +51,7 @@ namespace spline {
         CoefficientNode* operator->() const ;
 
         Coefficient add_trival_dimension(int i) const;
-        int getNumberCoefficents() const;
+        int n_coeff() const;
     #endif // SWIG
         Coefficient();
         Coefficient(const AnyTensor& t);
@@ -61,7 +61,7 @@ namespace spline {
         std::vector< int > dimension() const;  // Related to the number of basis functions
 
         Coefficient operator-() const ;
-        AnyTensor getData() const;
+        AnyTensor data() const;
         std::string getRepresentation() const;
         /// Transform a direction of the coeffient's data tensor using given transformation matrix
         AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;

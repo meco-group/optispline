@@ -15,11 +15,11 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = UnivariateBasis()
         s3 = UnivariateBasis()
         b = TensorBasis()
-        b = b.addBasis(s1)
+        b = b.add_basis(s1)
         self.assertEqual(b.n_basis(), 1)
 
-        b = b.addBasis(s2)
-        b = b.addBasis(s3)
+        b = b.add_basis(s2)
+        b = b.add_basis(s3)
         self.assertEqual(b.n_basis(), 3)
 
     def test_tbasis_n_basis(self):
@@ -27,11 +27,11 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         s3 = MonomialBasis(1)
         b = TensorBasis()
-        b = b.addBasis(s1)
+        b = b.add_basis(s1)
         self.assertEqual(b.n_basis(), 1)
 
-        b = b.addBasis(s2)
-        b = b.addBasis(s3)
+        b = b.add_basis(s2)
+        b = b.add_basis(s3)
         self.assertEqual(b.n_basis(), 3)
 
     def test_tbasis_dimension(self):
@@ -39,17 +39,17 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         s3 = MonomialBasis(1)
         b = TensorBasis()
-        b = b.addBasis(s1)
+        b = b.add_basis(s1)
         self.assertEqual(b.dimension(), [4])
 
-        b = b.addBasis(s2)
-        b = b.addBasis(s3)
+        b = b.add_basis(s2)
+        b = b.add_basis(s3)
         self.assertEqual(b.dimension(), [4,5,2])
 
     def test_tbasis_n_inputs1(self):
         s1 = MonomialBasis(3)
         b = TensorBasis()
-        b = b.addBasis(s1)
+        b = b.add_basis(s1)
         self.assertEqual(b.n_inputs(), 1)
 
     def test_tbasis_n_inputs2(self):
@@ -57,9 +57,9 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         s3 = MonomialBasis(1)
         b = TensorBasis()
-        b = b.addBasis(s1)
-        b = b.addBasis(s2)
-        b = b.addBasis(s3)
+        b = b.add_basis(s1)
+        b = b.add_basis(s2)
+        b = b.add_basis(s3)
         self.assertEqual(b.n_inputs(), 3)
 
     def test_tbasis_n_inputs2(self):
@@ -67,30 +67,30 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(4)
         s3 = MonomialBasis(1)
         b = TensorBasis()
-        b = b.addBasis(s1)
-        b = b.addBasis(s2)
-        b = b.addBasis(s3)
+        b = b.add_basis(s1)
+        b = b.add_basis(s2)
+        b = b.add_basis(s3)
         self.assertEqual(b.n_inputs(), 3)
 
     def test_getSubBasis1(self):
         s1 = MonomialBasis(3)
         b = TensorBasis()
-        b = b.addBasis(s1)
+        b = b.add_basis(s1)
         self.assertEqual(len(b.getSubBasis()), 1)
 
     def test_getSubBasis2(self):
         s1 = MonomialBasis(3)
         s2 = MonomialBasis(4)
         b = TensorBasis()
-        b = b.addBasis(s1)
-        b = b.addBasis(s2)
-        b = b.addBasis(s1)
+        b = b.add_basis(s1)
+        b = b.add_basis(s2)
+        b = b.add_basis(s1)
         self.assertEqual(len(b.getSubBasis()), 3)
 
     def test_getEvaluation1(self):
         s1 = MonomialBasis(3)
         b = TensorBasis()
-        b = b.addBasis(s1)
+        b = b.add_basis(s1)
         x = [0.1]
         for _ in range(10):
             x = [random.random()]
@@ -100,8 +100,8 @@ class Test_Basis_Basis(BasisTestCase):
         s1 = MonomialBasis(2)
         s2 = MonomialBasis(3)
         b = TensorBasis()
-        b = b.addBasis(s1)
-        b = b.addBasis(s2)
+        b = b.add_basis(s1)
+        b = b.add_basis(s2)
         x = [0.1]
         with self.assertRaises(Exception):
             b(x)
@@ -110,8 +110,8 @@ class Test_Basis_Basis(BasisTestCase):
         s1 = MonomialBasis(2)
         s2 = MonomialBasis(3)
         b = TensorBasis()
-        b = b.addBasis(s1)
-        b = b.addBasis(s2)
+        b = b.add_basis(s1)
+        b = b.add_basis(s2)
         x = [0.1,2]
         self.assertEqualTensor(b(x),np.array([[1,2,4,8],[0.1,0.2,0.4,0.8],[0.01,0.02,0.04,0.08]]))
 
@@ -123,8 +123,8 @@ class Test_Basis_Basis(BasisTestCase):
         a = Argument()
         b = TensorBasis()
         s1 = MonomialBasis(2)
-        b = b.addBasis(s1)
-        b = b.addBasis(s1)
+        b = b.add_basis(s1)
+        b = b.add_basis(s1)
         b = TensorBasis(b, [a,a])
         self.assertTrue(b.hasArguments())
 
@@ -133,31 +133,31 @@ class Test_Basis_Basis(BasisTestCase):
         s2 = MonomialBasis(3)
         b = TensorBasis([s1,s2])
         with self.assertRaises(Exception):
-          p = b.getBasis(-1)
+          p = b.basis(-1)
         with self.assertRaises(Exception):
-          p = b.getBasis(2)
+          p = b.basis(2)
 
-        p = b.getBasis(0)
-        self.assertEqual( p.getDegree(), 2)
-        p = b.getBasis(1)
-        self.assertEqual( p.getDegree(), 3)
+        p = b.basis(0)
+        self.assertEqual( p.degree(), 2)
+        p = b.basis(1)
+        self.assertEqual( p.degree(), 3)
 
-        p = b.getBasis("x")
+        p = b.basis("x")
 
         s1 = MonomialBasis(2)
         s2 = MonomialBasis(3)
         b = TensorBasis([s1,s2])
         b = TensorBasis(b, ["x","y"])
 
-        p = b.getBasis(0)
-        self.assertEqual( p.getDegree(), 2)
-        p = b.getBasis(1)
-        self.assertEqual( p.getDegree(), 3)
+        p = b.basis(0)
+        self.assertEqual( p.degree(), 2)
+        p = b.basis(1)
+        self.assertEqual( p.degree(), 3)
 
-        p = b.getBasis("x")
-        self.assertEqual( p.getDegree(), 2)
-        p = b.getBasis("y")
-        self.assertEqual( p.getDegree(), 3)
+        p = b.basis("x")
+        self.assertEqual( p.degree(), 2)
+        p = b.basis("y")
+        self.assertEqual( p.degree(), 3)
 
     def test_derivative(self):
         # Test derivative of TensorBasis
@@ -182,12 +182,12 @@ class Test_Basis_Basis(BasisTestCase):
         # Same T's and same Bases
         self.assertEqualT(T[0], T0)
         self.assertEqualT(T[1], T1)
-        db00 = dB.getBasis(0)
-        db11 = dB.getBasis(1)
+        db00 = dB.basis(0)
+        db11 = dB.basis(1)
 
-        self.assertEqual(db1.getKnots(),db11.getKnots())
-        self.assertEqual(db1.getDegree(),db11.getDegree())
-        self.assertEqual(db0.getDegree(),db00.getDegree())
+        self.assertEqual(db1.knots(),db11.knots())
+        self.assertEqual(db1.degree(),db11.degree())
+        self.assertEqual(db0.degree(),db00.degree())
 
 # TODO constructor
     # def test_getEvaluation1(self):

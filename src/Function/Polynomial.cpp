@@ -13,7 +13,7 @@ namespace spline {
     Polynomial::Polynomial(const std::vector< double >& coef, const std::string &name) :
         Function(TensorBasis(MonomialBasis(coef.size()-1), std::vector< Argument > { Argument(name)}), Coefficient(coef)) {
         /* std::vector< Argument > argumentList = { Argument(name)}; */
-        /* getTensorBasis().setArguments(argumentList); */
+        /* tensor_basis().setArguments(argumentList); */
     }
 
 } // namespace spline

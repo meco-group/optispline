@@ -24,7 +24,7 @@ namespace spline{
     }
 
     std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid(const spline::Function & f) const {
-        TensorBasis basis = f.getTensorBasis();
+        TensorBasis basis = f.tensor_basis();
         std::vector< int > indexPermutation = getPermutation(basis);
 
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
@@ -51,7 +51,7 @@ namespace spline{
         }
 
         for (AnyTensor pre : preStep) {
-            postStep.push_back(pre.inner(f.getCoefficient().getData()));
+            postStep.push_back(pre.inner(f.coeff().data()));
         }
 
         return postStep;
@@ -60,7 +60,7 @@ namespace spline{
     std::vector< int > EvaluationGrid::getPermutation(TensorBasis basis) const{
         std::vector< int > index;
         if(griddedBasis.hasArguments() && basis.hasArguments()){
-            for(auto & a : griddedBasis.getArguments()){
+            for(auto & a : griddedBasis.arguments()){
                 index.push_back(basis.indexArgument(a));
             }
         }else{

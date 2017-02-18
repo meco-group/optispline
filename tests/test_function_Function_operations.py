@@ -11,7 +11,7 @@ class Test_Function_Operations(BasisTestCase):
       t = DTensor([0, 1, 1, 0, 1, 0, 0, 1], [2, 2, 2])
 
       x = Polynomial([0,1],'x')
-      b = x.getBasis()
+      b = x.basis()
       f = Function(b, t)
       f([0.2])
 

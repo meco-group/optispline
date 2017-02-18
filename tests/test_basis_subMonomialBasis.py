@@ -13,9 +13,9 @@ class Test_Basis_SubMonomial(BasisTestCase):
         s = MonomialBasis(3)
         self.assertEqual(s.n_inputs(), 1)
 
-    def test_getDegree(self):
+    def test_degree(self):
         s = MonomialBasis(3)
-        self.assertEqual(s.getDegree(), 3)
+        self.assertEqual(s.degree(), 3)
 
     def test_evaluation1(self):
         s = MonomialBasis(3)

@@ -28,7 +28,7 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const ;
         virtual Basis operator*(const DummyBasis& other) const ;
 
-        virtual std::string getRepresentation() const ;
+        virtual std::string getRepresentation() const override ;
 
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
@@ -55,10 +55,6 @@ namespace spline{
         MonomialBasisNode* operator->() const ;
 #endif // SWIG
         MonomialBasis(int degree);
-
-        virtual std::string getRepresentation() const ;
-
-        virtual void foo() const {};
 
 #ifndef SWIG
         /// Print a representation of the object to a stream (shorthand)

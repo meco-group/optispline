@@ -7,10 +7,6 @@ namespace spline {
         return "MonomialBasis";
     }
 
-    std::string MonomialBasis::getRepresentation() const {
-        return (*this)->getRepresentation() ;
-    }
-
     MonomialBasisNode* MonomialBasis::get() const {
         return static_cast<MonomialBasisNode*>(SharedObject::get());
     };
@@ -75,7 +71,7 @@ namespace spline {
     }
 
     int MonomialBasisNode::getLength() const {
-         return getDegree() + 1;
+         return degree() + 1;
     }
 
     std::vector< std::vector < AnyScalar > > MonomialBasisNode::getEvaluationGrid() const {
@@ -87,7 +83,7 @@ namespace spline {
     }
 
     Basis MonomialBasisNode::derivative(int order, AnyTensor& T) const {
-        if (order > getDegree()){
+        if (order > degree()){
             // User tries to take a derivative which is of higher order than the basis, returns all 0
             int dim = dimension();
             std::vector<double> entries(1*(dim), 0);
@@ -97,7 +93,7 @@ namespace spline {
         else{
             // Derivative is of lower order than basis
             int dim = dimension();  // number of basis functions in the basis
-            int curr_degree = getDegree();
+            int curr_degree = degree();
             int dim_new = dim-1;  // dimension
             std::vector<AnyScalar> entries(dim*dim,0);  // initialization of entries of transformation matrix
             for(int i=0; i<dim; i++){
@@ -124,7 +120,7 @@ namespace spline {
     Basis MonomialBasisNode::antiderivative(int order, AnyTensor& T) const {
         int dim = dimension();
         int dim_new = dim;
-        int deg = getDegree();
+        int deg = degree();
         // construct coefficient transformation matrix
         std::vector<AnyScalar> data(dim*dim,0);
         for(int i=0; i<dim; i++) {

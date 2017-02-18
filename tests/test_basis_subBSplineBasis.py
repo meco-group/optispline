@@ -31,9 +31,9 @@ class Test_Basis_SubBSpline(BasisTestCase):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
         self.assertEqual(s.n_inputs(), 1)
 
-    def test_getDegree(self):
+    def test_degree(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
-        self.assertEqual(s.getDegree(), 2)
+        self.assertEqual(s.degree(), 2)
 
     def test_evaluation1(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
@@ -88,9 +88,9 @@ class Test_Basis_SubBSpline(BasisTestCase):
       ts = np.linspace(0,1,1000)
 
 #       def FunDerivative(self):
-#         degree = self.getBasis().getDegree()
-#         coeffs = self.getCoefficient().getData()
-#         knots = np.array(self.getBasis().getKnots())
+#         degree = self.basis().degree()
+#         coeffs = self.coeff().data()
+#         knots = np.array(self.basis().knots())
 #         n = coeffs.shape[0]
 #         delta_knots = knots[1+degree:-1] - knots[1:-degree-1]
 #         T = np.zeros((n - 1, n))

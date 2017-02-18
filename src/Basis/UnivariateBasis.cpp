@@ -5,13 +5,12 @@
 #include "../common.h"
 
 namespace spline {
-    UnivariateBasisNode::UnivariateBasisNode(int degree_) :degree(degree_) { }
+    UnivariateBasisNode::UnivariateBasisNode(int degree) : degree_(degree) { }
     UnivariateBasisNode* UnivariateBasis::get() const {
         return static_cast<UnivariateBasisNode*>(SharedObject::get());
     };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
 
-    std::string UnivariateBasis::getRepresentation() const { return (*this)->getRepresentation() ; }
     std::string UnivariateBasisNode::getRepresentation() const {
         return "UnivariateBasis object";
     }
@@ -69,12 +68,12 @@ namespace spline {
 
     void UnivariateBasis::setDegree(int degree) { (*this)->setDegree(degree); }
     void UnivariateBasisNode::setDegree(int degree) {
-         this->degree = degree;
+         degree_ = degree;
     }
 
-    int  UnivariateBasis::getDegree() const { return (*this)->getDegree (); }
-    int  UnivariateBasisNode::getDegree() const {
-         return degree ;
+    int  UnivariateBasis::degree() const { return (*this)->degree (); }
+    int  UnivariateBasisNode::degree() const {
+         return degree_ ;
     }
 
     int UnivariateBasisNode::n_inputs() const { return 1; }

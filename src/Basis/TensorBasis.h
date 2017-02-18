@@ -30,24 +30,24 @@ namespace spline {
         std::vector<int> dimension() const;
         int n_inputs() const;
 
-        std::vector< Argument > getArguments() const;
+        std::vector< Argument > arguments() const;
 
         Argument getSubArgument(int index) const;
         int indexArgument(Argument a) const;
 
         bool hasArguments() const;
 
-        virtual std::string getRepresentation() const ;
+        std::string getRepresentation() const ;
 
         std::vector< Basis > getSubBasis() const;
         TensorBasis getSubBasis(int index) const;
-        Basis getBasis() const;
-        Basis getBasis(const Argument& a) const;
-        Basis getBasis(const Index& index) const;
+        Basis basis() const;
+        Basis basis(const Argument& a) const;
+        Basis basis(const Index& index) const;
         // Basis getSubBasis( Argument a) const;
 
-        TensorBasis addBasis(TensorBasis basis) const ;
-        TensorBasis addBasis(Basis basis) const ;
+        TensorBasis add_basis(TensorBasis basis) const ;
+        TensorBasis add_basis(Basis basis) const ;
 
         TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
 
@@ -93,26 +93,26 @@ namespace spline {
         int n_inputs() const; // Total number of inputs, over all bases
         std::vector<int> dimension() const; // Vector containing number of basis functions in each basis
 
-        std::vector< spline::Argument > getArguments() const;
+        std::vector< spline::Argument > arguments() const;
 
         spline::Argument getSubArgument(int index) const;
         int indexArgument(Argument a) const;
 
         bool hasArguments() const;
 
-        virtual std::string getRepresentation() const ;
+        std::string getRepresentation() const ;
 
-        Basis getBasis() const;
-        Basis getBasis(const Argument& a) const;
-        Basis getBasis(const Index& index) const;
+        Basis basis() const;
+        Basis basis(const Argument& a) const;
+        Basis basis(const Index& index) const;
         // Basis operator[](Argument a) const;
         // Basis operator[](int index) const;
 
         std::vector< Basis > getSubBasis() const;
-        // TensorBasis getTensorBasis() const;
+        // TensorBasis tensor_basis() const;
 
-        TensorBasis addBasis(TensorBasis basis) const ;
-        TensorBasis addBasis(Basis basis) const ;
+        TensorBasis add_basis(TensorBasis basis) const ;
+        TensorBasis add_basis(Basis basis) const ;
 
         TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
 

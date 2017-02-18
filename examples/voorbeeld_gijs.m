@@ -16,11 +16,11 @@ B2 = BSplineBasis(knots,degree);
 
 % test fields
 
-degree = B1.getDegree; % this seems OK
+degree = B1.degree; % this seems OK
 
-knots  = B2.getKnots;  % why is this a swig object instead of vector?
+knots  = B2.knots;  % why is this a swig object instead of vector?
 
-degree = B2.getDegree; % this seems OK
+degree = B2.degree; % this seems OK
 
 
 

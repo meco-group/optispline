@@ -22,8 +22,8 @@ namespace spline {
           const BasisComposition& bc) {
         TensorBasis returnBasis = TensorBasis();
         if (b1.hasArguments() && b2.hasArguments()) {
-            std::vector< Argument > allArguments = b1.getArguments();
-            for (auto &a : b2.getArguments()) {
+            std::vector< Argument > allArguments = b1.arguments();
+            for (auto &a : b2.arguments()) {
                 if (std::find(allArguments.begin(), allArguments.end(), a) == allArguments.end()) {
                     /* v does not contain x */
                     allArguments.push_back(a);
@@ -31,10 +31,10 @@ namespace spline {
             }
 
             for (auto &a : allArguments) {
-                Basis subBasis1 = b1.getBasis(a);
-                Basis subBasis2 = b2.getBasis(a);
+                Basis subBasis1 = b1.basis(a);
+                Basis subBasis2 = b2.basis(a);
                 Basis sum = bc(subBasis1, subBasis2);
-                returnBasis = returnBasis.addBasis(sum);
+                returnBasis = returnBasis.add_basis(sum);
             }
 
             returnBasis = TensorBasis(returnBasis, allArguments);
@@ -43,18 +43,18 @@ namespace spline {
             spline_assert_message(b1.n_basis() == b2.n_basis(),
               "Mismatch dimension");
             for (int i = 0; i < b1.n_basis(); i++) {
-                Basis subBasis1 = b1.getBasis(i);
-                Basis subBasis2 = b2.getBasis(i);
+                Basis subBasis1 = b1.basis(i);
+                Basis subBasis2 = b2.basis(i);
                 Basis sum = bc(subBasis1, subBasis2);
-                returnBasis = returnBasis.addBasis(sum);
+                returnBasis = returnBasis.add_basis(sum);
             }
 
             if (b1.hasArguments()) {
-                returnBasis = TensorBasis(returnBasis, b1.getArguments());
+                returnBasis = TensorBasis(returnBasis, b1.arguments());
             }
 
             if (b2.hasArguments()) {
-                returnBasis = TensorBasis(returnBasis, b2.getArguments());
+                returnBasis = TensorBasis(returnBasis, b2.arguments());
             }
 
         }

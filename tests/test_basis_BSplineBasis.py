@@ -32,7 +32,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         knotsint = 8
         knots = np.r_[np.zeros(degree),np.linspace(0., 1., knotsint), np.ones(degree)]
         b = BSplineBasis(np.flipud(knots), degree)
-        self.assertEqualT(knots, b.getKnots()) # test if sorted
+        self.assertEqualT(knots, b.knots()) # test if sorted
         b = BSplineBasis(MX.sym('knots', 13), degree)
         b = BSplineBasis(np.c_[knots], degree)
         with self.assertRaises(Exception):
@@ -45,7 +45,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         knots1 = knots.tolist() + [sym_k1, sym_k2]
         knots2 = knots.tolist() + [0.8, 0.55]
         b = BSplineBasis(knots1, degree)
-        kn = casadi.Function('f', [sym_k1, sym_k2], b.getKnots())
+        kn = casadi.Function('f', [sym_k1, sym_k2], b.knots())
         self.assertEqualT(np.sort(knots2), kn(0.8, 0.55))
 
 
@@ -60,7 +60,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         knots_add = np.random.rand(2)
         b2,T = b1.insert_knots(knots_add)
         knots2 = np.sort(np.r_[knots_add, knots1])
-        self.assertEqualT(knots2, b2.getKnots(), tol=1e-6)
+        self.assertEqualT(knots2, b2.knots(), tol=1e-6)
         c2 = T.dot(c1)
         s2 = Function(b2,c2)
         g2 = b2.greville()
@@ -79,7 +79,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         ref = 2
         b2,T = b1.midpoint_refinement(ref)
         knots2 = np.r_[np.zeros(degree),np.linspace(0., 1., 2*ref*(knotsint-1)+1), np.ones(degree)]
-        self.assertEqualT(knots2, b2.getKnots(), 1e-6)
+        self.assertEqualT(knots2, b2.knots(), 1e-6)
         c2 = T.dot(c1)
         s2 = Function(b2,c2)
         g2 = b2.greville()
@@ -141,8 +141,8 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         b = BSplineBasis(np.r_[np.zeros(degree), np.linspace(0.,1.,knotsint), np.ones(degree)],degree)
         banti, Tanti = b.antiderivative(order)
         b_, Tder = banti.derivative(order)
-        self.assertEqualT(b_.getDegree(), b.getDegree())
-        self.assertEqualT(b_.getKnots(), b.getKnots())
+        self.assertEqualT(b_.degree(), b.degree())
+        self.assertEqualT(b_.knots(), b.knots())
         self.assertEqualT(Tder.dot(Tanti), np.eye(Tder.shape[0]))
 
 

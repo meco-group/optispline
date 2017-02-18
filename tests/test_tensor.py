@@ -140,8 +140,8 @@ class Test_Tensor(BasisTestCase):
       a_ = Coefficient(a)
       F = Basis.Function(B, a_)
 
-      c = F.getCoefficient()
-      r = c.getData()
+      c = F.coeff()
+      r = c.data()
 
       # a = DTensor(a ,  B.dimension() + [1, 1])
       print "------"

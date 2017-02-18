@@ -122,10 +122,10 @@ class Test_Function_Function(BasisTestCase):
         b = TensorBasis([m,m])
         f = Function(b,a_)
 
-        # print f.getCoeffTensor()
+        # print f.coeff_tensor()
         # print a
 
-        self.assertEqualT(a,f.getCoeffTensor())
+        self.assertEqualT(a,f.coeff_tensor())
 
     def test_insert_knots_univariate(self):
         np.random.seed(0)
@@ -138,10 +138,10 @@ class Test_Function_Function(BasisTestCase):
         knots_add = np.random.rand(2)
         # knots_add = 0.1
         s2 = s1.insert_knots(knots_add)
-        b2 = s2.getBasis()
+        b2 = s2.basis()
         knots2 = np.sort(np.r_[knots_add, knots1])
-        self.assertEqualT(knots2, b2.getKnots(), 1e-6)
-        self.assertEqualT(degree, b2.getDegree(), 1e-6)
+        self.assertEqualT(knots2, b2.knots(), 1e-6)
+        self.assertEqualT(degree, b2.degree(), 1e-6)
         g2 = b2.greville()
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
@@ -178,12 +178,12 @@ class Test_Function_Function(BasisTestCase):
         f = Function(B,C)
         f_a1 = f.insert_knots(ka1, 0)
         f_a12 = f.insert_knots([ka1,ka2], ['x', 'y'])
-        b1_2 = f_a12.getBasis(0)
-        b2_2 = f_a12.getBasis(1)
-        self.assertEqualT(k1a, b1_2.getKnots(), 1e-6)
-        self.assertEqualT(d1, b1_2.getDegree(), 1e-6)
-        self.assertEqualT(k2a, b2_2.getKnots(), 1e-6)
-        self.assertEqualT(d2, b2_2.getDegree(), 1e-6)
+        b1_2 = f_a12.basis(0)
+        b2_2 = f_a12.basis(1)
+        self.assertEqualT(k1a, b1_2.knots(), 1e-6)
+        self.assertEqualT(d1, b1_2.degree(), 1e-6)
+        self.assertEqualT(k2a, b2_2.knots(), 1e-6)
+        self.assertEqualT(d2, b2_2.degree(), 1e-6)
         g1_2 = b1_2.greville()
         g2_2 = b2_2.greville()
         for i in g1_2:
@@ -201,10 +201,10 @@ class Test_Function_Function(BasisTestCase):
         s1 = Function(b1,c1)
         ref = 2
         s2 = s1.midpoint_refinement(ref)
-        b2 = s2.getBasis()
+        b2 = s2.basis()
         knots2 = np.r_[np.zeros(degree),np.linspace(0., 1., 2*ref*(knotsint-1)+1), np.ones(degree)]
-        self.assertEqualT(knots2, b2.getKnots(), 1e-6)
-        self.assertEqualT(degree, b2.getDegree(), 1e-6)
+        self.assertEqualT(knots2, b2.knots(), 1e-6)
+        self.assertEqualT(degree, b2.degree(), 1e-6)
         g2 = b2.greville()
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
@@ -268,11 +268,11 @@ class Test_Function_Function(BasisTestCase):
         dddp = p.derivative([3],[0])
         ddddp = p.derivative([deg],[0])
 
-        self.assertEqualT(p.getCoefficient().getData().reshape(p.getBasis().getDegree()+1,), [1,2,3,4])
-        self.assertEqualT(dp.getCoefficient().getData().reshape(dp.getBasis().getDegree()+1,), [2,6,12])
-        self.assertEqualT(ddp.getCoefficient().getData().reshape(ddp.getBasis().getDegree()+1,), [6,24])
-        self.assertEqualT(dddp.getCoefficient().getData().reshape(dddp.getBasis().getDegree()+1,), [24])
-        self.assertEqualT(ddddp.getCoefficient().getData().reshape(dddp.getBasis().getDegree()+1,), [0])
+        self.assertEqualT(p.coeff().data().reshape(p.basis().degree()+1,), [1,2,3,4])
+        self.assertEqualT(dp.coeff().data().reshape(dp.basis().degree()+1,), [2,6,12])
+        self.assertEqualT(ddp.coeff().data().reshape(ddp.basis().degree()+1,), [6,24])
+        self.assertEqualT(dddp.coeff().data().reshape(dddp.basis().degree()+1,), [24])
+        self.assertEqualT(ddddp.coeff().data().reshape(dddp.basis().degree()+1,), [0])
 
     def test_transform_to(self):
         b = BSplineBasis([0, 1], 3, 2)
@@ -313,6 +313,7 @@ class Test_Function_Function(BasisTestCase):
             f.antiderivative(n0)
 
     def test_jacobian(self):
+       if valgrind: return
        d0 = 4
        k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,7),np.ones(d0)]
        b0 = BSplineBasis(k0,d0)

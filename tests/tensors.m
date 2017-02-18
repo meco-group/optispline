@@ -27,7 +27,7 @@ a = rand(B.dimension());
 
 F = Basis.Function(B, a);
 
-c = F.getCoefficient();
-r = c.getData();
+c = F.coeff();
+r = c.data();
 
 assert(all(all(all(a==r))))

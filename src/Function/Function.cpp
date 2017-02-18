@@ -5,24 +5,24 @@
 #include "../common.h"
 
 namespace spline {
-    Function::Function(const TensorBasis& basis, const Coefficient& coef) {
-        init(basis, coef);
+    Function::Function(const TensorBasis& basis, const Coefficient& coeff) {
+        init(basis, coeff);
     }
 
-    Function::Function(const Basis& basis, const Coefficient& coef) {
-        init(TensorBasis(basis), coef);
+    Function::Function(const Basis& basis, const Coefficient& coeff) {
+        init(TensorBasis(basis), coeff);
     }
 
     Function::Function(const AnyTensor& c) {
         Basis basis = MonomialBasis(0);
-        std::vector< int > dims_ = c.dims();
-        dims_.insert(dims_.begin(), 1);
-        init(basis, c.shape(dims_));
+        std::vector< int > new_dims = c.dims();
+        new_dims.insert(new_dims.begin(), 1);
+        init(basis, c.shape(new_dims));
     }
 
-    void Function::init(const TensorBasis& basis_, const Coefficient& coef_) {
-        std::vector< int > dim_basis = basis_.dimension();
-        std::vector< int > dim_coef = coef_.getData().dims();
+    void Function::init(const TensorBasis& basis, const Coefficient& coeff) {
+        std::vector< int > dim_basis = basis.dimension();
+        std::vector< int > dim_coef = coeff.data().dims();
 
         int total_size_coef = dim_coef.size();
         spline_assert_message(dim_basis.size() <= total_size_coef,
@@ -37,8 +37,8 @@ namespace spline {
                 << "Got basis " << dim_basis << " and coefficient" << dim_coef <<".");
         }
 
-        basis = basis_;
-        coef = coef_.add_trival_dimension(2 + dim_basis.size() - dim_coef.size());
+        basis_ = basis;
+        coeff_ = coeff.add_trival_dimension(2 + dim_basis.size() - dim_coef.size());
     }
 
     Function Function::Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size) {
@@ -62,29 +62,29 @@ namespace spline {
     }
 
     AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const {
-        return basis(x).inner(coef.getData());
+        return basis_(x).inner(coeff().data());
     }
 
     MX Function::operator<=(const MX& x) const {
-      return getCoefficient().getData().as_MT().data()<=x;
+      return coeff().data().as_MT().data()<=x;
     }
     MX Function::operator>=(const MX& x) const {
-      return getCoefficient().getData().as_MT().data()>=x;
+      return coeff().data().as_MT().data()>=x;
     }
 
-    Basis Function::getBasis() const {
-      spline_assert_message(basis.n_basis()==1,
-          ".getBasis() syntax only works for a 1-D TensorBasis.");
-      return basis.getSubBasis()[0];
+    Basis Function::basis() const {
+      spline_assert_message(basis_.n_basis()==1,
+          ".basis() syntax only works for a 1-D TensorBasis.");
+      return basis_.getSubBasis()[0];
     }
-    Basis Function::getBasis(const Index& index) const {
-      return basis.getBasis(index);
+    Basis Function::basis(const Index& index) const {
+      return basis_.basis(index);
     }
 
     Function Function::generic_operation(const Function& f,
         const BasisComposition & bc, const TensorComposition & tc) const  {
 
-      TensorBasis sumBasis = bc(getTensorBasis(), f.getTensorBasis());
+      TensorBasis sumBasis = bc(tensor_basis(), f.tensor_basis());
       EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
       std::vector< AnyTensor > basisEvaluated;
       std::vector< AnyTensor > thisFunctionEvaluated;
@@ -137,7 +137,7 @@ namespace spline {
 
     Function Function::operator+(const AnyTensor& t) const {
         if (t.is_scalar() && t.dims()!=shape()) return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
-        return operator+(Function::Constant(this->getTensorBasis(), t));
+        return operator+(Function::Constant(this->tensor_basis(), t));
     }
 
     Function Function::operator*(const Function& f) const {
@@ -150,8 +150,8 @@ namespace spline {
       if (t.is_scalar() && t.dims()!=f.shape()) t = AnyTensor::repeat(t.as_scalar(), f.shape());
       if (f.is_scalar() && !t.is_scalar()) {
         AnyTensor ones = AnyTensor::repeat(AnyScalar(1), t.dims());
-        Coefficient C = f.getCoefficient();
-        f =  Function(f.getTensorBasis(), C.getData().shape(C.dimension()).outer_product(ones)).operator*(t);
+        Coefficient C = f.coeff();
+        f =  Function(f.tensor_basis(), C.data().shape(C.dimension()).outer_product(ones)).operator*(t);
       }
     }
 
@@ -160,15 +160,15 @@ namespace spline {
         AnyTensor t = rhs;
         homogenize_args(f, t);
 
-        std::vector< int > tdims = f.getCoeffTensor().dims();
+        std::vector< int > tdims = f.coeff_tensor().dims();
         tdims.pop_back();
         tdims.pop_back();
 
         AnyTensor transf = AnyTensor::repeat(AnyScalar(1), tdims);
         transf = transf.outer_product(t);
-        AnyTensor data = f.getCoeffTensor()*transf;
+        AnyTensor data = f.coeff_tensor()*transf;
 
-        return Function(f.getTensorBasis(), Coefficient(data));
+        return Function(f.tensor_basis(), Coefficient(data));
     }
 
     Function Function::mtimes(const Function& f) const {
@@ -180,14 +180,14 @@ namespace spline {
     Function Function::mtimes(const AnyTensor& t) const {
         if (t.is_scalar()) return operator*(t);
         spline_assert(t.n_dims() == 2);
-        Coefficient c = getCoefficient();
+        Coefficient c = coeff();
         int dir = n_inputs() + 1; //0 based, 2nd matrix dimension
-        return Function(getTensorBasis(), c.transform(t.reorder_dims({1,0}), dir));
+        return Function(tensor_basis(), c.transform(t.reorder_dims({1,0}), dir));
     }
 
     Function Function::rmtimes(const AnyTensor& t) const {
         if (t.is_scalar()) return operator*(t);
-        return Function::Constant(this->getTensorBasis(), t).mtimes(*this);
+        return Function::Constant(this->tensor_basis(), t).mtimes(*this);
     }
 
     Function Function::pow(int power) const {
@@ -196,7 +196,7 @@ namespace spline {
         Function fpow = *this;
 
         if(power == 0){
-            fpow = Function::Constant(getTensorBasis(), 1, shape());
+            fpow = Function::Constant(tensor_basis(), 1, shape());
         } else {
             for (int i = 1; i < power; i++) {
                 fpow = fpow*f;
@@ -215,11 +215,11 @@ namespace spline {
     }
 
     Function Function::operator-() const {
-        return Function(basis, -coef);
+        return Function(basis_, -coeff_);
     }
 
     Function Function::transpose() const {
-        return Function(getTensorBasis(), getCoefficient().transpose());
+        return Function(tensor_basis(), coeff().transpose());
     }
 
     Function Function::trace() const {
@@ -229,12 +229,12 @@ namespace spline {
         AnyTensor t = DT(DM::densify(DM::eye(shape_[0])));
         Function fdiag = operator*(t); //keep diagonal entries only
 
-        Coefficient cdiag = fdiag.getCoefficient();
+        Coefficient cdiag = fdiag.coeff();
         AnyTensor ones = AnyTensor::repeat(AnyScalar(1), std::vector< int >{1,shape_[0]});
         cdiag = cdiag.transform(ones, cdiag.dimension().size()); //sum over all columns
         cdiag = cdiag.transform(ones, cdiag.dimension().size()+1); //sum over all rows
 
-        return Function(getTensorBasis(), cdiag);
+        return Function(tensor_basis(), cdiag);
     }
 
     Function Function::vertcat(const std::vector< spline::Function >& f) const {
@@ -251,8 +251,8 @@ namespace spline {
             std::vector< int > shape12 = std::vector< int >{b.shape()[0],f[i].shape()[1]};
             std::vector< int > shape21 = std::vector< int >{f[i].shape()[0],b.shape()[1]};
 
-            Function zero12 = Function::Constant(b.getTensorBasis(), AnyTensor::repeat(AnyScalar(0), shape12));
-            Function zero21 = Function::Constant(b.getTensorBasis(), AnyTensor::repeat(AnyScalar(0), shape21));
+            Function zero12 = Function::Constant(b.tensor_basis(), AnyTensor::repeat(AnyScalar(0), shape12));
+            Function zero21 = Function::Constant(b.tensor_basis(), AnyTensor::repeat(AnyScalar(0), shape21));
 
             Function upper = b.horzcat(std::vector< Function >{zero12});
             Function lower = zero21.horzcat(std::vector< Function >{f[i]});
@@ -266,15 +266,15 @@ namespace spline {
     std::string Function::getRepresentation() const {return "Function";};
 
     int Function::n_inputs() const {
-        return basis.n_inputs();
+        return basis_.n_inputs();
     }
 
     std::vector< int > Function::shape() const {
-        return coef.shape();
+        return coeff_.shape();
     }
 
     Function Function::insert_knots(const AnyVector & new_knots) const {
-      spline_assert_message(getTensorBasis().n_basis() == 1,
+      spline_assert_message(tensor_basis().n_basis() == 1,
         "I don't know the direction for knot insertion. Please supply argument.")
       return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<NumericIndex>{0});
     }
@@ -292,7 +292,7 @@ namespace spline {
       const std::vector<Argument> & arg) const {
       std::vector<NumericIndex> arg_ind(arg.size());
       for (int i=0; i<arg.size(); i++) {
-        arg_ind[i] = getTensorBasis().indexArgument(arg[i]);
+        arg_ind[i] = tensor_basis().indexArgument(arg[i]);
       }
       return insert_knots(new_knots, arg_ind);
     }
@@ -301,16 +301,16 @@ namespace spline {
       const std::vector<NumericIndex> & arg_ind) const {
       spline_assert(arg_ind.size() == new_knots.size())
       std::vector<AnyTensor> T;
-      TensorBasis tbasis = getTensorBasis();
+      TensorBasis tbasis = tensor_basis();
       TensorBasis new_tbasis = tbasis.insert_knots(new_knots, T, arg_ind);
-      Coefficient new_coefficient = getCoefficient().transform(T, arg_ind);
+      Coefficient new_coefficient = coeff().transform(T, arg_ind);
       return Function(new_tbasis, new_coefficient);
     }
 
     Function Function::midpoint_refinement(int refinement) const {
       // apply on all directions
-      std::vector<NumericIndex> arg_ind(getTensorBasis().n_basis());
-      std::vector<int> refs(getTensorBasis().n_basis());
+      std::vector<NumericIndex> arg_ind(tensor_basis().n_basis());
+      std::vector<int> refs(tensor_basis().n_basis());
       for (int k=0; k<arg_ind.size(); k++) {
         arg_ind[k] = k;
         refs[k] = refinement;
@@ -330,7 +330,7 @@ namespace spline {
       const std::vector<Argument> & arg) const {
       std::vector<NumericIndex> arg_ind(arg.size());
       for (int i=0; i<arg.size(); i++) {
-        arg_ind[i] = getTensorBasis().indexArgument(arg[i]);
+        arg_ind[i] = tensor_basis().indexArgument(arg[i]);
       }
       return midpoint_refinement(refinement, arg_ind);
     }
@@ -339,9 +339,9 @@ namespace spline {
       const std::vector<NumericIndex> & arg_ind) const {
       spline_assert(arg_ind.size() == refinement.size())
       std::vector<AnyTensor> T;
-      TensorBasis tbasis = getTensorBasis();
+      TensorBasis tbasis = tensor_basis();
       TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement, T, arg_ind);
-      Coefficient new_coefficient = getCoefficient().transform(T, arg_ind);
+      Coefficient new_coefficient = coeff().transform(T, arg_ind);
       return Function(new_tbasis, new_coefficient);
     }
 
@@ -350,7 +350,7 @@ namespace spline {
     }
 
     Function Function::derivative(int order) const {
-      spline_assert_message(getTensorBasis().n_basis() == 1,
+      spline_assert_message(tensor_basis().n_basis() == 1,
         "I don't know the direction for derivation. Please supply argument.");
       return derivative(std::vector<int>{order}, std::vector<NumericIndex>{0});
     }
@@ -366,7 +366,7 @@ namespace spline {
     Function Function::derivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const {
         std::vector<NumericIndex> direction_ind(directions.size());
         for (int i=0; i<directions.size(); i++){
-            direction_ind[i] = getTensorBasis().indexArgument(directions[i]);
+            direction_ind[i] = tensor_basis().indexArgument(directions[i]);
         }
         return derivative(orders, direction_ind);
     }
@@ -374,10 +374,10 @@ namespace spline {
     Function Function::derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const {
         spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
         std::vector<AnyTensor> T;
-        TensorBasis tbasis = getTensorBasis();
+        TensorBasis tbasis = tensor_basis();
         TensorBasis new_tbasis = tbasis.derivative(orders, direction_ind, T);
         std::vector<NumericIndex> directions(direction_ind.size());
-        Coefficient new_coefficient = getCoefficient().transform(T, direction_ind);
+        Coefficient new_coefficient = coeff().transform(T, direction_ind);
         return Function(new_tbasis, new_coefficient);
     }
 
@@ -386,7 +386,7 @@ namespace spline {
     }
 
     Function Function::antiderivative(int order) const {
-      spline_assert_message(getTensorBasis().n_basis() == 1,
+      spline_assert_message(tensor_basis().n_basis() == 1,
         "I don't know the direction for derivation. Please supply argument.");
       return antiderivative(std::vector<int>{order}, std::vector<NumericIndex>{0});
     }
@@ -402,7 +402,7 @@ namespace spline {
     Function Function::antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const {
       std::vector<NumericIndex> direction_ind(directions.size());
       for (int i=0; i<directions.size(); i++){
-          direction_ind[i] = getTensorBasis().indexArgument(directions[i]);
+          direction_ind[i] = tensor_basis().indexArgument(directions[i]);
       }
       return antiderivative(orders, direction_ind);
     }
@@ -410,10 +410,10 @@ namespace spline {
     Function Function::antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const {
       spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
       std::vector<AnyTensor> T;
-      TensorBasis tbasis = getTensorBasis();
+      TensorBasis tbasis = tensor_basis();
       TensorBasis new_tbasis = tbasis.antiderivative(orders, direction_ind, T);
       std::vector<NumericIndex> directions(direction_ind.size());
-      Coefficient new_coefficient = getCoefficient().transform(T, direction_ind);
+      Coefficient new_coefficient = coeff().transform(T, direction_ind);
       return Function(new_tbasis, new_coefficient);
     }
 
@@ -427,7 +427,7 @@ namespace spline {
 
     Function Function::transform_to(const TensorBasis& basis) const {
 
-      TensorBasis unionBasis = getTensorBasis() + basis;
+      TensorBasis unionBasis = tensor_basis() + basis;
       EvaluationGrid evaluationGrid = EvaluationGrid(unionBasis);
       std::vector< AnyTensor > basisEvaluated;
       std::vector< AnyTensor > thisFunctionEvaluated;
@@ -457,17 +457,17 @@ namespace spline {
     }
 
     Function Function::cat(const NumericIndex& index, const std::vector< spline::Function >& functions) const {
-        TensorBasis unionBasis = getTensorBasis();
+        TensorBasis unionBasis = tensor_basis();
         for(auto& f : functions){
-            unionBasis = unionBasis + f.getTensorBasis();
+            unionBasis = unionBasis + f.tensor_basis();
         }
 
         std::vector< Coefficient > coefVec;
         for(auto& f : functions){
-            coefVec.push_back(f.transform_to(unionBasis).getCoefficient());
+            coefVec.push_back(f.transform_to(unionBasis).coeff());
         }
 
-        Coefficient coef = this->transform_to(unionBasis).getCoefficient();
+        Coefficient coef = this->transform_to(unionBasis).coeff();
         return Function(unionBasis, coef.cat(index, coefVec));
     }
 

@@ -107,23 +107,23 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const ;
         virtual Basis operator*(const DummyBasis& other) const ;
 
-        std::vector<AnyScalar> getKnots() const;
+        std::vector<AnyScalar> knots() const;
 
         std::vector<AnyScalar> greville() const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
-        virtual std::string getRepresentation() const ;
+        virtual std::string getRepresentation() const override;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
 
-        virtual int getLength() const ;
+        virtual int getLength() const override;
 
-        AnyTensor SubBasisEvalution(const std::vector<AnyScalar> & x ) const ;
+        AnyTensor SubBasisEvalution(const std::vector<AnyScalar> & x ) const;
 
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const override;
 
         virtual Basis derivative(int order, AnyTensor& T) const override;
         virtual Basis antiderivative(int order, AnyTensor& T) const override;
@@ -154,14 +154,12 @@ namespace spline{
         BSplineBasis(const AnyVector& bounds, int degree, int numberOfIntervals) :
         BSplineBasis(bounds.to_scalar_vector(), degree, numberOfIntervals) {};
 
-        std::vector<AnyScalar> getKnots() const;
+        std::vector<AnyScalar> knots() const;
 
         std::vector<AnyScalar> greville() const;
         //
         //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
         //
-
-        virtual void foo() const {};
 
     private:
         //  std::vector<bool> indector(int i, double x);

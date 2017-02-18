@@ -50,7 +50,7 @@ class Test_Basis_MonomialBasis(BasisTestCase):
         b = MonomialBasis(degree)
         banti, Tanti = b.antiderivative(order)
         b_, Tder = banti.derivative(order)
-        self.assertEqualT(b_.getDegree(), b.getDegree())
+        self.assertEqualT(b_.degree(), b.degree())
         self.assertEqualT(Tder.dot(Tanti), np.eye(Tder.shape[0]))
 
 # TODO constructor

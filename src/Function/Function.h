@@ -43,11 +43,13 @@ namespace spline {
         Function horzcat(const std::vector< spline::Function >& f) const ;
         Function blkdiag(const std::vector< spline::Function >& f) const ;
 
-        Basis getBasis() const;
-        Basis getBasis(const Index& i) const;
-        TensorBasis getTensorBasis() const {return basis;}
-        Coefficient getCoefficient() const {return coef;}
-        AnyTensor getCoeffTensor() const {return coef.getData();}
+        Basis basis() const;
+        Basis basis(const Index& i) const;
+        TensorBasis tensor_basis() const {return basis_;}
+        Coefficient coeff() const {return coeff_;}
+        AnyTensor coeff_tensor() const {return coeff_.data();}
+
+        AnyTensor data() const {return coeff_tensor().squeeze(); }
 
         MX operator<=(const MX& x) const;
         MX operator>=(const MX& x) const;
@@ -56,9 +58,9 @@ namespace spline {
 
         std::string getRepresentation() const ;
         void repr() const { userOut() << getRepresentation() << std::endl;}
-        // Argument& getArgument (){ return getBasis().getArgument();}
+        // Argument& getArgument (){ return basis().getArgument();}
 
-        static void homogenize_args(Function& f, AnyTensor& t);
+
 
         int n_inputs() const;  // Number of inputs of the function
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
@@ -92,17 +94,19 @@ namespace spline {
         Function antiderivative(int order, const NumericIndex& direction) const;
         Function antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions) const;
         Function antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
-        
+
         std::vector<spline::Function> jacobian() const;
 
         Function transform_to(const TensorBasis& basis) const ;
 
         Function cat(const NumericIndex& index, const std::vector< spline::Function >& f) const;
     public:
-        TensorBasis basis;
-        Coefficient coef;
+        TensorBasis basis_;
+        Coefficient coeff_;
 
     private:
+        static void homogenize_args(Function& f, AnyTensor& t);
+
         void init( const TensorBasis& basis, const Coefficient& coef) ;
         typedef std::function<TensorBasis(const TensorBasis&, const TensorBasis&)> BasisComposition;
         typedef std::function<AnyTensor(const AnyTensor&, const AnyTensor&)> TensorComposition;

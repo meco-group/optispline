@@ -78,7 +78,7 @@ namespace spline {
 
         AnyTensor operator()(const AnyVector& x) const;
 
-        virtual std::string getRepresentation() const ;
+        std::string getRepresentation() const ;
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;

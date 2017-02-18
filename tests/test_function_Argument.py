@@ -47,8 +47,8 @@ class Test_Function_Argument(BasisTestCase):
         b2 = b1
         b2 = TensorBasis(b1, [y])
 
-        self.assertEqual(b1.getArguments()[0].getName(), "x")
-        self.assertEqual(b2.getArguments()[0].getName(), "y")
+        self.assertEqual(b1.arguments()[0].getName(), "x")
+        self.assertEqual(b2.arguments()[0].getName(), "y")
 
         # with self.assertRaises(Exception):
         #     b1.setArguments([x,y])
