@@ -93,9 +93,9 @@ namespace spline {
       std::vector< AnyTensor > otherFunctionEvaluated;
       std::vector< AnyTensor > sumFunctionEvaluated;
 
-      basisEvaluated = evaluationGrid.evaluateEvaluationGrid();
-      thisFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(*this);
-      otherFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(f);
+      basisEvaluated = evaluationGrid.eval();
+      thisFunctionEvaluated = evaluationGrid.eval(*this);
+      otherFunctionEvaluated = evaluationGrid.eval(f);
 
       for (int i = 0; i < basisEvaluated.size(); i++) {
           AnyTensor lhs = thisFunctionEvaluated[i];
@@ -441,8 +441,8 @@ namespace spline {
       std::vector< AnyTensor > basisEvaluated;
       std::vector< AnyTensor > thisFunctionEvaluated;
 
-      basisEvaluated = evaluationGrid.evaluateEvaluationGrid();
-      thisFunctionEvaluated = evaluationGrid.evaluateEvaluationGrid(*this);
+      basisEvaluated = evaluationGrid.eval();
+      thisFunctionEvaluated = evaluationGrid.eval(*this);
 
       AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
       AnyTensor B = AnyTensor::pack(thisFunctionEvaluated, 0);

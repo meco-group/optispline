@@ -16,8 +16,8 @@ namespace spline{
         std::string getRepresentation() const ;
 
         EvaluationGrid(TensorBasis basis);
-        std::vector< AnyTensor > evaluateEvaluationGrid() const;
-        std::vector< AnyTensor > evaluateEvaluationGrid(const spline::Function & f) const;
+        std::vector< AnyTensor > eval() const;
+        std::vector< AnyTensor > eval(const spline::Function & f) const;
 
         std::vector< int > getPermutation(TensorBasis basis) const;
     private:

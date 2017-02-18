@@ -5,7 +5,7 @@
 namespace spline{
     EvaluationGrid::EvaluationGrid(TensorBasis basis) : griddedBasis(basis) {}
 
-    std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid() const {
+    std::vector< AnyTensor > EvaluationGrid::eval() const {
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
         std::vector< AnyTensor > postStep ;
 
@@ -23,7 +23,7 @@ namespace spline{
         return preStep;
     }
 
-    std::vector< AnyTensor > EvaluationGrid::evaluateEvaluationGrid(const spline::Function & f) const {
+    std::vector< AnyTensor > EvaluationGrid::eval(const spline::Function & f) const {
         TensorBasis basis = f.tensor_basis();
         std::vector< int > indexPermutation = getPermutation(basis);
 
