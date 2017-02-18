@@ -15,56 +15,7 @@ namespace spline {
         return "UnivariateBasis object";
     }
 
-    Basis UnivariateBasisNode::operator+ (const Basis& other) const  {
-        spline_assert(false); //  Univariate is "abstract"
-        return Basis();
-    }
-
-    Basis UnivariateBasisNode::operator+ (const DummyBasis& other) const  {
-        spline_assert(false); //  Univariate is "abstract"
-        return Basis();
-    }
-
-    Basis UnivariateBasisNode::operator+ (const MonomialBasis &other) const  {
-        spline_assert(false); //  Univariate is "abstract"
-        return Basis();
-    }
-
-    Basis UnivariateBasisNode::operator+ (const BSplineBasis &other) const  {
-        spline_assert(false); //  Univariate is "abstract"
-        return Basis();
-    }
-
-    Basis UnivariateBasisNode::operator* (const Basis& other) const  {
-        spline_assert(false); //  Univariate is "abstract"
-        return Basis();
-    }
-
-    Basis UnivariateBasisNode::operator* (const DummyBasis& other) const  {
-        spline_assert(false); //  Univariate is "abstract"
-        return Basis();
-    }
-
-    Basis UnivariateBasisNode::operator* (const MonomialBasis &other) const  {
-        spline_assert(false); //  Univariate is "abstract"
-        return Basis();
-    }
-
-    Basis UnivariateBasisNode::operator* (const BSplineBasis &other) const  {
-        spline_assert(false); //  Univariate is "abstract"
-        return Basis();
-    }
-
-
-    AnyTensor UnivariateBasisNode::const_coeff_tensor(const AnyTensor& t) const {
-        spline_assert(false);
-        return AnyTensor();
-    }
-
     int UnivariateBasis::getLength() const  { return (*this)->getLength(); }
-    int UnivariateBasisNode::getLength() const {
-         assert(0);
-    }
 
     int  UnivariateBasis::degree() const { return (*this)->degree (); }
     int  UnivariateBasisNode::degree() const {

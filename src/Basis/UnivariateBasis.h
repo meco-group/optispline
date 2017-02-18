@@ -16,23 +16,23 @@ namespace spline {
 
     class UnivariateBasisNode : public BasisNode {
     public:
-        virtual Basis operator+(const MonomialBasis& other) const ;
-        virtual Basis operator+(const BSplineBasis& other) const ;
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator+(const DummyBasis& other) const ;
+        virtual Basis operator+(const MonomialBasis& other) const = 0;
+        virtual Basis operator+(const BSplineBasis& other) const = 0;
+        virtual Basis operator+(const Basis& other) const = 0;
+        virtual Basis operator+(const DummyBasis& other) const = 0;
 
-        virtual Basis operator*(const MonomialBasis& other) const ;
-        virtual Basis operator*(const BSplineBasis& other) const ;
-        virtual Basis operator*(const Basis& other) const ;
-        virtual Basis operator*(const DummyBasis& other) const ;
+        virtual Basis operator*(const MonomialBasis& other) const = 0;
+        virtual Basis operator*(const BSplineBasis& other) const = 0;
+        virtual Basis operator*(const Basis& other) const = 0;
+        virtual Basis operator*(const DummyBasis& other) const = 0;
 
         UnivariateBasisNode(int degree);
 
-        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
+        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const = 0;
 
         virtual std::string getRepresentation() const override;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const {spline_assert(0); return DT();};
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const = 0;
 
         int degree () const ;
         int n_inputs() const;
@@ -40,10 +40,10 @@ namespace spline {
         virtual Basis derivative(int order, AnyTensor& T) const = 0;
         virtual Basis antiderivative(int order, AnyTensor& T) const = 0;
 
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const {spline_assert(0); return std::vector< std::vector < AnyScalar > >(); };
+        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const = 0;
 
         int dimension() const {return getLength();}
-        virtual int getLength() const ;
+        virtual int getLength() const = 0;
     protected:
         int degree_;
     };
