@@ -216,12 +216,11 @@ class Tensor {
 
   static std::pair<int, int> normalize_dim(const std::vector<int> & dims);
 
-  static void assert_match_dim(const std::vector<int>& a, const std::vector<int>& b) {
-    tensor_assert(a==b);
-  }
-
-  static void assert_match_dim_or_scalar(const std::vector<int>& a, const std::vector<int>& b) {
-    tensor_assert(a.size()==0 || b.size()==0 ||  a==b);
+  static std::vector<int> binary_dims(const Tensor& a, const Tensor& b) {
+    if (a.is_scalar()) return b.dims();
+    if (b.is_scalar()) return a.dims();
+    tensor_assert(a.dims()==b.dims());
+    return b.dims();
   }
 
   static std::vector<int> sub2ind(const std::vector<int>& dims, int sub) {
@@ -266,8 +265,7 @@ class Tensor {
   }
 
   Tensor operator+(const Tensor& rhs) const {
-    assert_match_dim_or_scalar(dims_, rhs.dims_);
-    std::vector< int > new_dims = dims_.size() == 0 ? rhs.dims() : dims();
+    std::vector< int > new_dims = binary_dims(*this, rhs);
     return Tensor(data_+rhs.data_, new_dims);
   }
 
@@ -280,8 +278,7 @@ class Tensor {
   }
 
   Tensor operator*(const Tensor& rhs) const {
-    assert_match_dim_or_scalar(dims_, rhs.dims_);
-    std::vector< int > new_dims = dims_.size() == 0 ? rhs.dims() : dims();
+    std::vector< int > new_dims = binary_dims(*this, rhs);
     return Tensor(data_*rhs.data_, new_dims);
   }
 

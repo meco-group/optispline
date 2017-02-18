@@ -86,6 +86,13 @@ def _swig_repr(self):
 %include "exception.i"
 
 
+%feature("classAttributes","(InferiorClasses = {?casadi.DM,?casadi.SX,?casadi.MX,?DTensor,?STensor,?MTensor})") spline::Function;
+
+
+//%feature("classAttributes","(InferiorClasses = {?casadi.DM,?casadi.SX,?casadi.MX})") ::Tensor<DM>;
+%feature("classAttributes","(InferiorClasses = {?casadi.DM,?casadi.SX,?casadi.MX})") Tensor;
+
+
 %{
 #include <tensor.hpp>
 #include <src/SharedObject/SharedObject.h>
@@ -758,7 +765,6 @@ using namespace spline;
       end
    end
 %}
-
 %tensor_like_helpers(arraypriority)
 %enddef
 #endif
@@ -944,7 +950,28 @@ namespace spline {
     static Function mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.rmtimes(lhs); }
     static Function rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
   }
-} // namespace casadi
+} // namespace spline
+  %extend Tensor<DM> {
+    static AnyTensor plus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs+rhs; }
+    static AnyTensor minus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs-rhs; }
+    static AnyTensor times(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs*rhs; }
+    static AnyTensor mtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
+    static AnyTensor rmtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.mtimes(lhs); }
+  }
+  %extend Tensor<SX> {
+    static AnyTensor plus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs+rhs; }
+    static AnyTensor minus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs-rhs; }
+    static AnyTensor times(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs*rhs; }
+    static AnyTensor mtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
+    static AnyTensor rmtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.mtimes(lhs); }
+  }
+  %extend Tensor<MX> {
+    static AnyTensor plus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs+rhs; }
+    static AnyTensor minus(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs-rhs; }
+    static AnyTensor times(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs*rhs; }
+    static AnyTensor mtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
+    static AnyTensor rmtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.mtimes(lhs); }
+  }
 %feature("nonstatic", "");
 #endif // SWIGMATLAB
 
