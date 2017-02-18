@@ -22,14 +22,14 @@ namespace spline {
 
     class BasisNode : public SharedObjectNode {
     public:
-        virtual Basis operator+(const Basis& rhs) const;
+        virtual Basis operator+(const Basis& rhs) const = 0;
         virtual Basis operator+(const DummyBasis& rhs) const;
-        virtual Basis operator+(const MonomialBasis& rhs) const;
-        virtual Basis operator+(const BSplineBasis& rhs) const;
-        virtual Basis operator*(const Basis& rhs) const;
+        virtual Basis operator+(const MonomialBasis& rhs) const = 0;
+        virtual Basis operator+(const BSplineBasis& rhs) const = 0;
+        virtual Basis operator*(const Basis& rhs) const = 0;
         virtual Basis operator*(const DummyBasis& rhs) const;
-        virtual Basis operator*(const MonomialBasis& rhs) const;
-        virtual Basis operator*(const BSplineBasis& rhs) const;
+        virtual Basis operator*(const MonomialBasis& rhs) const = 0;
+        virtual Basis operator*(const BSplineBasis& rhs) const = 0;
 
         virtual std::string getRepresentation() const ;
 
@@ -59,27 +59,23 @@ namespace spline {
     public:
 
 #ifndef SWIG
-
         BasisNode* get() const ;
         BasisNode* operator->() const ;
-
 #endif // SWIG
-        // std::vector<int> getSize() const;
-        Basis();
 
-        virtual Basis operator+(const Basis& rhs) const;
-        virtual Basis operator+(const DummyBasis& rhs) const;
-        virtual Basis operator+(const MonomialBasis& rhs) const;
-        virtual Basis operator+(const BSplineBasis& rhs) const;
-        virtual Basis operator*(const Basis& rhs) const;
-        virtual Basis operator*(const DummyBasis& rhs) const;
-        virtual Basis operator*(const MonomialBasis& rhs) const;
-        virtual Basis operator*(const BSplineBasis& rhs) const;
+        Basis operator+(const Basis& rhs) const;
+        Basis operator+(const DummyBasis& rhs) const;
+        Basis operator+(const MonomialBasis& rhs) const;
+        Basis operator+(const BSplineBasis& rhs) const;
+        Basis operator*(const Basis& rhs) const;
+        Basis operator*(const DummyBasis& rhs) const;
+        Basis operator*(const MonomialBasis& rhs) const;
+        Basis operator*(const BSplineBasis& rhs) const;
 
         AnyTensor operator()(const AnyVector& x) const;
 
         std::string getRepresentation() const ;
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;
         Basis midpoint_refinement(int refinement, AnyTensor& SWIG_OUTPUT(T)) const;
@@ -87,11 +83,11 @@ namespace spline {
         int dimension() const;
         int n_inputs() const;
 
-        virtual Basis derivative(AnyTensor& SWIG_OUTPUT(T)) const;  // default order = 1
-        virtual Basis derivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
+        Basis derivative(AnyTensor& SWIG_OUTPUT(T)) const;  // default order = 1
+        Basis derivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
 
-        virtual Basis antiderivative(AnyTensor& SWIG_OUTPUT(T)) const;  // default order = 1
-        virtual Basis antiderivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
+        Basis antiderivative(AnyTensor& SWIG_OUTPUT(T)) const;  // default order = 1
+        Basis antiderivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
 
         AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
     };

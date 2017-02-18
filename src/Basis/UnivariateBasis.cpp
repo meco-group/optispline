@@ -11,16 +11,10 @@ namespace spline {
     };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
 
-    std::string UnivariateBasisNode::getRepresentation() const {
-        return "UnivariateBasis object";
-    }
-
     int UnivariateBasis::getLength() const  { return (*this)->getLength(); }
 
     int  UnivariateBasis::degree() const { return (*this)->degree (); }
-    int  UnivariateBasisNode::degree() const {
-         return degree_ ;
-    }
+    int  UnivariateBasisNode::degree() const { return degree_ ; }
 
     int UnivariateBasisNode::n_inputs() const { return 1; }
 

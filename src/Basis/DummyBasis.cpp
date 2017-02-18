@@ -13,7 +13,6 @@ namespace spline {
     DummyBasis::DummyBasis() {
         assign_node(new DummyBasisNode());
     }
-    std::string DummyBasis::getRepresentation() const { return (*this)->getRepresentation() ; }
     std::string DummyBasisNode::getRepresentation() const {
         return "DummyBasis object";
     }

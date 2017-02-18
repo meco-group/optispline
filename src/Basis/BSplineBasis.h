@@ -97,22 +97,19 @@ namespace spline{
     public:
         BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree);
 
-        virtual Basis operator+(const MonomialBasis& other) const ;
-        virtual Basis operator+(const BSplineBasis& other) const ;
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator+(const DummyBasis& other) const ;
+        virtual Basis operator+(const MonomialBasis& other) const override;
+        virtual Basis operator+(const BSplineBasis& other) const override;
+        virtual Basis operator+(const Basis& other) const override;
+        virtual Basis operator+(const DummyBasis& other) const override;
 
-        virtual Basis operator*(const MonomialBasis& other) const ;
-        virtual Basis operator*(const BSplineBasis& other) const ;
-        virtual Basis operator*(const Basis& other) const ;
-        virtual Basis operator*(const DummyBasis& other) const ;
+        virtual Basis operator*(const MonomialBasis& other) const override;
+        virtual Basis operator*(const BSplineBasis& other) const override;
+        virtual Basis operator*(const Basis& other) const override;
+        virtual Basis operator*(const DummyBasis& other) const override;
 
         std::vector<AnyScalar> knots() const;
-
         std::vector<AnyScalar> greville() const;
-        //
-        //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
-        //
+
         virtual std::string getRepresentation() const override;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
@@ -150,19 +147,13 @@ namespace spline{
 #endif // SWIG
 
         BSplineBasis(const AnyVector& knots, int degree) :
-        BSplineBasis(knots.to_scalar_vector(), degree) {};
+          BSplineBasis(knots.to_scalar_vector(), degree) {};
         BSplineBasis(const AnyVector& bounds, int degree, int numberOfIntervals) :
-        BSplineBasis(bounds.to_scalar_vector(), degree, numberOfIntervals) {};
+          BSplineBasis(bounds.to_scalar_vector(), degree, numberOfIntervals) {};
 
         std::vector<AnyScalar> knots() const;
-
         std::vector<AnyScalar> greville() const;
-        //
-        //   BSplineBasis addKnots(const std::vector<double> newKnots, bool unique = false) const;
-        //
 
-    private:
-        //  std::vector<bool> indector(int i, double x);
     };
 
 }

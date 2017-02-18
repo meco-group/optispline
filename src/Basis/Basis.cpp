@@ -7,10 +7,6 @@ namespace spline {
     BasisNode* Basis::get() const { return static_cast<BasisNode*>(SharedObject::get()); };
     BasisNode* Basis::operator->() const { return get(); }
 
-    Basis::Basis() {
-        assign_node(new BasisNode());
-    }
-
     std::string BasisNode::getRepresentation() const {return "Basis";};
     std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
     std::ostream& operator<<(std::ostream &stream, const Basis& base) {
@@ -18,10 +14,6 @@ namespace spline {
     }
 
     Basis Basis::operator+ (const Basis& other) const { return (*this)->operator+(other);}
-    Basis BasisNode::operator+ (const Basis& other) const {
-        spline_assert(false);
-        return Basis();
-    }
 
     Basis Basis::operator+ (const DummyBasis& other) const { return (*this)->operator+(other);}
     Basis BasisNode::operator+ (const DummyBasis& other) const {
@@ -30,23 +22,9 @@ namespace spline {
     }
 
     Basis Basis::operator+ (const MonomialBasis& other) const { return (*this)->operator+(other); }
-    Basis BasisNode::operator+ (const MonomialBasis& other) const {
-        spline_assert(false);
-        return Basis();
-    }
-
     Basis Basis::operator+ (const BSplineBasis& other) const {return (*this)->operator+(other);}
-    Basis BasisNode::operator+ (const BSplineBasis& other) const {
-        spline_assert(false);
-        return Basis();
-    }
 
     Basis Basis::operator* (const Basis& other) const { return (*this)->operator*(other);}
-    Basis BasisNode::operator* (const Basis& other) const {
-        spline_assert(false);
-        return Basis();
-    }
-
     Basis Basis::operator* (const DummyBasis& other) const { return (*this)->operator*(other);}
     Basis BasisNode::operator* (const DummyBasis& other) const {
         spline_assert(false);
@@ -54,16 +32,7 @@ namespace spline {
     }
 
     Basis Basis::operator* (const MonomialBasis& other) const { return (*this)->operator*(other); }
-    Basis BasisNode::operator* (const MonomialBasis& other) const {
-        spline_assert(false);
-        return Basis();
-    }
-
     Basis Basis::operator* (const BSplineBasis& other) const {return (*this)->operator*(other);}
-    Basis BasisNode::operator* (const BSplineBasis& other) const {
-        spline_assert(false);
-        return Basis();
-    }
 
     AnyTensor Basis::operator() (const AnyVector & x) const {
       std::vector<AnyScalar> a = x.to_scalar_vector();

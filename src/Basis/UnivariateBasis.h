@@ -16,22 +16,9 @@ namespace spline {
 
     class UnivariateBasisNode : public BasisNode {
     public:
-        virtual Basis operator+(const MonomialBasis& other) const = 0;
-        virtual Basis operator+(const BSplineBasis& other) const = 0;
-        virtual Basis operator+(const Basis& other) const = 0;
-        virtual Basis operator+(const DummyBasis& other) const = 0;
-
-        virtual Basis operator*(const MonomialBasis& other) const = 0;
-        virtual Basis operator*(const BSplineBasis& other) const = 0;
-        virtual Basis operator*(const Basis& other) const = 0;
-        virtual Basis operator*(const DummyBasis& other) const = 0;
-
         UnivariateBasisNode(int degree);
 
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const = 0;
-
-        virtual std::string getRepresentation() const override;
-
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const = 0;
 
         int degree () const ;

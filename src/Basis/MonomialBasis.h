@@ -18,26 +18,26 @@ namespace spline{
     public:
         MonomialBasisNode(int degree) : UnivariateBasisNode(degree) {};
 
-        virtual Basis operator+(const MonomialBasis& other) const ;
-        virtual Basis operator+(const BSplineBasis& other) const ;
-        virtual Basis operator+(const Basis& other) const ;
-        virtual Basis operator+(const DummyBasis& other) const ;
+        virtual Basis operator+(const MonomialBasis& other) const override;
+        virtual Basis operator+(const BSplineBasis& other) const override;
+        virtual Basis operator+(const Basis& other) const override;
+        virtual Basis operator+(const DummyBasis& other) const override;
 
-        virtual Basis operator*(const MonomialBasis& other) const ;
-        virtual Basis operator*(const BSplineBasis& other) const ;
-        virtual Basis operator*(const Basis& other) const ;
-        virtual Basis operator*(const DummyBasis& other) const ;
+        virtual Basis operator*(const MonomialBasis& other) const override;
+        virtual Basis operator*(const BSplineBasis& other) const override;
+        virtual Basis operator*(const Basis& other) const override;
+        virtual Basis operator*(const DummyBasis& other) const override;
 
         virtual std::string getRepresentation() const override ;
 
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 
-        virtual int getLength() const ;
+        virtual int getLength() const override;
         template<class T>
         AnyTensor SubBasisEvalution(const std::vector< T >& x ) const ;
 
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const override;
 
         virtual Basis derivative(int order, AnyTensor& T) const override;
         virtual Basis antiderivative(int order, AnyTensor& T) const override;
