@@ -9,9 +9,6 @@ namespace spline {
 
     std::string BasisNode::getRepresentation() const {return "Basis";};
     std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
-    std::ostream& operator<<(std::ostream &stream, const Basis& base) {
-        return stream << base.getRepresentation();
-    }
 
     Basis Basis::operator+ (const Basis& other) const { return (*this)->operator+(other);}
 
@@ -36,7 +33,7 @@ namespace spline {
 
     AnyTensor Basis::operator() (const AnyVector & x) const {
       std::vector<AnyScalar> a = x.to_scalar_vector();
-      (*this)->assert_vector_lenght_correct( a );
+      (*this)->assert_vector_lenght_correct(a);
       return (*this)->operator()(a);
     }
     AnyTensor BasisNode::operator() (const std::vector< AnyScalar > & x) const {

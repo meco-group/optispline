@@ -90,6 +90,13 @@ namespace spline {
         Basis antiderivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
 
         AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
+
+#ifndef SWIG
+        inline friend
+            std::ostream& operator<<(std::ostream &stream, const Basis& obj) {
+                return stream << obj.getRepresentation();
+            }
+#endif // SWIG
     };
 
     template< class T >

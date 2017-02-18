@@ -56,13 +56,6 @@ namespace spline{
 #endif // SWIG
         MonomialBasis(int degree);
 
-#ifndef SWIG
-        /// Print a representation of the object to a stream (shorthand)
-        inline friend
-            std::ostream& operator<<(std::ostream &stream, const MonomialBasis& obj) {
-                return stream << obj.getRepresentation();
-            }
-#endif // SWIG
     };
 
     template<class T>

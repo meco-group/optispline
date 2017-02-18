@@ -50,16 +50,16 @@ namespace spline {
 
     AnyTensor MonomialBasisNode::const_coeff_tensor(const AnyTensor& t) const {
         std::vector< int > coeff_size = t.dims();
-        coeff_size.insert(coeff_size.begin(),1);
+        coeff_size.insert(coeff_size.begin(), 1);
 
         AnyTensor values = t.shape(coeff_size);
-        AnyTensor zeros = AnyTensor::repeat(AnyTensor(AnyScalar(0)),coeff_size);
+        AnyTensor zeros = AnyTensor::repeat(AnyTensor(AnyScalar(0)), coeff_size);
 
 
         std::vector< AnyTensor > coeffs = std::vector< AnyTensor >(dimension(), zeros);
         coeffs[0] = values;
 
-        return AnyTensor::concat(coeffs,0);
+        return AnyTensor::concat(coeffs, 0);
     }
 
    AnyTensor MonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
@@ -83,32 +83,35 @@ namespace spline {
     }
 
     Basis MonomialBasisNode::derivative(int order, AnyTensor& T) const {
-        if (order > degree()){
-            // User tries to take a derivative which is of higher order than the basis, returns all 0
+        if (order > degree()) {
+            // User tries to take a derivative which is of higher order than the basis,
+            // returns all 0
             int dim = dimension();
             std::vector<double> entries(1*(dim), 0);
-            T = vertcat(entries).shape({1, dim});  // Transformation tensor to apply on coefficients of function, all zero
+            // Transformation tensor to apply on coefficients of function, all zero
+            T = vertcat(entries).shape({1, dim});
             return MonomialBasis(0);
-        }
-        else{
+        } else {
             // Derivative is of lower order than basis
             int dim = dimension();  // number of basis functions in the basis
             int curr_degree = degree();
             int dim_new = dim-1;  // dimension
-            std::vector<AnyScalar> entries(dim*dim,0);  // initialization of entries of transformation matrix
-            for(int i=0; i<dim; i++){
+            // initialization of entries of transformation matrix
+            std::vector<AnyScalar> entries(dim*dim, 0);
+            for (int i=0; i<dim; i++) {
                 entries[i*(dim+1)] = 1;  // to make eye matrix
             }
-            AnyTensor T_ = vertcat(entries).shape({dim,dim});  // initialize tensor to multiply
+            AnyTensor T_ = vertcat(entries).shape({dim, dim});  // initialize tensor to multiply
             Basis new_basis = MonomialBasis(curr_degree-order);  // basis to return
-            for (int j = 0; j<order; j++){  // loop over order
+            for (int j = 0; j<order; j++) {  // loop over order
                 entries.resize((dim_new)*(dim));
                 std::fill(entries.begin(), entries.end(), 0);
-                for (int i=1; i<dim; i++){
+                for (int i=1; i<dim; i++) {
                     entries[i*(dim) -1] = i;
                     // Makes e.g. matrix [0 1 0 0 ; 0 0 2 0 ; 0 0 0 3] for degree 3 basis, order 1
                 }
-                T_ = mtimes(vertcat(entries).shape({dim_new, dim}), T_);  // multiply transformation matrices, for higher order
+                // multiply transformation matrices, for higher order
+                T_ = mtimes(vertcat(entries).shape({dim_new, dim}), T_);
                 dim -= 1;
                 dim_new -= 1;
             }
@@ -122,13 +125,13 @@ namespace spline {
         int dim_new = dim;
         int deg = degree();
         // construct coefficient transformation matrix
-        std::vector<AnyScalar> data(dim*dim,0);
-        for(int i=0; i<dim; i++) {
+        std::vector<AnyScalar> data(dim*dim, 0);
+        for (int i=0; i<dim; i++) {
             data[i*(dim+1)] = 1.;
         }
         AnyTensor T_ = vertcat(data).shape({dim, dim});
         AnyScalar val;
-        for (int k=0; k<order; k++){
+        for (int k=0; k<order; k++) {
             deg++;
             dim_new++;
             data.resize(dim_new*dim);
