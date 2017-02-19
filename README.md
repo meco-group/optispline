@@ -25,6 +25,12 @@ Only matlab tests (with `-V` for verbose):
 
 `ctest -V -R matlab`
 
+Cpplint filters:
+
+-whitespace/semicolon,-whitespace/blank_line,-whitespace/operators,-whitespace/indent,-whitespace/comments,-build/include_order,-build/include_order,-build/namespaces,-build/include_what_you_use,-readability/streams,-runtime/references,-runtime/int,-runtime/explicit,-runtime/printf,-build/c++11,-readability/braces,-runtime/indentation_namespace
+
+
+linesize 100
 
 
 
