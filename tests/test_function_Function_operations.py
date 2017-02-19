@@ -138,8 +138,8 @@ class Test_Function_Operations(BasisTestCase):
         m1 = func1*2.0
         m2 = func1*func2
         m3 = p1*2.0
-        p = func1.pow(3)
-        pp = p1.pow(4)
+        p = func1**3
+        pp = p1**4
 
         # assertion over grid
         k = 0
@@ -184,7 +184,7 @@ class Test_Function_Operations(BasisTestCase):
         m1 = func1*func2
         m2 = func1*2.0
         u1 = -func1
-        p1 = func1.pow(3)
+        p1 = func1**3
 
         # function evaluations
         x = [0.1,0.35,0.4,0.5,0.8,0.99] #range(-1.,2.1,10)

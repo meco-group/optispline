@@ -270,29 +270,29 @@ assert(norm(delta(:)) < 1e-14);
 %% power
 
 % scalar spline constant coeffs
-% b1 = BSplineBasis([0,0,1/2,1,1],1);
-% c1 = Coefficient(3*ones(3,1,1));
-% s1 = Basis.Function(b1, c1);
-% s0 = s1^0; % to the power 0
-% assert(isequal(s0.coeff.data,ones(3,1,1)));
-% s4 = s1^4;
-% assert(abs(s4(0.2)-81) < 1e-14);
+b1 = BSplineBasis([0,0,1/2,1,1],1);
+c1 = Coefficient(3*ones(3,1,1));
+s1 = Basis.Function(b1, c1);
+s0 = s1^0; % to the power 0
+assert(isequal(s0.data,ones(3,1)));
+s4 = s1^4;
+assert(abs(s4(0.2)-81) < 1e-14);
 
 % % scalar spline random coeffs
-% b2 = BSplineBasis([0,0,1,1],1);
-% c2 = Coefficient(rand*ones(2,1,1));
-% s2 = Basis.Function(b1, c1);
-% s0 = s2^0; % to the power 0
-% assert(s0 == 1);
-% s4 = s2^4; 
-% assert(abs(s4(0.7)-s2(0.7)^4) < 1e-14);
+b2 = BSplineBasis([0,0,1,1],1);
+c2 = Coefficient(rand*ones(2,1,1));
+s2 = Basis.Function(b1, c1);
+s0 = s2^0; % to the power 0
+assert(isequal(s0.data,ones(3,1)));
+s4 = s2^4; 
+assert(norm(s4(0.7)-s2(0.7)^4) < 1e-12);
 
 % % bivariate matrix-valued spline random coeffs
-% n = 3;
-% SB1 = BSplineBasis([0 0 0 0.9 1 1 1],2);
-% SB2 = BSplineBasis([0 0 0.4 1 1],1);
-% B = Basis.TensorBasis({SB1,SB2});
-% C = Coefficient(rand(SB1.dimension,SB2.dimension,n,n));
-% S = Basis.Function(B,C);
-% P = S^4;
-% assert(abs(P(0.5,0.3) - S(0.5,0.3)^4) < 1e-14);
+n = 3;
+SB1 = BSplineBasis([0 0 0 0.9 1 1 1],2);
+SB2 = BSplineBasis([0 0 0.4 1 1],1);
+B = Basis.TensorBasis({SB1,SB2});
+C = Coefficient(rand(SB1.dimension,SB2.dimension,n,n));
+S = Basis.Function(B,C);
+P = S.^4;
+assert(norm(P(0.5,0.3) - S(0.5,0.3).^4) < 1e-12);
