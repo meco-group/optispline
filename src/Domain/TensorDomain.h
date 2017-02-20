@@ -9,10 +9,6 @@
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
-#include "../Function/Argument.h"
-#include "../Function/Index.h"
-#include "../Function/NumericIndex.h"
-
 namespace spline {
 
 class TensorDomain;
