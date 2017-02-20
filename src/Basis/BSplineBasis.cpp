@@ -18,7 +18,7 @@ namespace spline {
     size_t BSplineEvaluator::get_n_out() { return 1; }
 
     Sparsity BSplineEvaluator::get_sparsity_in(int i) {
-      if (i==0) {
+      if (i == 0) {
         return Sparsity::dense(n_knots_, 1);
       } else {
         return Sparsity::dense(1, 1);
@@ -27,7 +27,7 @@ namespace spline {
     }
 
     Sparsity BSplineEvaluator::get_sparsity_out(int i) {
-      if (i==0) {
+      if (i == 0) {
         return Sparsity::dense(n_knots_ - degree_ - 1, 1);
       }
       return Sparsity();
@@ -35,9 +35,7 @@ namespace spline {
 
 
     BSplineEvaluator::BSplineEvaluator(const std::string &name, int n_knots, int degree) :
-      casadi::FunctionInternal(name), n_knots_(n_knots), degree_(degree) {
-
-    }
+      casadi::FunctionInternal(name), n_knots_(n_knots), degree_(degree) {}
 
     void BSplineEvaluator::print(std::ostream &stream) const {
       stream << "BSpline(" << n_knots_ << "," << degree_ << ")";
@@ -81,7 +79,7 @@ namespace spline {
 
     BSplineBasisNode* BSplineBasis::get() const {
       return static_cast<BSplineBasisNode*>(SharedObject::get());
-    };
+    }
 
     BSplineBasisNode* BSplineBasis::operator->() const { return get(); }
 
@@ -89,7 +87,7 @@ namespace spline {
         std::stringstream s;
         s << "BSplineBasis object";
         return s.str();
-    };
+    }
 
     Basis BSplineBasisNode::operator+ (const Basis& other) const {
         return other + shared_from_this<BSplineBasis>();
@@ -146,7 +144,7 @@ namespace spline {
 
 
     BSplineBasis::BSplineBasis(const std::vector<AnyScalar>& knots, int degree) {
-        spline_assert_message(knots.size()>degree+1, "Incompatible dimensions." <<
+        spline_assert_message(knots.size() > degree+1, "Incompatible dimensions." <<
             " Got " << knots.size() << " knots and degree "  << degree << ".");
         assign_node(new BSplineBasisNode(knots, degree));
     }
@@ -172,7 +170,7 @@ namespace spline {
             knot_vector[degree + i] = bounds[0] + (bounds[1] - bounds[0])*f;
         }
       assign_node(new BSplineBasisNode(knot_vector, degree));
-    };
+    }
 
     std::vector<AnyScalar> BSplineBasis::knots() const { return (*this)->knots(); }
     std::vector<AnyScalar> BSplineBasisNode::knots() const {
@@ -206,15 +204,15 @@ namespace spline {
         AnyScalar x = x_[0];
         TensorType t = AnyScalar::merge(AnyScalar::type(knots_), x.type());
 
-        if (t==TENSOR_DOUBLE) {
+        if (t == TENSOR_DOUBLE) {
           DM ret = bspline_evaluator_(
             std::vector<DM>{AnyScalar::as_double(knots_), x.as_double()})[0];
           return DT(ret, {ret.numel()});
-        } else if (t==TENSOR_MX) {
+        } else if (t == TENSOR_MX) {
           MX ret = bspline_evaluator_(
             std::vector<MX>{vertcat(AnyScalar::as_MX(knots_)), x.as_MX()})[0];
           return MT(ret, {ret.numel()});
-        } else if (t==TENSOR_SX) {
+        } else if (t == TENSOR_SX) {
           SX ret = bspline_evaluator_(
             std::vector<SX>{vertcat(AnyScalar::as_SX(knots_)), x.as_SX()})[0];
           return ST(ret, {ret.numel()});
@@ -241,20 +239,20 @@ namespace spline {
 
         // initialization of data of transformation matrix
         std::vector<AnyScalar> data(n_dim*n_dim, 0);
-        for (int i=0; i<n_dim; i++) {
+        for (int i = 0; i < n_dim; i++) {
             data[i*(n_dim+1)] = 1.;  // to make eye matrix
         }
         AnyTensor T_ = vertcat(data).shape({n_dim, n_dim});  // initialize matrix to multiply
 
         AnyScalar c_j;
-        for (int i=0; i<order; i++) {
+        for (int i = 0; i < order; i++) {
             kn.erase(kn.begin()); // remove first element
             kn.pop_back();  // remove last element
 
             data.resize(n_dim_new*n_dim);
             std::fill(data.begin(), data.end(), 0);
 
-            for (int j=0; j<=n_dim-2; j++) {
+            for (int j = 0; j <= n_dim-2; j++) {
                 if (deg <= 0) {
                     //  This is the case if taking the degree+n'th derivative
                     //  In that case the T-matrix is all zero
@@ -282,19 +280,19 @@ namespace spline {
         std::vector<AnyScalar> kn = knots();
         // construct coefficient transformation matrix
         std::vector<AnyScalar> data(n_dim*n_dim, 0);
-        for (int i=0; i<n_dim; i++) {
+        for (int i=0; i < n_dim; i++) {
             data[i*(n_dim+1)] = 1.;
         }
         AnyTensor T_ = vertcat(data).shape({n_dim, n_dim});
         AnyScalar val;
-        for (int k=0; k<order; k++) {
+        for (int k = 0; k < order; k++) {
             deg++;
             n_dim_new++;
             data.resize(n_dim_new*n_dim);
             std::fill(data.begin(), data.end(), 0);
-            for (int i=0;  i<n_dim; i++) {
+            for (int i = 0;  i < n_dim; i++) {
               val = (kn[i+deg] - kn[i])/deg;
-              for (int j=i*(n_dim+1)+i+1; j<=i*(n_dim+1)+n_dim; j++) {
+              for (int j = i*(n_dim+1)+i+1; j <= i*(n_dim+1)+n_dim; j++) {
                 data[j] = val;
               }
             }
@@ -315,19 +313,19 @@ namespace spline {
       int n_dim_new = n_dim;
       int deg = degree();
       std::vector<AnyScalar> data(n_dim*n_dim, 0);
-      for (int i=0; i<n_dim; i++) {
+      for (int i = 0; i < n_dim; i++) {
         data[i*(n_dim+1)] = 1.;
       }
       AnyTensor T_ = vertcat(data).shape({n_dim, n_dim});
       AnyScalar val;
       std::vector<AnyScalar> knots;
       BSplineBasis ret = shared_from_this<BSplineBasis>();
-      for (int k=0; k<new_knots.size(); k++) {
+      for (int k = 0; k < new_knots.size(); k++) {
         std::vector<AnyScalar> knots = ret.knots();
         n_dim_new++;
         data.resize(n_dim_new*n_dim);
         std::fill(data.begin(), data.end(), 0);
-        for (int i=1; i<n_dim; i++) {
+        for (int i = 1; i < n_dim; i++) {
           val = (new_knots[k] - knots[i])/(knots[i+deg] - knots[i]);
           data[i*(n_dim_new+1)] = AnyScalar::max(0., AnyScalar::min(1., val));
           val = (knots[i+deg] - new_knots[k])/(knots[i+deg] - knots[i]);
@@ -353,14 +351,14 @@ namespace spline {
       // build inserted knot vector
       std::vector<AnyScalar> new_knots(0);
       int j;
-      for (int i=0; i<kn.size(); i+=j) {
+      for (int i = 0; i < kn.size(); i+=j) {
           j = 1;
           while ((i+j < kn.size()) && (kn[i+j] == kn[i])) {
             j++;
           }
           if (i+j < kn.size()) {
             double den = pow(2, refinement);
-            for (int num=1; num<den; num++) {
+            for (int num = 1; num < den; num++) {
                 new_knots.push_back(((den - 1.*num)/den)*kn[i]+((1.*num)/den)*kn[i+j]);
             }
           }
