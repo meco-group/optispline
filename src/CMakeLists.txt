@@ -35,7 +35,7 @@ add_library(Basis SHARED
 
     Domain/TensorDomain.h Domain/TensorDomain.cpp
     Domain/Domain.h Domain/Domain.cpp
-    Domain/Inverval.h Domain/Inverval.cpp
+    Domain/Interval.h Domain/Interval.cpp
 
     Coefficients/Coefficient.h Coefficients/Coefficient.cpp
 
