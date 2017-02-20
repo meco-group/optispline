@@ -22,8 +22,6 @@ class DomainNode : public SharedObjectNode {
         virtual Domain intersection(const Interval & dom) const = 0;
 
         virtual std::string getRepresentation() const ;
-    private:
-        std::vector< Domain > allDomains;
 };
 
 #endif // SWIG
