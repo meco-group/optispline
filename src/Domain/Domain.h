@@ -34,9 +34,7 @@ public:
 
         DomainNode* get() const;
         DomainNode* operator->() const;
-
 #endif // SWIG
-        Domain();
         Domain intersection(const Domain & dom) const;
         Domain intersection(const Interval & dom) const;
 
