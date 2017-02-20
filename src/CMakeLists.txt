@@ -33,6 +33,10 @@ add_library(Basis SHARED
     Function/Index.h Function/Index.cpp
     Function/NumericIndex.h
 
+    Domain/TensorDomain.h Domain/TensorDomain.cpp
+    Domain/Domain.h Domain/Domain.cpp
+    Domain/Inverval.h Domain/Inverval.cpp
+
     Coefficients/Coefficient.h Coefficients/Coefficient.cpp
 
     Optistack/optistack.h Optistack/optistack.cpp
