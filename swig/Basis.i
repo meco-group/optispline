@@ -111,9 +111,9 @@ def _swig_repr(self):
 
 #include <src/Coefficients/Coefficient.h>
 
-#include <src/Domain/DomainTensor.h>
-#include <src/Domain/Domain.h>
 #include <src/Domain/Interval.h>
+#include <src/Domain/Domain.h>
+#include <src/Domain/DomainTensor.h>
 
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
@@ -845,9 +845,9 @@ using namespace spline;
 
 %include <src/Coefficients/Coefficient.h>
 
-%include <src/Domain/DomainTensor.h>
-%include <src/Domain/Domain.h>
 %include <src/Domain/Interval.h>
+%include <src/Domain/Domain.h>
+%include <src/Domain/DomainTensor.h>
 
 #ifdef SWIGPYTHON
 %rename(call) spline::Function::operator();

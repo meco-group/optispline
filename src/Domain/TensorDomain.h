@@ -6,13 +6,14 @@
 #include <vector>
 #include <any_tensor.hpp>
 
+#include "Domain.h"
+
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
 namespace spline {
 
 class TensorDomain;
-class Domain;
 
 #ifndef SWIG
 

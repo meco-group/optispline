@@ -1,14 +1,12 @@
 #include "TensorDomain.h"
-#include "Domain.h"
 #include "../common.h"
 
 namespace spline {
 
-    TensorDomainNode* TensorDomain::get() const {
-        return static_cast<TensorDomainNode*>(SharedObject::get());
-    }
-
+    TensorDomainNode* TensorDomain::get() const { return static_cast<TensorDomainNode*>(SharedObject::get()); }
     TensorDomainNode* TensorDomain::operator->() const { return get(); }
+
+    TensorDomainNode::TensorDomainNode(const std::vector< Domain >& dom) : allDomains(dom) {}
 
     TensorDomain::TensorDomain() {
         assign_node(new TensorDomainNode(std::vector< Domain >{}));
@@ -37,7 +35,7 @@ namespace spline {
     /*     return stream << base.getRepresentation(); */
     /* } */
 
-    TensorDomain TensorDomain::intersection() const { return (*this)->dimension ();}
+    TensorDomain TensorDomain::intersection() const { return (*this)->intersection();}
     TensorDomain TensorDomainNode::intersection() const {
         spline_assert_message(false, "test lengtes en zo");
         return TensorDomain();
