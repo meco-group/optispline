@@ -43,7 +43,7 @@ public:
         std::string getRepresentation() const ;
 #ifndef SWIG
         inline friend
-            std::ostream& operator<<(std::ostream &stream, const Basis& obj) {
+            std::ostream& operator<<(std::ostream &stream, const Domain& obj) {
                 return stream << obj.getRepresentation();
             }
 #endif // SWIG
