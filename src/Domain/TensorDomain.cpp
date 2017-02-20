@@ -22,7 +22,7 @@ namespace spline {
         assign_node(new TensorDomainNode(allSubDomain));
     }
 
-    int TensorDomain::n_domains() const { return (*this)->dimension ();}
+    int TensorDomain::n_domains() const { return (*this)->n_domains();}
     int TensorDomainNode::n_domains() const {
         return allDomains.size();
     }
