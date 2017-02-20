@@ -72,20 +72,20 @@ class Test_Basis_Basis(BasisTestCase):
         b = b.add_basis(s3)
         self.assertEqual(b.n_inputs(), 3)
 
-    def test_getSubBasis1(self):
+    def test_bases1(self):
         s1 = MonomialBasis(3)
         b = TensorBasis()
         b = b.add_basis(s1)
-        self.assertEqual(len(b.getSubBasis()), 1)
+        self.assertEqual(len(b.bases()), 1)
 
-    def test_getSubBasis2(self):
+    def test_bases2(self):
         s1 = MonomialBasis(3)
         s2 = MonomialBasis(4)
         b = TensorBasis()
         b = b.add_basis(s1)
         b = b.add_basis(s2)
         b = b.add_basis(s1)
-        self.assertEqual(len(b.getSubBasis()), 3)
+        self.assertEqual(len(b.bases()), 3)
 
     def test_getEvaluation1(self):
         s1 = MonomialBasis(3)
@@ -167,13 +167,13 @@ class Test_Basis_Basis(BasisTestCase):
         d1 = 3
         k1 = np.r_[np.zeros(d1), np.linspace(0.,1.,4.), np.ones(d1)]
         b1 = BSplineBasis(k1,d1)
-        
+
         # Derivative of bases
         nd0 = 1
         db0,T0 = b0.derivative(nd0)
         nd1=2
         db1,T1 = b1.derivative(nd1)
-        
+
         # Derivative of TensorBasis
         B = TensorBasis([b0,b1], ['x', 'y'])
         dB,T = B.derivative([nd0,nd1],[0,1])

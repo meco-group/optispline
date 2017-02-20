@@ -30,7 +30,7 @@ if __name__ == '__main__':
     print "NO ARGUMENT"
     b = b1 + b2
     print b
-    print b.getSubBasis()
+    print b.bases()
 
 
     x1 = Argument('x1')
@@ -43,12 +43,12 @@ if __name__ == '__main__':
     print "SWAP"
     b = b1 + b2
     print b
-    print b.getSubBasis()
+    print b.bases()
 
     b3 = TensorBasis([s3,s4], [x2,x3])
 
     print "ARGUMENT COMBINE"
     b = b1 + b3
     print b
-    print b.getSubBasis()
+    print b.bases()
     unittest.main()
