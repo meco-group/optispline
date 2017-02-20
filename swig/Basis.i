@@ -241,7 +241,7 @@ using namespace spline;
       // Try first converting to a temporary SX
       {
         SX tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_scalar())) {
           if (m) **m = *mt;
           return true;
         }
@@ -250,7 +250,7 @@ using namespace spline;
       // Try first converting to a temporary MX
       {
         MX tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_scalar())) {
           if (m) **m = *mt;
           return true;
         }
@@ -269,13 +269,21 @@ using namespace spline;
       {
         std::vector<SX> tmp, *mt=&tmp;
         if(casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) **m = AnyScalar::from_vector(*mt);
+          if (m) {
+            for (auto& e : tmp) {
+              if (!e.is_scalar()) return false;
+            }
+            **m = AnyScalar::from_vector(*mt);
+          }
           return true;
         }
       }
       {
         std::vector<MX> tmp, *mt=&tmp;
         if(casadi::to_ptr(p, m ? &mt : 0)) {
+          for (auto& e : tmp) {
+            if (!e.is_scalar()) return false;
+          }
           if (m) **m = AnyScalar::from_vector(*mt);
           return true;
         }

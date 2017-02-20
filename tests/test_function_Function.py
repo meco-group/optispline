@@ -11,6 +11,9 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(3)
         b = TensorBasis([m])
         f = Function(b,a)
+        
+        with self.assertRaises(Exception):
+          f(np.array([2.0,4.0]))
 
     def test_function_n_inputs1(self):
         a = MX.sym('a',3 + 1,1)
