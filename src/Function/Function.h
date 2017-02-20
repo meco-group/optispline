@@ -18,7 +18,7 @@ class Function {
         Function( const AnyTensor& c);
         Function() {}
 
-        static Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size)
+        static Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size);
         static Function Constant(const TensorBasis& basis, const AnyTensor& t);
         static Function Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size);
         static Function Constant(const Basis& basis, const AnyTensor& t);

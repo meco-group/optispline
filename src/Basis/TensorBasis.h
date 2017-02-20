@@ -15,13 +15,14 @@
 #include "../Function/NumericIndex.h"
 
 namespace spline {
-    class TensorBasis;
-    class BSplineBasis;
-    class MonomialBasis;
+
+class TensorBasis;
+class BSplineBasis;
+class MonomialBasis;
 
 #ifndef SWIG
 
-    class TensorBasisNode : public SharedObjectNode {
+class TensorBasisNode : public SharedObjectNode {
     public:
         TensorBasisNode(const std::vector< Basis >& allSubBasis);
         TensorBasisNode(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args);
@@ -37,7 +38,7 @@ namespace spline {
 
         bool hasArguments() const;
 
-        std::string getRepresentation() const ;
+        std::string getRepresentation() const;
 
         std::vector< Basis > getSubBasis() const;
         TensorBasis getSubBasis(int index) const;
@@ -46,8 +47,8 @@ namespace spline {
         Basis basis(const Index& index) const;
         // Basis getSubBasis( Argument a) const;
 
-        TensorBasis add_basis(TensorBasis basis) const ;
-        TensorBasis add_basis(Basis basis) const ;
+        TensorBasis add_basis(TensorBasis basis) const;
+        TensorBasis add_basis(Basis basis) const;
 
         TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
 
@@ -68,17 +69,16 @@ namespace spline {
     // protected:
         std::vector< Basis > allSubBasis;
         std::vector< Argument > allArguments;
-    };
+};
 
 #endif // SWIG
 
-    class TensorBasis : public SharedObject{
-    public:
-
+class TensorBasis : public SharedObject{
+public:
 #ifndef SWIG
 
-        TensorBasisNode* get() const ;
-        TensorBasisNode* operator->() const ;
+        TensorBasisNode* get() const;
+        TensorBasisNode* operator->() const;
 
 #endif // SWIG
         TensorBasis();
@@ -100,7 +100,7 @@ namespace spline {
 
         bool hasArguments() const;
 
-        std::string getRepresentation() const ;
+        std::string getRepresentation() const;
 
         Basis basis() const;
         Basis basis(const Argument& a) const;
@@ -111,8 +111,8 @@ namespace spline {
         std::vector< Basis > getSubBasis() const;
         // TensorBasis tensor_basis() const;
 
-        TensorBasis add_basis(TensorBasis basis) const ;
-        TensorBasis add_basis(Basis basis) const ;
+        TensorBasis add_basis(TensorBasis basis) const;
+        TensorBasis add_basis(Basis basis) const;
 
         TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
 
@@ -140,9 +140,8 @@ namespace spline {
         TensorBasis antiderivative(const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+};
 
-    };
-}
-#endif  // TENSORBASIS_H_
+}   // namespace spline
 
 #endif  // SRC_BASIS_TENSORBASIS_H_
