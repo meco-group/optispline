@@ -40,12 +40,12 @@ class TensorBasisNode : public SharedObjectNode {
 
         std::string getRepresentation() const;
 
-        std::vector< Basis > getSubBasis() const;
-        TensorBasis getSubBasis(int index) const;
+        std::vector< Basis > bases() const;
+        TensorBasis bases(int index) const;
         Basis basis() const;
         Basis basis(const Argument& a) const;
         Basis basis(const Index& index) const;
-        // Basis getSubBasis( Argument a) const;
+        // Basis bases( Argument a) const;
 
         TensorBasis add_basis(TensorBasis basis) const;
         TensorBasis add_basis(Basis basis) const;
@@ -108,7 +108,7 @@ public:
         // Basis operator[](Argument a) const;
         // Basis operator[](int index) const;
 
-        std::vector< Basis > getSubBasis() const;
+        std::vector< Basis > bases() const;
         // TensorBasis tensor_basis() const;
 
         TensorBasis add_basis(TensorBasis basis) const;

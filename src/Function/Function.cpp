@@ -77,7 +77,7 @@ namespace spline {
     Basis Function::basis() const {
       spline_assert_message(basis_.n_basis()==1,
           ".basis() syntax only works for a 1-D TensorBasis.");
-      return basis_.getSubBasis()[0];
+      return basis_.bases()[0];
     }
     Basis Function::basis(const Index& index) const {
       return basis_.basis(index);

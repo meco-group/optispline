@@ -19,7 +19,7 @@ namespace spline {
     TensorBasis::TensorBasis(const std::vector< TensorBasis >& allBasis) {
         std::vector< Basis > allSubBasis {};
         for ( auto &basis : allBasis ) {
-            for ( auto &subBasis : basis.getSubBasis() ) {
+            for ( auto &subBasis : basis.bases() ) {
                 allSubBasis.push_back(subBasis);
             }
         }
@@ -39,7 +39,7 @@ namespace spline {
     }
 
     TensorBasis::TensorBasis(const TensorBasis& tensor, const std::vector< Argument >& args) {
-        assign_node(new TensorBasisNode(tensor.getSubBasis(), args));
+        assign_node(new TensorBasisNode(tensor.bases(), args));
     }
 
     TensorBasis::TensorBasis(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args) {
@@ -91,8 +91,8 @@ namespace spline {
         return allArguments.size() > 0;
     }
 
-    std::vector< Basis > TensorBasis::getSubBasis() const { return (*this)->getSubBasis (); }
-    std::vector< Basis > TensorBasisNode::getSubBasis() const {
+    std::vector< Basis > TensorBasis::bases() const { return (*this)->bases (); }
+    std::vector< Basis > TensorBasisNode::bases() const {
         return allSubBasis;
     }
 
@@ -102,7 +102,7 @@ namespace spline {
 
     Basis TensorBasisNode::basis() const {
         spline_assert(n_basis() == 1);
-        return getSubBasis()[0];
+        return bases()[0];
     }
 
     Basis TensorBasis::basis(const Argument& a) const {
@@ -125,13 +125,13 @@ namespace spline {
     Basis TensorBasisNode::basis(const Index& index) const {
         int ind = index.concrete(arguments());
         spline_assert(ind < n_basis());
-        return getSubBasis()[ind];
+        return bases()[ind];
     }
 
     TensorBasis TensorBasis::add_basis(TensorBasis basis) const {return (*this)->add_basis(basis);}
     TensorBasis TensorBasisNode::add_basis(TensorBasis basis) const {
-        std::vector< Basis > all_basis = getSubBasis();
-        for ( auto &subBasis : basis.getSubBasis() ) {
+        std::vector< Basis > all_basis = bases();
+        for ( auto &subBasis : basis.bases() ) {
             all_basis.push_back(subBasis);
         }
         return TensorBasis(all_basis, arguments());
@@ -139,7 +139,7 @@ namespace spline {
 
     TensorBasis TensorBasis::add_basis(Basis basis) const {return (*this)->add_basis(basis);}
     TensorBasis TensorBasisNode::add_basis(Basis basis) const {
-        std::vector< Basis > all_basis = getSubBasis();
+        std::vector< Basis > all_basis = bases();
         all_basis.push_back(basis);
         return TensorBasis(all_basis, arguments());
     }
@@ -172,7 +172,7 @@ namespace spline {
     std::vector<int> TensorBasis::dimension() const { return (*this)->dimension ();}
     std::vector<int> TensorBasisNode::dimension() const {
         std::vector<int> shape;
-        for (auto const& b : getSubBasis()) {
+        for (auto const& b : bases()) {
             shape.push_back(b.dimension());
         }
         return shape;
@@ -231,7 +231,7 @@ namespace spline {
     }
     int TensorBasisNode::n_inputs() const {
         int r = 0;
-        for (auto const& b : getSubBasis()) {
+        for (auto const& b : bases()) {
             r += b.n_inputs();
         }
         return r;
