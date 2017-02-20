@@ -20,7 +20,7 @@ namespace spline {
         return other + shared_from_this<MonomialBasis>();
     }
 
-    Basis MonomialBasisNode::operator+ (const DummyBasis& other) const {
+    Basis MonomialBasisNode::operator+ (const EmptyBasis& other) const {
         return shared_from_this<MonomialBasis>();
     }
 
@@ -36,7 +36,7 @@ namespace spline {
         return other * shared_from_this<MonomialBasis>();
     }
 
-    Basis MonomialBasisNode::operator* (const DummyBasis& other) const {
+    Basis MonomialBasisNode::operator* (const EmptyBasis& other) const {
         return shared_from_this<MonomialBasis>();
     }
 

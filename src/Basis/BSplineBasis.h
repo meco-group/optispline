@@ -100,12 +100,12 @@ namespace spline{
         virtual Basis operator+(const MonomialBasis& other) const override;
         virtual Basis operator+(const BSplineBasis& other) const override;
         virtual Basis operator+(const Basis& other) const override;
-        virtual Basis operator+(const DummyBasis& other) const override;
+        virtual Basis operator+(const EmptyBasis& other) const override;
 
         virtual Basis operator*(const MonomialBasis& other) const override;
         virtual Basis operator*(const BSplineBasis& other) const override;
         virtual Basis operator*(const Basis& other) const override;
-        virtual Basis operator*(const DummyBasis& other) const override;
+        virtual Basis operator*(const EmptyBasis& other) const override;
 
         std::vector<AnyScalar> knots() const;
         std::vector<AnyScalar> greville() const;

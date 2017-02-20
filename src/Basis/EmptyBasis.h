@@ -11,7 +11,7 @@ namespace spline {
 #ifndef SWIG
     class MonomialBasis;
     class BSplineBasis;
-    class DummyBasisNode : public BasisNode {
+    class EmptyBasisNode : public BasisNode {
       public:
         virtual Basis operator+(const Basis& other) const override;
         virtual Basis operator+(const MonomialBasis& other) const override;
@@ -26,14 +26,14 @@ namespace spline {
     };
 #endif // SWIG
 
-    class DummyBasis : public Basis {
+    class EmptyBasis : public Basis {
     public:
 #ifndef SWIG
-        DummyBasisNode* get() const ;
-        DummyBasisNode* operator->() const ;
+        EmptyBasisNode* get() const ;
+        EmptyBasisNode* operator->() const ;
 #endif // SWIG
 
-        DummyBasis() ;
+        EmptyBasis() ;
 
     };
 } // namespace spline

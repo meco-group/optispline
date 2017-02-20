@@ -12,8 +12,8 @@ namespace spline {
 
     Basis Basis::operator+ (const Basis& other) const { return (*this)->operator+(other);}
 
-    Basis Basis::operator+ (const DummyBasis& other) const { return (*this)->operator+(other);}
-    Basis BasisNode::operator+ (const DummyBasis& other) const {
+    Basis Basis::operator+ (const EmptyBasis& other) const { return (*this)->operator+(other);}
+    Basis BasisNode::operator+ (const EmptyBasis& other) const {
         spline_assert(false);
         return Basis();
     }
@@ -22,8 +22,8 @@ namespace spline {
     Basis Basis::operator+ (const BSplineBasis& other) const {return (*this)->operator+(other);}
 
     Basis Basis::operator* (const Basis& other) const { return (*this)->operator*(other);}
-    Basis Basis::operator* (const DummyBasis& other) const { return (*this)->operator*(other);}
-    Basis BasisNode::operator* (const DummyBasis& other) const {
+    Basis Basis::operator* (const EmptyBasis& other) const { return (*this)->operator*(other);}
+    Basis BasisNode::operator* (const EmptyBasis& other) const {
         spline_assert(false);
         return Basis();
     }

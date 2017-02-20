@@ -12,7 +12,7 @@ add_library(Basis SHARED
     Basis/utils/vectorUtilities.h Basis/utils/vectorUtilities.cpp
 
     Basis/Basis.h Basis/Basis.cpp
-    Basis/DummyBasis.h Basis/DummyBasis.cpp
+    Basis/EmptyBasis.h Basis/EmptyBasis.cpp
     Basis/BSplineBasis.h Basis/BSplineBasis.cpp
     Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
     Basis/MonomialBasis.h Basis/MonomialBasis.cpp
@@ -32,7 +32,7 @@ add_library(Basis SHARED
     Function/Argument.h Function/Argument.cpp
     Function/Index.h Function/Index.cpp
     Function/NumericIndex.h
-    
+
     Coefficients/Coefficient.h Coefficients/Coefficient.cpp
 
     Optistack/optistack.h Optistack/optistack.cpp

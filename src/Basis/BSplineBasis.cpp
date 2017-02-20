@@ -93,7 +93,7 @@ namespace spline {
         return other + shared_from_this<BSplineBasis>();
     }
 
-    Basis BSplineBasisNode::operator+ (const DummyBasis& other) const {
+    Basis BSplineBasisNode::operator+ (const EmptyBasis& other) const {
         return shared_from_this<BSplineBasis>();
     }
 
@@ -109,7 +109,7 @@ namespace spline {
         return other * shared_from_this<BSplineBasis>();
     }
 
-    Basis BSplineBasisNode::operator* (const DummyBasis& other) const {
+    Basis BSplineBasisNode::operator* (const EmptyBasis& other) const {
         return shared_from_this<BSplineBasis>();
     }
 

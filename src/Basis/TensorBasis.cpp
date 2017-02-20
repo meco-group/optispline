@@ -1,5 +1,5 @@
 #include "TensorBasis.h"
-#include "DummyBasis.h"
+#include "EmptyBasis.h"
 #include "BSplineBasis.h"
 #include "../common.h"
 #include "operations/operationsBasis.h"
@@ -112,7 +112,7 @@ namespace spline {
     Basis TensorBasisNode::basis(const Argument& a) const {
         int index = indexArgument(a);
         if (index < 0) {
-            return DummyBasis();
+            return EmptyBasis();
         } else {
             return basis(index);
         }

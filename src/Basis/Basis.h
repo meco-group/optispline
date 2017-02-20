@@ -14,7 +14,7 @@
 
 namespace spline {
     class Basis;
-    class DummyBasis;
+    class EmptyBasis;
     class BSplineBasis;
     class MonomialBasis;
 
@@ -23,11 +23,11 @@ namespace spline {
     class BasisNode : public SharedObjectNode {
     public:
         virtual Basis operator+(const Basis& rhs) const = 0;
-        virtual Basis operator+(const DummyBasis& rhs) const;
+        virtual Basis operator+(const EmptyBasis& rhs) const;
         virtual Basis operator+(const MonomialBasis& rhs) const = 0;
         virtual Basis operator+(const BSplineBasis& rhs) const = 0;
         virtual Basis operator*(const Basis& rhs) const = 0;
-        virtual Basis operator*(const DummyBasis& rhs) const;
+        virtual Basis operator*(const EmptyBasis& rhs) const;
         virtual Basis operator*(const MonomialBasis& rhs) const = 0;
         virtual Basis operator*(const BSplineBasis& rhs) const = 0;
 
@@ -64,11 +64,11 @@ namespace spline {
 #endif // SWIG
 
         Basis operator+(const Basis& rhs) const;
-        Basis operator+(const DummyBasis& rhs) const;
+        Basis operator+(const EmptyBasis& rhs) const;
         Basis operator+(const MonomialBasis& rhs) const;
         Basis operator+(const BSplineBasis& rhs) const;
         Basis operator*(const Basis& rhs) const;
-        Basis operator*(const DummyBasis& rhs) const;
+        Basis operator*(const EmptyBasis& rhs) const;
         Basis operator*(const MonomialBasis& rhs) const;
         Basis operator*(const BSplineBasis& rhs) const;
 

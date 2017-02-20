@@ -21,12 +21,12 @@ namespace spline{
         virtual Basis operator+(const MonomialBasis& other) const override;
         virtual Basis operator+(const BSplineBasis& other) const override;
         virtual Basis operator+(const Basis& other) const override;
-        virtual Basis operator+(const DummyBasis& other) const override;
+        virtual Basis operator+(const EmptyBasis& other) const override;
 
         virtual Basis operator*(const MonomialBasis& other) const override;
         virtual Basis operator*(const BSplineBasis& other) const override;
         virtual Basis operator*(const Basis& other) const override;
-        virtual Basis operator*(const DummyBasis& other) const override;
+        virtual Basis operator*(const EmptyBasis& other) const override;
 
         virtual std::string getRepresentation() const override ;
 
