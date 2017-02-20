@@ -1,5 +1,5 @@
-#ifndef CPP_SPLINE_FUNCTION_FUNCTION_H
-#define CPP_SPLINE_FUNCTION_FUNCTION_H
+#ifndef SRC_FUNCTION_FUNCTION_H_
+#define SRC_FUNCTION_FUNCTION_H_
 
 #include <casadi/casadi.hpp>
 #include <string>
@@ -116,4 +116,4 @@ namespace spline {
 
 } // namespace spline
 
-#endif //CPP_SPLINE_FUNCTION_FUNCTION_H
+#endif // SRC_FUNCTION_FUNCTION_H_
