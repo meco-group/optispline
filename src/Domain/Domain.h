@@ -1,5 +1,5 @@
-#ifndef SRC_DOMAIN_TENSORDOMAIN_H_
-#define SRC_DOMAIN_TENSORDOMAIN_H_
+#ifndef SRC_DOMAIN_DOMAIN_H_
+#define SRC_DOMAIN_DOMAIN_H_
 
 #include <iostream>
 #include <string>
@@ -50,4 +50,4 @@ public:
 };
 
 }   // namespace spline
-#endif  // SRC_DOMAIN_TENSORDOMAIN_H_
+#endif  // SRC_DOMAIN_DOMAIN_H_
