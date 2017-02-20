@@ -25,6 +25,13 @@ class Function {
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
+        /* evaluation options */
+        /* AnyTensor operator()(const std::map<std::string, AnyScalar >& x) const; */
+        /* AnyTensor operator()(const std::map<std::string, std::vector<AnyScalar> >& x) const; */
+        /* AnyTensor operator()(const std:vector< std::vector<AnyScalar> >& x, const std::vector< std::string > = std::vector< std::string > {} ) const; */
+
+        /* Function partial(const std::map<std::string, AnyScalar >& x) const; */
+
         Function operator+(const Function& f) const;
         Function operator+(const AnyTensor& t) const;
         Function operator*(const Function& f) const;
