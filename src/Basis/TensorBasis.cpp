@@ -8,7 +8,7 @@ namespace spline {
 
     TensorBasisNode* TensorBasis::get() const {
         return static_cast<TensorBasisNode*>(SharedObject::get());
-    };
+    }
 
     TensorBasisNode* TensorBasis::operator->() const { return get(); }
 
@@ -254,7 +254,7 @@ namespace spline {
     TensorBasis TensorBasis::insert_knots(const std::vector<AnyVector> & new_knots,
         std::vector<AnyTensor> & T, const std::vector<Argument>& args) const {
         std::vector<NumericIndex> arg_ind(args.size());
-        for (int i=0; i<args.size(); i++){
+        for (int i=0; i<args.size(); i++) {
             arg_ind[i] = indexArgument(args[i]);
         }
         return (*this)->insert_knots(new_knots, T, arg_ind);
@@ -270,7 +270,7 @@ namespace spline {
         spline_assert(arg_ind.size() == new_knots.size());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
-        for (int i=0; i < arg_ind.size(); i++){
+        for (int i=0; i < arg_ind.size(); i++) {
             new_bases[i] = basis(arg_ind[i].index()).insert_knots(new_knots[i], T_[i]);
         }
         T = T_;
@@ -280,7 +280,7 @@ namespace spline {
     TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
         std::vector<AnyTensor> & T, const std::vector<Argument>& args) const {
         std::vector<NumericIndex> arg_ind(args.size());
-        for (int i=0; i<args.size(); i++){
+        for (int i=0; i<args.size(); i++) {
             arg_ind[i] = indexArgument(args[i]);
         }
         return (*this)->midpoint_refinement(refinement, T, arg_ind);
@@ -292,11 +292,11 @@ namespace spline {
     }
 
     TensorBasis TensorBasisNode::midpoint_refinement(const std::vector<int>& refinement,
-        std::vector<AnyTensor>& T, const std::vector<NumericIndex>& arg_ind) const{
+        std::vector<AnyTensor>& T, const std::vector<NumericIndex>& arg_ind) const {
         spline_assert(arg_ind.size() == refinement.size());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
-        for (int i=0; i < arg_ind.size(); i++){
+        for (int i=0; i < arg_ind.size(); i++) {
             new_bases[i] = basis(arg_ind[i].index()).midpoint_refinement(refinement[i], T_[i]);
         }
         T = T_;
@@ -307,7 +307,7 @@ namespace spline {
         // default derivative is with order = 1
         std::vector<NumericIndex> direction_ind(directions.size());
         std::vector<int> orders(directions.size(), 1);
-        for (int i=0; i<directions.size(); i++){
+        for (int i=0; i<directions.size(); i++) {
             direction_ind[i] = indexArgument(directions[i]);
         }
         return (*this)->derivative(orders, direction_ind, T);
@@ -321,7 +321,7 @@ namespace spline {
 
     TensorBasis TensorBasis::derivative(const std::vector<int>& orders, const std::vector<Argument>& directions, std::vector<AnyTensor>& T) const {
         std::vector<NumericIndex> direction_ind(directions.size());
-        for (int i=0; i<directions.size(); i++){
+        for (int i=0; i<directions.size(); i++) {
             direction_ind[i] = indexArgument(directions[i]);
         }
         return (*this)->derivative(orders, direction_ind, T);
@@ -335,7 +335,7 @@ namespace spline {
         // Call derivative on basis, for corresponding direction
         std::vector<Basis> new_bases(direction_ind.size());
         std::vector<AnyTensor> T_(direction_ind.size());
-        for (int i=0; i < direction_ind.size(); i++){
+        for (int i=0; i < direction_ind.size(); i++) {
             new_bases[i] = basis(direction_ind[i].index()).derivative(orders[i], T_[i]);
         }
         T = T_;
@@ -347,7 +347,7 @@ namespace spline {
         // default antiderivative is with order = 1
         std::vector<NumericIndex> direction_ind(directions.size());
         std::vector<int> orders(directions.size(), 1);
-        for (int i=0; i<directions.size(); i++){
+        for (int i=0; i<directions.size(); i++) {
             direction_ind[i] = indexArgument(directions[i]);
         }
         return (*this)->antiderivative(orders, direction_ind, T);
@@ -361,7 +361,7 @@ namespace spline {
 
     TensorBasis TensorBasis::antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions, std::vector<AnyTensor>& T) const {
         std::vector<NumericIndex> direction_ind(directions.size());
-        for (int i=0; i<directions.size(); i++){
+        for (int i=0; i<directions.size(); i++) {
             direction_ind[i] = indexArgument(directions[i]);
         }
         return (*this)->antiderivative(orders, direction_ind, T);
@@ -375,7 +375,7 @@ namespace spline {
         // Call antiderivative on basis, for corresponding direction
         std::vector<Basis> new_bases(direction_ind.size());
         std::vector<AnyTensor> T_(direction_ind.size());
-        for (int i=0; i < direction_ind.size(); i++){
+        for (int i=0; i < direction_ind.size(); i++) {
             new_bases[i] = basis(direction_ind[i].index()).antiderivative(orders[i], T_[i]);
         }
         T = T_;
