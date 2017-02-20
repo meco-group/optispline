@@ -1,5 +1,5 @@
-#ifndef TENSORBASIS_H_
-#define TENSORBASIS_H_
+#ifndef SRC_BASIS_TENSORBASIS_H_
+#define SRC_BASIS_TENSORBASIS_H_
 
 #include <iostream>
 #include <string>
@@ -144,3 +144,5 @@ namespace spline {
     };
 }
 #endif  // TENSORBASIS_H_
+
+#endif  // SRC_BASIS_TENSORBASIS_H_
