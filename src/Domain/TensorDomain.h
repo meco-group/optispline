@@ -18,6 +18,7 @@ class Domain;
 
 class TensorDomainNode : public SharedObjectNode {
     public:
+        TensorDomainNode(const std::vector< Domain >& allDomain);
         int n_domains() const;
         TensorDomain intersection() const;
     private:
@@ -36,11 +37,11 @@ public:
 #endif // SWIG
         TensorDomain();
         TensorDomain(const Domain & allSubDomain);
-        TensorDomain::TensorDomain(const std::vector< Domain >& allSubDomain);
+        TensorDomain(const std::vector< Domain >& allDomain);
 
-        int n_domains() const; // Vector containing number of basis functions in each basi
+        int n_domains() const;
         TensorDomain intersection() const;
+};
 
 }   // namespace spline
-
 #endif  // SRC_DOMAIN_TENSORDOMAIN_H_
