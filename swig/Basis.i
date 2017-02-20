@@ -241,7 +241,7 @@ using namespace spline;
       // Try first converting to a temporary SX
       {
         SX tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_scalar())) {
           if (m) **m = *mt;
           return true;
         }
@@ -250,7 +250,7 @@ using namespace spline;
       // Try first converting to a temporary MX
       {
         MX tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_scalar())) {
           if (m) **m = *mt;
           return true;
         }
@@ -269,13 +269,21 @@ using namespace spline;
       {
         std::vector<SX> tmp, *mt=&tmp;
         if(casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) **m = AnyScalar::from_vector(*mt);
+          if (m) {
+            for (auto& e : tmp) {
+              if (!e.is_scalar()) return false;
+            }
+            **m = AnyScalar::from_vector(*mt);
+          }
           return true;
         }
       }
       {
         std::vector<MX> tmp, *mt=&tmp;
         if(casadi::to_ptr(p, m ? &mt : 0)) {
+          for (auto& e : tmp) {
+            if (!e.is_scalar()) return false;
+          }
           if (m) **m = AnyScalar::from_vector(*mt);
           return true;
         }
@@ -716,6 +724,7 @@ using namespace spline;
 
     def __add__(self, a) : return spline_plus(self, a)
     def __radd__(self, a) : return spline_plus(self, a)
+    def __pow__(x, n): return spline_power(x, n)
     def __sub__(self, a) : return spline_minus(self, a)
     def __rsub__(self, a) : return spline_plus(-self, a)
     def __mul__(self, a) : return spline_times(self, a)
@@ -910,6 +919,7 @@ namespace spline {
     AnyTensor spline_times(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs*rhs; }
     AnyTensor spline_mtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
     AnyTensor spline_rmtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.mtimes(lhs); }
+    Function spline_power(const Function& lhs, int rhs) { return lhs.pow(rhs); }
     Function spline_plus(const Function& lhs, const Function& rhs) { return lhs+rhs; }
     Function spline_minus(const Function& lhs, const Function& rhs) { return lhs-rhs; }
     Function spline_times(const Function& lhs, const Function& rhs) { return lhs*rhs; }
@@ -939,6 +949,8 @@ namespace spline {
     static Function times(const Function& lhs, const Function& rhs) { return lhs*rhs; }
     static Function mtimes(const Function& lhs, const Function& rhs) { return lhs.mtimes(rhs); }
     static Function rmtimes(const Function& lhs, const Function& rhs) { return rhs.mtimes(lhs); }
+    static Function power(const Function& lhs, int rhs) { return lhs.pow(rhs); }
+    static Function mpower(const Function& lhs, int rhs) { spline_assert(lhs.is_scalar()); return lhs.pow(rhs); }
     static Function plus(const Function& lhs, const AnyTensor& rhs) { return lhs+rhs; }
     static Function minus(const Function& lhs, const AnyTensor& rhs) { return lhs-rhs; }
     static Function times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }

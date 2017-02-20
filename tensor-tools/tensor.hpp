@@ -150,14 +150,12 @@ class Tensor {
 
   }
 
-  Tensor(const T& data, const std::vector<int>& dims) : data_(vec(data)), dims_(dims) {
-    tensor_assert(data.is_dense());
+  Tensor(const T& data, const std::vector<int>& dims) : data_(vec(densify(data))), dims_(dims) {
     tensor_assert_message(data.numel()==product(dims), "Data of length " << data.numel()
       << " and dims " << dims << " are incompatible.");
   }
 
-  Tensor(const T& data) : data_(vec(data)), dims_({data.size1(), data.size2()}) {
-    tensor_assert(data.is_dense());
+  Tensor(const T& data) : data_(vec(densify(data))), dims_({data.size1(), data.size2()}) {
   }
 
   Tensor(const Tensor& t) : data_(vec(t.data())), dims_(t.dims()) {
