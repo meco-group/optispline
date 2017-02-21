@@ -4,11 +4,16 @@
 
 namespace spline {
 
+    BasisNode::BasisNode(const Domain& domain) : domain_(domain) { }
+
     BasisNode* Basis::get() const { return static_cast<BasisNode*>(SharedObject::get()); };
     BasisNode* Basis::operator->() const { return get(); }
 
     std::string BasisNode::getRepresentation() const {return "Basis";};
     std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
+
+    Domain BasisNode::domain() const {return domain_;}
+    Domain Basis::domain() const {return (*this)->domain();}
 
     Basis Basis::operator+ (const Basis& other) const { return (*this)->operator+(other);}
 

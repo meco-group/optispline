@@ -6,6 +6,7 @@
 
 #include "../common.h"
 #include "Basis.h"
+#include "../Domain/Interval.h"
 
 namespace spline {
 
@@ -16,12 +17,12 @@ namespace spline {
 
     class UnivariateBasisNode : public BasisNode {
     public:
-        UnivariateBasisNode(int degree);
+        UnivariateBasisNode(int degree, const Domain& domain);
 
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const = 0;
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const = 0;
 
-        int degree () const ;
+        int degree () const;
         int n_inputs() const;
 
         virtual Basis derivative(int order, AnyTensor& T) const = 0;
@@ -31,6 +32,7 @@ namespace spline {
 
         int dimension() const {return length();}
         virtual int length() const = 0;
+
     protected:
         int degree_;
     };
@@ -46,7 +48,7 @@ namespace spline {
         UnivariateBasisNode* operator->() const ;
 #endif // SWIG
 
-        int degree () const ;
+        int degree() const;
 
     protected:
         int length() const ;

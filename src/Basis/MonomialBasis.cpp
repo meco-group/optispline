@@ -12,6 +12,9 @@ namespace spline {
     };
     MonomialBasisNode* MonomialBasis::operator->() const { return get(); }
 
+    MonomialBasisNode::MonomialBasisNode(int degree) :
+        UnivariateBasisNode(degree, Interval(-inf, +inf)) {};
+
     MonomialBasis::MonomialBasis(int degree)  {
         assign_node(new MonomialBasisNode(degree));
     }

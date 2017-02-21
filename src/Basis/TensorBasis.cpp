@@ -178,6 +178,19 @@ namespace spline {
         return shape;
     }
 
+    TensorDomain TensorBasisNode::domain() const {
+        std::vector<Domain> doms(n_basis());
+        for (int i=0; i<n_basis(); i++) {
+            doms[i] = basis(i).domain();
+        }
+        if (hasArguments()) {
+            return TensorDomain(doms, arguments());
+        } else {
+            return TensorDomain(doms);
+        }
+    }
+
+    TensorDomain TensorBasis::domain() const { return (*this)->domain(); }
     std::string TensorBasisNode::getRepresentation() const {
         return "TensorBasis"  + std::to_string(allArguments.size()) +
             std::to_string(allSubBasis.size());

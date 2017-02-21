@@ -5,7 +5,8 @@
 #include "../common.h"
 
 namespace spline {
-    UnivariateBasisNode::UnivariateBasisNode(int degree) : degree_(degree) { }
+    UnivariateBasisNode::UnivariateBasisNode(int degree, const Domain& domain) :
+    BasisNode(domain), degree_(degree) { }
     UnivariateBasisNode* UnivariateBasis::get() const {
         return static_cast<UnivariateBasisNode*>(SharedObject::get());
     };

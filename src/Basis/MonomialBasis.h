@@ -16,7 +16,7 @@ namespace spline{
     class MonomialBasisNode : public UnivariateBasisNode {
 
     public:
-        MonomialBasisNode(int degree) : UnivariateBasisNode(degree) {};
+        MonomialBasisNode(int degree);
 
         virtual Basis operator+(const MonomialBasis& other) const override;
         virtual Basis operator+(const BSplineBasis& other) const override;

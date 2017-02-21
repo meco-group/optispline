@@ -13,6 +13,7 @@
 #include "../Function/Argument.h"
 #include "../Function/Index.h"
 #include "../Function/NumericIndex.h"
+#include "../Domain/TensorDomain.h"
 
 namespace spline {
 
@@ -38,6 +39,7 @@ class TensorBasisNode : public SharedObjectNode {
 
         bool hasArguments() const;
 
+        TensorDomain domain() const;
         std::string getRepresentation() const;
 
         std::vector< Basis > bases() const;
@@ -101,6 +103,7 @@ public:
         bool hasArguments() const;
 
         std::string getRepresentation() const;
+        TensorDomain domain() const;
 
         Basis basis() const;
         Basis basis(const Argument& a) const;
