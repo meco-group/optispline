@@ -11,4 +11,10 @@ namespace spline {
 
     Domain Domain::intersection(const Domain & dom) const { return (*this)->intersection(dom);}
     Domain Domain::intersection(const Interval & dom) const { return (*this)->intersection(dom);}
+
+    bool Domain::operator==(const Domain& other) const {return (*this)->operator==(other); }
+    bool Domain::operator==(const Interval& other) const {return (*this)->operator==(other); }
+    bool DomainNode::operator==(const Domain& other) const {return false; }
+    bool DomainNode::operator==(const Interval& other) const {return false; }
+
 } // namespace spline

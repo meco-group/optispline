@@ -7,9 +7,9 @@ namespace spline {
     TensorDomainNode* TensorDomain::operator->() const { return get(); }
 
     TensorDomainNode::TensorDomainNode(const std::vector< Domain >& dom) :
-        allDomains(dom), allArguments(std::vector<Argument>{}) {}
+        domains_(dom), arguments_(std::vector<Argument>{}) {}
     TensorDomainNode::TensorDomainNode(const std::vector< Domain >& dom, const std::vector< Argument >& args) :
-        allDomains(dom), allArguments(args) {}
+        domains_(dom), arguments_(args) {}
 
     TensorDomain::TensorDomain() {
         assign_node(new TensorDomainNode(std::vector< Domain >{}));
@@ -28,63 +28,84 @@ namespace spline {
         assign_node(new TensorDomainNode(allSubDomain, args));
     }
 
-    // TensorDomain::TensorDomain(const std::vector< std::vector< AnyScalar > >& intervals,
-    //     const std::vector< Argument >& args) {
-    //     std::vector<Domain> domains(intervals.size());
-    //     for (int i=0; i<intervals.size(); i++) {
-    //         domains[i] = Interval(intervals[i]);
-    //     }
-    //     assign_node(new TensorDomainNode(domains, args));
-    // }
-
-    TensorDomain::TensorDomain(const std::vector< std::vector< AnyScalar > >& intervals) {
-        // TensorDomain(intervals, std::vector<Argument> {});
+    TensorDomain::TensorDomain(const std::vector< std::vector< AnyScalar > >& intervals,
+        const std::vector< Argument >& args) {
         std::vector<Domain> domains(intervals.size());
         for (int i=0; i<intervals.size(); i++) {
             domains[i] = Interval(intervals[i]);
         }
-        assign_node(new TensorDomainNode(domains));
+        assign_node(new TensorDomainNode(domains, args));
+    }
+
+    TensorDomain::TensorDomain(const std::vector< std::vector< AnyScalar > >& intervals) {
+        TensorDomain(intervals, std::vector<Argument> {});
+    }
+
+    bool TensorDomain::operator==(const TensorDomain& other) const {
+        return (*this)->operator==(other);
+    }
+
+    bool TensorDomainNode::operator==(const TensorDomain& other) const {
+        if (n_domains() != other.n_domains()) {
+            return false;
+        }
+        if (! (hasArguments() && other.hasArguments())) {
+            for (int i=0; i<n_domains(); i++) {
+                if (!(domain(i) == other.domain(i))) {
+                    return false;
+                }
+            }
+        } else {
+            Argument arg;
+            for (int i=0; i<n_domains(); i++) {
+                arg = getSubArgument(i);
+                if (!(domain(i) == other.domain(arg))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     int TensorDomain::n_domains() const { return (*this)->n_domains();}
     int TensorDomainNode::n_domains() const {
-        return allDomains.size();
+        return domains_.size();
     }
 
     std::vector< spline::Argument > TensorDomain::arguments() const {
         return (*this)->arguments();
     }
     std::vector< Argument > TensorDomainNode::arguments() const {
-        return allArguments;
+        return arguments_;
     }
 
     spline::Argument TensorDomain::getSubArgument(int index) const {
         return (*this)->getSubArgument(index);
     }
     Argument TensorDomainNode::getSubArgument(int index) const {
-        return allArguments[index];
+        return arguments_[index];
     }
 
     int TensorDomain::indexArgument(Argument a) const { return (*this)->indexArgument(a); }
     int TensorDomainNode::indexArgument(Argument a) const {
-        auto it = std::find(allArguments.begin(), allArguments.end(), a);
+        auto it = std::find(arguments_.begin(), arguments_.end(), a);
         int index;
-        if (it == allArguments.end()) {
+        if (it == arguments_.end()) {
             index = -1;
         } else {
-            index = std::distance(allArguments.begin(), it);
+            index = std::distance(arguments_.begin(), it);
         }
         return  index;
     }
 
     bool TensorDomain::hasArguments() const { return (*this)->hasArguments();}
     bool TensorDomainNode::hasArguments() const {
-        return allArguments.size() > 0;
+        return arguments_.size() > 0;
     }
 
     std::vector< Domain > TensorDomain::domains() const { return (*this)->domains (); }
     std::vector< Domain > TensorDomainNode::domains() const {
-        return allDomains;
+        return domains_;
     }
 
     Domain TensorDomain::domain() const { return (*this)->domain(); }
@@ -109,7 +130,7 @@ namespace spline {
 
 
     /* std::string TensorDomainNode::getRepresentation() const { */
-    /*     return "TensorDomain"  + std::to_string(allArguments.size()) + */
+    /*     return "TensorDomain"  + std::to_string(arguments_.size()) + */
     /*         std::to_string(allSubDomain.size()); */
     /* } */
 

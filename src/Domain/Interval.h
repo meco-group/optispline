@@ -18,13 +18,13 @@ class IntervalNode : public DomainNode {
     public:
         IntervalNode(const std::vector<AnyScalar>& data);
 
-        virtual Domain intersection(const Domain & dom) const;
-        virtual Domain intersection(const Interval & dom) const override;
         AnyScalar min() const;
         AnyScalar max() const;
         virtual std::string getRepresentation() const ;
-    private:
-        std::vector<AnyScalar> data;
+        virtual Domain intersection(const Domain & dom) const;
+        virtual Domain intersection(const Interval & dom) const override;
+        virtual bool operator==(const Domain& other) const override;
+        virtual bool operator==(const Interval& other) const override;
 };
 
 #endif // SWIG
@@ -41,6 +41,7 @@ public:
         Interval(const std::vector<AnyScalar>& data);
         AnyScalar min() const;
         AnyScalar max() const;
+
 
 //RUBEN ik denk dat de volgende code niet nodig is voor een output te geven
 /* #ifndef SWIG */

@@ -34,9 +34,11 @@ class TensorDomainNode : public SharedObjectNode {
         Domain domain(const Argument& a) const;
         Domain domain(const Index& ind) const;
         TensorDomain intersection(const TensorDomain& other) const;
+        bool operator==(const TensorDomain& other) const;
+
     private:
-        std::vector< Domain > allDomains;
-        std::vector< Argument > allArguments;
+        std::vector< Domain > domains_;
+        std::vector< Argument > arguments_;
 };
 
 #endif // SWIG
@@ -53,8 +55,8 @@ public:
         TensorDomain(const Domain & allSubDomain);
         TensorDomain(const std::vector< Domain >& allDomain);
         TensorDomain(const std::vector< Domain >& allDomain, const std::vector< Argument >& args);
+        TensorDomain(const std::vector< std::vector< AnyScalar > >& intervals, const std::vector< Argument >& args);
         TensorDomain(const std::vector< std::vector<AnyScalar> >& intervals);
-        // TensorDomain(const std::vector< std::vector< AnyScalar > >& intervals, const std::vector< Argument >& args);
 
         std::vector< spline::Argument > arguments() const;
         spline::Argument getSubArgument(int index) const;
@@ -67,6 +69,7 @@ public:
         Domain domain(const Argument& a) const;
         Domain domain(const Index& ind) const;
         TensorDomain intersection(const TensorDomain& other) const;
+        bool operator==(const TensorDomain& other) const;
 };
 
 }   // namespace spline
