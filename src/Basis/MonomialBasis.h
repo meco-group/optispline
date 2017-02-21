@@ -35,7 +35,8 @@ namespace spline{
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 
-        virtual int length() const override;
+        virtual int dimension() const override;
+
         template<class T>
         AnyTensor basis_evaluation(const std::vector< T >& x ) const ;
 
@@ -63,7 +64,7 @@ namespace spline{
     template<class T>
     AnyTensor MonomialBasisNode::basis_evaluation(const std::vector< T >& x ) const {
         T x_ = x[0];
-        int lenght  = this->length();
+        int lenght  = this->dimension();
         std::vector<T> evaluation_basis(lenght);
         for (int i = 0; i < lenght; ++i) {
               evaluation_basis[i] = pow(x_,i);

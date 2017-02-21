@@ -127,8 +127,8 @@ namespace spline {
         if (deg == 0) {
             deg = 1;
         }
-        std::vector<AnyScalar> grevillePoints(length());
-        for (int i = 0; i < length(); ++i) {
+        std::vector<AnyScalar> grevillePoints(dimension());
+        for (int i = 0; i < dimension(); ++i) {
           grevillePoints[i] = AnyScalar(0.0);
           for (int j = 0; j < deg; j++) {
             grevillePoints[i] += knots_[i+1+j];
@@ -138,7 +138,7 @@ namespace spline {
         return grevillePoints;
     }
 
-    int BSplineBasisNode::length() const {
+    int BSplineBasisNode::dimension() const {
         return knots_.size() - degree() - 1;
     }
 
@@ -229,7 +229,7 @@ namespace spline {
         *     Derivative of the basis (new_basis) and transformation matrix to transform
         *     the coefficients of the function (T)
         */
-        int n_dim = length();  // Number of basis functions in the basis
+        int n_dim = dimension();  // Number of basis functions in the basis
         int n_dim_new = n_dim-1;
         int deg = degree();;
 
@@ -274,7 +274,7 @@ namespace spline {
     }
 
     Basis BSplineBasisNode::antiderivative(int order, AnyTensor& T) const {
-        int n_dim = length();
+        int n_dim = dimension();
         int n_dim_new = n_dim;
         int deg = degree();
         std::vector<AnyScalar> kn = knots();
@@ -309,7 +309,7 @@ namespace spline {
     Basis BSplineBasisNode::insert_knots(const AnyVector & new_knots,
       AnyTensor & T) const {
       // construct coefficient transformation matrix
-      int n_dim = length();
+      int n_dim = dimension();
       int n_dim_new = n_dim;
       int deg = degree();
       std::vector<AnyScalar> data(n_dim*n_dim, 0);
