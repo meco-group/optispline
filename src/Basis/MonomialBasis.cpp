@@ -25,11 +25,11 @@ namespace spline {
     }
 
     Basis MonomialBasisNode::operator+ (const BSplineBasis& other) const {
-        return plusSubBasis (shared_from_this<MonomialBasis>(), other);
+        return plusBasis (shared_from_this<MonomialBasis>(), other);
     }
 
     Basis MonomialBasisNode::operator+ (const MonomialBasis& other) const {
-        return plusSubBasis (shared_from_this<MonomialBasis>(), other);
+        return plusBasis (shared_from_this<MonomialBasis>(), other);
     }
 
     Basis MonomialBasisNode::operator* (const Basis& other) const {
@@ -41,11 +41,11 @@ namespace spline {
     }
 
     Basis MonomialBasisNode::operator* (const BSplineBasis& other) const {
-        return timesSubBasis (shared_from_this<MonomialBasis>(), other);
+        return timesBasis (shared_from_this<MonomialBasis>(), other);
     }
 
     Basis MonomialBasisNode::operator* (const MonomialBasis& other) const {
-        return timesSubBasis (shared_from_this<MonomialBasis>(), other);
+        return timesBasis (shared_from_this<MonomialBasis>(), other);
     }
 
     AnyTensor MonomialBasisNode::const_coeff_tensor(const AnyTensor& t) const {

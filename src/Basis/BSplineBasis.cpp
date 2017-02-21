@@ -98,11 +98,11 @@ namespace spline {
     }
 
     Basis BSplineBasisNode::operator+ (const BSplineBasis& other) const {
-        return plusSubBasis (shared_from_this<BSplineBasis>(), other);
+        return plusBasis (shared_from_this<BSplineBasis>(), other);
     }
 
     Basis BSplineBasisNode::operator+ (const MonomialBasis& other) const {
-        return plusSubBasis (shared_from_this<BSplineBasis>(), other);
+        return plusBasis (shared_from_this<BSplineBasis>(), other);
     }
 
     Basis BSplineBasisNode::operator* (const Basis& other) const {
@@ -114,11 +114,11 @@ namespace spline {
     }
 
     Basis BSplineBasisNode::operator* (const BSplineBasis& other) const {
-        return timesSubBasis (shared_from_this<BSplineBasis>(), other);
+        return timesBasis (shared_from_this<BSplineBasis>(), other);
     }
 
     Basis BSplineBasisNode::operator* (const MonomialBasis& other) const {
-        return timesSubBasis (shared_from_this<BSplineBasis>(), other);
+        return timesBasis (shared_from_this<BSplineBasis>(), other);
     }
 
     std::vector<AnyScalar> BSplineBasis::greville() const { return (*this)->greville(); }
