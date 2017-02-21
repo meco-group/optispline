@@ -913,8 +913,6 @@ using namespace spline;
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>
 
-%template(AnyScalarVectorVector) std::vector< std::vector< AnyScalar > >; // Debug
-
 %include <src/Basis/TensorBasis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
