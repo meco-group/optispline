@@ -178,7 +178,7 @@ namespace spline {
     }
 
     AnyTensor BSplineBasisNode::operator() (const std::vector<AnyScalar> & x) const {
-        return SubBasisEvalution(x);
+        return basis_evaluation(x);
     }
 
     std::vector< std::vector<AnyScalar> > BSplineBasisNode::getEvaluationGrid() const {
@@ -200,7 +200,7 @@ namespace spline {
         return AnyTensor::concat(coeffs, 0);
     }
 
-    AnyTensor BSplineBasisNode::SubBasisEvalution(const std::vector< AnyScalar > & x_) const {
+    AnyTensor BSplineBasisNode::basis_evaluation(const std::vector< AnyScalar > & x_) const {
         AnyScalar x = x_[0];
         TensorType t = AnyScalar::merge(AnyScalar::type(knots_), x.type());
 

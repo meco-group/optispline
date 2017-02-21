@@ -119,7 +119,7 @@ namespace spline{
 
         virtual int length() const override;
 
-        AnyTensor SubBasisEvalution(const std::vector<AnyScalar> & x ) const;
+        AnyTensor basis_evaluation(const std::vector<AnyScalar> & x ) const;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const override;
 

@@ -37,7 +37,7 @@ namespace spline{
 
         virtual int length() const override;
         template<class T>
-        AnyTensor SubBasisEvalution(const std::vector< T >& x ) const ;
+        AnyTensor basis_evaluation(const std::vector< T >& x ) const ;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const override;
 
@@ -61,7 +61,7 @@ namespace spline{
     };
 
     template<class T>
-    AnyTensor MonomialBasisNode::SubBasisEvalution(const std::vector< T >& x ) const {
+    AnyTensor MonomialBasisNode::basis_evaluation(const std::vector< T >& x ) const {
         T x_ = x[0];
         int lenght  = this->length();
         std::vector<T> evaluation_basis(lenght);
