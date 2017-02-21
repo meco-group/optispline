@@ -190,11 +190,11 @@ namespace spline {
     }
 
     TensorBasis TensorBasis::operator+ (const TensorBasis& other) const {
-        return plusTensorBasis(*this, other);
+        return plus_tensor_basis(*this, other);
     }
 
     TensorBasis TensorBasis::operator* (const TensorBasis& other) const {
-        return timesTensorBasis(*this, other);
+        return times_tensor_basis(*this, other);
     }
 
     AnyTensor TensorBasis::operator() (const std::vector< AnyScalar > &  x) const {

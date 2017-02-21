@@ -8,10 +8,10 @@
 namespace spline{
 //TODO specify return type
 // #ifndef SWIG
-    Basis plusBasis(const BSplineBasis& b1 , const BSplineBasis& b2);
-    Basis plusBasis(const MonomialBasis& b1 , const MonomialBasis& b2);
-    Basis plusBasis(const MonomialBasis& b1 , const BSplineBasis& b2);
-    Basis plusBasis(const BSplineBasis& b1 , const MonomialBasis& b2);
+    Basis plus_basis(const BSplineBasis& b1 , const BSplineBasis& b2);
+    Basis plus_basis(const MonomialBasis& b1 , const MonomialBasis& b2);
+    Basis plus_basis(const MonomialBasis& b1 , const BSplineBasis& b2);
+    Basis plus_basis(const BSplineBasis& b1 , const MonomialBasis& b2);
 
 // #endif // SWIG
 } // namespace spline
