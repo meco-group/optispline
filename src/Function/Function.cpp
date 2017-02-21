@@ -481,4 +481,9 @@ namespace spline {
         return Function(unionBasis, coef.cat(index, coefVec));
     }
 
+    Function Function::slice(const std::vector<NumericIndex>& i,
+        const std::vector<NumericIndex>& j) const {
+      return Function(tensor_basis(), coeff_tensor().get_slice(NumericIndex::as_int(i), NumericIndex::as_int(j)));
+    }
+
 }  // namespace spline

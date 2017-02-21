@@ -188,6 +188,12 @@ class AnyTensor {
 
     static AnyTensor pack(const std::vector<AnyTensor>& v, int axis);
     static std::vector<AnyTensor> unpack(const AnyTensor& v, int axis);
+    
+    
+    AnyTensor get_slice(const std::vector<int>& i, const std::vector<int>& j) const {
+      ANYTENSOR_METHOD(get_slice(i, j));
+      return DT();
+    }
 
     AnyTensor reorder_dims(const std::vector<int>& order) const {
       ANYTENSOR_METHOD(reorder_dims(order));

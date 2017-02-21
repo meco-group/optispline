@@ -32,6 +32,8 @@ class Function {
 
         /* Function partial(const std::map<std::string, AnyScalar >& x) const; */
 
+        Function slice(const std::vector<NumericIndex>& i, const std::vector<NumericIndex>& j) const;
+
         Function operator+(const Function& f) const;
         Function operator+(const AnyTensor& t) const;
         Function operator*(const Function& f) const;
