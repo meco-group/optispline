@@ -1,5 +1,4 @@
 #include "Domain.h"
-#include "Domain.h"
 #include "../common.h"
 
 namespace spline {

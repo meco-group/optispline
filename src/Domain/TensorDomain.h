@@ -7,9 +7,10 @@
 #include <any_tensor.hpp>
 
 #include "Domain.h"
-
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
+#include "../Function/Argument.h"
+#include "../Function/Index.h"
 
 namespace spline {
 
@@ -20,10 +21,21 @@ class TensorDomain;
 class TensorDomainNode : public SharedObjectNode {
     public:
         TensorDomainNode(const std::vector< Domain >& allDomain);
+        TensorDomainNode(const std::vector< Domain >& allDomain, const std::vector< Argument >& args);
+        std::vector< spline::Argument > arguments() const;
+        spline::Argument getSubArgument(int index) const;
+        int indexArgument(Argument a) const;
+        bool hasArguments() const;
+
         int n_domains() const;
-        TensorDomain intersection() const;
+        std::vector< Domain > domains() const;
+        Domain domain() const;
+        Domain domain(const Argument& a) const;
+        Domain domain(const Index& ind) const;
+        TensorDomain intersection(const TensorDomain& other) const;
     private:
         std::vector< Domain > allDomains;
+        std::vector< Argument > allArguments;
 };
 
 #endif // SWIG
@@ -39,9 +51,19 @@ public:
         TensorDomain();
         TensorDomain(const Domain & allSubDomain);
         TensorDomain(const std::vector< Domain >& allDomain);
+        TensorDomain(const std::vector< Domain >& allDomain, const std::vector< Argument >& args);
+
+        std::vector< spline::Argument > arguments() const;
+        spline::Argument getSubArgument(int index) const;
+        int indexArgument(Argument a) const;
+        bool hasArguments() const;
 
         int n_domains() const;
-        TensorDomain intersection() const;
+        std::vector< Domain > domains() const;
+        Domain domain() const;
+        Domain domain(const Argument& a) const;
+        Domain domain(const Index& ind) const;
+        TensorDomain intersection(const TensorDomain& other) const;
 };
 
 }   // namespace spline

@@ -149,6 +149,10 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, spline::NumericIndex** m);
     bool to_ptr(GUESTOBJECT *p, spline::TensorBasis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Basis** m);
+
+    bool to_ptr(GUESTOBJECT *p, spline::TensorDomain** m);
+    bool to_ptr(GUESTOBJECT *p, spline::Domain** m);
+
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
     bool to_ptr(GUESTOBJECT *p, spline::Function** m);
@@ -159,6 +163,10 @@ using namespace spline;
     GUESTOBJECT * from_ptr(const AnyVector *a);
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
     GUESTOBJECT * from_ptr(const spline::Basis *a);
+
+    GUESTOBJECT * from_ptr(const spline::TensorDomain *a);
+    GUESTOBJECT * from_ptr(const spline::Domain *a);
+
     GUESTOBJECT * from_ptr(const spline::Coefficient *a);
     GUESTOBJECT * from_ptr(const spline::Function *a);
     GUESTOBJECT *from_ptr(const DT *a);
@@ -201,6 +209,36 @@ using namespace spline;
       }
       return false;
     }
+
+    bool to_ptr(GUESTOBJECT *p, spline::Domain** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::Domain*), 0))) {
+        return true;
+      }
+      return false;
+    }
+    bool to_ptr(GUESTOBJECT *p, spline::TensorDomain** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::TensorDomain*), 0))) {
+        return true;
+      }
+
+      {
+        std::vector<Domain> tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+      return false;
+    }
+
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m) {
       // Treat Null
       if (is_null(p)) return false;
@@ -697,6 +735,20 @@ using namespace spline;
     GUESTOBJECT* from_ptr(const spline::TensorBasis *a) {
       return SWIG_NewPointerObj(new spline::TensorBasis(*a), $descriptor(spline::TensorBasis *), SWIG_POINTER_OWN);
     }
+
+    GUESTOBJECT* from_ptr(const spline::Domain *a) {
+      if (dynamic_cast<const spline::IntervalNode*>(a->get())) {;
+        const spline::IntervalNode * b = dynamic_cast<const spline::IntervalNode*>(a->get());
+        return SWIG_NewPointerObj(new spline::Interval(b->shared_from_this<spline::Interval>()), $descriptor(spline::Interval *), SWIG_POINTER_OWN);
+      } else {
+        return SWIG_NewPointerObj(new spline::Domain(*a), $descriptor(spline::Domain *), SWIG_POINTER_OWN);
+      }
+    }
+    GUESTOBJECT* from_ptr(const spline::TensorDomain *a) {
+      return SWIG_NewPointerObj(new spline::TensorDomain(*a), $descriptor(spline::TensorDomain *), SWIG_POINTER_OWN);
+    }
+
+
     GUESTOBJECT* from_ptr(const spline::Argument *a) {
       return SWIG_NewPointerObj(new spline::Argument(*a), $descriptor(spline::Argument *), SWIG_POINTER_OWN);
     }
@@ -799,6 +851,12 @@ using namespace spline;
 %casadi_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
 %casadi_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
 %casadi_typemaps("Basis", PREC_MX, spline::Basis)
+
+%casadi_typemaps("Domain", PREC_MX, spline::Domain)
+%casadi_typemaps("TensorDomain", PREC_MX, spline::TensorDomain)
+%casadi_typemaps("[TensorDomain]", PREC_MXVector, std::vector< spline::TensorDomain >)
+%casadi_typemaps("[Domain]", PREC_MXVector, std::vector< spline::Domain >)
+
 %casadi_typemaps("Coefficient", PREC_MX, spline::Coefficient)
 %casadi_typemaps("TensorBasis", PREC_MX, spline::TensorBasis)
 %casadi_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)

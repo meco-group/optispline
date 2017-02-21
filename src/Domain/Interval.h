@@ -16,12 +16,15 @@ class Interval;
 
 class IntervalNode : public DomainNode {
     public:
-        virtual Domain intersection(const Domain & dom) const = 0;
-        virtual Domain intersection(const Interval & dom) const = 0;
+        IntervalNode(const std::vector<AnyScalar>& data);
 
+        virtual Domain intersection(const Domain & dom) const;
+        virtual Domain intersection(const Interval & dom) const override;
+        AnyScalar min() const;
+        AnyScalar max() const;
         virtual std::string getRepresentation() const ;
     private:
-        float data; //RUBEN
+        std::vector<AnyScalar> data;
 };
 
 #endif // SWIG
@@ -33,6 +36,11 @@ public:
         IntervalNode* get() const;
         IntervalNode* operator->() const;
 #endif // SWIG
+        Interval();
+        Interval(const AnyScalar& min, const AnyScalar& max);
+        Interval(const std::vector<AnyScalar>& data);
+        AnyScalar min() const;
+        AnyScalar max() const;
 
 //RUBEN ik denk dat de volgende code niet nodig is voor een output te geven
 /* #ifndef SWIG */
