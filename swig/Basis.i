@@ -152,7 +152,8 @@ using namespace spline;
 
     bool to_ptr(GUESTOBJECT *p, spline::TensorDomain** m);
     bool to_ptr(GUESTOBJECT *p, spline::Domain** m);
-
+    bool to_ptr(GUESTOBJECT *p, spline::Interval** m);
+    
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
     bool to_ptr(GUESTOBJECT *p, spline::Function** m);
@@ -166,7 +167,8 @@ using namespace spline;
 
     GUESTOBJECT * from_ptr(const spline::TensorDomain *a);
     GUESTOBJECT * from_ptr(const spline::Domain *a);
-
+    GUESTOBJECT * from_ptr(const spline::Interval *a);
+    
     GUESTOBJECT * from_ptr(const spline::Coefficient *a);
     GUESTOBJECT * from_ptr(const spline::Function *a);
     GUESTOBJECT *from_ptr(const DT *a);
@@ -210,6 +212,23 @@ using namespace spline;
       return false;
     }
 
+    bool to_ptr(GUESTOBJECT *p, spline::Interval** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::Interval*), 0))) {
+        return true;
+      }
+      {
+        std::vector<AnyScalar> tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = tmp;
+          return true;
+        }
+      }
+      return false;
+    }
     bool to_ptr(GUESTOBJECT *p, spline::Domain** m) {
       // Treat Null
       if (is_null(p)) return false;
@@ -854,8 +873,8 @@ using namespace spline;
 
 %casadi_typemaps("Domain", PREC_MX, spline::Domain)
 %casadi_typemaps("TensorDomain", PREC_MX, spline::TensorDomain)
-%casadi_typemaps("[TensorDomain]", PREC_MXVector, std::vector< spline::TensorDomain >)
-%casadi_typemaps("[Domain]", PREC_MXVector, std::vector< spline::Domain >)
+%casadi_template("[TensorDomain]", PREC_MXVector, std::vector< spline::TensorDomain >)
+%casadi_template("[Domain]", PREC_MXVector, std::vector< spline::Domain >)
 
 %casadi_typemaps("Coefficient", PREC_MX, spline::Coefficient)
 %casadi_typemaps("TensorBasis", PREC_MX, spline::TensorBasis)
@@ -903,8 +922,8 @@ using namespace spline;
 
 %include <src/Coefficients/Coefficient.h>
 
-%include <src/Domain/Interval.h>
 %include <src/Domain/Domain.h>
+%include <src/Domain/Interval.h>
 %include <src/Domain/TensorDomain.h>
 
 #ifdef SWIGPYTHON
