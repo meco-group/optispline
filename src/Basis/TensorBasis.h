@@ -35,7 +35,7 @@ class TensorBasisNode : public SharedObjectNode {
 
         std::vector< Argument > arguments() const;
 
-        Argument getSubArgument(int index) const;
+        Argument argument(int index) const;
         int indexArgument(Argument a) const;
 
         bool hasArguments() const;
@@ -101,7 +101,7 @@ public:
 
         std::vector< spline::Argument > arguments() const;
 
-        spline::Argument getSubArgument(int index) const;
+        spline::Argument argument(int index) const;
         int indexArgument(Argument a) const;
 
         bool hasArguments() const;

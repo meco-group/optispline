@@ -68,10 +68,10 @@ namespace spline {
         return allArguments;
     }
 
-    spline::Argument TensorBasis::getSubArgument(int index) const {
-        return (*this)->getSubArgument(index);
+    spline::Argument TensorBasis::argument(int index) const {
+        return (*this)->argument(index);
     }
-    Argument TensorBasisNode::getSubArgument(int index) const {
+    Argument TensorBasisNode::argument(int index) const {
         return allArguments[index];
     }
 
