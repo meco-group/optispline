@@ -24,8 +24,8 @@ class MonomialBasis;
 
 class TensorBasisNode : public SharedObjectNode {
     public:
-        TensorBasisNode(const std::vector< Basis >& allSubBasis);
-        TensorBasisNode(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args);
+        TensorBasisNode(const std::vector< Basis >& bases_);
+        TensorBasisNode(const std::vector< Basis >& bases_, const std::vector< Argument >& args);
 
         virtual std::string type() const {return "TensorBasis";}
 
@@ -69,7 +69,7 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
 
     // protected:
-        std::vector< Basis > allSubBasis;
+        std::vector< Basis > bases_;
         std::vector< Argument > allArguments;
 
 
@@ -86,11 +86,11 @@ public:
 
 #endif // SWIG
         TensorBasis();
-        TensorBasis(const Basis& allSubBasis);
-        TensorBasis(const Basis& allSubBasis, const Argument& args);
+        TensorBasis(const Basis& bases_);
+        TensorBasis(const Basis& bases_, const Argument& args);
         TensorBasis(const TensorBasis& tensor, const std::vector< Argument >& args);
-        TensorBasis(const std::vector< Basis >& allSubBasis);
-        TensorBasis(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args);
+        TensorBasis(const std::vector< Basis >& bases_);
+        TensorBasis(const std::vector< Basis >& bases_, const std::vector< Argument >& args);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
 
         std::string type() const;
