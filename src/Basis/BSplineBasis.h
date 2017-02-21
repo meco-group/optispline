@@ -16,7 +16,6 @@ namespace spline{
 
     class BSplineEvaluator : public casadi::FunctionInternal {
     public:
-
       static casadi::Function create(const std::string &name, int n_knots, int degree, const Dict& opts=Dict());
 
       BSplineEvaluator(const std::string &name, int n_knots, int degree);
@@ -96,6 +95,8 @@ namespace spline{
 
     public:
         BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree);
+
+        virtual std::string type() const override {return "BSplineBasis";}
 
         virtual Basis operator+(const MonomialBasis& other) const override;
         virtual Basis operator+(const BSplineBasis& other) const override;

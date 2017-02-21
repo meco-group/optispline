@@ -22,6 +22,8 @@ namespace spline {
 
     class BasisNode : public SharedObjectNode {
     public:
+        virtual std::string type() const {return "Basis";}
+
         virtual Basis operator+(const Basis& rhs) const = 0;
         virtual Basis operator+(const EmptyBasis& rhs) const;
         virtual Basis operator+(const MonomialBasis& rhs) const = 0;

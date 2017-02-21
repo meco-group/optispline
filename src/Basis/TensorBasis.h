@@ -27,6 +27,8 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasisNode(const std::vector< Basis >& allSubBasis);
         TensorBasisNode(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args);
 
+        virtual std::string type() const {return "TensorBasis";}
+
         int n_basis() const;
         std::vector<int> dimension() const;
         int n_inputs() const;
@@ -69,6 +71,8 @@ class TensorBasisNode : public SharedObjectNode {
     // protected:
         std::vector< Basis > allSubBasis;
         std::vector< Argument > allArguments;
+
+
 };
 
 #endif // SWIG
@@ -88,6 +92,8 @@ public:
         TensorBasis(const std::vector< Basis >& allSubBasis);
         TensorBasis(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
+
+        std::string type() const;
 
         int n_basis() const;  // Number of bases, building up the TensorBasis
         int n_inputs() const; // Total number of inputs, over all bases

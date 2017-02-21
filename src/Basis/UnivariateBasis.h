@@ -18,6 +18,8 @@ namespace spline {
     public:
         UnivariateBasisNode(int degree);
 
+        virtual std::string type() const override {return "UnivariateBasis";}
+
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const = 0;
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const = 0;
 

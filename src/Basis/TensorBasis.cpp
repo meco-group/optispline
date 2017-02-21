@@ -46,10 +46,11 @@ namespace spline {
         assign_node(new TensorBasisNode(allSubBasis, args));
     }
 
-
     TensorBasisNode::TensorBasisNode(const std::vector< Basis >& allSubBasis_)
       : allSubBasis(allSubBasis_), allArguments(std::vector<Argument>{})
       {}
+
+    std::string TensorBasis::type() const { return (*this)->type(); }
 
     TensorBasisNode::TensorBasisNode(const std::vector< Basis >& allSubBasis_, const std::vector< Argument >& args) :
         allSubBasis(allSubBasis_), allArguments(args)

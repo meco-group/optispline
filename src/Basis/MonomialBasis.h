@@ -18,6 +18,8 @@ namespace spline{
     public:
         MonomialBasisNode(int degree) : UnivariateBasisNode(degree) {};
 
+        virtual std::string type() const override {return "MonomialBasis";}
+
         virtual Basis operator+(const MonomialBasis& other) const override;
         virtual Basis operator+(const BSplineBasis& other) const override;
         virtual Basis operator+(const Basis& other) const override;
