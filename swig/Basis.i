@@ -153,7 +153,7 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, spline::TensorDomain** m);
     bool to_ptr(GUESTOBJECT *p, spline::Domain** m);
     bool to_ptr(GUESTOBJECT *p, spline::Interval** m);
-    
+
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
     bool to_ptr(GUESTOBJECT *p, spline::Function** m);
@@ -168,7 +168,7 @@ using namespace spline;
     GUESTOBJECT * from_ptr(const spline::TensorDomain *a);
     GUESTOBJECT * from_ptr(const spline::Domain *a);
     GUESTOBJECT * from_ptr(const spline::Interval *a);
-    
+
     GUESTOBJECT * from_ptr(const spline::Coefficient *a);
     GUESTOBJECT * from_ptr(const spline::Function *a);
     GUESTOBJECT *from_ptr(const DT *a);
@@ -855,6 +855,8 @@ using namespace spline;
 
 
 %casadi_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
+%casadi_template("[[AnyScalar]]", PREC_SXVector, std::vector< std::vector< AnyScalar > >)
+%casadi_typemaps("AnyScalar", PREC_MX, AnyScalar)
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
 %casadi_template("[AnyTensor]", PREC_MX, std::vector<AnyTensor>)
 %casadi_typemaps("AnyVector", PREC_MX, AnyVector)

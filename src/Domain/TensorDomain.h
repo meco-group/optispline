@@ -7,6 +7,7 @@
 #include <any_tensor.hpp>
 
 #include "Domain.h"
+#include "Interval.h"
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 #include "../Function/Argument.h"
@@ -52,6 +53,8 @@ public:
         TensorDomain(const Domain & allSubDomain);
         TensorDomain(const std::vector< Domain >& allDomain);
         TensorDomain(const std::vector< Domain >& allDomain, const std::vector< Argument >& args);
+        TensorDomain(const std::vector< std::vector<AnyScalar> >& intervals);
+        // TensorDomain(const std::vector< std::vector< AnyScalar > >& intervals, const std::vector< Argument >& args);
 
         std::vector< spline::Argument > arguments() const;
         spline::Argument getSubArgument(int index) const;
