@@ -131,7 +131,7 @@ namespace spline{
 
     private:
         std::vector<AnyScalar> knots_;
-        mutable Function bspline_evaluator_;
+        mutable casadi::Function bspline_evaluator_;
     };
 
 #endif // SWIG

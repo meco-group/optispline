@@ -189,6 +189,19 @@ class Test_Basis_Basis(BasisTestCase):
         self.assertEqual(db1.degree(),db11.degree())
         self.assertEqual(db0.degree(),db00.degree())
 
+    def test_basis_functions(self):
+        knots = [0,0,0.2,0.8,1,1]
+        degree = 1
+        b = BSplineBasis(knots, degree)
+        f = b.basis_functions()
+
+        self.assertEqualT(f.shape,[4,1])
+        self.assertEqualT(f(0).T,[[1,0,0,0]])
+        self.assertEqualT(f(0.2).T,[[0,1,0,0]])
+        self.assertEqualT(f(0.8).T,[[0,0,1,0]])
+        self.assertEqualT(f(1).T,[[0,0,0,1]])
+        self.assertEqualT(f(0.5).T,[[0,0.5,0.5,0]])
+
 # TODO constructor
     # def test_getEvaluation1(self):
     # def test_getEvaluation2(self):

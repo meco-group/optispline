@@ -1,5 +1,6 @@
 #include "Basis.h"
 #include "operations/operationsBasis.h"
+#include "../Function/Function.h"
 #include "../common.h"
 
 namespace spline {
@@ -64,6 +65,15 @@ namespace spline {
 
     Basis Basis::midpoint_refinement(int refinement, AnyTensor& T) const {
         return (*this)->midpoint_refinement(refinement, T);
+    }
+
+    Function BasisNode::basis_functions() const {
+        AnyTensor t = DT(DM::densify(DM::eye(dimension())));
+        return Function(shared_from_this<Basis>(), Coefficient(t));
+    }
+    
+    Function Basis::basis_functions() const {
+        return (*this)->basis_functions();
     }
 
 

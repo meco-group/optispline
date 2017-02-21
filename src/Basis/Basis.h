@@ -17,6 +17,7 @@ namespace spline {
     class EmptyBasis;
     class BSplineBasis;
     class MonomialBasis;
+    class Function;
 
 #ifndef SWIG
 
@@ -52,6 +53,7 @@ namespace spline {
 
         virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const;
         virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const;
+        spline::Function basis_functions() const;
 
     };
 
@@ -81,6 +83,7 @@ namespace spline {
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;
         Basis midpoint_refinement(int refinement, AnyTensor& SWIG_OUTPUT(T)) const;
+        spline::Function basis_functions() const;
 
         int dimension() const;
         int n_inputs() const;

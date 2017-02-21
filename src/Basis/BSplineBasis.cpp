@@ -46,7 +46,7 @@ namespace spline {
       alloc_w((degree_+1)*(n_knots_-1), true);
     }
 
-    Function BSplineEvaluator::getFullJacobian(const std::string& name, const Dict& opts) {
+    casadi::Function BSplineEvaluator::getFullJacobian(const std::string& name, const Dict& opts) {
       int n = n_knots_ - degree_ - 1;
       MX knots = MX::sym("knots", n_knots_);
       MX x = MX::sym("x");
@@ -60,12 +60,12 @@ namespace spline {
       MX delta_knots_inv = 1/delta_knots;
       MX T = MX(sp_diag, -delta_knots_inv) + MX(sp_band, delta_knots_inv);
 
-      Function bspline_evaluator = BSplineEvaluator::create("f", n_knots_-2, degree_-1);
+      casadi::Function bspline_evaluator = BSplineEvaluator::create("f", n_knots_-2, degree_-1);
 
       MX res = bspline_evaluator({knots(range(1, n_knots_-1)), x})[0];
 
       MX J = mtimes(T.T(), res);
-      return Function("J", {knots, x}, { horzcat(MX(n, n_knots_), degree_*J) });
+      return casadi::Function("J", {knots, x}, { horzcat(MX(n, n_knots_), degree_*J) });
     }
 
     void BSplineEvaluator::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, int mem) {
