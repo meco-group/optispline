@@ -8,8 +8,8 @@
 #include <casadi/casadi.hpp>
 #include "tensor_exception.hpp"
 
+// using namespace std;
 using namespace casadi;
-using namespace std;
 
 template <class T>
 std::vector<T> reorder(const std::vector<T>& data, const std::vector<int>& order) {
@@ -517,8 +517,8 @@ class Tensor {
     const Tensor& a = *this;
 
     //assert(a.dims(0)==b.dims(0));
-    int shared_dim = min(a.n_dims(), b.n_dims());
-    int max_dim    = max(a.n_dims(), b.n_dims());
+    int shared_dim = std::min(a.n_dims(), b.n_dims());
+    int max_dim    = std::max(a.n_dims(), b.n_dims());
     std::vector<int> common = mrange(shared_dim);
 
     std::vector<int> c_r = mrange(shared_dim, max_dim);
