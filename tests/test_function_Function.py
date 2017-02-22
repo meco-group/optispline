@@ -393,17 +393,17 @@ class Test_Function_Function(BasisTestCase):
 
         f12.integral([[0., 0.5], [0.1, 0.4]])
         f2.integral([0.,0.5])
-        # # print f1.integral(TensorDomain(Interval([0., 0.5])))
-        # print f3.integral()
-        # f_antider = f3.antiderivative()
-        # print f_antider(1)
+        print f1.integral(TensorDomain(Interval([0., 0.5])))
+        print f3.integral()
+        f_antider = f3.antiderivative()
+        print f_antider(1)
 
-        # f_antider = f2.antiderivative([1, 1], ['x', 'y'])
-        # print f_antider(1,1)
-        # print f_antider(2,2)
+        f_antider = f2.antiderivative([1, 1], ['x', 'y'])
+        print f_antider(1,1)
+        print f_antider(2,2)
 
 
-        # f2.integral([0, 0], [1, 1])
+        f2.integral([0, 0], [1, 1])
 
 
 if __name__ == '__main__':

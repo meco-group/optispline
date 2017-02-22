@@ -223,7 +223,7 @@ using namespace spline;
       }
       {
         std::vector<AnyScalar> tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
+        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.size()==2)) {
           if (m) **m = tmp;
           return true;
         }
@@ -237,6 +237,13 @@ using namespace spline;
       if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
                                     $descriptor(spline::Domain*), 0))) {
         return true;
+      }
+      {
+        Interval tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = tmp;
+          return true;
+        }
       }
       return false;
     }
@@ -256,6 +263,14 @@ using namespace spline;
           return true;
         }
       }
+      {
+        Domain tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+      
       return false;
     }
 
