@@ -120,7 +120,7 @@ class Test_Basis_Basis(BasisTestCase):
         self.assertFalse(b.hasArguments())
 
     def test_hasArgument2(self):
-        a = Argument()
+        a = "a"
         b = TensorBasis()
         s1 = MonomialBasis(2)
         b = b.add_basis(s1)
@@ -142,7 +142,7 @@ class Test_Basis_Basis(BasisTestCase):
         p = b.basis(1)
         self.assertEqual( p.degree(), 3)
 
-        p = b.basis("x")
+        # p = b.basis("x")
 
         s1 = MonomialBasis(2)
         s2 = MonomialBasis(3)
