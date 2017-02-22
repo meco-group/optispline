@@ -59,6 +59,39 @@ namespace spline {
     AnyTensor Coefficient::data() const  { return (*this)->data(); }
     std::string Coefficient::getRepresentation() const { return (*this)->getRepresentation(); }
 
+    AnyTensor Coefficient::transform(const AnyTensor& T) const {
+        std::vector< NumericIndex > direction = NumericIndex::as_numeric_index(range(T.n_dims()/2));
+        return (*this)->transform(T, direction);
+    }
+
+    AnyTensor Coefficient::transform(const AnyTensor& T, const std::vector< NumericIndex > direction) const {
+        return (*this)->transform(T, direction);
+    }
+
+    AnyTensor CoefficientNode::transform(const AnyTensor& T, const std::vector< NumericIndex > direction) const {
+        //check dimensions
+        int n = T.n_dims()/2; 
+        tensor_assert_message(T.n_dims()%2 == 0, "The transform tensor should have an even number of dimensions");
+        tensor_assert_message(n == direction.size(), "Number of directions does not match the number of dimensions.");
+        //do einstein
+        std::vector< int > index_t = mrange(2*n);
+        std::vector< int > index_c = mrange(2*n, 2*n+data().n_dims());
+        std::vector< int > index_r = mrange(0, 2*n+data().n_dims());
+        index_r.erase(index_r.begin()+n, index_r.begin()+2*n);
+
+        //scramble indices
+        for (int i = 0; i < direction.size(); i++) {
+            tensor_assert_message(direction[i] < n, "Direction of the transform should be smaller than the transform dimension/2");
+            tensor_assert_message(T.dims()[n+i] == dimension()[direction[i]], "Transformation matrix dimensions mismatch. For direction " << direction[i] << ": " << T.dims()[n+i] << " is not equal to " << dimension()[direction[i]] << ".");
+
+            index_c[direction[i]] = index_t[n+i];
+            index_r.erase(index_r.begin()+n+direction[i]);
+        }
+
+        // Do crazy tensor shit
+        return T.einstein(data(), index_t, index_c, index_r);
+    }
+
     AnyTensor Coefficient::transform(const AnyTensor& T, const NumericIndex& directions) const {
         return (*this)->transform(std::vector<AnyTensor>{T}, std::vector<NumericIndex>{directions});
     }

@@ -30,7 +30,7 @@ namespace spline {
         std::string getRepresentation() const ;
         void repr() const { userOut() << getRepresentation() << std::endl;}
 
-        AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;
+        AnyTensor transform(const AnyTensor& T, const std::vector< NumericIndex> direction) const;
         AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;
         Coefficient transpose() const;
 
@@ -64,6 +64,8 @@ namespace spline {
         AnyTensor data() const;
         std::string getRepresentation() const;
         /// Transform a direction of the coeffient's data tensor using given transformation matrix
+        AnyTensor transform(const AnyTensor& T) const;
+        AnyTensor transform(const AnyTensor& T, const std::vector< NumericIndex> direction) const;
         AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;
         AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;
         Coefficient transpose() const;

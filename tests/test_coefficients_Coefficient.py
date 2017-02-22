@@ -61,5 +61,18 @@ class Test_Function_SubBasis(BasisTestCase):
             Tf = np.random.rand(2, 3)
             a_cfs.transform(Tf, 0)
 
+    def test_transform2(self):
+        a = np.random.rand(2,2,3)
+        a = Coefficient(a)
+        T = np.random.rand(1,2)
+        
+        aT1 = a.transform(T)
+        aT2 = a.transform(T,0)
+        aT3 = a.transform(T,[0])
+
+        self.assertEqualT(aT1,aT2)
+        self.assertEqualT(aT1,aT3)
+
+
 if __name__ == '__main__':
     unittest.main()
