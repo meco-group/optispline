@@ -127,21 +127,16 @@ namespace spline {
     }
 
     Coefficient Coefficient::cat(const NumericIndex& index,
-          const std::vector< Coefficient >& coefs) const {
-        return (*this)->cat(index, coefs);
-    }
-
-    Coefficient CoefficientNode::cat(const NumericIndex& index,
-          const std::vector< Coefficient >& coefs) const {
-        std::vector< AnyTensor > all_tensor = {data()};
-        for (auto& c : coefs) {
-            tensor_assert_message(shape()[1-index] == c.shape()[1-index],
-              "cat has mismatched coefficients" << shape()[1-index] <<
-              " != " << c.shape()[1-index] << ".");
-            all_tensor.push_back(c.data());
+          const std::vector< Coefficient >& coefs) {
+        Coefficient c = coefs[0];
+        std::vector< AnyTensor > all_tensor = {};
+        for (int i = 0; i< coefs.size(); i++) {
+            tensor_assert_message(c.shape()[1-index] == coefs[i].shape()[1-index],
+              "cat has mismatched coefficients" << c.shape()[1-index] <<
+              " != " << coefs[i].shape()[1-index] << ".");
+            all_tensor.push_back(coefs[i].data());
         }
-
-       return AnyTensor::concat(all_tensor, dimension().size() + index);
+       return AnyTensor::concat(all_tensor, c.dimension().size() + index);
     }
 
 }  // namespace spline

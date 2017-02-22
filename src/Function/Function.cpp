@@ -242,12 +242,12 @@ namespace spline {
         return Function(tensor_basis(), cdiag);
     }
 
-    Function Function::vertcat(const std::vector< spline::Function >& f) const {
-        return cat(0, f);
+    Function Function::vertcat(const std::vector< spline::Function >& f) { 
+        return Function::cat(0, f);
     }
 
-    Function Function::horzcat(const std::vector< spline::Function >& f) const {
-        return cat(1, f);
+    Function Function::horzcat(const std::vector< spline::Function >& f) {
+        return Function::cat(1, f);
     }
 
     Function Function::blkdiag(const std::vector< spline::Function >& f) const {
@@ -466,19 +466,18 @@ namespace spline {
     }
 
     Function Function::cat(const NumericIndex& index,
-          const std::vector< spline::Function >& functions) const {
-        TensorBasis unionBasis = tensor_basis();
-        for (auto& f : functions) {
-            unionBasis = unionBasis + f.tensor_basis();
+          const std::vector< spline::Function >& functions) {
+        TensorBasis unionBasis = functions[0].tensor_basis();  // load first basis
+        for (int i = 1; i< functions.size(); i++) {
+            unionBasis = unionBasis + functions[i].tensor_basis();  // add other bases
         }
 
         std::vector< Coefficient > coefVec;
-        for (auto& f : functions) {
-            coefVec.push_back(f.transform_to(unionBasis).coeff());
+        for (int i = 0; i< functions.size(); i++) {
+            coefVec.push_back(functions[i].transform_to(unionBasis).coeff());
         }
 
-        Coefficient coef = this->transform_to(unionBasis).coeff();
-        return Function(unionBasis, coef.cat(index, coefVec));
+        return Function(unionBasis, Coefficient::cat(index, coefVec));
     }
 
     Function Function::slice(const std::vector<NumericIndex>& i,

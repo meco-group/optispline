@@ -34,7 +34,6 @@ namespace spline {
         AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;
         Coefficient transpose() const;
 
-        Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const;
     private:
         AnyTensor data_;
 
@@ -67,7 +66,7 @@ namespace spline {
         AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;
         AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;
         Coefficient transpose() const;
-        Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs) const;
+        static Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs);
     };
 } // namespace spline
 

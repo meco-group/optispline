@@ -48,8 +48,9 @@ class Function {
         Function transpose() const;
         Function trace() const;
 
-        Function vertcat(const std::vector< spline::Function >& f) const;
-        Function horzcat(const std::vector< spline::Function >& f) const;
+        static Function vertcat(const std::vector< spline::Function >& f);
+        static Function horzcat(const std::vector< spline::Function >& f);
+        static Function cat(const NumericIndex& index, const std::vector< spline::Function >& f);
         Function blkdiag(const std::vector< spline::Function >& f) const;
 
         Basis basis() const;
@@ -106,7 +107,6 @@ class Function {
 
         Function transform_to(const TensorBasis& basis) const;
 
-        Function cat(const NumericIndex& index, const std::vector< spline::Function >& f) const;
     public:
         TensorBasis basis_;
         Coefficient coeff_;
