@@ -13,7 +13,7 @@ namespace spline {
     }
 
     CoefficientNode::CoefficientNode(const std::vector< double >& v) :
-        data_(DT(DM(v), std::vector<int>{static_cast<int>(v.size()), 1, 1})) {
+        data_(DT(v, std::vector<int>{static_cast<int>(v.size()), 1, 1})) {
     }
 
     std::vector< int > Coefficient::dimension() const { return (*this)->dimension(); }

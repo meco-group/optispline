@@ -28,7 +28,7 @@ namespace spline {
         // Coefficient operator+ (Coefficient & other) const;
         AnyTensor data() const {return data_;}
         std::string getRepresentation() const ;
-        void repr() const { userOut() << getRepresentation() << std::endl;}
+        void repr() const { casadi::userOut() << getRepresentation() << std::endl;}
 
         AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;
         AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;

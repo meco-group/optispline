@@ -69,10 +69,10 @@ namespace spline {
         return basis_(x).inner(coeff().data());
     }
 
-    MX Function::operator<=(const MX& x) const {
+    casadi::MX Function::operator<=(const casadi::MX& x) const {
       return coeff().data().as_MT().data()<=x;
     }
-    MX Function::operator>=(const MX& x) const {
+    casadi::MX Function::operator>=(const casadi::MX& x) const {
       return coeff().data().as_MT().data()>=x;
     }
 
@@ -233,7 +233,7 @@ namespace spline {
         spline_assert_message(shape_[0] == shape_[1],
             "Trace only defined for square matrices. Dimensions are " << shape_ << ".");
 
-        AnyTensor t = DT(DM::densify(DM::eye(shape_[0])));
+        AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(shape_[0])));
         Function fdiag = operator*(t); //keep diagonal entries only
 
         Coefficient cdiag = fdiag.coeff();

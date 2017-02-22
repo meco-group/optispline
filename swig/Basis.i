@@ -957,12 +957,12 @@ using namespace spline;
 %include <tensor.hpp>
 %include <slice.hpp>
 
-%template(DTensor) Tensor<DM>;
-%template(STensor) Tensor<SX>;
-%template(MTensor) Tensor<MX>;
+%template(DTensor) Tensor<casadi::DM>;
+%template(STensor) Tensor<casadi::SX>;
+%template(MTensor) Tensor<casadi::MX>;
 
-%template(STensorVector) std::vector< Tensor<SX> >;
-%template(MTensorVector) std::vector< Tensor<MX> >;
+%template(STensorVector) std::vector< Tensor<casadi::SX> >;
+%template(MTensorVector) std::vector< Tensor<casadi::MX> >;
 
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/Basis.h>
