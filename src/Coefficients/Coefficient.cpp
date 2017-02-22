@@ -13,7 +13,7 @@ namespace spline {
     }
 
     CoefficientNode::CoefficientNode(const std::vector< double >& v) :
-        data_(DT(DM(v), std::vector<int>{static_cast<int>(v.size()), 1, 1})) {
+        data_(DT(v, std::vector<int>{static_cast<int>(v.size()), 1, 1})) {
     }
 
     std::vector< int > Coefficient::dimension() const { return (*this)->dimension(); }
@@ -60,7 +60,7 @@ namespace spline {
     std::string Coefficient::getRepresentation() const { return (*this)->getRepresentation(); }
 
     AnyTensor Coefficient::transform(const AnyTensor& T) const {
-        std::vector< NumericIndex > direction = NumericIndex::as_numeric_index(range(T.n_dims()/2));
+        std::vector< NumericIndex > direction = NumericIndex::as_numeric_index(casadi::range((int)T.n_dims()/2));
         return (*this)->transform(T, direction);
     }
 

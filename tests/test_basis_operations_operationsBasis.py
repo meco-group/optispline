@@ -33,9 +33,9 @@ if __name__ == '__main__':
     print b.bases()
 
 
-    x1 = Argument('x1')
-    x2 = Argument('x2')
-    x3 = Argument('x3')
+    x1 = 'x1'
+    x2 = 'x2'
+    x3 = 'x3'
 
     b1 = TensorBasis(b1, [x1,x2])
     b2 = TensorBasis(b2, [x2,x1])
