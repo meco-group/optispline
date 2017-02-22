@@ -986,6 +986,14 @@ using namespace spline;
 #ifdef SWIGPYTHON
 %rename(call) spline::Function::operator();
 %rename(_shape) spline::Function::shape;
+%rename(_vertcat) spline::spline_vertcat;
+%rename(_horzcat) spline::spline_horzcat;
+%pythoncode %{
+  def vertcat(*args):
+    return _vertcat(args)
+  def horzcat(*args):
+    return _horzcat(args)
+%}
 #endif
 
 #ifdef SWIGMATLAB
@@ -1097,6 +1105,10 @@ namespace spline {
     Function spline_times(const AnyTensor& lhs, const Function& rhs) { return rhs*lhs; }
     Function spline_mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.rmtimes(lhs); }
     Function spline_rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
+
+    Function spline_vertcat(const std::vector<spline::Function>& args) { return Function::vertcat(args); }
+    Function spline_horzcat(const std::vector<spline::Function>& args) { return Function::horzcat(args); }
+
   }
 }
 
