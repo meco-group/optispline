@@ -382,6 +382,7 @@ using namespace spline;
           return true;
         }
       }
+      return false;
     }
 
     bool to_ptr(GUESTOBJECT *p, DT** m) {
@@ -947,9 +948,11 @@ using namespace spline;
 %casadi_typemaps("Basis", PREC_MX, spline::Basis)
 
 %casadi_typemaps("Domain", PREC_MX, spline::Domain)
+%casadi_typemaps("interval", PREC_MX, spline::Interval)
 %casadi_typemaps("TensorDomain", PREC_MX, spline::TensorDomain)
 %casadi_template("[TensorDomain]", PREC_MXVector, std::vector< spline::TensorDomain >)
 %casadi_template("[Domain]", PREC_MXVector, std::vector< spline::Domain >)
+%casadi_template("[interval]", PREC_MXVector, std::vector< spline::Interval >)
 
 %casadi_typemaps("Coefficient", PREC_MX, spline::Coefficient)
 %casadi_typemaps("TensorBasis", PREC_MX, spline::TensorBasis)

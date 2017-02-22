@@ -11,7 +11,7 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(3)
         b = TensorBasis([m])
         f = Function(b,a)
-        
+
         with self.assertRaises(Exception):
           f(np.array([2.0,4.0]))
 
@@ -159,40 +159,40 @@ class Test_Function_Function(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), float(s2_ev(knots_add, i)), 1e-6)
 
-    # def test_insert_knots_multivariate(self):
-    #     np.random.seed(0)
-    #     d1 = 3
-    #     nki1 = 8
-    #     k1 = np.r_[np.zeros(d1),np.linspace(0., 1., nki1), np.ones(d1)]
-    #     b1 = BSplineBasis(k1, d1)
-    #     ka1 = np.random.rand(2)
-    #     k1a = np.sort(np.r_[k1, ka1])
-    #     d2 = 2
-    #     nki2 = 5
-    #     k2 = np.r_[np.zeros(d2),np.linspace(0., 1., nki2), np.ones(d2)]
-    #     b2 = BSplineBasis(k2, d2)
-    #     ka2 = np.random.rand(3)
-    #     k2a = np.sort(np.r_[k2, ka2])
-    #     d3 = 6
-    #     b3 = MonomialBasis(d3)
-    #     B = TensorBasis([b1,b2,b3], ['x', 'y', 'z'])
-    #     dims = B.dimension()
-    #     C = np.random.rand(dims[0], dims[1], dims[2])
-    #     f = Function(B,C)
-    #     f_a1 = f.insert_knots(ka1, 0)
-    #     f_a12 = f.insert_knots([ka1,ka2], ['x', 'y'])
-    #     b1_2 = f_a12.basis(0)
-    #     b2_2 = f_a12.basis(1)
-    #     self.assertEqualT(k1a, b1_2.knots(), 1e-6)
-    #     self.assertEqualT(d1, b1_2.degree(), 1e-6)
-    #     self.assertEqualT(k2a, b2_2.knots(), 1e-6)
-    #     self.assertEqualT(d2, b2_2.degree(), 1e-6)
-    #     g1_2 = b1_2.greville()
-    #     g2_2 = b2_2.greville()
-    #     for i in g1_2:
-    #         for j in g2_2:
-    #             for k in np.linspace(0, 1, d3+1):
-    #                 self.assertEqualT(f(i,j,k), f_a12(i,j,k), 1e-6)
+    def test_insert_knots_multivariate(self):
+        np.random.seed(0)
+        d1 = 3
+        nki1 = 8
+        k1 = np.r_[np.zeros(d1),np.linspace(0., 1., nki1), np.ones(d1)]
+        b1 = BSplineBasis(k1, d1)
+        ka1 = np.random.rand(2)
+        k1a = np.sort(np.r_[k1, ka1])
+        d2 = 2
+        nki2 = 5
+        k2 = np.r_[np.zeros(d2),np.linspace(0., 1., nki2), np.ones(d2)]
+        b2 = BSplineBasis(k2, d2)
+        ka2 = np.random.rand(3)
+        k2a = np.sort(np.r_[k2, ka2])
+        d3 = 6
+        b3 = MonomialBasis(d3)
+        B = TensorBasis([b1,b2,b3], ['x', 'y', 'z'])
+        dims = B.dimension()
+        C = np.random.rand(dims[0], dims[1], dims[2])
+        f = Function(B,C)
+        f_a1 = f.insert_knots(ka1, 0)
+        f_a12 = f.insert_knots([ka1,ka2], ['x', 'y'])
+        b1_2 = f_a12.basis(0)
+        b2_2 = f_a12.basis(1)
+        self.assertEqualT(k1a, b1_2.knots(), 1e-6)
+        self.assertEqualT(d1, b1_2.degree(), 1e-6)
+        self.assertEqualT(k2a, b2_2.knots(), 1e-6)
+        self.assertEqualT(d2, b2_2.degree(), 1e-6)
+        g1_2 = b1_2.greville()
+        g2_2 = b2_2.greville()
+        for i in g1_2:
+            for j in g2_2:
+                for k in np.linspace(0, 1, d3+1):
+                    self.assertEqualT(f(i,j,k), f_a12(i,j,k), 1e-6)
 
     def test_midpoint_refinement(self):
         np.random.seed(0)
@@ -212,15 +212,6 @@ class Test_Function_Function(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
-    # def test_insert_knots_multivariate(self):
-    #     return
-    #     np.random.seed(0)
-    #     degree = 3
-    #     knotsint = 8
-    #     knots = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
-    #     bs = BSplineBasis(knots,degree)
-    #     bm = MonomialBasis(degree)
-    #     b = TensorBasis([m])
 
     def test_derivative_multivariate(self):
         d0 = 4
@@ -313,37 +304,35 @@ class Test_Function_Function(BasisTestCase):
         f.antiderivative([n0, n1], ['x', 'y'])
         f.derivative(n0)
 
-    # def test_jacobian(self):
-    #    if valgrind: return
-    #    d0 = 4
-    #    k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,7),np.ones(d0)]
-    #    b0 = BSplineBasis(k0,d0)
-    #    g0 = np.sort(np.r_[b0.greville(), b0.derivative()[0].greville()])
+    def test_jacobian(self):
+       if valgrind: return
+       d0 = 4
+       k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,7),np.ones(d0)]
+       b0 = BSplineBasis(k0,d0)
+       g0 = np.sort(np.r_[b0.greville(), b0.derivative()[0].greville()])
 
-    #    d1 = 6
-    #    k1 = np.r_[np.zeros(d1),np.linspace(0.,1.,7),np.ones(d1)]
-    #    b1 = BSplineBasis(k1,d1)
-    #    g1 = np.sort(np.r_[b1.greville(), b1.derivative()[0].greville()])
+       d1 = 6
+       k1 = np.r_[np.zeros(d1),np.linspace(0.,1.,7),np.ones(d1)]
+       b1 = BSplineBasis(k1,d1)
+       g1 = np.sort(np.r_[b1.greville(), b1.derivative()[0].greville()])
 
-    #    d2 = 3
-    #    b2 = MonomialBasis(d2)
-    #    g2 = range(d2+1)
+       d2 = 3
+       b2 = MonomialBasis(d2)
+       g2 = range(d2+1)
 
-    #    c = np.random.rand(b0.dimension(),b1.dimension(),b2.dimension())
-    #    f = Function(TensorBasis([b0,b1,b2]), c)
-    #    Jf = f.jacobian()
+       c = np.random.rand(b0.dimension(),b1.dimension(),b2.dimension())
+       f = Function(TensorBasis([b0,b1,b2]), c)
+       Jf = f.jacobian()
 
-    #    x = casadi.SX.sym('x',3)
-    #    f_c = f(x[0], x[1], x[2])
-    #    Jf_c = casadi.jacobian(f_c, x)
-    #    Jf_c = casadi.Function('Jf_c', [x], [Jf_c])
-
-    #    for i0 in g0:
-    #        for i1 in g1:
-    #            for i2 in g2:
-    #                 for idx in range(len(Jf)):
-    #                     self.assertEqualT(Jf[idx](i0,i1,i2), float(Jf_c([i0,i1,i2])[idx]), 1e-6)
-
+       x = casadi.SX.sym('x',3)
+       f_c = f(x[0], x[1], x[2])
+       Jf_c = casadi.jacobian(f_c, x)
+       Jf_c = casadi.Function('Jf_c', [x], [Jf_c])
+       for i0 in g0:
+           for i1 in g1:
+               for i2 in g2:
+                    for idx in range(len(Jf)):
+                        self.assertEqualT(Jf[idx](i0,i1,i2), float(Jf_c([i0,i1,i2])[idx]), 1e-6)
 
     def test_integral(self):
         np.random.seed(0)
@@ -369,7 +358,7 @@ class Test_Function_Function(BasisTestCase):
         f2 = Function(b2, np.random.rand(b2.dimension()))
         f3 = Function(b3, np.random.rand(b3.dimension()))
         B2 = TensorBasis([b1, b2], ['x', 'y'])
-        B3 = TensorBasis([b1, b3], ['x', 'z'])
+        B3 = TensorBasis([b1, b3], ['x', 'y'])
         C2 = np.random.rand(dims[0], dims[1])
         C3 = np.random.rand(dims[0], dims[2])
         f12 = Function(B2, C2)
@@ -377,34 +366,28 @@ class Test_Function_Function(BasisTestCase):
 
         f1_antider = f1.antiderivative()
         f2_antider = f2.antiderivative()
+        f3_antider = f3.antiderivative()
         f12_antider = f12.antiderivative()
-        f13_antider = f12.antiderivative()
+        f13_antider = f13.antiderivative()
 
         self.assertEqualT(f2.integral(), f2_antider(1.) - f2_antider(0.), 1e-6)
         self.assertEqualT(f3.integral(), inf, 1e-6)
-        self.assertEqualT(f2.integral(), f2_antider(1.) - f2_antider(0.), 1e-6)
         self.assertEqualT(f12.integral(), f12_antider(1., 1.) - f12_antider(0., 0.), 1e-6)
         self.assertEqualT(f13.integral(), inf, 1e-6)
 
-        fv = f1.vertcat([f2])
-        fv = fv.horzcat([fv])
-        print fv(0.5)
-        print fv.integral()
-
-        f12.integral([[0., 0.5], [0.1, 0.4]])
-        f2.integral([0.,0.5])
-        print f1.integral(TensorDomain(Interval([0., 0.5])))
-        print f3.integral()
-        f_antider = f3.antiderivative()
-        print f_antider(1)
-
-        f_antider = f2.antiderivative([1, 1], ['x', 'y'])
-        print f_antider(1,1)
-        print f_antider(2,2)
-
-
-        f2.integral([0, 0], [1, 1])
-
+        self.assertEqualT(f1.integral([0.1, 0.9]), f1_antider(0.9) - f1_antider(0.1), 1e-6)
+        self.assertEqualT(f2.integral([0.1, 0.8]), f2_antider(0.8) - f2_antider(0.1), 1e-6)
+        self.assertEqualT(f3.integral([-2.1, 0.6]), f3_antider(0.6) - f3_antider(-2.1), 1e-6)
+        f12_int1 = f12.integral([[0.1, 0.8], [0.2, 0.9]])
+        f12_int1b = f12.integral(TensorDomain([[0.2, 0.9], [0.1, 0.8]], ['y', 'x']))
+        f12_int2 = f12_antider(0.8, 0.9) - f12_antider(0.8, 0.2) - f12_antider(0.1, 0.9) + f12_antider(0.1, 0.2)
+        self.assertEqualT(f12_int1, f12_int2, 1e-6)
+        self.assertEqualT(f12_int1b, f12_int2, 1e-6)
+        f13_int1 = f13.integral([[0.1, 0.8], [0.2, 0.9]])
+        f13_int2 = f13_antider(0.8, 0.9) - f13_antider(0.8, 0.2) - f13_antider(0.1, 0.9) + f13_antider(0.1, 0.2)
+        self.assertEqualT(f13_int1, f13_int2, 1e-6)
+        fv = f12.vertcat([f13])
+        self.assertEqualT(fv.integral([[0.1, 0.8], [0.2, 0.9]]), np.r_[f12_int2, f13_int2], 1e-6)
 
 if __name__ == '__main__':
     unittest.main()
