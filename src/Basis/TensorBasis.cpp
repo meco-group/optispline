@@ -3,6 +3,7 @@
 #include "BSplineBasis.h"
 #include "../common.h"
 #include "operations/operationsBasis.h"
+#include "../Function/Function.h"
 
 namespace spline {
 
@@ -437,6 +438,18 @@ namespace spline {
             }
             return (*this)->integral(domain, direction_ind);
         }
+    }
+
+    std::vector< Function > TensorBasis::basis_functions() const {
+        return (*this)->basis_functions();
+    }
+
+    std::vector< Function > TensorBasisNode::basis_functions() const {
+        std::vector< Function > basis_functions_;
+        for (int i = 0; i < n_basis(); i++){
+            basis_functions_.push_back(basis(i).basis_functions());
+        }
+        return basis_functions_;
     }
 
 } // namespace spline

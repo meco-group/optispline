@@ -45,28 +45,28 @@ class AnyScalar {
 #endif
     AnyScalar(const AnyScalar& s);
     AnyScalar(double s);
-    AnyScalar(const DM& s);
-    AnyScalar(const SX& s);
-    AnyScalar(const MX& s);
+    AnyScalar(const casadi::DM& s);
+    AnyScalar(const casadi::SX& s);
+    AnyScalar(const casadi::MX& s);
     AnyScalar();
 
 #ifndef SWIG
     explicit operator double() const;
-    explicit operator SX() const;
-    explicit operator MX() const;
+    explicit operator casadi::SX() const;
+    explicit operator casadi::MX() const;
 #endif
 
     double as_double() const { return this->operator double();}
-    SX as_SX() const { return this->operator SX();}
-    MX as_MX() const { return this->operator MX();}
+    casadi::SX as_SX() const { return this->operator casadi::SX();}
+    casadi::MX as_MX() const { return this->operator casadi::MX();}
 
     bool is_double() const;
     bool is_SX() const;
     bool is_MX() const;
 
     static std::vector<double> as_double(const std::vector<AnyScalar>& v);
-    static std::vector<SX> as_SX(const std::vector<AnyScalar>& v);
-    static std::vector<MX> as_MX(const std::vector<AnyScalar>& v);
+    static std::vector<casadi::SX> as_SX(const std::vector<AnyScalar>& v);
+    static std::vector<casadi::MX> as_MX(const std::vector<AnyScalar>& v);
     static TensorType merge(TensorType a, TensorType b);
 
     static AnyScalar min(const AnyScalar& a, const AnyScalar& b);
@@ -115,8 +115,8 @@ class AnyScalar {
     static bool is_MX(const std::vector<AnyScalar>& v) {return type(v)==TENSOR_MX;}
 
     static std::vector<AnyScalar> from_vector(const std::vector<double>& v);
-    static std::vector<AnyScalar> from_vector(const std::vector<SX>& v);
-    static std::vector<AnyScalar> from_vector(const std::vector<MX>& v);
+    static std::vector<AnyScalar> from_vector(const std::vector<casadi::SX>& v);
+    static std::vector<AnyScalar> from_vector(const std::vector<casadi::MX>& v);
 
     #ifndef SWIG
     /// Print a representation of the object to a stream (shorthand)
@@ -138,8 +138,8 @@ class AnyScalar {
   private:
     TensorType t;
     double data_double;
-    SX data_sx;
-    MX data_mx;
+    casadi::SX data_sx;
+    casadi::MX data_mx;
 };
 
 AnyScalar pow(const AnyScalar&x, int i);

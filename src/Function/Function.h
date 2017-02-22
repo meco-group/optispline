@@ -61,13 +61,13 @@ class Function {
 
         AnyTensor data() const {return coeff_tensor().squeeze(); }
 
-        MX operator<=(const MX& x) const;
-        MX operator>=(const MX& x) const;
+        casadi::MX operator<=(const casadi::MX& x) const;
+        casadi::MX operator>=(const casadi::MX& x) const;
 
         bool is_scalar() const { return shape()[0] == 1 && shape()[1] == 1; }
 
         std::string getRepresentation() const;
-        void repr() const { userOut() << getRepresentation() << std::endl;}
+        void repr() const { casadi::userOut() << getRepresentation() << std::endl;}
         // Argument& getArgument (){ return basis().getArgument();}
 
         int n_inputs() const;  // Number of inputs of the function

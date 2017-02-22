@@ -120,7 +120,7 @@ class Test_Basis_Basis(BasisTestCase):
         self.assertFalse(b.hasArguments())
 
     def test_hasArgument2(self):
-        a = Argument()
+        a = "a"
         b = TensorBasis()
         s1 = MonomialBasis(2)
         b = b.add_basis(s1)
@@ -142,7 +142,7 @@ class Test_Basis_Basis(BasisTestCase):
         p = b.basis(1)
         self.assertEqual( p.degree(), 3)
 
-        p = b.basis("x")
+        # p = b.basis("x")
 
         s1 = MonomialBasis(2)
         s2 = MonomialBasis(3)
@@ -188,6 +188,19 @@ class Test_Basis_Basis(BasisTestCase):
         self.assertEqual(db1.knots(),db11.knots())
         self.assertEqual(db1.degree(),db11.degree())
         self.assertEqual(db0.degree(),db00.degree())
+
+    def test_basis_functions(self):
+        knots = [0,0,0.2,0.8,1,1]
+        degree = 1
+        b = BSplineBasis(knots, degree)
+        f = b.basis_functions()
+
+        self.assertEqualT(f.shape,[4,1])
+        self.assertEqualT(f(0).T,[[1,0,0,0]])
+        self.assertEqualT(f(0.2).T,[[0,1,0,0]])
+        self.assertEqualT(f(0.8).T,[[0,0,1,0]])
+        self.assertEqualT(f(1).T,[[0,0,0,1]])
+        self.assertEqualT(f(0.5).T,[[0,0.5,0.5,0]])
 
 # TODO constructor
     # def test_getEvaluation1(self):

@@ -140,7 +140,7 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, std::vector<AnyScalar>** m);
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m);
     bool to_ptr(GUESTOBJECT *p, AnyVector** m);
-    bool to_ptr(GUESTOBJECT *p, AnySlice** m); 
+    bool to_ptr(GUESTOBJECT *p, AnySlice** m);
     bool to_ptr(GUESTOBJECT *p, DT** m);
     bool to_ptr(GUESTOBJECT *p, ST** m);
     bool to_ptr(GUESTOBJECT *p, MT** m);
@@ -155,7 +155,6 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, spline::Interval** m);
 
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
-    bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
     bool to_ptr(GUESTOBJECT *p, spline::Function** m);
 
     GUESTOBJECT * from_ptr(const std::vector<AnyScalar>* a);
@@ -163,7 +162,7 @@ using namespace spline;
     GUESTOBJECT * from_ptr(const AnyTensor *a);
     GUESTOBJECT * from_ptr(const AnyVector *a);
     GUESTOBJECT * from_ptr(const AnySlice *a);
-    
+
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
     GUESTOBJECT * from_ptr(const spline::Basis *a);
 
@@ -177,7 +176,6 @@ using namespace spline;
     GUESTOBJECT *from_ptr(const ST *a);
     GUESTOBJECT *from_ptr(const MT *a);
     GUESTOBJECT *from_ptr(const spline::Index *a);
-    GUESTOBJECT *from_ptr(const spline::Argument *a);
   }
 }
 
@@ -334,7 +332,7 @@ using namespace spline;
       }
       return false;
     }
-    
+
     bool to_ptr(GUESTOBJECT *p, std::vector<NumericIndex>** m) {
       {
         std::vector<int> tmp, *mt=&tmp;
@@ -567,7 +565,7 @@ using namespace spline;
       }
       return false;
     }
-    
+
     bool to_ptr(GUESTOBJECT *p, AnySlice** m) {
       // Treat Null
       if (is_null(p)) return false;
@@ -602,7 +600,7 @@ using namespace spline;
           int stop = (r->stop ==Py_None || PyNumber_AsSsize_t(r->stop, NULL)>= std::numeric_limits<int>::max())
             ? std::numeric_limits<int>::max() : PyInt_AsLong(r->stop);
           int step = (r->step !=Py_None)? PyInt_AsLong(r->step) : 1;
-          
+
           userOut() << "start" << start << "stop" << stop << "step" << step << std::endl;
           **m = AnySlice(start, stop, step);
         }
@@ -697,25 +695,6 @@ using namespace spline;
 
       return false;
       }
-    bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
-      // Treat Null
-      if (is_null(p)) return false;
-
-      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
-                                    $descriptor(spline::Argument*), 0))) {
-        return true;
-      }
-
-      // String scalar
-      {
-        std::string tmp;
-        if (to_val(p, &tmp)) {
-          if (m) **m=tmp;
-          return true;
-        }
-      }
-      return false;
-    }
 
     GUESTOBJECT * from_ptr(const AnyScalar *a) {
       if (a->is_double()) return from_ref(static_cast<double>(*a));
@@ -866,9 +845,6 @@ using namespace spline;
     }
 
 
-    GUESTOBJECT* from_ptr(const spline::Argument *a) {
-      return SWIG_NewPointerObj(new spline::Argument(*a), $descriptor(spline::Argument *), SWIG_POINTER_OWN);
-    }
   } // namespace casadi
  }
 
@@ -960,8 +936,6 @@ using namespace spline;
 %casadi_template("[AnyTensor]", PREC_MX, std::vector<AnyTensor>)
 %casadi_typemaps("AnyVector", PREC_MX, AnyVector)
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
-%casadi_typemaps("argument", PREC_MX, spline::Argument)
-%casadi_template("[argument]", PREC_MX, std::vector<spline::Argument>)
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_typemaps("index", PREC_MX, spline::Index)
 %casadi_typemaps("index", PREC_MX, spline::NumericIndex)
@@ -987,7 +961,6 @@ using namespace spline;
 
 %casadi_template("[int]", PREC_IVector, std::vector<int>)
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Index >)
-%casadi_template("[argument]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
 
 %include <src/SharedObject/SharedObject.h>
@@ -999,12 +972,12 @@ using namespace spline;
 %include <tensor.hpp>
 %include <slice.hpp>
 
-%template(DTensor) Tensor<DM>;
-%template(STensor) Tensor<SX>;
-%template(MTensor) Tensor<MX>;
+%template(DTensor) Tensor<casadi::DM>;
+%template(STensor) Tensor<casadi::SX>;
+%template(MTensor) Tensor<casadi::MX>;
 
-%template(STensorVector) std::vector< Tensor<SX> >;
-%template(MTensorVector) std::vector< Tensor<MX> >;
+%template(STensorVector) std::vector< Tensor<casadi::SX> >;
+%template(MTensorVector) std::vector< Tensor<casadi::MX> >;
 
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/Basis.h>
@@ -1096,20 +1069,20 @@ namespace spline {
 namespace spline {
 %extend Function {
   %tensor_like_helpers(2003.0)
-  
+
 #ifdef SWIGPYTHON
   %pythoncode %{
   def __getitem__(self, s):
       return self.slice(*s)
   %}
 #endif
-  
+
 #ifdef SWIGMATLAB
   %matlabcode %{
   function out = paren(self,args)
     out = self.slice(args{:});
   end
-  
+
   %}
 #endif
 

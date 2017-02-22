@@ -13,7 +13,9 @@ namespace spline {
     MonomialBasisNode* MonomialBasis::operator->() const { return get(); }
 
     MonomialBasisNode::MonomialBasisNode(int degree) :
-        UnivariateBasisNode(degree, Interval(-inf, +inf)) {};
+        UnivariateBasisNode(degree,
+          Interval(-std::numeric_limits<double>::infinity(),
+                   +std::numeric_limits<double>::infinity())) {};
 
     MonomialBasis::MonomialBasis(int degree)  {
         assign_node(new MonomialBasisNode(degree));
@@ -152,7 +154,7 @@ namespace spline {
 
     AnyTensor MonomialBasisNode::integral(const Interval& dom) const {
         if (dom == domain()) {
-            return vertcat(std::vector<double>(dimension(), inf)).shape({1, dimension()});
+            return vertcat(std::vector<double>(dimension(), std::numeric_limits<double>::infinity())).shape({1, dimension()});
         } else {
             AnyTensor T;
             Basis basis_int = antiderivative(1, T);

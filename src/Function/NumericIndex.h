@@ -31,6 +31,16 @@ namespace spline {
             return ret;
         }
 
+#ifndef SWIG
+        static std::vector<NumericIndex> as_numeric_index(const std::vector<int>& ind){
+            std::vector<NumericIndex> ret(ind.size());
+            for (int i=0; i<ind.size(); i++){
+                ret[i] = NumericIndex(ind[i]);
+            }
+            return ret;
+        }
+#endif //SWIG
+
     private:
       int index_;
     };

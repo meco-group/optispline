@@ -20,6 +20,7 @@ namespace spline {
 class TensorBasis;
 class BSplineBasis;
 class MonomialBasis;
+class Function;
 
 #ifndef SWIG
 
@@ -71,6 +72,9 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
         std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const;
         std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<Argument>& directions) const;
+
+        TensorBasis project_to(const TensorBasis& b) const ;
+        std::vector< spline::Function > basis_functions() const ;
 
     // protected:
         std::vector< Basis > bases_;
@@ -155,6 +159,8 @@ public:
         std::vector<AnyTensor> integral(const TensorDomain& domain) const;
         std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<Argument>& directions) const;
         std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const;
+
+        std::vector< spline::Function > basis_functions() const ;
 };
 
 }   // namespace spline
