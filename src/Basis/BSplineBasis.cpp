@@ -150,7 +150,7 @@ namespace spline {
     }
 
     BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree)
-        : UnivariateBasisNode(degree),
+        : UnivariateBasisNode(degree, Interval(knots[0], knots[knots.size()-1])),
       bspline_evaluator_(BSplineEvaluator::create("f", knots.size(), degree)) {
         AnyVector kn(vertcat(knots));
         knots_ = kn.sort().to_scalar_vector();

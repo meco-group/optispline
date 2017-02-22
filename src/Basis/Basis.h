@@ -8,6 +8,7 @@
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 #include "../common.h"
+#include "../Domain/Domain.h"
 
 // #include <tensor.hpp>
 #include <any_tensor.hpp>
@@ -22,7 +23,8 @@ namespace spline {
 
     class BasisNode : public SharedObjectNode {
     public:
-        virtual std::string type() const {return "Basis";}
+        BasisNode(const Domain& domain);
+        BasisNode() { }
 
         virtual Basis operator+(const Basis& rhs) const = 0;
         virtual Basis operator+(const EmptyBasis& rhs) const;
@@ -34,6 +36,7 @@ namespace spline {
         virtual Basis operator*(const BSplineBasis& rhs) const = 0;
 
         virtual std::string getRepresentation() const ;
+        Domain domain() const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
@@ -52,6 +55,9 @@ namespace spline {
 
         virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const;
         virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const;
+
+    protected:
+        Domain domain_;
 
     };
 
@@ -77,6 +83,7 @@ namespace spline {
         AnyTensor operator()(const AnyVector& x) const;
 
         std::string getRepresentation() const ;
+        Domain domain() const;
         std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;

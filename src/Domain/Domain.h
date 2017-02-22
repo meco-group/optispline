@@ -18,10 +18,17 @@ class Interval;
 
 class DomainNode : public SharedObjectNode {
     public:
+        DomainNode(const std::vector<AnyScalar> & data) : data_(data) {}
+        std::vector<AnyScalar> data() const { return data_; }
+        virtual std::string getRepresentation() const ;
         virtual Domain intersection(const Domain & dom) const = 0;
         virtual Domain intersection(const Interval & dom) const = 0;
+        virtual bool operator==(const Domain& other) const;
+        virtual bool operator==(const Interval& other) const;
 
-        virtual std::string getRepresentation() const ;
+    protected:
+        std::vector<AnyScalar> data_;
+
 };
 
 #endif // SWIG
@@ -33,10 +40,13 @@ public:
         DomainNode* get() const;
         DomainNode* operator->() const;
 #endif // SWIG
+        std::vector<AnyScalar> data() const { return (*this)->data(); }
+        std::string getRepresentation() const ;
         Domain intersection(const Domain & dom) const;
         Domain intersection(const Interval & dom) const;
+        bool operator==(const Domain& other) const;
+        bool operator==(const Interval& other) const;
 
-        std::string getRepresentation() const ;
 #ifndef SWIG
         inline friend
             std::ostream& operator<<(std::ostream &stream, const Domain& obj) {
