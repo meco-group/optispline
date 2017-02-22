@@ -5,6 +5,8 @@
 #include "../common.h"
 
 namespace spline {
+
+
     Function::Function(const TensorBasis& basis, const Coefficient& coeff) {
         init(basis, coeff);
     }
@@ -479,6 +481,10 @@ namespace spline {
 
         Coefficient coef = this->transform_to(unionBasis).coeff();
         return Function(unionBasis, coef.cat(index, coefVec));
+    }
+
+    Function Function::slice(const AnySlice& i, const AnySlice& j) const {
+      return Function(tensor_basis(), coeff_tensor().get_slice(i, j));
     }
 
 }  // namespace spline

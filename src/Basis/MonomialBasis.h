@@ -18,6 +18,8 @@ namespace spline{
     public:
         MonomialBasisNode(int degree);
 
+        virtual std::string type() const override {return "MonomialBasis";}
+
         virtual Basis operator+(const MonomialBasis& other) const override;
         virtual Basis operator+(const BSplineBasis& other) const override;
         virtual Basis operator+(const Basis& other) const override;
@@ -33,9 +35,10 @@ namespace spline{
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 
-        virtual int length() const override;
+        virtual int dimension() const override;
+
         template<class T>
-        AnyTensor SubBasisEvalution(const std::vector< T >& x ) const ;
+        AnyTensor basis_evaluation(const std::vector< T >& x ) const ;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const override;
 
@@ -59,9 +62,9 @@ namespace spline{
     };
 
     template<class T>
-    AnyTensor MonomialBasisNode::SubBasisEvalution(const std::vector< T >& x ) const {
+    AnyTensor MonomialBasisNode::basis_evaluation(const std::vector< T >& x ) const {
         T x_ = x[0];
-        int lenght  = this->length();
+        int lenght  = this->dimension();
         std::vector<T> evaluation_basis(lenght);
         for (int i = 0; i < lenght; ++i) {
               evaluation_basis[i] = pow(x_,i);

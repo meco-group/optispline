@@ -3,7 +3,6 @@
 
 #include "tensor.hpp"
 
-
 enum TensorType {TENSOR_NULL, TENSOR_DOUBLE, TENSOR_SX, TENSOR_MX};
 
 
@@ -188,6 +187,12 @@ class AnyTensor {
 
     static AnyTensor pack(const std::vector<AnyTensor>& v, int axis);
     static std::vector<AnyTensor> unpack(const AnyTensor& v, int axis);
+
+
+    AnyTensor get_slice(const AnySlice& i, const AnySlice& j) const {
+      ANYTENSOR_METHOD(get_slice(i, j));
+      return DT();
+    }
 
     AnyTensor reorder_dims(const std::vector<int>& order) const {
       ANYTENSOR_METHOD(reorder_dims(order));

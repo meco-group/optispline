@@ -10,6 +10,7 @@
 #include "Index.h"
 
 namespace spline {
+
 class Function {
 
     public :
@@ -31,6 +32,8 @@ class Function {
         /* AnyTensor operator()(const std:vector< std::vector<AnyScalar> >& x, const std::vector< std::string > = std::vector< std::string > {} ) const; */
 
         /* Function partial(const std::map<std::string, AnyScalar >& x) const; */
+
+        Function slice(const AnySlice& i, const AnySlice& j) const;
 
         Function operator+(const Function& f) const;
         Function operator+(const AnyTensor& t) const;

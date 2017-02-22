@@ -72,12 +72,10 @@ def _swig_repr(self):
 //{% endif %}
 
 // Renameing MATLAB
-//{% if false %}
-//%{
-//%remame(f) TensorBasis::evalBasis
-//%}
-//{% endif %}
-
+#ifdef SWIGMATLAB
+%rename(eval) spline::Function::operator();
+%feature("varargin","1") spline::Function::operator();
+#endif //SWIGMATLAB
 
 
 %include "std_vector.i"
@@ -142,11 +140,13 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, std::vector<AnyScalar>** m);
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m);
     bool to_ptr(GUESTOBJECT *p, AnyVector** m);
+    bool to_ptr(GUESTOBJECT *p, AnySlice** m); 
     bool to_ptr(GUESTOBJECT *p, DT** m);
     bool to_ptr(GUESTOBJECT *p, ST** m);
     bool to_ptr(GUESTOBJECT *p, MT** m);
     bool to_ptr(GUESTOBJECT *p, spline::Index** m);
     bool to_ptr(GUESTOBJECT *p, spline::NumericIndex** m);
+    bool to_ptr(GUESTOBJECT *p, std::vector<spline::NumericIndex>** m);
     bool to_ptr(GUESTOBJECT *p, spline::TensorBasis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Basis** m);
 
@@ -162,6 +162,8 @@ using namespace spline;
     GUESTOBJECT * from_ptr(const AnyScalar *a);
     GUESTOBJECT * from_ptr(const AnyTensor *a);
     GUESTOBJECT * from_ptr(const AnyVector *a);
+    GUESTOBJECT * from_ptr(const AnySlice *a);
+    
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
     GUESTOBJECT * from_ptr(const spline::Basis *a);
 
@@ -174,7 +176,6 @@ using namespace spline;
     GUESTOBJECT *from_ptr(const DT *a);
     GUESTOBJECT *from_ptr(const ST *a);
     GUESTOBJECT *from_ptr(const MT *a);
-    GUESTOBJECT *from_ptr(const spline::NumericIndex *a);
     GUESTOBJECT *from_ptr(const spline::Index *a);
     GUESTOBJECT *from_ptr(const spline::Argument *a);
   }
@@ -313,6 +314,25 @@ using namespace spline;
         MX tmp, *mt=&tmp;
         if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_scalar())) {
           if (m) **m = *mt;
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    bool to_ptr(GUESTOBJECT *p, std::vector<NumericIndex>** m) {
+      {
+        std::vector<int> tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+#ifdef SWIGMATLAB
+          if (m) {
+            for (int i=0;i<tmp.size();++i) tmp[i]=tmp[i]-1;
+          }
+#endif // SWIGMATLAB
+          if (m) {
+            (**m).resize(tmp.size());
+            for (int i=0;i<tmp.size();++i) (**m)[i] = tmp[i];
+          }
           return true;
         }
       }
@@ -532,6 +552,62 @@ using namespace spline;
       }
       return false;
     }
+    
+    bool to_ptr(GUESTOBJECT *p, AnySlice** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(AnySlice*), 0))) {
+        return true;
+      }
+      // Integer
+      {
+        NumericIndex tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m = AnySlice(tmp);
+          return true;
+        }
+      }
+      // Integer vector
+      {
+        std::vector<NumericIndex> tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m = AnySlice(NumericIndex::as_int(tmp));
+          return true;
+        }
+      }
+#ifdef SWIGPYTHON
+      // Python slice
+      if (PySlice_Check(p)) {
+        PySliceObject *r = (PySliceObject*)(p);
+        if (m) {
+          int start = (r->start == Py_None || PyNumber_AsSsize_t(r->start, NULL) <= std::numeric_limits<int>::min())
+            ? std::numeric_limits<int>::min() : PyInt_AsLong(r->start);
+          int stop = (r->stop ==Py_None || PyNumber_AsSsize_t(r->stop, NULL)>= std::numeric_limits<int>::max())
+            ? std::numeric_limits<int>::max() : PyInt_AsLong(r->stop);
+          int step = (r->step !=Py_None)? PyInt_AsLong(r->step) : 1;
+          
+          userOut() << "start" << start << "stop" << stop << "step" << step << std::endl;
+          **m = AnySlice(start, stop, step);
+        }
+        return true;
+      }
+#endif // SWIGPYTHON
+
+      // string
+      {
+        std::string tmp;
+        if (to_val(p, &tmp)) {
+          if (m) {
+            if (tmp!=":") return false;
+            **m = AnySlice();
+            return true;
+          }
+        }
+      }
+      return false;
+    }
 
     bool to_ptr(GUESTOBJECT *p, spline::NumericIndex** m) {
       // Treat Null
@@ -654,6 +730,13 @@ using namespace spline;
     }
 
     GUESTOBJECT * from_ptr(const spline::NumericIndex *a) {
+#ifdef SWIGPYTHON
+      return Py_None;
+#endif // SWIGPYTHON
+      return 0;
+    }
+
+    GUESTOBJECT * from_ptr(const AnySlice *a) {
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
@@ -858,6 +941,7 @@ using namespace spline;
 %casadi_template("[[AnyScalar]]", PREC_SXVector, std::vector< std::vector< AnyScalar > >)
 %casadi_typemaps("AnyScalar", PREC_MX, AnyScalar)
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
+%casadi_typemaps("AnySlice", PREC_MX, AnySlice)
 %casadi_template("[AnyTensor]", PREC_MX, std::vector<AnyTensor>)
 %casadi_typemaps("AnyVector", PREC_MX, AnyVector)
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
@@ -898,7 +982,7 @@ using namespace spline;
 %include <src/Function/Index.h>
 %include <src/Function/NumericIndex.h>
 %include <tensor.hpp>
-
+%include <slice.hpp>
 
 %template(DTensor) Tensor<DM>;
 %template(STensor) Tensor<SX>;
@@ -952,8 +1036,11 @@ namespace spline {
 %extend Function {
   %matlabcode %{
    function varargout = subsref(self,s)
-      if numel(s)==1 && strcmp(s.type,'()')
-        [varargout{1:nargout}] = paren(self, s.subs);
+      if numel(s)==1 && strcmp(s(1).type,'()')
+        [varargout{1:nargout}] = paren(self, s(1).subs);
+      elseif numel(s)>1 && strcmp(s(1).type,'()')
+        r = paren(self, s(1).subs);
+        [varargout{1:nargout}] = subsref(r,s(2:end));
       else
         [varargout{1:nargout}] = builtin('subsref',self,s);
       end
@@ -994,6 +1081,23 @@ namespace spline {
 namespace spline {
 %extend Function {
   %tensor_like_helpers(2003.0)
+  
+#ifdef SWIGPYTHON
+  %pythoncode %{
+  def __getitem__(self, s):
+      return self.slice(*s)
+  %}
+#endif
+  
+#ifdef SWIGMATLAB
+  %matlabcode %{
+  function out = paren(self,args)
+    out = self.slice(args{:});
+  end
+  
+  %}
+#endif
+
 }
 }
 

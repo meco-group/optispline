@@ -291,5 +291,48 @@ class Test_Function_Operations(BasisTestCase):
             self.assertAlmostEqual(numpy.trace(func1(_x,_y)), tr(_x,_y))
         self.assertEqualT(tr.shape, [1,1])
 
+    def test_slice(self):
+        knots1 = [0,0,0.4,1,1]
+        degree = 1
+        basis1 = Basis.BSplineBasis(knots1,degree)
+
+        basis2 = MonomialBasis(2);
+
+        mbasis = TensorBasis([basis1,basis2]);
+        
+        numpy.random.seed(0)
+
+        coeff2 = DTensor(numpy.random.randn(9*12,1),[3,3,3,4])
+        func2 = Function(mbasis,coeff2)
+        
+        xy = numpy.random.random((2,1))
+        x = float(xy[0])
+        y = float(xy[1])
+        
+
+        f = func2[[0,1],[2,1]]
+        self.assertEqualT(func2(x,y)[np.ix_([0,1],[2,1])], f(x,y))
+
+        f = func2[:,[2,1]]
+        self.assertEqualT(func2(x,y)[:,[2,1]], f(x,y))
+
+        f = func2[[0,1],:]
+        self.assertEqualT(func2(x,y)[[0,1],:], f(x,y))
+    
+        f = func2[[0,1],2]
+        self.assertEqualT(func2(x,y)[[0,1],2], f(x,y).ravel())
+
+        f = func2[1,[2,1]]
+        self.assertEqualT(func2(x,y)[1,[2,1]], f(x,y).ravel())
+        
+        f = func2[1,2]
+        self.assertEqual(func2(x,y)[1,2], f(x,y))
+           
+        f = func2[1:3,2]
+        self.assertEqualT(func2(x,y)[1:3,2], f(x,y).ravel())
+
+        f = func2[1:3,2:4]
+        self.assertEqualT(func2(x,y)[1:3,2:4], f(x,y))
+        
 if __name__ == '__main__':
     unittest.main()

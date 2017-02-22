@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <casadi/casadi.hpp>
 #include "tensor_exception.hpp"
+#include "slice.hpp"
 
 using namespace casadi;
 using namespace std;
@@ -107,8 +108,6 @@ class Tensor {
     // r : {n m p q r1 r2 r3 r4 | r5}
     Tensor<T> r = e.outer_product(ones);
 
-    //userOut() << "r" << r << std::endl;
-
     std::vector<int> order_interleave = range(e.n_dims()+factors.size());
 
     for (int i=0;i<e.n_dims();++i) {
@@ -116,8 +115,6 @@ class Tensor {
       order_interleave[i+e.n_dims()] = 2*i+1;
     }
     // order_leave { 0 2 4 6 1 3 5 7 | 8 }
-
-   // userOut() << "order_interleave" << order_interleave << std::endl;
 
     r = r.reorder_dims(order_interleave);
 
@@ -238,6 +235,28 @@ class Tensor {
       cumprod*= dims[i];
     }
     return ret;
+  }
+
+  Tensor get_slice(const AnySlice& i, const AnySlice& j) {
+    int n = dims()[n_dims()-2];
+    int m = dims()[n_dims()-1];
+
+    std::vector<int> i_e = i.indices(n);
+    std::vector<int> j_e = j.indices(m);
+
+    DM R = DM::zeros(m, j_e.size());
+    for (int ii=0;ii<j_e.size();++ii) {
+      R(j_e[ii],ii)=1;
+    }
+
+    DM L = DM::zeros(i_e.size(), n);
+    for (int ii=0;ii<i_e.size();++ii) {
+      L(ii,i_e[ii])=1;
+    }
+
+    return Tensor<T>(L).trailing_rmtimes(trailing_mtimes(Tensor<T>(R)));
+
+
   }
 
   static T get(const T& data, const std::vector<int> dims, const std::vector<int>& ind) {
@@ -474,6 +493,25 @@ class Tensor {
     }
     tensor_assert(n_dims()==2 && rhs.n_dims()==2);
     return einstein(rhs, {-1, -2}, {-2, -3}, {-1, -3});
+  }
+
+  Tensor trailing_mtimes(const Tensor &rhs) const {
+    tensor_assert(rhs.n_dims()==2 && n_dims()>=2);
+    std::vector<int> a_e = mrange(n_dims());
+    std::vector<int> b_e = {a_e[a_e.size()-1], -n_dims()-1};
+    std::vector<int> c_e = a_e; c_e[c_e.size()-1] = -n_dims()-1;
+
+    return einstein(rhs, a_e, b_e, c_e);
+  }
+
+  Tensor trailing_rmtimes(const Tensor &rhs) const {
+    tensor_assert(n_dims()==2 && rhs.n_dims()>=2);
+    std::vector<int> a_e = mrange(rhs.n_dims());
+    std::vector<int> b_e = {-rhs.n_dims()-1,a_e[a_e.size()-2]};
+    std::vector<int> c_e = a_e; c_e[c_e.size()-2] = -rhs.n_dims()-1;
+    c_e[c_e.size()-1] = -rhs.n_dims();
+
+    return einstein(rhs, b_e, a_e, c_e);
   }
 
   Tensor inner(const Tensor&b) {

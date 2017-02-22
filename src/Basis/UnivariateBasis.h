@@ -19,6 +19,8 @@ namespace spline {
     public:
         UnivariateBasisNode(int degree, const Domain& domain);
 
+        virtual std::string type() const override {return "UnivariateBasis";}
+
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const = 0;
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const = 0;
 
@@ -29,9 +31,6 @@ namespace spline {
         virtual Basis antiderivative(int order, AnyTensor& T) const = 0;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const = 0;
-
-        int dimension() const {return length();}
-        virtual int length() const = 0;
 
     protected:
         int degree_;
@@ -48,10 +47,7 @@ namespace spline {
         UnivariateBasisNode* operator->() const ;
 #endif // SWIG
 
-        int degree() const;
-
-    protected:
-        int length() const ;
+        int degree () const ;
     };
 } // namespace spline
 

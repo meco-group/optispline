@@ -16,7 +16,6 @@ namespace spline{
 
     class BSplineEvaluator : public casadi::FunctionInternal {
     public:
-
       static casadi::Function create(const std::string &name, int n_knots, int degree, const Dict& opts=Dict());
 
       BSplineEvaluator(const std::string &name, int n_knots, int degree);
@@ -97,6 +96,8 @@ namespace spline{
     public:
         BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree);
 
+        virtual std::string type() const override {return "BSplineBasis";}
+
         virtual Basis operator+(const MonomialBasis& other) const override;
         virtual Basis operator+(const BSplineBasis& other) const override;
         virtual Basis operator+(const Basis& other) const override;
@@ -116,9 +117,10 @@ namespace spline{
 
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
 
-        virtual int length() const override;
+        virtual int dimension() const override;
 
-        AnyTensor SubBasisEvalution(const std::vector<AnyScalar> & x ) const;
+
+        AnyTensor basis_evaluation(const std::vector<AnyScalar> & x ) const;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const override;
 
