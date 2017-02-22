@@ -33,6 +33,10 @@ add_library(Basis SHARED
     Function/Index.h Function/Index.cpp
     Function/NumericIndex.h
 
+    Domain/Interval.h Domain/Interval.cpp
+    Domain/Domain.h Domain/Domain.cpp
+    Domain/TensorDomain.h Domain/TensorDomain.cpp
+
     Coefficients/Coefficient.h Coefficients/Coefficient.cpp
 
     Optistack/optistack.h Optistack/optistack.cpp
@@ -40,6 +44,8 @@ add_library(Basis SHARED
     ../tensor-tools/any_tensor.cpp
     ../tensor-tools/any_tensor.hpp
     ../tensor-tools/tensor.hpp
+    ../tensor-tools/slice.hpp
+    ../tensor-tools/slice.cpp
     )
 target_link_libraries(Basis ${CASADI_LIBRARIES})
 add_definitions(-DSHARED_LIBRARY)

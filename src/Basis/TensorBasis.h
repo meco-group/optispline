@@ -13,19 +13,23 @@
 #include "../Function/Argument.h"
 #include "../Function/Index.h"
 #include "../Function/NumericIndex.h"
+#include "../Domain/TensorDomain.h"
 
 namespace spline {
 
 class TensorBasis;
 class BSplineBasis;
 class MonomialBasis;
+class Function;
 
 #ifndef SWIG
 
 class TensorBasisNode : public SharedObjectNode {
     public:
-        TensorBasisNode(const std::vector< Basis >& allSubBasis);
-        TensorBasisNode(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args);
+        TensorBasisNode(const std::vector< Basis >& bases_);
+        TensorBasisNode(const std::vector< Basis >& bases_, const std::vector< Argument >& args);
+
+        virtual std::string type() const {return "TensorBasis";}
 
         int n_basis() const;
         std::vector<int> dimension() const;
@@ -33,11 +37,12 @@ class TensorBasisNode : public SharedObjectNode {
 
         std::vector< Argument > arguments() const;
 
-        Argument getSubArgument(int index) const;
+        Argument argument(int index) const;
         int indexArgument(Argument a) const;
 
         bool hasArguments() const;
 
+        TensorDomain domain() const;
         std::string getRepresentation() const;
 
         std::vector< Basis > bases() const;
@@ -66,9 +71,14 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
 
+        TensorBasis project_to(const TensorBasis& b) const ;
+        std::vector< spline::Function > basis_functions() const ;
+
     // protected:
-        std::vector< Basis > allSubBasis;
+        std::vector< Basis > bases_;
         std::vector< Argument > allArguments;
+
+
 };
 
 #endif // SWIG
@@ -82,12 +92,14 @@ public:
 
 #endif // SWIG
         TensorBasis();
-        TensorBasis(const Basis& allSubBasis);
-        TensorBasis(const Basis& allSubBasis, const Argument& args);
+        TensorBasis(const Basis& bases_);
+        TensorBasis(const Basis& bases_, const Argument& args);
         TensorBasis(const TensorBasis& tensor, const std::vector< Argument >& args);
-        TensorBasis(const std::vector< Basis >& allSubBasis);
-        TensorBasis(const std::vector< Basis >& allSubBasis, const std::vector< Argument >& args);
+        TensorBasis(const std::vector< Basis >& bases_);
+        TensorBasis(const std::vector< Basis >& bases_, const std::vector< Argument >& args);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
+
+        std::string type() const;
 
         int n_basis() const;  // Number of bases, building up the TensorBasis
         int n_inputs() const; // Total number of inputs, over all bases
@@ -95,12 +107,13 @@ public:
 
         std::vector< spline::Argument > arguments() const;
 
-        spline::Argument getSubArgument(int index) const;
+        spline::Argument argument(int index) const;
         int indexArgument(Argument a) const;
 
         bool hasArguments() const;
 
         std::string getRepresentation() const;
+        TensorDomain domain() const;
 
         Basis basis() const;
         Basis basis(const Argument& a) const;
@@ -140,6 +153,7 @@ public:
         TensorBasis antiderivative(const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+        std::vector< spline::Function > basis_functions() const ;
 };
 
 }   // namespace spline

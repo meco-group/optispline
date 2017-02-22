@@ -39,7 +39,7 @@ namespace spline {
 
     int StringIndexNode::concrete(const std::vector<Argument> & args) const {
       std::vector<std::string> args_str;
-      for (auto &a : args) args_str.push_back(a.getName());
+      for (auto &a : args) args_str.push_back(a);
       auto it = std::find(args_str.begin(), args_str.end(), name_);
       if (it == args_str.end()) {
         std::stringstream ss;

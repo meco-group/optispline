@@ -8,6 +8,7 @@
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 #include "../common.h"
+#include "../Domain/Domain.h"
 
 // #include <tensor.hpp>
 #include <any_tensor.hpp>
@@ -17,11 +18,17 @@ namespace spline {
     class EmptyBasis;
     class BSplineBasis;
     class MonomialBasis;
+    class Function;
 
 #ifndef SWIG
 
     class BasisNode : public SharedObjectNode {
     public:
+        BasisNode(const Domain& domain);
+        BasisNode() { }
+
+        virtual std::string type() const {return "Basis";}
+
         virtual Basis operator+(const Basis& rhs) const = 0;
         virtual Basis operator+(const EmptyBasis& rhs) const;
         virtual Basis operator+(const MonomialBasis& rhs) const = 0;
@@ -32,6 +39,7 @@ namespace spline {
         virtual Basis operator*(const BSplineBasis& rhs) const = 0;
 
         virtual std::string getRepresentation() const ;
+        Domain domain() const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
@@ -50,6 +58,10 @@ namespace spline {
 
         virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const;
         virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const;
+        spline::Function basis_functions() const;
+
+    protected:
+        Domain domain_;
 
     };
 
@@ -75,10 +87,12 @@ namespace spline {
         AnyTensor operator()(const AnyVector& x) const;
 
         std::string getRepresentation() const ;
+        Domain domain() const;
         std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;
         Basis midpoint_refinement(int refinement, AnyTensor& SWIG_OUTPUT(T)) const;
+        spline::Function basis_functions() const;
 
         int dimension() const;
         int n_inputs() const;

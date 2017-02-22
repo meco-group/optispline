@@ -7,9 +7,7 @@
 #include <assert.h>
 #include <casadi/casadi.hpp>
 #include "tensor_exception.hpp"
-
-// using namespace std;
-using namespace casadi;
+#include "slice.hpp"
 
 template <class T>
 std::vector<T> reorder(const std::vector<T>& data, const std::vector<int>& order) {
@@ -22,12 +20,12 @@ std::vector<T> reorder(const std::vector<T>& data, const std::vector<int>& order
 
 template <class T>
 std::vector<T> mrange(T stop) {
-  return range(-1, -stop-1, -1);
+  return casadi::range(-1, -stop-1, -1);
 }
 
 template <class T>
 std::vector<T> mrange(T start, T stop) {
-  return range(-start-1, -stop-1, -1);
+  return casadi::range(-start-1, -stop-1, -1);
 }
 
 
@@ -102,22 +100,18 @@ class Tensor {
     tensor_assert(factors.size()>= e.n_dims());
 
     // e : {n m p q}   factors : {r1 r2 r3 r4 | r5}
-    Tensor<T> ones(DM::ones(product(factors)), factors);
+    Tensor<T> ones(casadi::DM::ones(product(factors)), factors);
 
     // r : {n m p q r1 r2 r3 r4 | r5}
     Tensor<T> r = e.outer_product(ones);
 
-    //userOut() << "r" << r << std::endl;
-
-    std::vector<int> order_interleave = range(e.n_dims()+factors.size());
+    std::vector<int> order_interleave = casadi::range(e.n_dims()+factors.size());
 
     for (int i=0;i<e.n_dims();++i) {
       order_interleave[i] = 2*i;
       order_interleave[i+e.n_dims()] = 2*i+1;
     }
     // order_leave { 0 2 4 6 1 3 5 7 | 8 }
-
-   // userOut() << "order_interleave" << order_interleave << std::endl;
 
     r = r.reorder_dims(order_interleave);
 
@@ -239,23 +233,27 @@ class Tensor {
     }
     return ret;
   }
-  
-  Tensor get_slice(const std::vector<int>& i, const std::vector<int>& j) {
+
+  Tensor get_slice(const AnySlice& i, const AnySlice& j) {
     int n = dims()[n_dims()-2];
     int m = dims()[n_dims()-1];
-    DM R = DM::zeros(m, j.size());
-    for (int ii=0;ii<j.size();++ii) {
-      R(j[ii],ii)=1;
+
+    std::vector<int> i_e = i.indices(n);
+    std::vector<int> j_e = j.indices(m);
+
+    casadi::DM R = casadi::DM::zeros(m, j_e.size());
+    for (int ii=0;ii<j_e.size();++ii) {
+      R(j_e[ii],ii)=1;
     }
-    
-    DM L = DM::zeros(i.size(), n);
-    for (int ii=0;ii<i.size();++ii) {
-      L(ii,i[ii])=1;
+
+    casadi::DM L = casadi::DM::zeros(i_e.size(), n);
+    for (int ii=0;ii<i_e.size();++ii) {
+      L(ii,i_e[ii])=1;
     }
-    
+
     return Tensor<T>(L).trailing_rmtimes(trailing_mtimes(Tensor<T>(R)));
-    
-    
+
+
   }
 
   static T get(const T& data, const std::vector<int> dims, const std::vector<int>& ind) {
@@ -277,7 +275,7 @@ class Tensor {
   }
 
   Tensor solve(const Tensor& B) const {
-    return T::solve(matrix(), B.matrix(), "lapacklu", Dict());
+    return T::solve(matrix(), B.matrix(), "lapacklu", casadi::Dict());
   }
 
   Tensor operator+(const Tensor& rhs) const {
@@ -493,14 +491,14 @@ class Tensor {
     tensor_assert(n_dims()==2 && rhs.n_dims()==2);
     return einstein(rhs, {-1, -2}, {-2, -3}, {-1, -3});
   }
-  
+
   Tensor trailing_mtimes(const Tensor &rhs) const {
     tensor_assert(rhs.n_dims()==2 && n_dims()>=2);
     std::vector<int> a_e = mrange(n_dims());
     std::vector<int> b_e = {a_e[a_e.size()-1], -n_dims()-1};
     std::vector<int> c_e = a_e; c_e[c_e.size()-1] = -n_dims()-1;
 
-    return einstein(rhs, a_e, b_e, c_e);    
+    return einstein(rhs, a_e, b_e, c_e);
   }
 
   Tensor trailing_rmtimes(const Tensor &rhs) const {
@@ -510,9 +508,9 @@ class Tensor {
     std::vector<int> c_e = a_e; c_e[c_e.size()-2] = -rhs.n_dims()-1;
     c_e[c_e.size()-1] = -rhs.n_dims();
 
-    return einstein(rhs, b_e, a_e, c_e);    
+    return einstein(rhs, b_e, a_e, c_e);
   }
-  
+
   Tensor inner(const Tensor&b) {
     const Tensor& a = *this;
 
@@ -575,7 +573,7 @@ class Tensor {
   }
 
   void repr() const {
-    userOut() << getRepresentation() << std::endl;
+    casadi::userOut() << getRepresentation() << std::endl;
   }
 
   private:
@@ -584,7 +582,7 @@ class Tensor {
 };
 
 template <>
-Tensor<SX> Tensor<SX>::solve(const Tensor<SX>& B) const;
+Tensor<casadi::SX> Tensor<casadi::SX>::solve(const Tensor<casadi::SX>& B) const;
 
 template <class T>
 std::pair<int, int> Tensor<T>::normalize_dim(const std::vector<int> & dims) {
@@ -606,8 +604,8 @@ std::pair<int, int> Tensor<T>::normalize_dim(const std::vector<int> & dims) {
     return {0, 0};
 }
 
-typedef Tensor<SX> ST;
-typedef Tensor<DM> DT;
-typedef Tensor<MX> MT;
+typedef Tensor<casadi::SX> ST;
+typedef Tensor<casadi::DM> DT;
+typedef Tensor<casadi::MX> MT;
 
 #endif

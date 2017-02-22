@@ -12,6 +12,11 @@ namespace spline {
     };
     MonomialBasisNode* MonomialBasis::operator->() const { return get(); }
 
+    MonomialBasisNode::MonomialBasisNode(int degree) :
+        UnivariateBasisNode(degree,
+          Interval(-std::numeric_limits<double>::infinity(),
+                   +std::numeric_limits<double>::infinity())) {};
+
     MonomialBasis::MonomialBasis(int degree)  {
         assign_node(new MonomialBasisNode(degree));
     }
@@ -25,11 +30,11 @@ namespace spline {
     }
 
     Basis MonomialBasisNode::operator+ (const BSplineBasis& other) const {
-        return plusSubBasis (shared_from_this<MonomialBasis>(), other);
+        return plus_basis (shared_from_this<MonomialBasis>(), other);
     }
 
     Basis MonomialBasisNode::operator+ (const MonomialBasis& other) const {
-        return plusSubBasis (shared_from_this<MonomialBasis>(), other);
+        return plus_basis (shared_from_this<MonomialBasis>(), other);
     }
 
     Basis MonomialBasisNode::operator* (const Basis& other) const {
@@ -41,11 +46,11 @@ namespace spline {
     }
 
     Basis MonomialBasisNode::operator* (const BSplineBasis& other) const {
-        return timesSubBasis (shared_from_this<MonomialBasis>(), other);
+        return times_basis (shared_from_this<MonomialBasis>(), other);
     }
 
     Basis MonomialBasisNode::operator* (const MonomialBasis& other) const {
-        return timesSubBasis (shared_from_this<MonomialBasis>(), other);
+        return times_basis (shared_from_this<MonomialBasis>(), other);
     }
 
     AnyTensor MonomialBasisNode::const_coeff_tensor(const AnyTensor& t) const {
@@ -64,19 +69,19 @@ namespace spline {
 
    AnyTensor MonomialBasisNode::operator() (const std::vector<AnyScalar> & x) const {
         if (AnyScalar::is_double(x)) {
-            return SubBasisEvalution<double>(AnyScalar::as_double(x));
+            return basis_evaluation<double>(AnyScalar::as_double(x));
         } else {
-            return SubBasisEvalution<AnyScalar>(x);
+            return basis_evaluation<AnyScalar>(x);
         }
     }
 
-    int MonomialBasisNode::length() const {
+    int MonomialBasisNode::dimension() const {
          return degree() + 1;
     }
 
     std::vector< std::vector < AnyScalar > > MonomialBasisNode::getEvaluationGrid() const {
       std::vector< std::vector < AnyScalar > > ret;
-        for (int i = 0; i < length(); i++) {
+        for (int i = 0; i < dimension(); i++) {
             ret.push_back(std::vector<AnyScalar> {static_cast<double>(i)});
         }
         return ret;

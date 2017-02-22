@@ -8,12 +8,12 @@
 
 namespace spline {
 
-    TensorBasis plusBasis(const TensorBasis& b1, const TensorBasis& b2) {
+    TensorBasis plus_tensor_basis(const TensorBasis& b1, const TensorBasis& b2) {
         return generic_operation(b1, b2,
                 [](const Basis& lhs, const Basis& rhs) { return lhs + rhs; });
     }
 
-    TensorBasis timesBasis(const TensorBasis& b1, const TensorBasis& b2) {
+    TensorBasis times_tensor_basis(const TensorBasis& b1, const TensorBasis& b2) {
         return generic_operation(b1, b2,
                 [](const Basis& lhs, const Basis& rhs) { return lhs * rhs; });
     }

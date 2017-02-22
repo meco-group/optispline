@@ -97,8 +97,8 @@ AnyScalar& AnyScalar::operator+=(const AnyScalar& rhs) {
 
 AnyScalar pow(const AnyScalar&x, int i) {
   if (x.is_double()) return pow(x.as_double(), i);
-  if (x.is_SX()) return pow(x.as_SX(), SX(i));
-  if (x.is_MX()) return pow(x.as_MX(), MX(i));
+  if (x.is_SX()) return pow(x.as_SX(), casadi::SX(i));
+  if (x.is_MX()) return pow(x.as_MX(), casadi::MX(i));
   tensor_assert(false);
   return 0;
 }
@@ -123,19 +123,19 @@ AnyScalar::AnyScalar(double s) {
   data_double = s;
 }
 
-AnyScalar::AnyScalar(const SX& s) {
+AnyScalar::AnyScalar(const casadi::SX& s) {
   t = TENSOR_SX;
   data_sx = s;
   tensor_assert(s.is_scalar());
 }
 
-AnyScalar::AnyScalar(const DM& s) {
+AnyScalar::AnyScalar(const casadi::DM& s) {
   t = TENSOR_DOUBLE;
   tensor_assert(s.is_scalar());
   data_double = static_cast<double>(s);
 }
 
-AnyScalar::AnyScalar(const MX& s) {
+AnyScalar::AnyScalar(const casadi::MX& s) {
   t = TENSOR_MX;
   data_mx = s;
   tensor_assert(s.is_scalar());
@@ -151,14 +151,14 @@ AnyScalar::operator double() const {
   return data_double;
 }
 
-AnyScalar::operator SX() const {
-  if (t==TENSOR_DOUBLE) return SX(data_double);
+AnyScalar::operator casadi::SX() const {
+  if (t==TENSOR_DOUBLE) return casadi::SX(data_double);
   tensor_assert(t==TENSOR_SX);
   return data_sx;
 }
 
-AnyScalar::operator MX() const {
-  if (t==TENSOR_DOUBLE) return MX(data_double);
+AnyScalar::operator casadi::MX() const {
+  if (t==TENSOR_DOUBLE) return casadi::MX(data_double);
   tensor_assert(t==TENSOR_MX);
   return data_mx;
 }
@@ -280,16 +280,16 @@ std::vector<double> AnyScalar::as_double(const std::vector<AnyScalar>& v) {
   return ret;
 }
 
-std::vector<SX> AnyScalar::as_SX(const std::vector<AnyScalar>& v) {
-  std::vector<SX> ret;
+std::vector<casadi::SX> AnyScalar::as_SX(const std::vector<AnyScalar>& v) {
+  std::vector<casadi::SX> ret;
   ret.reserve(v.size());
   for (auto & i : v)
     ret.push_back(i.as_SX());
   return ret;
 }
 
-std::vector<MX> AnyScalar::as_MX(const std::vector<AnyScalar>& v) {
-  std::vector<MX> ret;
+std::vector<casadi::MX> AnyScalar::as_MX(const std::vector<AnyScalar>& v) {
+  std::vector<casadi::MX> ret;
   ret.reserve(v.size());
   for (auto & i : v)
     ret.push_back(i.as_MX());
@@ -345,8 +345,8 @@ std::vector<AnyTensor> unpack(const AnyTensor& v, int axis) {
 AnyTensor AnyTensor::vertcat(const std::vector<AnyScalar>& v) {
   switch (AnyScalar::type(v)) {
     case TENSOR_DOUBLE: return DT(AnyScalar::as_double(v), {static_cast<int>(v.size())});
-    case TENSOR_SX: return ST(SX::vertcat(AnyScalar::as_SX(v)), {static_cast<int>(v.size())});
-    case TENSOR_MX: return MT(MX::vertcat(AnyScalar::as_MX(v)), {static_cast<int>(v.size())});
+    case TENSOR_SX: return ST(casadi::SX::vertcat(AnyScalar::as_SX(v)), {static_cast<int>(v.size())});
+    case TENSOR_MX: return MT(casadi::MX::vertcat(AnyScalar::as_MX(v)), {static_cast<int>(v.size())});
     default: tensor_assert(false); return DT();
   }
 }
@@ -367,7 +367,7 @@ AnyTensor concat(const std::vector<AnyTensor> & v, int axis) {
 
 
 AnyTensor vertcat(const std::vector<double>& v) {
-  return DT(DM(v), {static_cast<int>(v.size())});
+  return DT(v, {static_cast<int>(v.size())});
 }
 
 std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<double>& v) {
@@ -375,12 +375,12 @@ std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<double>& v) {
   std::copy(v.begin(), v.end(), ret.begin());
   return ret;
 }
-std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<SX>& v) {
+std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<casadi::SX>& v) {
   std::vector<AnyScalar> ret(v.size());
   std::copy(v.begin(), v.end(), ret.begin());
   return ret;
 }
-std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<MX>& v) {
+std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<casadi::MX>& v) {
   std::vector<AnyScalar> ret(v.size());
   std::copy(v.begin(), v.end(), ret.begin());
   return ret;
@@ -435,78 +435,81 @@ std::vector<AnyScalar> AnyVector::to_scalar_vector() const {
   return ret;
 }
 
-class Sorter : public casadi::FunctionInternal {
-public:
+namespace casadi {
+  class Sorter : public FunctionInternal {
+  public:
 
-  static casadi::Function create(const std::string &name, int size, bool ascending,
-      const Dict& opts=Dict()) {
-    casadi::Function ret;
-    ret.assignNode(new Sorter(name, size, ascending));
-    ret->construct(opts);
-    return ret;
-  }
-
-  Sorter(const std::string &name, int size, int ascending) : casadi::FunctionInternal(name),
-    size_(size), ascending_(ascending) {};
-
-  /** \brief  Destructor */
-  virtual ~Sorter() {};
-
-  ///@{
-  /** \brief Number of function inputs and outputs */
-  virtual size_t get_n_in() override { return 1; };
-  virtual size_t get_n_out() override { return 1; };
-  ///@}
-
-  /// @{
-  /** \brief Sparsities of function inputs and outputs */
-  virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
-  virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
-  /// @}
-
-  /** \brief  Evaluate numerically, work vectors given */
-  virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
-    if (!res[0]) return;
-    std::copy(arg[0], arg[0]+size_, res[0]);
-
-    if (ascending_) {
-      std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b) {
-          double arg1 = *static_cast<const double*>(a);
-          double arg2 = *static_cast<const double*>(b);
-
-          if (arg1 < arg2) return -1;
-          if (arg1 > arg2) return 1;
-          return 0;
-      });
-    } else {
-      std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b) {
-          double arg1 = *static_cast<const double*>(a);
-          double arg2 = *static_cast<const double*>(b);
-
-          if (arg1 < arg2) return 1;
-          if (arg1 > arg2) return -1;
-          return 0;
-      });
+    static casadi::Function create(const std::string &name, int size, bool ascending,
+        const Dict& opts=Dict()) {
+      casadi::Function ret;
+      ret.assignNode(new Sorter(name, size, ascending));
+      ret->construct(opts);
+      return ret;
     }
-  }
 
-  /** \brief  Print description */
-  virtual void print(std::ostream &stream) const override {
-    stream << "Sorter(" << size_ << ")";
-  }
+    Sorter(const std::string &name, int size, int ascending) : casadi::FunctionInternal(name),
+      size_(size), ascending_(ascending) {};
 
-  int size_;
-  bool ascending_;
-};
+    /** \brief  Destructor */
+    virtual ~Sorter() {};
+
+    ///@{
+    /** \brief Number of function inputs and outputs */
+    virtual size_t get_n_in() override { return 1; };
+    virtual size_t get_n_out() override { return 1; };
+    ///@}
+
+    /// @{
+    /** \brief Sparsities of function inputs and outputs */
+    virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
+    virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
+    /// @}
+
+    /** \brief  Evaluate numerically, work vectors given */
+    virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
+      if (!res[0]) return;
+      std::copy(arg[0], arg[0]+size_, res[0]);
+
+      if (ascending_) {
+        std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b) {
+            double arg1 = *static_cast<const double*>(a);
+            double arg2 = *static_cast<const double*>(b);
+
+            if (arg1 < arg2) return -1;
+            if (arg1 > arg2) return 1;
+            return 0;
+        });
+      } else {
+        std::qsort(res[0], size_, sizeof(double), [](const void* a, const void* b) {
+            double arg1 = *static_cast<const double*>(a);
+            double arg2 = *static_cast<const double*>(b);
+
+            if (arg1 < arg2) return 1;
+            if (arg1 > arg2) return -1;
+            return 0;
+        });
+      }
+    }
+
+    /** \brief  Print description */
+    virtual void print(std::ostream &stream) const override {
+      stream << "Sorter(" << size_ << ")";
+    }
+
+    int size_;
+    bool ascending_;
+  };
+
+} // namespace casadi
 
 AnyVector AnyVector::sort(bool ascending) const {
   tensor_assert(!is_ST());
 
-  Function sorter = Sorter::create("sorter", dims()[0], ascending);
+  casadi::Function sorter = casadi::Sorter::create("sorter", dims()[0], ascending);
   if (is_DT()) {
-    return DT(sorter(std::vector<DM>{as_DT().data()})[0], {dims()[0]});
+    return DT(sorter(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
   } else {
-    return MT(sorter(std::vector<MX>{as_MT().data()})[0], {dims()[0]});
+    return MT(sorter(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
   }
 }
 
@@ -548,7 +551,7 @@ namespace casadi {
   }
 
 template <>
-Tensor<SX> Tensor<SX>::solve(const Tensor<SX>& B) const {
-  return SX::solve(matrix(), B.matrix());
+Tensor<casadi::SX> Tensor<casadi::SX>::solve(const Tensor<casadi::SX>& B) const {
+  return casadi::SX::solve(matrix(), B.matrix());
 }
 } //namespace casadi

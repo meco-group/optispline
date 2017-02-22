@@ -1,14 +1,20 @@
 #include "Basis.h"
 #include "operations/operationsBasis.h"
+#include "../Function/Function.h"
 #include "../common.h"
 
 namespace spline {
+
+    BasisNode::BasisNode(const Domain& domain) : domain_(domain) { }
 
     BasisNode* Basis::get() const { return static_cast<BasisNode*>(SharedObject::get()); };
     BasisNode* Basis::operator->() const { return get(); }
 
     std::string BasisNode::getRepresentation() const {return "Basis";};
     std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
+
+    Domain BasisNode::domain() const {return domain_;}
+    Domain Basis::domain() const {return (*this)->domain();}
 
     Basis Basis::operator+ (const Basis& other) const { return (*this)->operator+(other);}
 
@@ -64,6 +70,15 @@ namespace spline {
 
     Basis Basis::midpoint_refinement(int refinement, AnyTensor& T) const {
         return (*this)->midpoint_refinement(refinement, T);
+    }
+
+    Function BasisNode::basis_functions() const {
+        AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(dimension())));
+        return Function(shared_from_this<Basis>(), Coefficient(t));
+    }
+    
+    Function Basis::basis_functions() const {
+        return (*this)->basis_functions();
     }
 
 
