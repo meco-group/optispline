@@ -28,19 +28,6 @@ namespace spline {
         assign_node(new TensorDomainNode(allSubDomain, args));
     }
 
-    TensorDomain::TensorDomain(const std::vector< std::vector< AnyScalar > >& intervals,
-        const std::vector< Argument >& args) {
-        std::vector<Domain> domains(intervals.size());
-        for (int i=0; i<intervals.size(); i++) {
-            domains[i] = Interval(intervals[i]);
-        }
-        assign_node(new TensorDomainNode(domains, args));
-    }
-
-    TensorDomain::TensorDomain(const std::vector< std::vector< AnyScalar > >& intervals) {
-        TensorDomain(intervals, std::vector<Argument> {});
-    }
-
     bool TensorDomain::operator==(const TensorDomain& other) const {
         return (*this)->operator==(other);
     }
