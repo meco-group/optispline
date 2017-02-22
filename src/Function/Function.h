@@ -107,6 +107,9 @@ class Function {
 
         Function transform_to(const TensorBasis& basis) const;
 
+        AnyTensor integral() const;
+        AnyTensor integral(const TensorDomain& domain) const;
+
         Function cat(const NumericIndex& index, const std::vector< spline::Function >& f) const;
     public:
         TensorBasis basis_;

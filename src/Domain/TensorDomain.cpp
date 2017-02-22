@@ -67,8 +67,9 @@ namespace spline {
         return true;
     }
 
-    int TensorDomain::n_domains() const { return (*this)->n_domains();}
+    int TensorDomain::n_domains() const { return (*this)->n_domains(); }
     int TensorDomainNode::n_domains() const {
+
         return domains_.size();
     }
 

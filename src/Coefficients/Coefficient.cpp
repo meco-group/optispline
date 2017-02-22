@@ -75,7 +75,8 @@ namespace spline {
         for (int k=0; k<T.size(); k++) {
             // check dimension of transformation matrix
             tensor_assert_message(T[k].n_dims()==2,
-              "Transformation matrix should have 2 dimensions.");
+              "Transformation matrix should have 2 dimensions. It has " <<
+              T[k].n_dims() << ".");
             // check compatibility
             tensor_assert_message(T[k].dims()[1]==ret_data.dims()[directions[k]],
                 "Incompatible dimensions: 2nd dimension of transformation matrix is "

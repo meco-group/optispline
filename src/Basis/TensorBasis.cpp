@@ -192,6 +192,7 @@ namespace spline {
     }
 
     TensorDomain TensorBasis::domain() const { return (*this)->domain(); }
+
     std::string TensorBasisNode::getRepresentation() const {
         return "TensorBasis"  + std::to_string(allArguments.size()) +
             std::to_string(bases_.size());
@@ -394,6 +395,48 @@ namespace spline {
         }
         T = T_;
         return substitute_bases(NumericIndex::as_index(direction_ind), new_bases);
+    }
+
+    std::vector<AnyTensor> TensorBasisNode::integral(const TensorDomain& dom, const std::vector<NumericIndex>& direction_ind) const {
+        spline_assert(dom.n_domains() == direction_ind.size());
+        std::vector<AnyTensor> ret(dom.n_domains());
+        for (int i=0; i<dom.n_domains(); i++){
+            ret[i] = basis(direction_ind[i].index()).integral(dom.domain(i));
+        }
+        return ret;
+    }
+
+    std::vector<AnyTensor> TensorBasisNode::integral(const TensorDomain& dom, const std::vector<Argument>& directions) const {
+        spline_assert(dom.n_domains() == directions.size());
+        std::vector<AnyTensor> ret(directions.size());
+        for (int i=0; i<directions.size(); i++) {
+            if (dom.hasArguments()) {
+                ret[i] = basis(directions[i]).integral(dom.domain(directions[i]));
+            } else {
+                ret[i] = basis(directions[i]).integral(dom.domain(i));
+            }
+        }
+        return ret;
+    }
+
+    std::vector<AnyTensor> TensorBasis::integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const {
+        return (*this)->integral(domain, direction_ind);
+    }
+
+    std::vector<AnyTensor> TensorBasis::integral(const TensorDomain& domain, const std::vector<Argument>& directions) const {
+        return (*this)->integral(domain, directions);
+    }
+
+    std::vector<AnyTensor> TensorBasis::integral(const TensorDomain& domain) const {
+        if (hasArguments()) {
+            return (*this)->integral(domain, arguments());
+        } else {
+            std::vector<NumericIndex> direction_ind(n_basis());
+            for (int i=0; i<n_basis(); i++) {
+                direction_ind[i] = i;
+            }
+            return (*this)->integral(domain, direction_ind);
+        }
     }
 
 } // namespace spline

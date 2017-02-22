@@ -37,6 +37,7 @@ public:
         IntervalNode* operator->() const;
 #endif // SWIG
         Interval();
+        Interval(const Domain& dom);
         Interval(const AnyScalar& min, const AnyScalar& max);
         Interval(const std::vector<AnyScalar>& data);
         AnyScalar min() const;

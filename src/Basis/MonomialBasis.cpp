@@ -150,4 +150,14 @@ namespace spline {
         return MonomialBasis(deg);
     }
 
+    AnyTensor MonomialBasisNode::integral(const Interval& dom) const {
+        if (dom == domain()) {
+            return vertcat(std::vector<double>(dimension(), inf)).shape({1, dimension()});
+        } else {
+            AnyTensor T;
+            Basis basis_int = antiderivative(1, T);
+            return (basis_int({dom.max()}) - basis_int({dom.min()})).shape({1, dimension()+1}).mtimes(T);
+        }
+    }
+
 } // namespace spline

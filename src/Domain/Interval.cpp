@@ -15,6 +15,13 @@ namespace spline {
         assign_node(new IntervalNode(std::vector<AnyScalar>{0, 0}));
     }
 
+    Interval::Interval(const Domain& dom) {
+        spline_assert_message(dom.data().size() == 2,
+            "Domain can not be casted as Interval. Domain's data size = " <<
+            dom.data().size() << ", while it should be 2.")
+        assign_node(new IntervalNode(dom.data()));
+    }
+
     Interval::Interval(const AnyScalar& min, const AnyScalar& max) {
         assign_node(new IntervalNode(std::vector<AnyScalar>{min, max}));
     }

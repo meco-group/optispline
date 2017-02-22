@@ -101,6 +101,15 @@ namespace spline {
         return Basis();
     }
 
+    AnyTensor BasisNode::integral(const Domain& domain) const {
+        spline_assert(false);
+        return AnyTensor();
+    }
+
+    AnyTensor Basis::integral(const Domain& domain) const {
+        return (*this)->integral(domain);
+    }
+
     AnyTensor BasisNode::const_coeff_tensor(const AnyTensor& t) const {
         spline_assert(false);
         return AnyTensor();
@@ -109,7 +118,5 @@ namespace spline {
     AnyTensor Basis::const_coeff_tensor(const AnyTensor& t) const {
         return (*this)->const_coeff_tensor(t);
     }
-
-
 
 } // namespace spline

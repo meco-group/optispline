@@ -54,6 +54,7 @@ namespace spline {
 
         virtual Basis derivative(int order, AnyTensor& T) const;
         virtual Basis antiderivative(int order, AnyTensor& T) const;
+        virtual AnyTensor integral(const Domain& domain) const;
 
         virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const;
         virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const;
@@ -100,6 +101,8 @@ namespace spline {
         Basis antiderivative(AnyTensor& SWIG_OUTPUT(T)) const;  // default order = 1
         Basis antiderivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
 
+        AnyTensor integral(const Domain& domain) const;
+
         AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
 
 #ifndef SWIG
@@ -112,7 +115,7 @@ namespace spline {
 
     template< class T >
         void BasisNode::assert_vector_lenght_correct( const std::vector< T >& x) const{
-            spline_assert_message(x.size() == n_inputs(), "imput vector has wrong dimention");  // imput vector has wrong dimention
+            spline_assert_message(x.size() == n_inputs(), "input vector has wrong dimention");  // input vector has wrong dimention
         }
 
 }  // namespace spline

@@ -357,9 +357,14 @@ namespace spline {
     }
 
     Function Function::derivative(int order) const {
-      spline_assert_message(tensor_basis().n_basis() == 1,
-        "I don't know the direction for derivation. Please supply argument.");
-      return derivative(std::vector<int>{order}, std::vector<NumericIndex>{0});
+        // apply on all directions
+        std::vector<NumericIndex> arg_ind(tensor_basis().n_basis());
+        std::vector<int> orders(tensor_basis().n_basis());
+        for (int k=0; k<arg_ind.size(); k++) {
+            arg_ind[k] = k;
+            orders[k] = order;
+        }
+        return derivative(orders, arg_ind);
     }
 
     Function Function::derivative(int order, const Argument& direction) const {
@@ -391,41 +396,46 @@ namespace spline {
     }
 
     Function Function::antiderivative() const {
-      return antiderivative(1);
+        return antiderivative(1);
     }
 
     Function Function::antiderivative(int order) const {
-      spline_assert_message(tensor_basis().n_basis() == 1,
-        "I don't know the direction for derivation. Please supply argument.");
-      return antiderivative(std::vector<int>{order}, std::vector<NumericIndex>{0});
+        // apply on all directions
+        std::vector<NumericIndex> arg_ind(tensor_basis().n_basis());
+        std::vector<int> orders(tensor_basis().n_basis());
+        for (int k=0; k<arg_ind.size(); k++) {
+            arg_ind[k] = k;
+            orders[k] = order;
+        }
+        return antiderivative(orders, arg_ind);
     }
 
     Function Function::antiderivative(int order, const Argument& direction) const {
-      return antiderivative(std::vector<int>{order}, std::vector<Argument>{direction});
+        return antiderivative(std::vector<int>{order}, std::vector<Argument>{direction});
     }
 
     Function Function::antiderivative(int order, const NumericIndex& direction) const {
-      return antiderivative(std::vector<int>{order}, std::vector<NumericIndex>{direction});
+        return antiderivative(std::vector<int>{order}, std::vector<NumericIndex>{direction});
     }
 
     Function Function::antiderivative(const std::vector<int>& orders,
         const std::vector<Argument>& directions) const {
-      std::vector<NumericIndex> direction_ind(directions.size());
-      for (int i=0; i<directions.size(); i++) {
-          direction_ind[i] = tensor_basis().indexArgument(directions[i]);
-      }
-      return antiderivative(orders, direction_ind);
+        std::vector<NumericIndex> direction_ind(directions.size());
+        for (int i=0; i<directions.size(); i++) {
+            direction_ind[i] = tensor_basis().indexArgument(directions[i]);
+        }
+        return antiderivative(orders, direction_ind);
     }
 
     Function Function::antiderivative(const std::vector<int>& orders,
         const std::vector<NumericIndex>& direction_ind) const {
-      spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
-      std::vector<AnyTensor> T;
-      TensorBasis tbasis = tensor_basis();
-      TensorBasis new_tbasis = tbasis.antiderivative(orders, direction_ind, T);
-      std::vector<NumericIndex> directions(direction_ind.size());
-      Coefficient new_coefficient = coeff().transform(T, direction_ind);
-      return Function(new_tbasis, new_coefficient);
+        spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
+        std::vector<AnyTensor> T;
+        TensorBasis tbasis = tensor_basis();
+        TensorBasis new_tbasis = tbasis.antiderivative(orders, direction_ind, T);
+        std::vector<NumericIndex> directions(direction_ind.size());
+        Coefficient new_coefficient = coeff().transform(T, direction_ind);
+        return Function(new_tbasis, new_coefficient);
     }
 
     std::vector<Function> Function::jacobian() const {
@@ -434,6 +444,20 @@ namespace spline {
             Jacobian[i] = derivative(1, i);
         }
         return Jacobian;
+    }
+
+    AnyTensor Function::integral() const {
+        return integral(tensor_basis().domain());
+    }
+
+    AnyTensor Function::integral(const TensorDomain& domain) const {
+        std::vector<AnyTensor> T = tensor_basis().integral(domain);
+        std::vector<NumericIndex> direction_ind(tensor_basis().n_basis());
+        for (int i=0; i<tensor_basis().n_basis(); i++){
+            direction_ind[i] = i;
+        }
+        Coefficient new_coefficient = coeff().transform(T, direction_ind);
+        return new_coefficient.data().squeeze();
     }
 
     Function Function::transform_to(const TensorBasis& basis) const {

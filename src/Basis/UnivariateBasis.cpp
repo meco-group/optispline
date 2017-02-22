@@ -17,4 +17,8 @@ namespace spline {
 
     int UnivariateBasisNode::n_inputs() const { return 1; }
 
+    AnyTensor UnivariateBasisNode::integral(const Domain& domain) const {
+        return integral(static_cast<Interval>(domain));
+    }
+
 }  // namespace spline

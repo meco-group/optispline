@@ -306,6 +306,23 @@ namespace spline {
         return BSplineBasis(kn, deg);
     }
 
+    AnyTensor BSplineBasisNode::integral(const Interval& dom) const {
+        if (dom == domain()){
+            int n_dim = dimension();
+            int deg = degree();
+            std::vector<AnyScalar> kn = knots();
+            std::vector<AnyScalar> data(n_dim, 0);
+            for (int i=0; i<n_dim; i++) {
+                data[i] = (kn[i+deg+1] - kn[i])/(deg+1);
+            }
+            return vertcat(data).shape({1, n_dim});
+        } else {
+            AnyTensor T;
+            Basis basis_int = antiderivative(1, T);
+            return (basis_int({dom.max()}) - basis_int({dom.min()})).shape({1, dimension()+1}).mtimes(T);
+        }
+    }
+
     Basis BSplineBasisNode::insert_knots(const AnyVector & new_knots,
       AnyTensor & T) const {
       // construct coefficient transformation matrix
@@ -363,8 +380,6 @@ namespace spline {
             }
           }
       }
-
-
       // invoke knot insertion
       return insert_knots(vertcat(new_knots), T);
     }

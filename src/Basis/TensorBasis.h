@@ -69,6 +69,8 @@ class TensorBasisNode : public SharedObjectNode {
 
         TensorBasis derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
+        std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const;
+        std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<Argument>& directions) const;
 
     // protected:
         std::vector< Basis > bases_;
@@ -149,8 +151,13 @@ public:
         TensorBasis antiderivative(const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<Argument>& directions, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+
+        std::vector<AnyTensor> integral(const TensorDomain& domain) const;
+        std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<Argument>& directions) const;
+        std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const;
 };
 
 }   // namespace spline
+
 
 #endif  // SRC_BASIS_TENSORBASIS_H_
