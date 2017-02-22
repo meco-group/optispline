@@ -109,6 +109,10 @@ def _swig_repr(self):
 
 #include <src/Coefficients/Coefficient.h>
 
+#include <src/Domain/Interval.h>
+#include <src/Domain/Domain.h>
+#include <src/Domain/TensorDomain.h>
+
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
 #include <src/Function/Argument.h>
@@ -188,7 +192,7 @@ using namespace spline;
                                     $descriptor(spline::TensorBasis*), 0))) {
         return true;
       }
-      
+
       {
         std::vector<Basis> tmp, *mt=&tmp;
         if(casadi::to_ptr(p, m ? &mt : 0)) {
@@ -610,7 +614,7 @@ using namespace spline;
                                     $descriptor(spline::Function*), 0))) {
         return true;
       }
-      
+
       {
         AnyTensor tmp;
         if (to_val(p, &tmp)) {
@@ -618,7 +622,7 @@ using namespace spline;
           return true;
         }
       }
-      
+
       return false;
       }
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
@@ -924,6 +928,10 @@ using namespace spline;
 %include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 %include <src/Coefficients/Coefficient.h>
+
+%include <src/Domain/Interval.h>
+%include <src/Domain/Domain.h>
+%include <src/Domain/TensorDomain.h>
 
 #ifdef SWIGPYTHON
 %rename(call) spline::Function::operator();
