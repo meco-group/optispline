@@ -23,6 +23,7 @@ add_definitions(-DSHARED_LIBRARY)
 
 add_library(tensortools
             any_tensor.cpp any_tensor.hpp tensor.hpp
+            slice.cpp slice.cpp
           )
 
 
