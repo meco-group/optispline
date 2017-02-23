@@ -398,46 +398,76 @@ namespace spline {
         return substitute_bases(NumericIndex::as_index(direction_ind), new_bases);
     }
 
-    std::vector<AnyTensor> TensorBasisNode::integral(const TensorDomain& dom, const std::vector<NumericIndex>& direction_ind) const {
-        spline_assert(dom.n_domains() == direction_ind.size());
-        std::vector<AnyTensor> ret(dom.n_domains());
-        for (int i=0; i<dom.n_domains(); i++){
-            ret[i] = basis(direction_ind[i].index()).integral(dom.domain(i));
-        }
-        return ret;
-    }
-
-    std::vector<AnyTensor> TensorBasisNode::integral(const TensorDomain& dom, const std::vector<Argument>& directions) const {
-        spline_assert(dom.n_domains() == directions.size());
-        std::vector<AnyTensor> ret(directions.size());
-        for (int i=0; i<directions.size(); i++) {
+    std::vector<AnyTensor> TensorBasisNode::integral(const TensorDomain& dom) const {
+        spline_assert(dom.n_domains() == n_basis());
+        std::vector<AnyTensor> ret(n_basis());
+        for (int i=0; i<n_basis(); i++) {
             if (dom.hasArguments()) {
-                ret[i] = basis(directions[i]).integral(dom.domain(directions[i]));
+                ret[i] = basis(i).integral(dom.domain(argument(i)));
             } else {
-                ret[i] = basis(directions[i]).integral(dom.domain(i));
+                ret[i] = basis(i).integral(dom.domain(i));
             }
         }
         return ret;
     }
 
-    std::vector<AnyTensor> TensorBasis::integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const {
-        return (*this)->integral(domain, direction_ind);
+    TensorBasis TensorBasisNode::partial_integral(const TensorDomain& dom,
+        const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
+        spline_assert(dom.n_domains() == direction_ind.size());
+        std::vector<Basis> bases(0);
+        std::vector<Argument> args(0);
+        std::vector<AnyTensor> T_(direction_ind.size());
+        for (int i=0; i<direction_ind.size(); i++) {
+            T_[i] = basis(direction_ind[i].index()).integral(dom.domain(i));
+        }
+        int i;
+        for (int j=0; j<n_basis(); j++) {
+            for (i=0; i<direction_ind.size(); i++) {
+                if (direction_ind[i].index() == j) {
+                    break;
+                }
+            }
+            if (i == direction_ind.size()) {
+                bases.push_back(basis(j));
+                if (hasArguments()) {
+                    args.push_back(argument(j));
+                }
+            }
+        }
+        T = T_;
+        return TensorBasis(bases, args);
     }
 
-    std::vector<AnyTensor> TensorBasis::integral(const TensorDomain& domain, const std::vector<Argument>& directions) const {
-        return (*this)->integral(domain, directions);
+    TensorBasis TensorBasisNode::partial_integral(const TensorDomain& dom,
+        const std::vector<Argument>& directions, std::vector<AnyTensor>& T) const {
+        spline_assert(dom.n_domains() == directions.size());
+        std::vector<NumericIndex> direction_ind(directions.size());
+        for (int i=0; i<directions.size(); i++) {
+            direction_ind[i] = indexArgument(directions[i]);
+        }
+        if (dom.hasArguments()) { // order domain
+            std::vector<Domain> doms(directions.size());
+            for (int i=0; i<directions.size(); i++) {
+                doms[i] = dom.domain(directions[i]);
+            }
+            TensorDomain dom2 = TensorDomain(doms, directions);
+            return partial_integral(dom2, direction_ind, T);
+        }
+        return partial_integral(dom, direction_ind, T);
     }
 
     std::vector<AnyTensor> TensorBasis::integral(const TensorDomain& domain) const {
-        if (hasArguments()) {
-            return (*this)->integral(domain, arguments());
-        } else {
-            std::vector<NumericIndex> direction_ind(n_basis());
-            for (int i=0; i<n_basis(); i++) {
-                direction_ind[i] = i;
-            }
-            return (*this)->integral(domain, direction_ind);
-        }
+        return (*this)->integral(domain);
+    }
+
+    TensorBasis TensorBasis::partial_integral(const TensorDomain& domain,
+        const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
+        return (*this)->partial_integral(domain, direction_ind, T);
+    }
+
+    TensorBasis TensorBasis::partial_integral(const TensorDomain& domain,
+        const std::vector<Argument>& directions, std::vector<AnyTensor>& T) const {
+        return (*this)->partial_integral(domain, directions, T);
     }
 
     std::vector< spline::Function > TensorBasis::basis_functions() const {
@@ -446,10 +476,9 @@ namespace spline {
 
     std::vector< spline::Function > TensorBasisNode::basis_functions() const {
         std::vector< spline::Function > basis_functions_;
-        for (int i = 0; i < n_basis(); i++){
+        for (int i = 0; i < n_basis(); i++) {
             basis_functions_.push_back(basis(i).basis_functions());
         }
         return basis_functions_;
     }
-
 } // namespace spline

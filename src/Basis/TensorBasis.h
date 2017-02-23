@@ -70,8 +70,9 @@ class TensorBasisNode : public SharedObjectNode {
 
         TensorBasis derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
-        std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const;
-        std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<Argument>& directions) const;
+        std::vector<AnyTensor> integral(const TensorDomain& domain) const;
+        TensorBasis partial_integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const;
+        TensorBasis partial_integral(const TensorDomain& domain, const std::vector<Argument>& directions, std::vector<AnyTensor>& T) const;
 
         AnyTensor project_to(const TensorBasis& b) const ;
         std::vector< spline::Function > basis_functions() const ;
@@ -157,8 +158,8 @@ public:
         TensorBasis antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
         std::vector<AnyTensor> integral(const TensorDomain& domain) const;
-        std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<Argument>& directions) const;
-        std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const;
+        TensorBasis partial_integral(const TensorDomain& domain, const std::vector<Argument>& directions, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+        TensorBasis partial_integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
         //AnyTensor project_to(const TensorBasis& b) const ;
         std::vector< spline::Function > basis_functions() const ;

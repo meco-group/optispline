@@ -453,11 +453,33 @@ namespace spline {
     AnyTensor Function::integral(const TensorDomain& domain) const {
         std::vector<AnyTensor> T = tensor_basis().integral(domain);
         std::vector<NumericIndex> direction_ind(tensor_basis().n_basis());
-        for (int i=0; i<tensor_basis().n_basis(); i++){
+        for (int i=0; i<tensor_basis().n_basis(); i++) {
             direction_ind[i] = i;
         }
         Coefficient new_coefficient = coeff().transform(T, direction_ind);
         return new_coefficient.data().shape(shape());
+    }
+
+    Function Function::partial_integral(const TensorDomain& domain,
+        const std::vector<Argument>& directions) const {
+        std::vector<AnyTensor> T;
+        TensorBasis new_tbasis = tensor_basis().partial_integral(domain, directions, T);
+        std::vector<NumericIndex> direction_ind(directions.size());
+        for (int i=0; i<directions.size(); i++) {
+            direction_ind[i] = tensor_basis().indexArgument(directions[i]);
+        }
+        Coefficient new_coefficient = coeff().transform(T, direction_ind);
+        new_coefficient = new_coefficient.rm_direction(direction_ind);
+        return Function(new_tbasis, new_coefficient);
+    }
+
+    Function Function::partial_integral(const TensorDomain& domain,
+        const std::vector<NumericIndex>& direction_ind) const {
+        std::vector<AnyTensor> T;
+        TensorBasis new_tbasis = tensor_basis().partial_integral(domain, direction_ind, T);
+        Coefficient new_coefficient = coeff().transform(T, direction_ind);
+        new_coefficient = new_coefficient.rm_direction(direction_ind);
+        return Function(new_tbasis, new_coefficient);
     }
 
     Function Function::transform_to(const TensorBasis& basis) const {

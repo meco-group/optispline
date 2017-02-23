@@ -110,6 +110,8 @@ class Function {
 
         AnyTensor integral() const;
         AnyTensor integral(const TensorDomain& domain) const;
+        Function partial_integral(const TensorDomain& domain, const std::vector<Argument>& directions) const;
+        Function partial_integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const;
 
         Function reshape(const std::vector< int >& shape) const;
 
