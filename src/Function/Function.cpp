@@ -244,27 +244,27 @@ namespace spline {
         return Function(tensor_basis(), cdiag);
     }
 
-    Function Function::vertcat(const std::vector< spline::Function >& f) const {
-        return cat(0, f);
+    Function Function::vertcat(const std::vector< spline::Function >& f) { 
+        return Function::cat(0, f);
     }
 
-    Function Function::horzcat(const std::vector< spline::Function >& f) const {
-        return cat(1, f);
+    Function Function::horzcat(const std::vector< spline::Function >& f) {
+        return Function::cat(1, f);
     }
 
-    Function Function::blkdiag(const std::vector< spline::Function >& f) const {
-        Function b = *this;
-        for (int i = 0; i < f.size(); i++) {
+    Function Function::blkdiag(const std::vector< spline::Function >& f) {
+        Function b = f[0];
+        for (int i = 1; i < f.size(); i++) {
             std::vector< int > shape12 = std::vector< int >{b.shape()[0], f[i].shape()[1]};
             std::vector< int > shape21 = std::vector< int >{f[i].shape()[0], b.shape()[1]};
 
             Function zero12 = Function::Constant(b.tensor_basis(), 0, shape12);
             Function zero21 = Function::Constant(b.tensor_basis(), 0, shape21);
 
-            Function upper = b.horzcat(std::vector< Function >{zero12});
-            Function lower = zero21.horzcat(std::vector< Function >{f[i]});
+            Function upper = Function::horzcat(std::vector< Function >{b, zero12});
+            Function lower = Function::horzcat(std::vector< Function >{zero21, f[i]});
 
-            b = upper.vertcat(std::vector< Function >{lower});
+            b = Function::vertcat(std::vector< Function >{upper, lower});
         }
 
         return b;
@@ -492,19 +492,18 @@ namespace spline {
     }
 
     Function Function::cat(const NumericIndex& index,
-          const std::vector< spline::Function >& functions) const {
-        TensorBasis unionBasis = tensor_basis();
-        for (auto& f : functions) {
-            unionBasis = unionBasis + f.tensor_basis();
+          const std::vector< spline::Function >& functions) {
+        TensorBasis unionBasis = functions[0].tensor_basis();  // load first basis
+        for (int i = 1; i< functions.size(); i++) {
+            unionBasis = unionBasis + functions[i].tensor_basis();  // add other bases
         }
 
         std::vector< Coefficient > coefVec;
-        for (auto& f : functions) {
-            coefVec.push_back(f.transform_to(unionBasis).coeff());
+        for (int i = 0; i< functions.size(); i++) {
+            coefVec.push_back(functions[i].transform_to(unionBasis).coeff());
         }
 
-        Coefficient coef = this->transform_to(unionBasis).coeff();
-        return Function(unionBasis, coef.cat(index, coefVec));
+        return Function(unionBasis, Coefficient::cat(index, coefVec));
     }
 
     Function Function::slice(const AnySlice& i, const AnySlice& j) const {

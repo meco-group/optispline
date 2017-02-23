@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from helpers import *
+from Basis import vertcat
 
 class Test_Function_Function(BasisTestCase):
 
@@ -379,7 +380,7 @@ class Test_Function_Function(BasisTestCase):
         f13_int1 = f13.integral([[0.1, 0.8], [0.2, 0.9]])
         f13_int2 = f13_antider(0.8, 0.9) - f13_antider(0.8, 0.2) - f13_antider(0.1, 0.9) + f13_antider(0.1, 0.2)
         self.assertEqualT(f13_int1, f13_int2, 1e-6)
-        fv = f12.vertcat([f13])
+        fv = vertcat(f12, f13)
         self.assertEqualT(fv.integral([[0.1, 0.8], [0.2, 0.9]]), np.vstack((f12_int2, f13_int2)), 1e-6)
 
 if __name__ == '__main__':

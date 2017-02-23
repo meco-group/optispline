@@ -3,6 +3,7 @@
 
 from helpers import *
 
+from Basis import vertcat, horzcat, blkdiag
 class Test_Function_Function_shape(BasisTestCase):
 
     def test_transpose(self):
@@ -56,23 +57,22 @@ class Test_Function_Function_shape(BasisTestCase):
         func1 = Function(mbasis1,coeff1)
         func2 = Function(mbasis2,coeff2)
         
-        func3 = func1.vertcat([func2])
+        func3 = vertcat(func1, func2)
         self.assertEqual(func3.shape,[2,1])
         print func3(0.5,0.2)
         print DTensor([func1(0.5,0.2),func2(0.5,0.2)])
         self.assertEqualT(func3(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2)],[2,1]))
 
         constant1 = Function.Constant(mbasis1, DTensor([2,2],[2,1]))
-        func4 = func3.horzcat([constant1])
+        func4 = horzcat(func3, constant1)
         self.assertEqual(func4.shape,[2,2])
 
         self.assertEqualT(func4(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2),2,2],[2,2]))
         constant2 = Function.Constant(mbasis1,DTensor([],[0,1]));
         constant3 = Function.Constant(mbasis2,DTensor([],[1,0]));
-        func5 = func1.vertcat([constant2]).horzcat([constant3])
+        func5 = vertcat(func1, constant2)
+        func5 = horzcat(func5, constant3)
         self.assertEqual(func5.shape,[1,1])
-
-
 
     def test_blockdiagonal(self):
         knots1 = [0,0,0.4,1,1]
@@ -95,17 +95,17 @@ class Test_Function_Function_shape(BasisTestCase):
         func1 = Function(mbasis1,coeff1)
         func2 = Function(mbasis2,coeff2)
 
-        func3 = func1.blkdiag([func2])
+        func3 = blkdiag(func1, func2)
         self.assertEqual(func3.shape,[2,2])
         self.assertEqualT(func3(0.5,0.2),DTensor([func1(0.5,0.2),0,0,func2(0.5,0.2)],[2,2]))
 
         constant1 = Function.Constant(mbasis2, DTensor([],[2,0]))
-        func4 = func1.blkdiag([constant1])
+        func4 = blkdiag(func1, constant1)
         self.assertEqual(func4.shape,[3,1])
         self.assertEqualT(func4(0.5,0.2),DTensor([func1(0.5,0.2),0,0],[3,1]))
 
         constant2 = Function.Constant(mbasis1, DTensor([2,3],[1,2]))
-        func5 = func1.blkdiag([constant2])
+        func5 = blkdiag(func1, constant2)
         self.assertEqual(func5.shape,[2,3])
         self.assertEqualT(func5(0.5,0.2),DTensor([func1(0.5,0.2),0,0,2,0,3],[2,3]))
 
