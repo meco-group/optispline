@@ -53,6 +53,21 @@ class Test_Basis_MonomialBasis(BasisTestCase):
         self.assertEqualT(b_.degree(), b.degree())
         self.assertEqualT(Tder.dot(Tanti), np.eye(Tder.shape[0]))
 
+    def test_degree_elevation(self):
+        np.random.seed(0)
+        degree = 3
+        b1 = MonomialBasis(degree)
+        c1 = np.random.rand(b1.dimension())
+        s1 = Function(b1,c1)
+        elev = 2
+        b2,T = b1.degree_elevation(elev)
+        degree2 = degree+elev
+        self.assertEqualT(degree2, b2.degree(), tol=1e-6)
+        c2 = T.dot(c1)
+        s2 = Function(b2,c2)
+        for i in range(b2.dimension()+1):
+            self.assertEqualT(s1(i), s2(i), 1e-6)
+
 # TODO constructor
     # def test_getEvaluation1(self):
     # def test_getEvaluation2(self):

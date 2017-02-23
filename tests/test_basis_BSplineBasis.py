@@ -86,8 +86,48 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
-    def test_derivative(self):
+    def test_degree_elevation(self):
+        np.random.seed(0)
+        degree = 3
+        knotsint = 8
+        knots1 = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+        b1 = BSplineBasis(knots1,degree)
+        c1 = np.random.rand(b1.dimension())
+        s1 = Function(b1,c1)
+        elev = 2
+        b2,T = b1.degree_elevation(elev)
+        degree2 = degree+elev
+        knots2 = np.r_[np.zeros(degree), sorted(np.linspace(0, 1, knotsint).tolist()*elev), np.ones(degree)]
+        self.assertEqualT(knots2, b2.knots(), tol=1e-6)
+        self.assertEqualT(degree2, b2.degree(), tol=1e-6)
+        # c2 = T.dot(c1)
+        # s2 = Function(b2,c2)
+        # g2 = b2.greville()
+        # for i in g2:
+        #     self.assertEqualT(s1(i), s2(i), 1e-6)
 
+    def test_kick_boundary(self):
+        np.random.seed(0)
+        degree = 3
+        knotsint = 8
+        knots1 = np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)]
+        b1 = BSplineBasis(knots1,degree)
+        c1 = np.random.rand(b1.dimension())
+        s1 = Function(b1,c1)
+        elev = 2
+        lb, ub = -0.1, 0.95
+        return
+        b2,T = b1.kick_boundary([lb, ub])
+        knots2 = np.r_[lb*np.ones(degree), np.linspace(lb, ub, knotsint), ub*np.ones(degree)]
+        self.assertEqualT(knots2, b2.knots(), tol=1e-6)
+        self.assertEqualT(degree, b2.degree(), tol=1e-6)
+        # c2 = T.dot(c1)
+        # s2 = Function(b2,c2)
+        # g2 = b2.greville()
+        # for i in g2:
+        #     self.assertEqualT(s1(i), s2(i), 1e-6)
+
+    def test_derivative(self):
         # Check first derivative
         n_der = 1
         degree = 3
