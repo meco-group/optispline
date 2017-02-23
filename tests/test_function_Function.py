@@ -423,7 +423,6 @@ class Test_Function_Function(BasisTestCase):
         f123_antider_yz = f123.antiderivative([1, 1], ['y', 'z'])
         dom1 = TensorDomain([[-0.1, 0.9], [0.5, 0.6]], ['z', 'y'])
         dom2 = TensorDomain([[0.5, 0.6], [-0.1, 0.9]])
-        dom2 = [[0.5, 0.6], [-0.1, 0.9]]
         fx = f123.partial_integral(dom1, ['y', 'z'])
         fx2 = f123.partial_integral(dom2, ['y', 'z'])
         fx3 = f123.partial_integral(dom2, [1, 2])
