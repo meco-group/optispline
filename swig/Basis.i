@@ -988,11 +988,14 @@ using namespace spline;
 %rename(_shape) spline::Function::shape;
 %rename(_vertcat) spline::spline_vertcat;
 %rename(_horzcat) spline::spline_horzcat;
+%rename(_blkdiag) spline::spline_blkdiag;
 %pythoncode %{
   def vertcat(*args):
     return _vertcat(args)
   def horzcat(*args):
     return _horzcat(args)
+  def blkdiag(*args):
+    return _blkdiag(args)
 %}
 #endif
 
@@ -1108,6 +1111,7 @@ namespace spline {
 
     Function spline_vertcat(const std::vector<spline::Function>& args) { return Function::vertcat(args); }
     Function spline_horzcat(const std::vector<spline::Function>& args) { return Function::horzcat(args); }
+    Function spline_blkdiag(const std::vector<spline::Function>& args) { return Function::blkdiag(args); }
 
   }
 }
