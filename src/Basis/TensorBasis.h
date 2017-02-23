@@ -74,7 +74,7 @@ class TensorBasisNode : public SharedObjectNode {
         std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<Argument>& directions) const;
 
         AnyTensor project_to(const TensorBasis& b) const ;
-        std::vector< Function > basis_functions() const ;
+        std::vector< spline::Function > basis_functions() const ;
 
     // protected:
         std::vector< Basis > bases_;
