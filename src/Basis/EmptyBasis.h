@@ -24,7 +24,6 @@ namespace spline {
         virtual Basis operator*(const BSplineBasis& other) const override;
 
         virtual std::string getRepresentation() const override;
-        virtual Basis derivative(int order, AnyTensor& T) const override ;
     };
 #endif // SWIG
 
