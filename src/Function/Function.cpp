@@ -80,7 +80,7 @@ namespace spline {
           ".basis() syntax only works for a 1-D TensorBasis.");
       return basis_.bases()[0];
     }
-    Basis Function::basis(const Index& index) const {
+    Basis Function::basis(const Argument& index) const {
       return basis_.basis(index);
     }
 

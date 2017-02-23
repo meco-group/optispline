@@ -10,7 +10,7 @@
 #include "../SharedObject/SharedObjectNode.h"
 
 #include "Basis.h"
-#include "../Function/Index.h"
+#include "../Function/Argument.h"
 #include "../Function/NumericIndex.h"
 #include "../Domain/TensorDomain.h"
 
@@ -48,13 +48,13 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis bases(int index) const;
         Basis basis() const;
         Basis basis(const std::string& a) const;
-        Basis basis(const Index& index) const;
+        Basis basis(const Argument& index) const;
         // Basis bases( std::string a) const;
 
         TensorBasis add_basis(TensorBasis basis) const;
         TensorBasis add_basis(Basis basis) const;
 
-        TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
+        TensorBasis substitute_bases(const std::vector<Argument>& arg_ind, const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
@@ -119,7 +119,7 @@ public:
 
         Basis basis() const;
         Basis basis(const std::string& a) const;
-        Basis basis(const Index& index) const;
+        Basis basis(const Argument& index) const;
         // Basis operator[](std::string a) const;
         // Basis operator[](int index) const;
 
@@ -129,7 +129,7 @@ public:
         TensorBasis add_basis(TensorBasis basis) const;
         TensorBasis add_basis(Basis basis) const;
 
-        TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
+        TensorBasis substitute_bases(const std::vector<Argument>& arg_ind, const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;

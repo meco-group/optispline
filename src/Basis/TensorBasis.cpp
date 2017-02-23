@@ -122,11 +122,11 @@ namespace spline {
         }
     }
 
-    Basis TensorBasis::basis(const Index& index) const {
+    Basis TensorBasis::basis(const Argument& index) const {
         return (*this)->basis(index);
     }
 
-    Basis TensorBasisNode::basis(const Index& index) const {
+    Basis TensorBasisNode::basis(const Argument& index) const {
         int ind = index.concrete(arguments());
         spline_assert(ind < n_basis());
         return bases()[ind];
@@ -149,12 +149,12 @@ namespace spline {
         return TensorBasis(new_bases, arguments());
     }
 
-    TensorBasis TensorBasis::substitute_bases(const std::vector<Index>& indices,
+    TensorBasis TensorBasis::substitute_bases(const std::vector<Argument>& indices,
         const std::vector<Basis>& bases) const {
         return (*this)->substitute_bases(indices, bases);
     }
 
-    TensorBasis TensorBasisNode::substitute_bases(const std::vector<Index>& indices,
+    TensorBasis TensorBasisNode::substitute_bases(const std::vector<Argument>& indices,
         const std::vector<Basis>& bases) const {
         spline_assert(indices.size() == bases.size());
         std::vector<Basis> new_bases(0);
@@ -293,7 +293,7 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).insert_knots(new_knots[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
@@ -319,7 +319,7 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).midpoint_refinement(refinement[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     TensorBasis TensorBasis::derivative(const std::vector<std::string>& directions,
@@ -363,7 +363,7 @@ namespace spline {
             new_bases[i] = basis(direction_ind[i]).derivative(orders[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(direction_ind), new_bases);
+        return substitute_bases(Argument::from_vector(direction_ind), new_bases);
     }
 
     TensorBasis TensorBasis::antiderivative(const std::vector<std::string>& directions,
@@ -407,7 +407,7 @@ namespace spline {
             new_bases[i] = basis(direction_ind[i]).antiderivative(orders[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(direction_ind), new_bases);
+        return substitute_bases(Argument::from_vector(direction_ind), new_bases);
     }
 
     std::vector<AnyTensor> TensorBasisNode::integral(const TensorDomain& dom) const {
