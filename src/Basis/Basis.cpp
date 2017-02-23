@@ -59,13 +59,13 @@ namespace spline {
         return Basis();
     }
 
+    Basis Basis::insert_knots(const AnyVector & new_knots, AnyTensor & T) const {
+        return (*this)->insert_knots(new_knots, T);
+    }
+
     Basis BasisNode::midpoint_refinement(int refinement, AnyTensor& T) const {
         spline_assert_message(false, getRepresentation() << " can not refine knots.");
         return Basis();
-    }
-
-    Basis Basis::insert_knots(const AnyVector & new_knots, AnyTensor & T) const {
-        return (*this)->insert_knots(new_knots, T);
     }
 
     Basis Basis::midpoint_refinement(int refinement, AnyTensor& T) const {
@@ -94,7 +94,7 @@ namespace spline {
         AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(dimension())));
         return Function(shared_from_this<Basis>(), Coefficient(t));
     }
-    
+
     Function Basis::basis_functions() const {
         return (*this)->basis_functions();
     }

@@ -64,8 +64,8 @@ class TensorBasisNode : public SharedObjectNode {
         int totalNumberBasisFunctions() const;
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
-        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & T, const NumericIndexVector& arg_ind) const;
-        TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & T, const NumericIndexVector& arg_ind) const;
+        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
+        TensorBasis midpoint_refinement(const std::vector<int> & refinement, const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
 
         TensorBasis derivative(const std::vector<int>& orders, const NumericIndexVector& direction_ind, std::vector<AnyTensor>& T) const;
         TensorBasis antiderivative(const std::vector<int>& orders, const NumericIndexVector& direction_ind, std::vector<AnyTensor>& T) const;
@@ -134,7 +134,8 @@ public:
         TensorBasis add_basis(TensorBasis basis) const;
         TensorBasis add_basis(Basis basis) const;
 
-        TensorBasis substitute_bases(const std::vector<Index>& arg_ind, const std::vector<Basis>& bases) const;
+        TensorBasis substitute_bases(const std::vector<Index>& arg_ind,
+            const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
@@ -145,11 +146,12 @@ public:
 
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
-        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<std::string>& args) const;
-        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, std::vector<AnyTensor> & SWIG_OUTPUT(T), const NumericIndexVector& arg_ind) const;
+        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, const std::vector<std::string>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
+        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots, const NumericIndexVector& arg_ind, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
 
-        TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & SWIG_OUTPUT(T), const std::vector<std::string>& args) const;
-        TensorBasis midpoint_refinement(const std::vector<int> & refinement, std::vector<AnyTensor> & SWIG_OUTPUT(T), const NumericIndexVector& arg_ind) const;
+        TensorBasis midpoint_refinement(const std::vector<int> & refinement, const std::vector<std::string>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
+        TensorBasis midpoint_refinement(const std::vector<int> & refinement, const NumericIndexVector& arg_ind, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
+
         TensorBasis degree_elevation(const std::vector<int>& elevation, const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis degree_elevation(const std::vector<int>& elevation, const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 

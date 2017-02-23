@@ -308,7 +308,7 @@ namespace spline {
       spline_assert(arg_ind.size() == new_knots.size())
       std::vector<AnyTensor> T;
       TensorBasis tbasis = tensor_basis();
-      TensorBasis new_tbasis = tbasis.insert_knots(new_knots, T, arg_ind);
+      TensorBasis new_tbasis = tbasis.insert_knots(new_knots, arg_ind, T);
       Coefficient new_coefficient = coeff().transform(T, arg_ind);
       return Function(new_tbasis, new_coefficient);
     }
@@ -346,7 +346,7 @@ namespace spline {
       spline_assert(arg_ind.size() == refinement.size())
       std::vector<AnyTensor> T;
       TensorBasis tbasis = tensor_basis();
-      TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement, T, arg_ind);
+      TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement, arg_ind, T);
       Coefficient new_coefficient = coeff().transform(T, arg_ind);
       return Function(new_tbasis, new_coefficient);
     }
