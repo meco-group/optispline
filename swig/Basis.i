@@ -115,7 +115,7 @@ def _swig_repr(self):
 
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
-#include <src/Function/Index.h>
+#include <src/Function/Argument.h>
 #include <src/Function/NumericIndex.h>
 #include <src/Optistack/optistack.h>
 
@@ -155,7 +155,7 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, DT** m);
     bool to_ptr(GUESTOBJECT *p, ST** m);
     bool to_ptr(GUESTOBJECT *p, MT** m);
-    bool to_ptr(GUESTOBJECT *p, spline::Index** m);
+    bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
     bool to_ptr(GUESTOBJECT *p, spline::TensorBasis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Basis** m);
 
@@ -184,7 +184,7 @@ using namespace spline;
     GUESTOBJECT *from_ptr(const DT *a);
     GUESTOBJECT *from_ptr(const ST *a);
     GUESTOBJECT *from_ptr(const MT *a);
-    GUESTOBJECT *from_ptr(const spline::Index *a);
+    GUESTOBJECT *from_ptr(const spline::Argument *a);
   }
 }
 
@@ -617,12 +617,12 @@ using namespace spline;
       return false;
     }
 
-    bool to_ptr(GUESTOBJECT *p, spline::Index** m) {
+    bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
       // Treat Null
       if (is_null(p)) return false;
 
       if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
-                                    $descriptor(spline::Index*), 0))) {
+                                    $descriptor(spline::Argument*), 0))) {
         return true;
       }
       // String scalar
@@ -688,7 +688,7 @@ using namespace spline;
       return 0;
     }
 
-    GUESTOBJECT * from_ptr(const spline::Index *a) {
+    GUESTOBJECT * from_ptr(const spline::Argument *a) {
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
@@ -904,8 +904,8 @@ using namespace spline;
 %casadi_typemaps("AnyVector", PREC_MX, AnyVector)
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
-%casadi_typemaps("index", PREC_MX, spline::Index)
-%casadi_template("[index]", PREC_MX, std::vector<spline::Index >)
+%casadi_typemaps("index", PREC_MX, spline::Argument)
+%casadi_template("[index]", PREC_MX, std::vector<spline::Argument >)
 %casadi_typemaps("STensor", PREC_MX, Tensor<casadi::SX>)
 %casadi_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
 %casadi_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
@@ -926,7 +926,7 @@ using namespace spline;
 %casadi_template("[Function]", PREC_FUNCTION, std::vector< spline::Function >)
 %casadi_typemaps("Function", PREC_FUNCTION, spline::Function)
 
-%casadi_template("[index]", PREC_IVector, std::vector< spline::Index >)
+%casadi_template("[index]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
 
 
@@ -951,7 +951,7 @@ using namespace spline;
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
 
-%include <src/Function/Index.h>
+%include <src/Function/Argument.h>
 %include <src/Function/NumericIndex.h>
 
 

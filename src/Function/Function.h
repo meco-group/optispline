@@ -7,7 +7,7 @@
 #include "../Basis/TensorBasis.h"
 #include "../Coefficients/Coefficient.h"
 #include <any_tensor.hpp>
-#include "Index.h"
+#include "Argument.h"
 
 namespace spline {
 
@@ -55,7 +55,7 @@ class Function {
         static Function blkdiag(const std::vector< spline::Function >& f);
 
         Basis basis() const;
-        Basis basis(const Index& i) const;
+        Basis basis(const Argument& i) const;
         TensorBasis tensor_basis() const {return basis_;}
         Coefficient coeff() const {return coeff_;}
         AnyTensor coeff_tensor() const {return coeff_.data();}
@@ -107,6 +107,7 @@ class Function {
         std::vector<spline::Function> jacobian() const;
 
         Function transform_to(const TensorBasis& basis) const;
+        Function project_to(const TensorBasis& basis) const;
 
         AnyTensor integral() const;
         AnyTensor integral(const TensorDomain& domain) const;

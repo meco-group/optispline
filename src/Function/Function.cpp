@@ -80,7 +80,7 @@ namespace spline {
           ".basis() syntax only works for a 1-D TensorBasis.");
       return basis_.bases()[0];
     }
-    Basis Function::basis(const Index& index) const {
+    Basis Function::basis(const Argument& index) const {
       return basis_.basis(index);
     }
 
@@ -122,6 +122,9 @@ namespace spline {
       std::vector< int > shapeB = {numberBasis, numberCoef};
       A = A.shape(shapeA);
       B = B.shape(shapeB);
+      casadi::DM anum = A.as_DT().matrix();
+      casadi::write_matlab(casadi::userOut(), anum.nonzeros());
+      std::cout << shapeA << std::endl;
       AnyTensor C = A.solve(B);
 
       std::vector< int > shapeCoef = elemShape;
@@ -510,6 +513,27 @@ namespace spline {
 
       C = C.shape(shapeBasis);
       return Function(unionBasis, C);
+    }
+
+    Function Function::project_to(const TensorBasis& b) const {
+        Function b2 = Function::vertcat(b.basis_functions());
+        Function f = reshape(std::vector< int >{1,shape()[0]*shape()[1]});
+
+        Function b22 = b2.mtimes(b2.transpose());
+        Function b2f = b2.mtimes(f); //f already is a row vector
+
+        AnyTensor B22 = b22.integral();
+        AnyTensor B2f = b2f.integral();
+
+        AnyTensor C = B22.solve(B2f);
+
+        std::vector< int > M = b.dimension();
+        std::vector< int > N = shape();
+        std::vector< int > shapeC = M;
+        shapeC.insert(shapeC.end(), N.begin(), N.end());
+        C = C.shape(shapeC);
+
+        return Function(b,C);
     }
 
     Function Function::cat(NumericIndex index,

@@ -9,56 +9,56 @@
 
 namespace spline {
 #ifndef SWIG
-    class Index;
-    class IndexNode : public SharedObjectNode {
+    class Argument;
+    class ArgumentNode : public SharedObjectNode {
     public:
         virtual std::string getRepresentation() const = 0;
         virtual int concrete(const std::vector<std::string> & args) const = 0;
     };
 
-    class StringIndexNode : public IndexNode {
+    class StringArgumentNode : public ArgumentNode {
     public:
-        StringIndexNode(const std::string &name);
+        StringArgumentNode(const std::string &name);
         virtual std::string getRepresentation() const ;
         virtual int concrete(const std::vector<std::string> & args) const;
     private:
         std::string name_;
     };
 
-    class IntIndexNode : public IndexNode {
+    class IntArgumentNode : public ArgumentNode {
     public:
-        IntIndexNode(int index);
+        IntArgumentNode(int index);
         virtual std::string getRepresentation() const ;
         virtual int concrete(const std::vector<std::string> & args) const;
     private:
         int index_;
     };
 
-    class NullIndexNode : public IndexNode {
+    class NullArgumentNode : public ArgumentNode {
     public:
-        NullIndexNode();
+        NullArgumentNode();
         virtual std::string getRepresentation() const ;
         virtual int concrete(const std::vector<std::string> & args) const;
     };
 
 #endif // SWIG
 
-    class Index : public  SharedObject {
+    class Argument : public  SharedObject {
     public:
 #ifndef SWIG
-        IndexNode* get() const ;
-        IndexNode* operator->() const ;
+        ArgumentNode* get() const ;
+        ArgumentNode* operator->() const ;
 
         inline friend
-            std::ostream& operator<<(std::ostream &stream, const Index& argument);
+            std::ostream& operator<<(std::ostream &stream, const Argument& argument);
 #endif // SWIG
-        Index();
-        Index(const std::string &name);
-        Index(int index);
+        Argument();
+        Argument(const std::string &name);
+        Argument(int index);
 
         int concrete(const std::vector<std::string> & args) const;
 
-        static std::vector<Index> from_vector(const std::vector<int>& ind);
+        static std::vector<Argument> from_vector(const std::vector<int>& ind);
 
         virtual std::string getRepresentation() const ;
     };

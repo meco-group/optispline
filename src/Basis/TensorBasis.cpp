@@ -122,11 +122,11 @@ namespace spline {
         }
     }
 
-    Basis TensorBasis::basis(const Index& index) const {
+    Basis TensorBasis::basis(const Argument& index) const {
         return (*this)->basis(index);
     }
 
-    Basis TensorBasisNode::basis(const Index& index) const {
+    Basis TensorBasisNode::basis(const Argument& index) const {
         int ind = index.concrete(arguments());
         spline_assert(ind < n_basis());
         return bases()[ind];
@@ -149,12 +149,12 @@ namespace spline {
         return TensorBasis(new_bases, arguments());
     }
 
-    TensorBasis TensorBasis::substitute_bases(const std::vector<Index>& indices,
+    TensorBasis TensorBasis::substitute_bases(const std::vector<Argument>& indices,
         const std::vector<Basis>& bases) const {
         return (*this)->substitute_bases(indices, bases);
     }
 
-    TensorBasis TensorBasisNode::substitute_bases(const std::vector<Index>& indices,
+    TensorBasis TensorBasisNode::substitute_bases(const std::vector<Argument>& indices,
         const std::vector<Basis>& bases) const {
         spline_assert(indices.size() == bases.size());
         std::vector<Basis> new_bases(0);
@@ -293,7 +293,7 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).insert_knots(new_knots[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
@@ -319,7 +319,7 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).midpoint_refinement(refinement[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     TensorBasis TensorBasis::degree_elevation(const std::vector<int>& elevation,
@@ -345,7 +345,7 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).degree_elevation(elevation[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     TensorBasis TensorBasisNode::kick_boundary(const TensorDomain& boundary,
@@ -357,7 +357,7 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).kick_boundary(boundary.domain(i), T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     TensorBasis TensorBasisNode::kick_boundary(const TensorDomain& boundary,
@@ -428,7 +428,7 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).derivative(orders[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     TensorBasis TensorBasis::antiderivative(const std::vector<std::string>& args,
@@ -471,7 +471,7 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).antiderivative(orders[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     std::vector<AnyTensor> TensorBasisNode::integral(const TensorDomain& dom) const {
@@ -556,5 +556,32 @@ namespace spline {
             basis_functions_.push_back(basis(i).basis_functions());
         }
         return basis_functions_;
+    }
+
+    AnyTensor TensorBasis::project_to(const TensorBasis& b) const {
+        return (*this)->project_to(b);
+    }
+
+    AnyTensor TensorBasisNode::project_to(const TensorBasis& b) const {
+        Function b1 = Function::vertcat(basis_functions());
+        Function b2 = Function::vertcat(b.basis_functions());
+
+        Function b21  = b2.mtimes(b1.transpose());
+        Function b22  = b2.mtimes(b2.transpose());
+
+        AnyTensor B21 = b21.integral();
+        AnyTensor B22 = b22.integral();
+
+        std::cout << B21.dims() << std::endl;
+        std::cout << B22.dims() << std::endl;
+
+        AnyTensor T = B22.solve(B21);
+
+        std::vector< int > M = b.dimension();
+        std::vector< int > N = dimension();
+        std::vector< int > shapeT = M;
+        shapeT.insert(shapeT.end(), N.begin(), N.end());
+
+        return T.shape(shapeT);
     }
 } // namespace spline
