@@ -24,7 +24,7 @@ class TensorDomainNode : public SharedObjectNode {
         TensorDomainNode(const std::vector< Domain >& allDomain);
         TensorDomainNode(const std::vector< Domain >& allDomain, const std::vector< Argument >& args);
         std::vector< spline::Argument > arguments() const;
-        spline::Argument getSubArgument(int index) const;
+        spline::Argument argument(int index) const;
         int indexArgument(Argument a) const;
         bool hasArguments() const;
 
@@ -57,7 +57,7 @@ public:
         TensorDomain(const std::vector< Domain >& allDomain, const std::vector< Argument >& args);
 
         std::vector< spline::Argument > arguments() const;
-        spline::Argument getSubArgument(int index) const;
+        spline::Argument argument(int index) const;
         int indexArgument(Argument a) const;
         bool hasArguments() const;
 

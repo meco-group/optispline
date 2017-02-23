@@ -45,7 +45,7 @@ namespace spline {
         } else {
             Argument arg;
             for (int i=0; i<n_domains(); i++) {
-                arg = getSubArgument(i);
+                arg = argument(i);
                 if (!(domain(i) == other.domain(arg))) {
                     return false;
                 }
@@ -67,10 +67,10 @@ namespace spline {
         return arguments_;
     }
 
-    spline::Argument TensorDomain::getSubArgument(int index) const {
-        return (*this)->getSubArgument(index);
+    spline::Argument TensorDomain::argument(int index) const {
+        return (*this)->argument(index);
     }
-    Argument TensorDomainNode::getSubArgument(int index) const {
+    Argument TensorDomainNode::argument(int index) const {
         return arguments_[index];
     }
 
@@ -143,7 +143,7 @@ namespace spline {
         } else {
             Argument arg;
             for (int i=0; i<n_domains(); i++) {
-                arg = getSubArgument(i);
+                arg = argument(i);
                 spline_assert_message(other.indexArgument(arg) >= 0,
                     "Domains have incompatible arguments!")
                 int_domains[i] = domain(i).intersection(other.domain(arg));
