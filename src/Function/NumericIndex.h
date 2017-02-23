@@ -6,7 +6,6 @@
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
-#include "Argument.h"
 #include "Index.h"
 
 namespace spline {

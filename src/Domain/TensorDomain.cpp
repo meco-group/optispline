@@ -7,8 +7,8 @@ namespace spline {
     TensorDomainNode* TensorDomain::operator->() const { return get(); }
 
     TensorDomainNode::TensorDomainNode(const std::vector< Domain >& dom) :
-        domains_(dom), arguments_(std::vector<Argument>{}) {}
-    TensorDomainNode::TensorDomainNode(const std::vector< Domain >& dom, const std::vector< Argument >& args) :
+        domains_(dom), arguments_(std::vector<std::string>{}) {}
+    TensorDomainNode::TensorDomainNode(const std::vector< Domain >& dom, const std::vector< std::string >& args) :
         domains_(dom), arguments_(args) {}
 
     TensorDomain::TensorDomain() {
@@ -24,7 +24,7 @@ namespace spline {
     }
 
     TensorDomain::TensorDomain(const std::vector< Domain >& allSubDomain,
-        const std::vector< Argument >& args) {
+        const std::vector< std::string >& args) {
         assign_node(new TensorDomainNode(allSubDomain, args));
     }
 
@@ -43,7 +43,7 @@ namespace spline {
                 }
             }
         } else {
-            Argument arg;
+            std::string arg;
             for (int i=0; i<n_domains(); i++) {
                 arg = argument(i);
                 if (!(domain(i) == other.domain(arg))) {
@@ -60,22 +60,22 @@ namespace spline {
         return domains_.size();
     }
 
-    std::vector< spline::Argument > TensorDomain::arguments() const {
+    std::vector< std::string > TensorDomain::arguments() const {
         return (*this)->arguments();
     }
-    std::vector< Argument > TensorDomainNode::arguments() const {
+    std::vector< std::string > TensorDomainNode::arguments() const {
         return arguments_;
     }
 
-    spline::Argument TensorDomain::argument(int index) const {
+    std::string TensorDomain::argument(int index) const {
         return (*this)->argument(index);
     }
-    Argument TensorDomainNode::argument(int index) const {
+    std::string TensorDomainNode::argument(int index) const {
         return arguments_[index];
     }
 
-    int TensorDomain::indexArgument(Argument a) const { return (*this)->indexArgument(a); }
-    int TensorDomainNode::indexArgument(Argument a) const {
+    int TensorDomain::indexArgument(std::string a) const { return (*this)->indexArgument(a); }
+    int TensorDomainNode::indexArgument(std::string a) const {
         auto it = std::find(arguments_.begin(), arguments_.end(), a);
         int index;
         if (it == arguments_.end()) {
@@ -102,8 +102,8 @@ namespace spline {
         return domains()[0];
     }
 
-    Domain TensorDomain::domain(const Argument& a) const { return (*this)->domain(a); }
-    Domain TensorDomainNode::domain(const Argument& a) const {
+    Domain TensorDomain::domain(const std::string& a) const { return (*this)->domain(a); }
+    Domain TensorDomainNode::domain(const std::string& a) const {
         int index = indexArgument(a);
         spline_assert(index >= 0);
         return domain(index);
@@ -141,7 +141,7 @@ namespace spline {
             }
             return TensorDomain(int_domains);
         } else {
-            Argument arg;
+            std::string arg;
             for (int i=0; i<n_domains(); i++) {
                 arg = argument(i);
                 spline_assert_message(other.indexArgument(arg) >= 0,

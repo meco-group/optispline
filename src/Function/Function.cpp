@@ -291,12 +291,12 @@ namespace spline {
       return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<NumericIndex>{arg_ind});
     }
 
-    Function Function::insert_knots(const AnyVector & new_knots, const Argument & arg) const {
-      return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<Argument>{arg});
+    Function Function::insert_knots(const AnyVector & new_knots, const std::string & arg) const {
+      return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<std::string>{arg});
     }
 
     Function Function::insert_knots(const std::vector<AnyVector> & new_knots,
-      const std::vector<Argument> & arg) const {
+      const std::vector<std::string> & arg) const {
       std::vector<NumericIndex> arg_ind(arg.size());
       for (int i=0; i<arg.size(); i++) {
         arg_ind[i] = tensor_basis().indexArgument(arg[i]);
@@ -329,12 +329,12 @@ namespace spline {
       return midpoint_refinement(std::vector<int>{refinement}, std::vector<NumericIndex>{arg_ind});
     }
 
-    Function Function::midpoint_refinement(int refinement, const Argument & arg) const {
-      return midpoint_refinement(std::vector<int>{refinement}, std::vector<Argument>{arg});
+    Function Function::midpoint_refinement(int refinement, const std::string & arg) const {
+      return midpoint_refinement(std::vector<int>{refinement}, std::vector<std::string>{arg});
     }
 
     Function Function::midpoint_refinement(const std::vector<int> & refinement,
-      const std::vector<Argument> & arg) const {
+      const std::vector<std::string> & arg) const {
       std::vector<NumericIndex> arg_ind(arg.size());
       for (int i=0; i<arg.size(); i++) {
         arg_ind[i] = tensor_basis().indexArgument(arg[i]);
@@ -367,8 +367,8 @@ namespace spline {
         return derivative(orders, arg_ind);
     }
 
-    Function Function::derivative(int order, const Argument& direction) const {
-      return derivative(std::vector<int>{order}, std::vector<Argument>{direction});
+    Function Function::derivative(int order, const std::string& direction) const {
+      return derivative(std::vector<int>{order}, std::vector<std::string>{direction});
     }
 
     Function Function::derivative(int order, const NumericIndex& direction) const {
@@ -376,7 +376,7 @@ namespace spline {
     }
 
     Function Function::derivative(const std::vector<int>& orders,
-          const std::vector<Argument>& directions) const {
+          const std::vector<std::string>& directions) const {
         std::vector<NumericIndex> direction_ind(directions.size());
         for (int i=0; i<directions.size(); i++) {
             direction_ind[i] = tensor_basis().indexArgument(directions[i]);
@@ -410,8 +410,8 @@ namespace spline {
         return antiderivative(orders, arg_ind);
     }
 
-    Function Function::antiderivative(int order, const Argument& direction) const {
-        return antiderivative(std::vector<int>{order}, std::vector<Argument>{direction});
+    Function Function::antiderivative(int order, const std::string& direction) const {
+        return antiderivative(std::vector<int>{order}, std::vector<std::string>{direction});
     }
 
     Function Function::antiderivative(int order, const NumericIndex& direction) const {
@@ -419,7 +419,7 @@ namespace spline {
     }
 
     Function Function::antiderivative(const std::vector<int>& orders,
-        const std::vector<Argument>& directions) const {
+        const std::vector<std::string>& directions) const {
         std::vector<NumericIndex> direction_ind(directions.size());
         for (int i=0; i<directions.size(); i++) {
             direction_ind[i] = tensor_basis().indexArgument(directions[i]);
@@ -461,7 +461,7 @@ namespace spline {
     }
 
     Function Function::partial_integral(const TensorDomain& domain,
-        const std::vector<Argument>& directions) const {
+        const std::vector<std::string>& directions) const {
         std::vector<AnyTensor> T;
         TensorBasis new_tbasis = tensor_basis().partial_integral(domain, directions, T);
         std::vector<NumericIndex> direction_ind(directions.size());

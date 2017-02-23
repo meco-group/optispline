@@ -115,7 +115,6 @@ def _swig_repr(self):
 
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
-#include <src/Function/Argument.h>
 #include <src/Function/Index.h>
 #include <src/Function/NumericIndex.h>
 #include <src/Optistack/optistack.h>
@@ -268,7 +267,7 @@ using namespace spline;
           return true;
         }
       }
-      
+
       return false;
     }
 
@@ -967,7 +966,6 @@ using namespace spline;
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
 
-%include <src/Function/Argument.h>
 %include <src/Function/Index.h>
 %include <src/Function/NumericIndex.h>
 %include <tensor.hpp>
