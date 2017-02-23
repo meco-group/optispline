@@ -392,6 +392,39 @@ namespace spline {
       return Function(new_tbasis, new_coefficient);
     }
 
+    Function Function::kick_boundary(const TensorDomain& boundary) const {
+      // apply on all directions
+      NumericIndexVector arg_ind(tensor_basis().n_basis());
+      for (int k=0; k<arg_ind.size(); k++) {
+        arg_ind[k] = k;
+      }
+      return kick_boundary(boundary, arg_ind);
+    }
+
+    Function Function::kick_boundary(const TensorDomain& boundary, const NumericIndex& arg_ind) const {
+      return kick_boundary(boundary, NumericIndexVector{arg_ind});
+    }
+
+    Function Function::kick_boundary(const TensorDomain& boundary,
+      const std::vector<std::string>& args) const {
+      std::vector<AnyTensor> T;
+      TensorBasis new_tbasis = tensor_basis().kick_boundary(boundary, args, T);
+      NumericIndexVector arg_ind(args.size());
+      for (int i=0; i<args.size(); i++) {
+          arg_ind[i] = tensor_basis().indexArgument(args[i]);
+      }
+      Coefficient new_coefficient = coeff().transform(T, arg_ind);
+      return Function(new_tbasis, new_coefficient);
+    }
+
+    Function Function::kick_boundary(const TensorDomain& boundary,
+      const NumericIndexVector& arg_ind) const {
+      std::vector<AnyTensor> T;
+      TensorBasis new_tbasis = tensor_basis().kick_boundary(boundary, arg_ind, T);
+      Coefficient new_coefficient = coeff().transform(T, arg_ind);
+      return Function(new_tbasis, new_coefficient);
+    }
+
     Function Function::derivative() const {
       return derivative(1);
     }

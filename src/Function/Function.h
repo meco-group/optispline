@@ -99,6 +99,14 @@ class Function {
             const std::vector<std::string> & args) const;
         Function degree_elevation(const std::vector<int> & elevation,
             const NumericIndexVector & arg_ind) const;
+
+        Function kick_boundary(const TensorDomain& boundary) const;
+        Function kick_boundary(const TensorDomain& boundary, const NumericIndex& arg_ind) const;
+        Function kick_boundary(const TensorDomain& boundary,
+            const std::vector<std::string> & args) const;
+        Function kick_boundary(const TensorDomain& boundary,
+            const NumericIndexVector & arg_ind) const;
+
         Function derivative() const;
         Function derivative(int order) const;
         Function derivative(int order, const std::string& arg) const;
