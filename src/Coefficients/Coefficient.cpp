@@ -71,7 +71,7 @@ namespace spline {
 
     AnyTensor CoefficientNode::transform(const AnyTensor& T, const std::vector< NumericIndex > direction) const {
         //check dimensions
-        int n = T.n_dims()/2; 
+        int n = T.n_dims()/2;
         spline_assert_message(T.n_dims()%2 == 0, "The transform tensor should have an even number of dimensions");
         spline_assert_message(n == direction.size(), "Number of directions does not match the number of dimensions.");
         //do einstein
@@ -159,6 +159,28 @@ namespace spline {
         order[order.size()-1] = order.size()-2;
 
         return Coefficient(data().reorder_dims(order));
+    }
+
+    Coefficient Coefficient::rm_direction(const std::vector<NumericIndex>& indices) const {
+        return (*this)->rm_direction(indices);
+    }
+    Coefficient CoefficientNode::rm_direction(const std::vector<NumericIndex>& indices) const {
+        std::vector< int > dims = data_.dims();
+        std::vector< int > new_dims;
+        int j;
+        for (int i=0; i<dims.size(); i++) {
+            for (j=0; j<indices.size(); j++) {
+                if (i == indices[j].index()) {
+                    break;
+                }
+            }
+            if (j == indices.size()) {
+                new_dims.push_back(dims[i]);
+            } else {
+                tensor_assert_message(dims[i] == 1, "Only directions with dimension 1 can be removed.")
+            }
+        }
+        return Coefficient(data().shape(new_dims));
     }
 
     Coefficient Coefficient::cat(const NumericIndex& index,
