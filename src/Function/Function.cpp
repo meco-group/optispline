@@ -244,7 +244,7 @@ namespace spline {
         return Function(tensor_basis(), cdiag);
     }
 
-    Function Function::vertcat(const std::vector< spline::Function >& f) { 
+    Function Function::vertcat(const std::vector< spline::Function >& f) {
         return Function::cat(0, f);
     }
 

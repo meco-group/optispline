@@ -177,7 +177,8 @@ namespace spline {
             if (j == indices.size()) {
                 new_dims.push_back(dims[i]);
             } else {
-                tensor_assert_message(dims[i] == 1, "Only directions with dimension 1 can be removed.")
+                tensor_assert_message(dims[i] == 1,
+                    "Only directions with dimension 1 can be removed.")
             }
         }
         return Coefficient(data().shape(new_dims));
