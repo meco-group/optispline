@@ -1,4 +1,5 @@
 #include "Coefficient.h"
+#include "../common.h"
 
 namespace spline {
 
@@ -71,8 +72,8 @@ namespace spline {
     AnyTensor CoefficientNode::transform(const AnyTensor& T, const std::vector< NumericIndex > direction) const {
         //check dimensions
         int n = T.n_dims()/2; 
-        tensor_assert_message(T.n_dims()%2 == 0, "The transform tensor should have an even number of dimensions");
-        tensor_assert_message(n == direction.size(), "Number of directions does not match the number of dimensions.");
+        spline_assert_message(T.n_dims()%2 == 0, "The transform tensor should have an even number of dimensions");
+        spline_assert_message(n == direction.size(), "Number of directions does not match the number of dimensions.");
         //do einstein
         std::vector< int > index_t = mrange(2*n);
         std::vector< int > index_c = mrange(2*n, 2*n+data().n_dims());
@@ -81,8 +82,8 @@ namespace spline {
 
         //scramble indices
         for (int i = 0; i < direction.size(); i++) {
-            tensor_assert_message(direction[i] < n, "Direction of the transform should be smaller than the transform dimension/2");
-            tensor_assert_message(T.dims()[n+i] == dimension()[direction[i]], "Transformation matrix dimensions mismatch. For direction " << direction[i] << ": " << T.dims()[n+i] << " is not equal to " << dimension()[direction[i]] << ".");
+            spline_assert_message(direction[i] < n, "Direction of the transform should be smaller than the transform dimension/2");
+            spline_assert_message(T.dims()[n+i] == dimension()[direction[i]], "Transformation matrix dimensions mismatch. For direction " << direction[i] << ": " << T.dims()[n+i] << " is not equal to " << dimension()[direction[i]] << ".");
 
             index_c[direction[i]] = index_t[n+i];
             index_r.erase(index_r.begin()+n+direction[i]);
@@ -103,15 +104,15 @@ namespace spline {
 
     AnyTensor CoefficientNode::transform(const std::vector<AnyTensor>& T,
           const std::vector<NumericIndex>& directions) const {
-        tensor_assert(T.size() == directions.size());
+        spline_assert(T.size() == directions.size());
         AnyTensor ret_data = data();
         for (int k=0; k<T.size(); k++) {
             // check dimension of transformation matrix
-            tensor_assert_message(T[k].n_dims()==2,
+            spline_assert_message(T[k].n_dims()==2,
               "Transformation matrix should have 2 dimensions. It has " <<
               T[k].n_dims() << ".");
             // check compatibility
-            tensor_assert_message(T[k].dims()[1]==ret_data.dims()[directions[k]],
+            spline_assert_message(T[k].dims()[1]==ret_data.dims()[directions[k]],
                 "Incompatible dimensions: 2nd dimension of transformation matrix is "
                 << T[k].dims()[1] << " while transformed direction has dimension "
                 << ret_data.dims()[directions[k]] << ".");
@@ -169,7 +170,7 @@ namespace spline {
           const std::vector< Coefficient >& coefs) const {
         std::vector< AnyTensor > all_tensor = {data()};
         for (auto& c : coefs) {
-            tensor_assert_message(shape()[1-index] == c.shape()[1-index],
+            spline_assert_message(shape()[1-index] == c.shape()[1-index],
               "cat has mismatched coefficients" << shape()[1-index] <<
               " != " << c.shape()[1-index] << ".");
             all_tensor.push_back(c.data());
