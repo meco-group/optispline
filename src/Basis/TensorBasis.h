@@ -160,7 +160,7 @@ public:
         std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<Argument>& directions) const;
         std::vector<AnyTensor> integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const;
 
-        //AnyTensor project_to(const TensorBasis& b) const ;
+        AnyTensor project_to(const TensorBasis& b) const ;
         std::vector< spline::Function > basis_functions() const ;
 };
 

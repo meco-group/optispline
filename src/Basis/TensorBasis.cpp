@@ -452,4 +452,30 @@ namespace spline {
         return basis_functions_;
     }
 
+    AnyTensor TensorBasis::project_to(const TensorBasis& b) const {
+        return (*this)->project_to(b);
+    }
+
+    AnyTensor TensorBasisNode::project_to(const TensorBasis& b) const {
+        Function b1 = Function::vertcat(basis_functions());
+        Function b2 = Function::vertcat(b.basis_functions());
+
+        Function b21  = b2.mtimes(b1.transpose());
+        Function b22  = b2.mtimes(b2.transpose());
+
+        AnyTensor B21 = b21.integral();
+        AnyTensor B22 = b22.integral();
+
+        std::cout << B21.dims() << std::endl;
+        std::cout << B22.dims() << std::endl;
+
+        AnyTensor T = B22.solve(B21);
+
+        std::vector< int > M = b.dimension();
+        std::vector< int > N = dimension();
+        std::vector< int > shapeT = M;
+        shapeT.insert(shapeT.end(), N.begin(), N.end());
+
+        return T.shape(shapeT);
+    }
 } // namespace spline

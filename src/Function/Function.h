@@ -107,6 +107,7 @@ class Function {
         std::vector<spline::Function> jacobian() const;
 
         Function transform_to(const TensorBasis& basis) const;
+        Function project_to(const TensorBasis& basis) const;
 
         AnyTensor integral() const;
         AnyTensor integral(const TensorDomain& domain) const;
