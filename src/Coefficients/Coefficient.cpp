@@ -178,4 +178,16 @@ namespace spline {
        return AnyTensor::concat(all_tensor, dimension().size() + index);
     }
 
+    Coefficient Coefficient::reshape(const std::vector< int >& shape) const {
+        return (*this)->reshape(shape);
+    }
+
+    Coefficient CoefficientNode::reshape(const std::vector< int >& shape) const {
+        spline_assert(shape.size() > 0);
+        std::vector< int > shape_ = dimension();
+        shape_.insert(shape_.end(), shape.begin(), shape.end());
+
+        return Coefficient(data().shape(shape_));
+    }
+
 }  // namespace spline

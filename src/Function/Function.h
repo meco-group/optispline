@@ -111,6 +111,7 @@ class Function {
         AnyTensor integral(const TensorDomain& domain) const;
 
         Function cat(const NumericIndex& index, const std::vector< spline::Function >& f) const;
+        Function reshape(const std::vector< int >& shape) const;
     public:
         TensorBasis basis_;
         Coefficient coeff_;

@@ -29,8 +29,6 @@ class Test_Function_Function_shape(BasisTestCase):
         func1t = func1.transpose();
         func2t = func2.transpose();
 
-        print func1t.shape
-        print func2t.shape
         self.assertEqualT(func1t.shape,[4,2])
         self.assertEqualT(func2t.shape,[3,3])
         self.assertEqualT(func2t.transpose().shape,func2.shape)
@@ -58,8 +56,6 @@ class Test_Function_Function_shape(BasisTestCase):
         
         func3 = func1.vertcat([func2])
         self.assertEqual(func3.shape,[2,1])
-        print func3(0.5,0.2)
-        print DTensor([func1(0.5,0.2),func2(0.5,0.2)])
         self.assertEqualT(func3(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2)],[2,1]))
 
         constant1 = Function.Constant(mbasis1, DTensor([2,2],[2,1]))
@@ -108,6 +104,30 @@ class Test_Function_Function_shape(BasisTestCase):
         func5 = func1.blkdiag([constant2])
         self.assertEqual(func5.shape,[2,3])
         self.assertEqualT(func5(0.5,0.2),DTensor([func1(0.5,0.2),0,0,2,0,3],[2,3]))
+
+    def test_reshape(self):
+        knots = [0,0,0.5,1,1]
+        degree = 1
+        b1 = BSplineBasis(knots, degree)
+        b2 = MonomialBasis(3)
+        b = TensorBasis([b1,b2])
+
+        shape = [3,4,2,4]
+        c = numpy.random.random(shape)
+        f = Function(b,c)
+        new_f = f.reshape([1,8])
+
+        N = 100
+        _x = numpy.random.random(N)
+        _y = numpy.random.random(N)
+        for i in range(0,N):
+            x = _x[i]
+            y = _y[i]
+
+            test_value = numpy.reshape((f.transpose())(x,y), [1,8])
+            value = new_f(x,y)
+            self.assertEqualT(value, test_value)
+
 
 if __name__ == '__main__':
     unittest.main()
