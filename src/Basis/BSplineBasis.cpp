@@ -401,7 +401,7 @@ namespace spline {
                 new_knots.push_back(kn[i+j]);
                 j++;
             }
-            if (i+j < kn.size()) {
+            if (i+j <= kn.size()) {
                 for (int k=0; k<elevation; k++) {
                     new_knots.push_back(kn[i]);
                 }
