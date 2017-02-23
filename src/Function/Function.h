@@ -111,6 +111,8 @@ class Function {
         AnyTensor integral() const;
         AnyTensor integral(const TensorDomain& domain) const;
 
+        Function reshape(const std::vector< int >& shape) const;
+
     public:
         TensorBasis basis_;
         Coefficient coeff_;

@@ -506,6 +506,10 @@ namespace spline {
         return Function(unionBasis, Coefficient::cat(index, coefVec));
     }
 
+    Function Function::reshape(const std::vector< int >& shape) const {
+        return Function(tensor_basis(), coeff().reshape(shape));
+    }
+
     Function Function::slice(const AnySlice& i, const AnySlice& j) const {
       return Function(tensor_basis(), coeff_tensor().get_slice(i, j));
     }
