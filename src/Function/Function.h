@@ -14,14 +14,16 @@ namespace spline {
 class Function {
 
     public :
-        Function( const TensorBasis& basis, const Coefficient& coef);
-        Function( const Basis& basis, const Coefficient& coef);
-        Function( const AnyTensor& c);
+        Function(const TensorBasis& basis, const Coefficient& coef);
+        Function(const Basis& basis, const Coefficient& coef);
+        Function(const AnyTensor& c);
         Function() {}
 
-        static Function Constant(const TensorBasis& basis, const AnyScalar& a, const std::vector< int >& size);
+        static Function Constant(const TensorBasis& basis, const AnyScalar& a,
+            const std::vector< int >& size);
         static Function Constant(const TensorBasis& basis, const AnyTensor& t);
-        static Function Constant(const Basis& basis, const AnyScalar& a, const std::vector< int >& size);
+        static Function Constant(const Basis& basis, const AnyScalar& a,
+            const std::vector< int >& size);
         static Function Constant(const Basis& basis, const AnyTensor& t);
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
@@ -92,17 +94,21 @@ class Function {
 
         Function derivative() const;
         Function derivative(int order) const;
-        Function derivative(int order, const std::string& direction) const;
-        Function derivative(int order, const NumericIndex& direction) const;
-        Function derivative(const std::vector<int>& orders, const std::vector<std::string>& directions) const;
-        Function derivative(const std::vector<int>& orders, const NumericIndexVector& direction_ind) const;
+        Function derivative(int order, const std::string& arg) const;
+        Function derivative(int order, const NumericIndex& arg_ind) const;
+        Function derivative(const std::vector<int>& orders,
+            const std::vector<std::string>& args) const;
+        Function derivative(const std::vector<int>& orders,
+            const NumericIndexVector& arg_ind) const;
 
         Function antiderivative() const;
         Function antiderivative(int order) const;
-        Function antiderivative(int order, const std::string& direction) const;
-        Function antiderivative(int order, const NumericIndex& direction) const;
-        Function antiderivative(const std::vector<int>& orders, const std::vector<std::string>& directions) const;
-        Function antiderivative(const std::vector<int>& orders, const NumericIndexVector& direction_ind) const;
+        Function antiderivative(int order, const std::string& arg) const;
+        Function antiderivative(int order, const NumericIndex& arg_ind) const;
+        Function antiderivative(const std::vector<int>& orders,
+            const std::vector<std::string>& args) const;
+        Function antiderivative(const std::vector<int>& orders,
+            const NumericIndexVector& arg_ind) const;
 
         std::vector<spline::Function> jacobian() const;
 
@@ -111,8 +117,10 @@ class Function {
 
         AnyTensor integral() const;
         AnyTensor integral(const TensorDomain& domain) const;
-        Function partial_integral(const TensorDomain& domain, const std::vector<std::string>& directions) const;
-        Function partial_integral(const TensorDomain& domain, const NumericIndexVector& direction_ind) const;
+        Function partial_integral(const TensorDomain& domain,
+            const std::vector<std::string>& args) const;
+        Function partial_integral(const TensorDomain& domain,
+         const NumericIndexVector& arg_ind) const;
 
         Function reshape(const std::vector< int >& shape) const;
 
@@ -123,7 +131,7 @@ class Function {
     private:
         static void homogenize_args(Function& f, AnyTensor& t);
 
-        void init( const TensorBasis& basis, const Coefficient& coef);
+        void init(const TensorBasis& basis, const Coefficient& coef);
         typedef std::function<TensorBasis(const TensorBasis&, const TensorBasis&)> BasisComposition;
         typedef std::function<AnyTensor(const AnyTensor&, const AnyTensor&)> TensorComposition;
         Function generic_operation(const Function& f,
