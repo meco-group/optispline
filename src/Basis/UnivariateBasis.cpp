@@ -21,4 +21,13 @@ namespace spline {
         return integral(static_cast<Interval>(domain));
     }
 
+    Basis UnivariateBasisNode::kick_boundary(const Domain& boundary, AnyTensor& T) const {
+        return kick_boundary(static_cast<Interval>(boundary), T);
+    }
+
+    Basis UnivariateBasisNode::kick_boundary(const Interval& boundary, AnyTensor& T) const {
+        spline_assert_message(false, getRepresentation() << " can not kick its boundaries.");
+        return Basis();
+    }
+
 }  // namespace spline

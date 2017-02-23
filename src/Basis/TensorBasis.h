@@ -75,6 +75,9 @@ class TensorBasisNode : public SharedObjectNode {
 
         TensorBasis degree_elevation(const std::vector<int>& elevation, const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
 
+        TensorBasis kick_boundary(const TensorDomain& boundary, const std::vector<std::string>& args, std::vector<AnyTensor> & T) const;
+        TensorBasis kick_boundary(const TensorDomain& boundary,  const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
+
         AnyTensor project_to(const TensorBasis& b) const ;
         std::vector< spline::Function > basis_functions() const ;
 
@@ -150,6 +153,8 @@ public:
         TensorBasis degree_elevation(const std::vector<int>& elevation, const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis degree_elevation(const std::vector<int>& elevation, const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
+        TensorBasis kick_boundary(const TensorDomain& boundary, const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+        TensorBasis kick_boundary(const TensorDomain& boundary, const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
         TensorBasis derivative(const std::vector<std::string>& directions, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
         TensorBasis derivative(const NumericIndexVector& direction_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1

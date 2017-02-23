@@ -80,6 +80,16 @@ namespace spline {
     Basis Basis::degree_elevation(int elevation, AnyTensor & T) const {
         return (*this)->degree_elevation(elevation, T);
     }
+
+    Basis BasisNode::kick_boundary(const Domain& boundary, AnyTensor& T) const {
+        spline_assert_message(false, getRepresentation() << " can not kick its boundaries.");
+        return Basis();
+    }
+
+    Basis Basis::kick_boundary(const Domain& boundary, AnyTensor & T) const {
+        return (*this)->kick_boundary(boundary, T);
+    }
+
     Function BasisNode::basis_functions() const {
         AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(dimension())));
         return Function(shared_from_this<Basis>(), Coefficient(t));

@@ -348,6 +348,47 @@ namespace spline {
         T = T_;
         return substitute_bases(Index::from_vector(arg_ind), new_bases);
     }
+
+    TensorBasis TensorBasisNode::kick_boundary(const TensorDomain& boundary,
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        spline_assert(arg_ind.size() == boundary.n_domains());
+        std::vector<Basis> new_bases(arg_ind.size());
+        std::vector<AnyTensor> T_(arg_ind.size());
+        for (int i = 0; i < arg_ind.size(); i++) {
+            new_bases[i] = basis(arg_ind[i]).kick_boundary(boundary.domain(i), T_[i]);
+        }
+        T = T_;
+        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+    }
+
+    TensorBasis TensorBasisNode::kick_boundary(const TensorDomain& boundary,
+            const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
+        spline_assert(boundary.n_domains() == args.size());
+        NumericIndexVector arg_ind(args.size());
+        for (int i=0; i<args.size(); i++) {
+            arg_ind[i] = indexArgument(args[i]);
+        }
+        if (boundary.hasArguments()) { // order domain
+            std::vector<Domain> doms(args.size());
+            for (int i=0; i<args.size(); i++) {
+                doms[i] = boundary.domain(args[i]);
+            }
+            TensorDomain boundary2 = TensorDomain(doms, args);
+            return partial_integral(boundary2, arg_ind, T);
+        }
+        return kick_boundary(boundary, arg_ind, T);
+    }
+
+    TensorBasis TensorBasis::kick_boundary(const TensorDomain& boundary,
+        const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        return (*this)->kick_boundary(boundary, arg_ind, T);
+    }
+
+    TensorBasis TensorBasis::kick_boundary(const TensorDomain& boundary,
+        const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
+        return (*this)->kick_boundary(boundary, args, T);
+    }
+
         std::vector<AnyTensor>& T) const {
         // default derivative is with order = 1
         NumericIndexVector direction_ind(directions.size());

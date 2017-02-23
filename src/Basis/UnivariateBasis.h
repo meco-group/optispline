@@ -31,6 +31,8 @@ namespace spline {
         virtual Basis antiderivative(int order, AnyTensor& T) const = 0;
         virtual AnyTensor integral(const Domain& domain) const override;
         virtual AnyTensor integral(const Interval& domain) const = 0;
+        virtual Basis kick_boundary(const Domain& domain, AnyTensor& T) const override;
+        virtual Basis kick_boundary(const Interval& domain, AnyTensor& T) const;
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const = 0;
 
     protected:

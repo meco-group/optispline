@@ -137,6 +137,7 @@ namespace spline{
         virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const override;
         virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const override;
         virtual Basis degree_elevation(int elevation, AnyTensor& T) const override;
+        virtual Basis kick_boundary(const Interval& boundary, AnyTensor& T) const override;
 
     private:
         std::vector<AnyScalar> knots_;
