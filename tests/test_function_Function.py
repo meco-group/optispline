@@ -383,5 +383,57 @@ class Test_Function_Function(BasisTestCase):
         fv = vertcat(f12, f13)
         self.assertEqualT(fv.integral([[0.1, 0.8], [0.2, 0.9]]), np.vstack((f12_int2, f13_int2)), 1e-6)
 
+    def test_partial_integral(self):
+        np.random.seed(0)
+        d1 = 3
+        nki1 = 8
+        k1 = np.r_[np.zeros(d1), np.linspace(0., 1., nki1), np.ones(d1)]
+        b1 = BSplineBasis(k1, d1)
+        ka1 = np.random.rand(2)
+        k1a = np.sort(np.r_[k1, ka1])
+        d2 = 2
+        nki2 = 5
+        k2 = np.r_[np.zeros(d2), np.linspace(0., 1., nki2), np.ones(d2)]
+        b2 = BSplineBasis(k2, d2)
+        ka2 = np.random.rand(3)
+        k2a = np.sort(np.r_[k2, ka2])
+        d3 = 6
+        b3 = MonomialBasis(d3)
+        B = TensorBasis([b1, b2, b3], ['x', 'y', 'z'])
+        dims = B.dimension()
+        C = np.random.rand(dims[0], dims[1], dims[2])
+        f = Function(B,C)
+        f1 = Function(b1, np.random.rand(b1.dimension()))
+        f2 = Function(b2, np.random.rand(b2.dimension()))
+        f3 = Function(b3, np.random.rand(b3.dimension()))
+        B2 = TensorBasis([b1, b2], ['x', 'y'])
+        B3 = TensorBasis([b1, b3], ['x', 'y'])
+        C2 = np.random.rand(dims[0], dims[1])
+        C3 = np.random.rand(dims[0], dims[2])
+        f12 = Function(B2, C2)
+        f13 = Function(B3, C3)
+        f123 = Function(TensorBasis([b1, b2, b3], ['x', 'y', 'z']), np.random.rand(dims[0], dims[1], dims[2]))
+
+        f12_antider_y = f12.antiderivative([1], ['y'])
+        fx = f12.partial_integral([0.5, 0.8], ['y'])
+        gx = fx.basis().greville()
+        for g in gx:
+            self.assertEqualT(fx(g), f12_antider_y(g, 0.8) - f12_antider_y(g, 0.5), 1e-6)
+
+        f123_antider_yz = f123.antiderivative([1, 1], ['y', 'z'])
+        dom1 = TensorDomain([[-0.1, 0.9], [0.5, 0.6]], ['z', 'y'])
+        dom2 = TensorDomain([[0.5, 0.6], [-0.1, 0.9]])
+        dom2 = [[0.5, 0.6], [-0.1, 0.9]]
+        fx = f123.partial_integral(dom1, ['y', 'z'])
+        fx2 = f123.partial_integral(dom2, ['y', 'z'])
+        fx3 = f123.partial_integral(dom2, [1, 2])
+        gx = fx.basis().greville()
+        self.assertEqual(fx.tensor_basis().arguments()[0], 'x')
+        for g in gx:
+            self.assertEqualT(fx(g), f123_antider_yz(g, 0.6, 0.9) - f123_antider_yz(g, 0.6, -0.1) - f123_antider_yz(g, 0.5, 0.9) + f123_antider_yz(g, 0.5, -0.1))
+            self.assertEqualT(fx2(g), f123_antider_yz(g, 0.6, 0.9) - f123_antider_yz(g, 0.6, -0.1) - f123_antider_yz(g, 0.5, 0.9) + f123_antider_yz(g, 0.5, -0.1))
+            self.assertEqualT(fx3(g), f123_antider_yz(g, 0.6, 0.9) - f123_antider_yz(g, 0.6, -0.1) - f123_antider_yz(g, 0.5, 0.9) + f123_antider_yz(g, 0.5, -0.1))
+
+
 if __name__ == '__main__':
     unittest.main()
