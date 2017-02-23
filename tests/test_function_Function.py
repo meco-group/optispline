@@ -124,10 +124,6 @@ class Test_Function_Function(BasisTestCase):
         m = MonomialBasis(1)
         b = TensorBasis([m,m])
         f = Function(b,a_)
-
-        # print f.coeff_tensor()
-        # print a
-
         self.assertEqualT(a,f.coeff_tensor())
 
     def test_insert_knots_univariate(self):
@@ -249,9 +245,6 @@ class Test_Function_Function(BasisTestCase):
         f.derivative(n_der0, 'x')
         f.derivative([n_der0, n_der1], ['x', 'y'])
         f.derivative(n_der0)
-
-        # test = f.jacobian()
-        # print test
 
     def test_derivative_polynomial(self):
         deg = 4
@@ -387,7 +380,7 @@ class Test_Function_Function(BasisTestCase):
         f13_int2 = f13_antider(0.8, 0.9) - f13_antider(0.8, 0.2) - f13_antider(0.1, 0.9) + f13_antider(0.1, 0.2)
         self.assertEqualT(f13_int1, f13_int2, 1e-6)
         fv = f12.vertcat([f13])
-        self.assertEqualT(fv.integral([[0.1, 0.8], [0.2, 0.9]]), np.r_[f12_int2, f13_int2], 1e-6)
+        self.assertEqualT(fv.integral([[0.1, 0.8], [0.2, 0.9]]), np.vstack((f12_int2, f13_int2)), 1e-6)
 
 if __name__ == '__main__':
     unittest.main()

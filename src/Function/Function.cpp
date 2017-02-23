@@ -457,7 +457,7 @@ namespace spline {
             direction_ind[i] = i;
         }
         Coefficient new_coefficient = coeff().transform(T, direction_ind);
-        return new_coefficient.data().squeeze();
+        return new_coefficient.data().shape(shape());
     }
 
     Function Function::transform_to(const TensorBasis& basis) const {
