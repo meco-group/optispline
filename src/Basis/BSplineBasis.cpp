@@ -386,4 +386,31 @@ namespace spline {
       // invoke knot insertion
       return insert_knots(vertcat(new_knots), T);
     }
+
+    Basis BSplineBasisNode::degree_elevation(int elevation, AnyTensor& T) const {
+      	// check if numeric knots
+        spline_assert_message(AnyScalar::is_double(knots()),
+            "Midpoint refinement only possible with numeric knot sequence.");
+        std::vector<double> kn = AnyScalar::as_double(knots());
+        // construct new basis
+        std::vector<AnyScalar> new_knots(0);
+        int j;
+        for (int i=0; i<kn.size(); i+=j) {
+            j = 1;
+            while ((i+j < kn.size()) && (kn[i+j] == kn[i])) {
+                new_knots.push_back(kn[i+j]);
+                j++;
+            }
+            if (i+j < kn.size()) {
+                for (int k=0; k<elevation; k++) {
+                    new_knots.push_back(kn[i]);
+                }
+            }
+        }
+        BSplineBasis new_basis = BSplineBasis(new_knots, degree()+elevation);
+        // project into new basis
+        // T = project_to(new_basis);
+        return new_basis;
+    }
+
 } // namespace spline

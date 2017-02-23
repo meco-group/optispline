@@ -323,6 +323,31 @@ namespace spline {
     }
 
     TensorBasis TensorBasis::derivative(const std::vector<std::string>& directions,
+    TensorBasis TensorBasis::degree_elevation(const std::vector<int>& elevation,
+            const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
+        NumericIndexVector arg_ind(args.size());
+        for (int i = 0; i < args.size(); i++) {
+            arg_ind[i] = indexArgument(args[i]);
+        }
+        return (*this)->degree_elevation(elevation, arg_ind, T);
+    }
+
+    TensorBasis TensorBasis::degree_elevation(const std::vector<int>& elevation,
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        return (*this)->degree_elevation(elevation, arg_ind, T);
+    }
+
+    TensorBasis TensorBasisNode::degree_elevation(const std::vector<int>& elevation,
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        spline_assert(arg_ind.size() == elevation.size());
+        std::vector<Basis> new_bases(arg_ind.size());
+        std::vector<AnyTensor> T_(arg_ind.size());
+        for (int i = 0; i < arg_ind.size(); i++) {
+            new_bases[i] = basis(arg_ind[i]).degree_elevation(elevation[i], T_[i]);
+        }
+        T = T_;
+        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+    }
         std::vector<AnyTensor>& T) const {
         // default derivative is with order = 1
         NumericIndexVector direction_ind(directions.size());

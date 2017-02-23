@@ -72,6 +72,14 @@ namespace spline {
         return (*this)->midpoint_refinement(refinement, T);
     }
 
+    Basis BasisNode::degree_elevation(int elevation, AnyTensor& T) const {
+        spline_assert_message(false, getRepresentation() << " can not elevate the degree.");
+        return Basis();
+    }
+
+    Basis Basis::degree_elevation(int elevation, AnyTensor & T) const {
+        return (*this)->degree_elevation(elevation, T);
+    }
     Function BasisNode::basis_functions() const {
         AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(dimension())));
         return Function(shared_from_this<Basis>(), Coefficient(t));

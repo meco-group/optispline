@@ -45,6 +45,7 @@ namespace spline{
         virtual Basis derivative(int order, AnyTensor& T) const override;
         virtual Basis antiderivative(int order, AnyTensor& T) const override;
         virtual AnyTensor integral(const Interval& domain) const override;
+        virtual Basis degree_elevation(int elevation, AnyTensor& T) const override;
     };
 
 #endif // SWIG
