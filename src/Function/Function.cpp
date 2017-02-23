@@ -252,19 +252,19 @@ namespace spline {
         return Function::cat(1, f);
     }
 
-    Function Function::blkdiag(const std::vector< spline::Function >& f) const {
-        Function b = *this;
-        for (int i = 0; i < f.size(); i++) {
+    Function Function::blkdiag(const std::vector< spline::Function >& f) {
+        Function b = f[0];
+        for (int i = 1; i < f.size(); i++) {
             std::vector< int > shape12 = std::vector< int >{b.shape()[0], f[i].shape()[1]};
             std::vector< int > shape21 = std::vector< int >{f[i].shape()[0], b.shape()[1]};
 
             Function zero12 = Function::Constant(b.tensor_basis(), 0, shape12);
             Function zero21 = Function::Constant(b.tensor_basis(), 0, shape21);
 
-            Function upper = b.horzcat(std::vector< Function >{zero12});
-            Function lower = zero21.horzcat(std::vector< Function >{f[i]});
+            Function upper = Function::horzcat(std::vector< Function >{b, zero12});
+            Function lower = Function::horzcat(std::vector< Function >{zero21, f[i]});
 
-            b = upper.vertcat(std::vector< Function >{lower});
+            b = Function::vertcat(std::vector< Function >{upper, lower});
         }
 
         return b;

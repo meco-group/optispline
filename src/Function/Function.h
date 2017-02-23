@@ -52,7 +52,7 @@ class Function {
         static Function vertcat(const std::vector< spline::Function >& f);
         static Function horzcat(const std::vector< spline::Function >& f);
         static Function cat(const NumericIndex& index, const std::vector< spline::Function >& f);
-        Function blkdiag(const std::vector< spline::Function >& f) const;
+        static Function blkdiag(const std::vector< spline::Function >& f);
 
         Basis basis() const;
         Basis basis(const Index& i) const;
