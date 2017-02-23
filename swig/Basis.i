@@ -1017,6 +1017,14 @@ using namespace spline;
 
 #ifdef SWIGMATLAB
 %rename(times) spline::Function::operator*;
+%feature("nonstatic") spline::Function::vertcat;
+%feature("nonstatic") spline::Function::horzcat;
+%feature("nonstatic") spline::Function::blkdiag;
+
+%feature("varargin","1") spline::Function::vertcat;
+%feature("varargin","1") spline::Function::horzcat;
+%feature("varargin","1") spline::Function::blkdiag;
+
 #endif
 
 %include <src/Function/Function.h>

@@ -61,3 +61,13 @@ assert(norm(func2(2,1).eval(x,y)-R(2,1))<1e-12)
 assert(norm(func2(1:3,2).eval(x,y)-R(1:3,2))<1e-12)
 assert(norm(func2(2:3,2:4).eval(x,y)-R(2:3,2:4))<1e-12)
 
+
+size(func2)
+
+f = [func2 func2]
+assert(all(size(f)==[3 8]))
+
+f = [func2;func2]
+assert(all(size(f)==[6 4]))
+
+
