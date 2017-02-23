@@ -51,7 +51,7 @@ class Function {
 
         static Function vertcat(const std::vector< spline::Function >& f);
         static Function horzcat(const std::vector< spline::Function >& f);
-        static Function cat(const NumericIndex& index, const std::vector< spline::Function >& f);
+        static Function cat(NumericIndex index, const std::vector< spline::Function >& f);
         static Function blkdiag(const std::vector< spline::Function >& f);
 
         Basis basis() const;
@@ -80,7 +80,7 @@ class Function {
         Function insert_knots(const std::vector<AnyVector> & new_knots,
             const std::vector<std::string> & arg) const;
         Function insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<NumericIndex> & arg_ind) const;
+            const NumericIndexVector & arg_ind) const;
 
         Function midpoint_refinement(int refinement) const;
         Function midpoint_refinement(int refinement, const NumericIndex & arg_ind) const;
@@ -88,21 +88,21 @@ class Function {
         Function midpoint_refinement(const std::vector<int> & refinement,
             const std::vector<std::string> & arg) const;
         Function midpoint_refinement(const std::vector<int> & refinement,
-            const std::vector<NumericIndex> & arg_ind) const;
+            const NumericIndexVector & arg_ind) const;
 
         Function derivative() const;
         Function derivative(int order) const;
         Function derivative(int order, const std::string& direction) const;
         Function derivative(int order, const NumericIndex& direction) const;
         Function derivative(const std::vector<int>& orders, const std::vector<std::string>& directions) const;
-        Function derivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
+        Function derivative(const std::vector<int>& orders, const NumericIndexVector& direction_ind) const;
 
         Function antiderivative() const;
         Function antiderivative(int order) const;
         Function antiderivative(int order, const std::string& direction) const;
         Function antiderivative(int order, const NumericIndex& direction) const;
         Function antiderivative(const std::vector<int>& orders, const std::vector<std::string>& directions) const;
-        Function antiderivative(const std::vector<int>& orders, const std::vector<NumericIndex>& direction_ind) const;
+        Function antiderivative(const std::vector<int>& orders, const NumericIndexVector& direction_ind) const;
 
         std::vector<spline::Function> jacobian() const;
 
@@ -111,7 +111,7 @@ class Function {
         AnyTensor integral() const;
         AnyTensor integral(const TensorDomain& domain) const;
         Function partial_integral(const TensorDomain& domain, const std::vector<std::string>& directions) const;
-        Function partial_integral(const TensorDomain& domain, const std::vector<NumericIndex>& direction_ind) const;
+        Function partial_integral(const TensorDomain& domain, const NumericIndexVector& direction_ind) const;
 
         Function reshape(const std::vector< int >& shape) const;
 
@@ -128,6 +128,7 @@ class Function {
         Function generic_operation(const Function& f,
                 const BasisComposition & bc, const TensorComposition & tc) const;
 };
+
 
 } // namespace spline
 

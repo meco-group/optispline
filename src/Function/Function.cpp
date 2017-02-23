@@ -6,7 +6,6 @@
 
 namespace spline {
 
-
     Function::Function(const TensorBasis& basis, const Coefficient& coeff) {
         init(basis, coeff);
     }
@@ -283,12 +282,12 @@ namespace spline {
     Function Function::insert_knots(const AnyVector & new_knots) const {
       spline_assert_message(tensor_basis().n_basis() == 1,
         "I don't know the direction for knot insertion. Please supply argument.")
-      return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<NumericIndex>{0});
+      return insert_knots(std::vector<AnyVector>{new_knots}, NumericIndexVector{0});
     }
 
     Function Function::insert_knots(const AnyVector & new_knots,
-      const NumericIndex & arg_ind) const {
-      return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<NumericIndex>{arg_ind});
+      const NumericIndex& arg_ind) const {
+      return insert_knots(std::vector<AnyVector>{new_knots}, NumericIndexVector{arg_ind});
     }
 
     Function Function::insert_knots(const AnyVector & new_knots, const std::string & arg) const {
@@ -305,7 +304,7 @@ namespace spline {
     }
 
     Function Function::insert_knots(const std::vector<AnyVector> & new_knots,
-      const std::vector<NumericIndex> & arg_ind) const {
+      const NumericIndexVector & arg_ind) const {
       spline_assert(arg_ind.size() == new_knots.size())
       std::vector<AnyTensor> T;
       TensorBasis tbasis = tensor_basis();
@@ -316,7 +315,7 @@ namespace spline {
 
     Function Function::midpoint_refinement(int refinement) const {
       // apply on all directions
-      std::vector<NumericIndex> arg_ind(tensor_basis().n_basis());
+      NumericIndexVector arg_ind(tensor_basis().n_basis());
       std::vector<int> refs(tensor_basis().n_basis());
       for (int k=0; k<arg_ind.size(); k++) {
         arg_ind[k] = k;
@@ -325,8 +324,8 @@ namespace spline {
       return midpoint_refinement(refs, arg_ind);
     }
 
-    Function Function::midpoint_refinement(int refinement, const NumericIndex & arg_ind) const {
-      return midpoint_refinement(std::vector<int>{refinement}, std::vector<NumericIndex>{arg_ind});
+    Function Function::midpoint_refinement(int refinement, const NumericIndex& arg_ind) const {
+      return midpoint_refinement(std::vector<int>{refinement}, NumericIndexVector{arg_ind});
     }
 
     Function Function::midpoint_refinement(int refinement, const std::string & arg) const {
@@ -343,7 +342,7 @@ namespace spline {
     }
 
     Function Function::midpoint_refinement(const std::vector<int> & refinement,
-      const std::vector<NumericIndex> & arg_ind) const {
+      const NumericIndexVector & arg_ind) const {
       spline_assert(arg_ind.size() == refinement.size())
       std::vector<AnyTensor> T;
       TensorBasis tbasis = tensor_basis();
@@ -358,7 +357,7 @@ namespace spline {
 
     Function Function::derivative(int order) const {
         // apply on all directions
-        std::vector<NumericIndex> arg_ind(tensor_basis().n_basis());
+        NumericIndexVector arg_ind(tensor_basis().n_basis());
         std::vector<int> orders(tensor_basis().n_basis());
         for (int k=0; k<arg_ind.size(); k++) {
             arg_ind[k] = k;
@@ -385,12 +384,12 @@ namespace spline {
     }
 
     Function Function::derivative(const std::vector<int>& orders,
-          const std::vector<NumericIndex>& direction_ind) const {
+          const NumericIndexVector& direction_ind) const {
         spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
         std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
         TensorBasis new_tbasis = tbasis.derivative(orders, direction_ind, T);
-        std::vector<NumericIndex> directions(direction_ind.size());
+        NumericIndexVector directions(direction_ind.size());
         Coefficient new_coefficient = coeff().transform(T, direction_ind);
         return Function(new_tbasis, new_coefficient);
     }
@@ -401,7 +400,7 @@ namespace spline {
 
     Function Function::antiderivative(int order) const {
         // apply on all directions
-        std::vector<NumericIndex> arg_ind(tensor_basis().n_basis());
+        NumericIndexVector arg_ind(tensor_basis().n_basis());
         std::vector<int> orders(tensor_basis().n_basis());
         for (int k=0; k<arg_ind.size(); k++) {
             arg_ind[k] = k;
@@ -415,7 +414,7 @@ namespace spline {
     }
 
     Function Function::antiderivative(int order, const NumericIndex& direction) const {
-        return antiderivative(std::vector<int>{order}, std::vector<NumericIndex>{direction});
+        return antiderivative(std::vector<int>{order}, NumericIndexVector{direction});
     }
 
     Function Function::antiderivative(const std::vector<int>& orders,
@@ -428,12 +427,12 @@ namespace spline {
     }
 
     Function Function::antiderivative(const std::vector<int>& orders,
-        const std::vector<NumericIndex>& direction_ind) const {
+        const NumericIndexVector& direction_ind) const {
         spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
         std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
         TensorBasis new_tbasis = tbasis.antiderivative(orders, direction_ind, T);
-        std::vector<NumericIndex> directions(direction_ind.size());
+        NumericIndexVector directions(direction_ind.size());
         Coefficient new_coefficient = coeff().transform(T, direction_ind);
         return Function(new_tbasis, new_coefficient);
     }
@@ -474,7 +473,7 @@ namespace spline {
     }
 
     Function Function::partial_integral(const TensorDomain& domain,
-        const std::vector<NumericIndex>& direction_ind) const {
+        const NumericIndexVector& direction_ind) const {
         std::vector<AnyTensor> T;
         TensorBasis new_tbasis = tensor_basis().partial_integral(domain, direction_ind, T);
         Coefficient new_coefficient = coeff().transform(T, direction_ind);
@@ -513,7 +512,7 @@ namespace spline {
       return Function(unionBasis, C);
     }
 
-    Function Function::cat(const NumericIndex& index,
+    Function Function::cat(NumericIndex index,
           const std::vector< spline::Function >& functions) {
         TensorBasis unionBasis = functions[0].tensor_basis();  // load first basis
         for (int i = 1; i< functions.size(); i++) {

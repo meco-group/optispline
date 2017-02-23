@@ -52,6 +52,12 @@ y = rand()
 
 R = func2.eval(x,y);
 
+class(R)
+
+R
+
+func2(2,1).eval(x,y)
+
 assert(norm(func2([1,2],[3,2]).eval(x,y)-R([1,2],[3,2]))<1e-12)
 assert(norm(func2(:,[3,2]).eval(x,y)-R(:,[3,2]))<1e-12)
 assert(norm(func2([1,2],:).eval(x,y)-R([1,2],:))<1e-12)
@@ -60,7 +66,6 @@ assert(norm(func2(2,[3,2]).eval(x,y)-R(2,[3,2]))<1e-12)
 assert(norm(func2(2,1).eval(x,y)-R(2,1))<1e-12)
 assert(norm(func2(1:3,2).eval(x,y)-R(1:3,2))<1e-12)
 assert(norm(func2(2:3,2:4).eval(x,y)-R(2:3,2:4))<1e-12)
-
 
 size(func2)
 
@@ -71,3 +76,6 @@ f = [func2;func2]
 assert(all(size(f)==[6 4]))
 
 
+func2.derivative(1, 2)
+
+func2.derivative([1 2],[1 2])

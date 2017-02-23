@@ -58,6 +58,8 @@ namespace spline {
 
         int concrete(const std::vector<std::string> & args) const;
 
+        static std::vector<Index> from_vector(const std::vector<int>& ind);
+
         virtual std::string getRepresentation() const ;
     };
 } // namespace spline
