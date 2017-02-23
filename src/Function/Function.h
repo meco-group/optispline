@@ -92,6 +92,13 @@ class Function {
         Function midpoint_refinement(const std::vector<int> & refinement,
             const NumericIndexVector & arg_ind) const;
 
+        Function degree_elevation(int elevation) const;
+        Function degree_elevation(int elevation, const NumericIndex& arg_ind) const;
+        Function degree_elevation(int elevation, const std::string& arg) const;
+        Function degree_elevation(const std::vector<int> & elevation,
+            const std::vector<std::string> & args) const;
+        Function degree_elevation(const std::vector<int> & elevation,
+            const NumericIndexVector & arg_ind) const;
         Function derivative() const;
         Function derivative(int order) const;
         Function derivative(int order, const std::string& arg) const;
