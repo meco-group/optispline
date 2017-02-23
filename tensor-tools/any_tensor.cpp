@@ -500,6 +500,55 @@ namespace casadi {
     bool ascending_;
   };
 
+class Uniquifier : public FunctionInternal {
+  public:
+
+    static casadi::Function create(const std::string &name, int size, const Dict& opts=Dict()) {
+      casadi::Function ret;
+      ret.assignNode(new Uniquifier(name, size));
+      ret->construct(opts);
+      return ret;
+    }
+
+    Uniquifier(const std::string &name, int size) : casadi::FunctionInternal(name),
+      size_(size) {};
+
+    /** \brief  Destructor */
+    virtual ~Uniquifier() {};
+
+    ///@{
+    /** \brief Number of function inputs and outputs */
+    virtual size_t get_n_in() override { return 1; };
+    virtual size_t get_n_out() override { return 1; };
+    ///@}
+
+    /// @{
+    /** \brief Sparsities of function inputs and outputs */
+    virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
+    virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
+    /// @}
+
+    /** \brief  Evaluate numerically, work vectors given */
+    virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
+      if (!res[0]) return;
+      std::copy(arg[0], arg[0]+size_, res[0]);
+
+      for (int i=1;i<size_-2;++i) {
+        if (arg[0][i]==arg[0][i+1]) {
+          res[0][i]   = (res[0][i-1]+res[0][i])/2;
+          res[0][i+1] = (res[0][i+1]+res[0][i+2])/2;
+        }
+      }
+      
+    }
+
+    /** \brief  Print description */
+    virtual void print(std::ostream &stream) const override {
+      stream << "Uniqifier(" << size_ << ")";
+    }
+
+    int size_;
+  };
 } // namespace casadi
 
 AnyVector AnyVector::sort(bool ascending) const {
@@ -512,6 +561,19 @@ AnyVector AnyVector::sort(bool ascending) const {
     return MT(sorter(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
   }
 }
+
+AnyVector AnyVector::uniquify() const {
+  tensor_assert(!is_ST());
+
+  casadi::Function uniquifier = casadi::Uniquifier::create("uniquifier", dims()[0]);
+  if (is_DT()) {
+    return DT(uniquifier(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
+  } else {
+    return MT(uniquifier(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
+  }
+}
+
+
 
 namespace casadi {
   bool casadi_limits<AnyScalar>::is_zero(const AnyScalar& val) {

@@ -31,9 +31,9 @@ namespace spline {
         void repr() const { casadi::userOut() << getRepresentation() << std::endl;}
 
         AnyTensor transform(const AnyTensor& T, const std::vector< NumericIndex> direction) const;
-        AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;
+        AnyTensor transform(const std::vector<AnyTensor>& T, const NumericIndexVector& direction) const;
         Coefficient transpose() const;
-
+        Coefficient rm_direction(const std::vector<NumericIndex>& indices) const;
         Coefficient reshape(const std::vector< int >& shape) const;
 
     private:
@@ -68,8 +68,9 @@ namespace spline {
         AnyTensor transform(const AnyTensor& T) const;
         AnyTensor transform(const AnyTensor& T, const std::vector< NumericIndex> direction) const;
         AnyTensor transform(const AnyTensor& T, const NumericIndex& direction) const;
-        AnyTensor transform(const std::vector<AnyTensor>& T, const std::vector<NumericIndex>& direction) const;
+        AnyTensor transform(const std::vector<AnyTensor>& T, const NumericIndexVector& direction) const;
         Coefficient transpose() const;
+        Coefficient rm_direction(const std::vector<NumericIndex>& indices) const;
         Coefficient reshape(const std::vector< int >& shape) const;
         static Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs);
     };

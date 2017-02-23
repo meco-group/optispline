@@ -115,7 +115,6 @@ def _swig_repr(self):
 
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
-#include <src/Function/Argument.h>
 #include <src/Function/Index.h>
 #include <src/Function/NumericIndex.h>
 #include <src/Optistack/optistack.h>
@@ -136,6 +135,18 @@ using namespace spline;
 
 %fragment("casadi_extra_decl", "header") {
   namespace casadi {
+  
+    void interpret_NumericIndex(spline::NumericIndex& a) {
+      #ifdef SWIGMATLAB
+        a--;
+      #endif
+    }
+    void interpret_NumericIndex(std::vector<spline::NumericIndex>& a) {
+      #ifdef SWIGMATLAB
+        for (auto& e: a) e--;
+      #endif
+    }
+
     bool to_ptr(GUESTOBJECT *p, AnyScalar** m);
     bool to_ptr(GUESTOBJECT *p, std::vector<AnyScalar>** m);
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m);
@@ -145,8 +156,6 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, ST** m);
     bool to_ptr(GUESTOBJECT *p, MT** m);
     bool to_ptr(GUESTOBJECT *p, spline::Index** m);
-    bool to_ptr(GUESTOBJECT *p, spline::NumericIndex** m);
-    bool to_ptr(GUESTOBJECT *p, std::vector<spline::NumericIndex>** m);
     bool to_ptr(GUESTOBJECT *p, spline::TensorBasis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Basis** m);
 
@@ -268,7 +277,7 @@ using namespace spline;
           return true;
         }
       }
-      
+
       return false;
     }
 
@@ -316,7 +325,7 @@ using namespace spline;
       // Try first converting to a temporary SX
       {
         SX tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_scalar())) {
+        if(casadi::to_ptr(p, &mt) && tmp.is_scalar()) {
           if (m) **m = *mt;
           return true;
         }
@@ -325,27 +334,8 @@ using namespace spline;
       // Try first converting to a temporary MX
       {
         MX tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_scalar())) {
+        if(casadi::to_ptr(p, &mt) && tmp.is_scalar()) {
           if (m) **m = *mt;
-          return true;
-        }
-      }
-      return false;
-    }
-
-    bool to_ptr(GUESTOBJECT *p, std::vector<NumericIndex>** m) {
-      {
-        std::vector<int> tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
-#ifdef SWIGMATLAB
-          if (m) {
-            for (int i=0;i<tmp.size();++i) tmp[i]=tmp[i]-1;
-          }
-#endif // SWIGMATLAB
-          if (m) {
-            (**m).resize(tmp.size());
-            for (int i=0;i<tmp.size();++i) (**m)[i] = tmp[i];
-          }
           return true;
         }
       }
@@ -362,19 +352,17 @@ using namespace spline;
       }
       {
         std::vector<SX> tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) {
+        if(casadi::to_ptr(p, &mt)) {
             for (auto& e : tmp) {
               if (!e.is_scalar()) return false;
             }
             **m = AnyScalar::from_vector(*mt);
-          }
           return true;
         }
       }
       {
         std::vector<MX> tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
+        if(casadi::to_ptr(p, &mt)) {
           for (auto& e : tmp) {
             if (!e.is_scalar()) return false;
           }
@@ -579,7 +567,10 @@ using namespace spline;
       {
         NumericIndex tmp;
         if (to_val(p, &tmp)) {
-          if (m) **m = AnySlice(tmp);
+          if (m) {
+            interpret_NumericIndex(tmp);
+            **m = AnySlice(tmp);
+          }
           return true;
         }
       }
@@ -587,7 +578,10 @@ using namespace spline;
       {
         std::vector<NumericIndex> tmp;
         if (to_val(p, &tmp)) {
-          if (m) **m = AnySlice(NumericIndex::as_int(tmp));
+          if (m) {
+            interpret_NumericIndex(tmp);
+            **m = AnySlice(tmp);
+          }
           return true;
         }
       }
@@ -618,29 +612,6 @@ using namespace spline;
             **m = AnySlice();
             return true;
           }
-        }
-      }
-      return false;
-    }
-
-    bool to_ptr(GUESTOBJECT *p, spline::NumericIndex** m) {
-      // Treat Null
-      if (is_null(p)) return false;
-
-      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
-                                    $descriptor(spline::NumericIndex*), 0))) {
-        return true;
-      }
-      // Integer scalar
-      {
-        int tmp;
-        if (to_val(p, &tmp)) {
-#ifdef SWIGMATLAB
-          if (m) **m=tmp-1;
-#else
-          if (m) **m=tmp;
-#endif
-          return true;
         }
       }
       return false;
@@ -718,13 +689,6 @@ using namespace spline;
     }
 
     GUESTOBJECT * from_ptr(const spline::Index *a) {
-#ifdef SWIGPYTHON
-      return Py_None;
-#endif // SWIGPYTHON
-      return 0;
-    }
-
-    GUESTOBJECT * from_ptr(const spline::NumericIndex *a) {
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
@@ -929,6 +893,8 @@ using namespace spline;
 #endif
 
 
+
+
 %casadi_template("[AnyScalar]", PREC_SXVector, std::vector< AnyScalar >)
 %casadi_template("[[AnyScalar]]", PREC_SXVector, std::vector< std::vector< AnyScalar > >)
 %casadi_typemaps("AnyScalar", PREC_MX, AnyScalar)
@@ -939,8 +905,6 @@ using namespace spline;
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_typemaps("index", PREC_MX, spline::Index)
-%casadi_typemaps("index", PREC_MX, spline::NumericIndex)
-%casadi_template("[index]", PREC_MX, std::vector<spline::NumericIndex >)
 %casadi_template("[index]", PREC_MX, std::vector<spline::Index >)
 %casadi_typemaps("STensor", PREC_MX, Tensor<casadi::SX>)
 %casadi_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
@@ -962,16 +926,35 @@ using namespace spline;
 %casadi_template("[Function]", PREC_FUNCTION, std::vector< spline::Function >)
 %casadi_typemaps("Function", PREC_FUNCTION, spline::Function)
 
-%casadi_template("[int]", PREC_IVector, std::vector<int>)
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Index >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
 
+
+%typemap(in, doc="index", noblock=1, fragment="casadi_all") spline::NumericIndex {
+  if (!casadi::to_val($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' index '.");
+  interpret_NumericIndex($1);
+  }
+
+%typemap(in, doc="index", noblock=1, fragment="casadi_all") const spline::NumericIndex & (spline::NumericIndex m) {
+  $1 = &m;
+  if (!casadi::to_ptr($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' index '.");
+  interpret_NumericIndex(*$1);
+ }
+
+ 
+%typemap(in, doc="[index]", noblock=1, fragment="casadi_all") const spline::NumericIndexVector & (spline::NumericIndexVector m) {
+  $1 = &m;
+  if (!casadi::to_ptr($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' [index] '.");
+  interpret_NumericIndex(m);
+ }
+ 
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
 
-%include <src/Function/Argument.h>
 %include <src/Function/Index.h>
 %include <src/Function/NumericIndex.h>
+
+
 %include <tensor.hpp>
 %include <slice.hpp>
 
@@ -1019,6 +1002,14 @@ using namespace spline;
 
 #ifdef SWIGMATLAB
 %rename(times) spline::Function::operator*;
+%feature("nonstatic") spline::Function::vertcat;
+%feature("nonstatic") spline::Function::horzcat;
+%feature("nonstatic") spline::Function::blkdiag;
+
+%feature("varargin","1") spline::Function::vertcat;
+%feature("varargin","1") spline::Function::horzcat;
+%feature("varargin","1") spline::Function::blkdiag;
+
 #endif
 
 %include <src/Function/Function.h>

@@ -6,7 +6,6 @@
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
-#include "Argument.h"
 
 namespace spline {
 #ifndef SWIG
@@ -14,14 +13,14 @@ namespace spline {
     class IndexNode : public SharedObjectNode {
     public:
         virtual std::string getRepresentation() const = 0;
-        virtual int concrete(const std::vector<Argument> & args) const = 0;
+        virtual int concrete(const std::vector<std::string> & args) const = 0;
     };
 
     class StringIndexNode : public IndexNode {
     public:
         StringIndexNode(const std::string &name);
         virtual std::string getRepresentation() const ;
-        virtual int concrete(const std::vector<Argument> & args) const;
+        virtual int concrete(const std::vector<std::string> & args) const;
     private:
         std::string name_;
     };
@@ -30,7 +29,7 @@ namespace spline {
     public:
         IntIndexNode(int index);
         virtual std::string getRepresentation() const ;
-        virtual int concrete(const std::vector<Argument> & args) const;
+        virtual int concrete(const std::vector<std::string> & args) const;
     private:
         int index_;
     };
@@ -39,7 +38,7 @@ namespace spline {
     public:
         NullIndexNode();
         virtual std::string getRepresentation() const ;
-        virtual int concrete(const std::vector<Argument> & args) const;
+        virtual int concrete(const std::vector<std::string> & args) const;
     };
 
 #endif // SWIG
@@ -57,7 +56,9 @@ namespace spline {
         Index(const std::string &name);
         Index(int index);
 
-        int concrete(const std::vector<Argument> & args) const;
+        int concrete(const std::vector<std::string> & args) const;
+
+        static std::vector<Index> from_vector(const std::vector<int>& ind);
 
         virtual std::string getRepresentation() const ;
     };

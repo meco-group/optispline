@@ -5,7 +5,6 @@
 #include <any_tensor.hpp>
 
 
-#include "../Function/Argument.h"
 #include "../Function/Function.h"
 #include "../TensorBasis.h"
 namespace spline{

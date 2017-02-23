@@ -17,16 +17,20 @@ namespace spline {
     IndexNode* Index::get() const { return static_cast<IndexNode*>(SharedObject::get()); };
     IndexNode* Index::operator->() const { return get(); }
 
+    std::vector<Index> Index::from_vector(const std::vector<int>& ind) {
+      std::vector<Index> ret(ind.size());
+      for (int i=0;i<ind.size();++i) ret[i] = ind[i];
+      return ret;
+    }
 
-
-    int Index::concrete(const std::vector<Argument> & args) const {
+    int Index::concrete(const std::vector<std::string> & args) const {
       return (*this)->concrete(args); };
 
     NullIndexNode::NullIndexNode() { }
     IntIndexNode::IntIndexNode(int index) : index_(index) { }
     StringIndexNode::StringIndexNode(const std::string &name) : name_(name) { }
 
-    int IntIndexNode::concrete(const std::vector<Argument> & args) const {
+    int IntIndexNode::concrete(const std::vector<std::string> & args) const {
       spline_assert_message(index_>=0,
         "Indexing out-of-range: supplied " + std::to_string(index_) +
         ". Must be >0.");
@@ -37,7 +41,7 @@ namespace spline {
       return index_;
     }
 
-    int StringIndexNode::concrete(const std::vector<Argument> & args) const {
+    int StringIndexNode::concrete(const std::vector<std::string> & args) const {
       std::vector<std::string> args_str;
       for (auto &a : args) args_str.push_back(a);
       auto it = std::find(args_str.begin(), args_str.end(), name_);
@@ -51,7 +55,7 @@ namespace spline {
       }
     }
 
-    int NullIndexNode::concrete(const std::vector<Argument> & args) const {
+    int NullIndexNode::concrete(const std::vector<std::string> & args) const {
       spline_error("Null-index.");
       return -1;
     }

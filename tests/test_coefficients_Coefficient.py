@@ -65,13 +65,21 @@ class Test_Function_SubBasis(BasisTestCase):
         a = np.random.rand(2,2,3)
         a = Coefficient(a)
         T = np.random.rand(1,2)
-        
+
         aT1 = a.transform(T)
         aT2 = a.transform(T,0)
         aT3 = a.transform(T,[0])
 
         self.assertEqualT(aT1,aT2)
         self.assertEqualT(aT1,aT3)
+
+    def test_rm_direction(self):
+        a = np.random.rand(1,2,1,4)
+        a = Coefficient(a)
+        b = a.rm_direction([0, 2])
+        self.assertEqual(b.shape(), [2, 4])
+        with self.assertRaises(Exception):
+            a.rm_direction([0, 1])
 
 
 if __name__ == '__main__':

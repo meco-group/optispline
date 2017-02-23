@@ -7,11 +7,11 @@ namespace spline {
         Function(MonomialBasis(coef.size()-1), Coefficient(coef)) {
     }
 
-    Polynomial::Polynomial(const std::vector< double >& coef, Argument& a) :
-        Function(TensorBasis(MonomialBasis(coef.size()-1), std::vector< Argument > {a}), Coefficient(coef)) { }
+    Polynomial::Polynomial(const std::vector< double >& coef, std::string& a) :
+        Function(TensorBasis(MonomialBasis(coef.size()-1), std::vector< std::string > {a}), Coefficient(coef)) { }
 
     Polynomial::Polynomial(const std::vector< double >& coef, const std::string &name) :
-        Function(TensorBasis(MonomialBasis(coef.size()-1), std::vector< Argument > { Argument(name)}), Coefficient(coef)) {
+        Function(TensorBasis(MonomialBasis(coef.size()-1), std::vector< std::string > { std::string(name)}), Coefficient(coef)) {
     }
 
 } // namespace spline
