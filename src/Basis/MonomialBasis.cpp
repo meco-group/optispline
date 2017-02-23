@@ -167,7 +167,6 @@ namespace spline {
     Basis MonomialBasisNode::degree_elevation(int elevation, AnyTensor& T) const {
         int dim = dimension();
         int dim_new = dim+elevation;
-        int deg = degree();
         // construct coefficient transformation matrix
         std::vector<AnyScalar> data(dim_new*dim, 0);
         for (int i=0; i<dim; i++) {
@@ -175,6 +174,7 @@ namespace spline {
         }
         Basis new_basis = MonomialBasis(degree()+elevation);
         T = vertcat(data).shape({dim_new, dim});
+        return new_basis;
     }
 
 } // namespace spline
