@@ -17,7 +17,11 @@ namespace spline {
     IndexNode* Index::get() const { return static_cast<IndexNode*>(SharedObject::get()); };
     IndexNode* Index::operator->() const { return get(); }
 
-
+    std::vector<Index> Index::from_vector(const std::vector<int>& ind) {
+      std::vector<Index> ret(ind.size());
+      for (int i=0;i<ind.size();++i) ret[i] = ind[i];
+      return ret;
+    }
 
     int Index::concrete(const std::vector<std::string> & args) const {
       return (*this)->concrete(args); };

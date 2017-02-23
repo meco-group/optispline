@@ -61,7 +61,7 @@ namespace spline {
     std::string Coefficient::getRepresentation() const { return (*this)->getRepresentation(); }
 
     AnyTensor Coefficient::transform(const AnyTensor& T) const {
-        std::vector< NumericIndex > direction = NumericIndex::as_numeric_index(casadi::range((int)T.n_dims()/2));
+        std::vector< int > direction = casadi::range((int)T.n_dims()/2);
         return (*this)->transform(T, direction);
     }
 
@@ -94,16 +94,16 @@ namespace spline {
     }
 
     AnyTensor Coefficient::transform(const AnyTensor& T, const NumericIndex& directions) const {
-        return (*this)->transform(std::vector<AnyTensor>{T}, std::vector<NumericIndex>{directions});
+        return (*this)->transform(std::vector<AnyTensor>{T}, NumericIndexVector{directions});
     }
 
     AnyTensor Coefficient::transform(const std::vector<AnyTensor>& T,
-          const std::vector<NumericIndex>& directions) const {
+          const NumericIndexVector& directions) const {
       return (*this)->transform(T, directions);
     }
 
     AnyTensor CoefficientNode::transform(const std::vector<AnyTensor>& T,
-          const std::vector<NumericIndex>& directions) const {
+          const NumericIndexVector& directions) const {
         spline_assert(T.size() == directions.size());
         AnyTensor ret_data = data();
         for (int k=0; k<T.size(); k++) {
@@ -170,7 +170,7 @@ namespace spline {
         int j;
         for (int i=0; i<dims.size(); i++) {
             for (j=0; j<indices.size(); j++) {
-                if (i == indices[j].index()) {
+                if (i == indices[j]) {
                     break;
                 }
             }
