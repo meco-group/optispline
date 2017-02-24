@@ -40,4 +40,11 @@ namespace spline {
     Basis EmptyBasisNode::operator* (const BSplineBasis& other) const  {
         return other.get()->shared_from_this< BSplineBasis >();
     }
+
+    AnyTensor EmptyBasis::operator() (const AnyVector & x) const {
+      return (*this)->operator()(a);
+    }
+    AnyTensor EmptyBasisNode::operator() (const std::vector< AnyScalar > & x) const {
+        return AnyTensor(1);
+    }
 }  // namespace spline
