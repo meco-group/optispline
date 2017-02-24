@@ -377,7 +377,7 @@ namespace spline {
             j++;
           }
           if (i+j < kn.size()) {
-            double den = pow(2, refinement);
+            double den = pow(2.0, refinement);
             for (int num = 1; num < den; num++) {
                 new_knots.push_back(((den - 1.*num)/den)*kn[i]+((1.*num)/den)*kn[i+j]);
             }

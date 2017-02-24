@@ -76,5 +76,7 @@ int product(const std::vector<int>& a);  // number of elements in vector
 int sum(const std::vector<int>& a);  // sum of elements in vector
 #endif
 
+double pow(double a, int n);
+
 } // namespace spline
 #endif  // COMMON_H
