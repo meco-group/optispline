@@ -69,6 +69,9 @@ class Test_Function_Function_shape(BasisTestCase):
         func5 = horzcat(func5, constant3)
         self.assertEqual(func5.shape,[1,1])
 
+        func6 = vertcat(func1, func2, [3,1])
+        self.assertEqualT(func6.shape,func1.shape+func2.shape+[1,2])
+
     def test_blockdiagonal(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
@@ -115,7 +118,7 @@ class Test_Function_Function_shape(BasisTestCase):
 
         # blkdiag with SX
         import casadi as cas
-        constant3 = Function.Constant(basis3, DTensor([1],[1,1]))
+        constant3 = Function.Constant(mbasis3, DTensor([1],[1,1]))
         func10 = blkdiag(constant3, cas.SX.sym('x',1))
         self.assertEqual(func10.shape,[2,2])
 

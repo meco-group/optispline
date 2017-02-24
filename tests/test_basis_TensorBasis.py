@@ -5,8 +5,6 @@ import random
 
 from helpers import *
 
-from Basis import *
-
 class Test_Basis_TensorBasis(BasisTestCase):
     def test_basis_functions(self):
         np.random.seed(0)
