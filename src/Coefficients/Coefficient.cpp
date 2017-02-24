@@ -65,11 +65,11 @@ namespace spline {
         return (*this)->transform(T, direction);
     }
 
-    AnyTensor Coefficient::transform(const AnyTensor& T, const std::vector< NumericIndex > direction) const {
+    AnyTensor Coefficient::transform(const AnyTensor& T, const NumericIndexVector& direction) const {
         return (*this)->transform(T, direction);
     }
 
-    AnyTensor CoefficientNode::transform(const AnyTensor& T, const std::vector< NumericIndex > direction) const {
+    AnyTensor CoefficientNode::transform(const AnyTensor& T, const NumericIndexVector& direction) const {
         //check dimensions
         int n = T.n_dims()/2;
         spline_assert_message(T.n_dims()%2 == 0, "The transform tensor should have an even number of dimensions");
