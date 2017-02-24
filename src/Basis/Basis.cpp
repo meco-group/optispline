@@ -1,6 +1,7 @@
 #include "Basis.h"
 #include "operations/operationsBasis.h"
 #include "../Function/Function.h"
+#include "../Basis/utils/EvaluationGrid.h"
 #include "../common.h"
 
 namespace spline {
@@ -106,6 +107,28 @@ namespace spline {
 
     AnyTensor Basis::project_to(const Basis& b) const {
         return (*this)->project_to(b);
+    }
+
+    Basis BasisNode::transform_to(const Basis& b, AnyTensor& T) const {
+        Basis basis = shared_from_this<Basis>();
+        Basis union_basis = basis + b;
+        std::vector<std::vector<AnyScalar>> eval_grid = union_basis.getEvaluationGrid();
+
+        std::vector< AnyTensor > pre_step{ AnyTensor::unity()};
+        std::vector< AnyTensor > union_basis_eval;
+        std::vector< AnyTensor > basis_eval;
+        for(auto const & point : eval_grid){
+            union_basis_eval.push_back(union_basis(point));
+            basis_eval.push_back(basis(point));
+        }
+        AnyTensor A = AnyTensor::pack(union_basis_eval, 0);
+        AnyTensor B = AnyTensor::pack(basis_eval, 0);
+        T = A.solve(B);
+        return union_basis;
+    }
+
+    Basis Basis::transform_to(const Basis& b, AnyTensor& T) const {
+        return (*this)->transform_to(b, T);
     }
 
     Function BasisNode::basis_functions() const {

@@ -63,6 +63,7 @@ namespace spline {
         virtual Basis kick_boundary(const Domain& boundary, AnyTensor& T) const;
 
         AnyTensor project_to(const Basis& b) const ;
+        Basis transform_to(const Basis& b, AnyTensor& T) const ;
         spline::Function basis_functions() const;
 
     protected:
@@ -101,6 +102,7 @@ namespace spline {
         Basis kick_boundary(const Domain& boundary, AnyTensor& SWIG_OUTPUT(T)) const;
 
         AnyTensor project_to(const Basis& b) const ;
+        Basis transform_to(const Basis& b, AnyTensor& SWIG_OUTPUT(T)) const ;
         spline::Function basis_functions() const;
 
         int dimension() const;
