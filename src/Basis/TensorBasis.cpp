@@ -594,4 +594,23 @@ namespace spline {
 
         return T.shape(shapeT);
     }
+
+    TensorBasis TensorBasis::transform_to(const TensorBasis& b, std::vector<AnyTensor>& T) const {
+        return (*this)->transform_to(b, T);
+    }
+
+    TensorBasis TensorBasisNode::transform_to(const TensorBasis& tb, std::vector<AnyTensor>& T) const {
+        spline_assert(n_basis() == tb.n_basis());
+        std::vector<Basis> new_bases(n_basis());
+        std::vector<AnyTensor> T_(n_basis());
+        for (int i = 0; i <n_basis(); i++) {
+            new_bases[i] = basis(i).transform_to(tb.basis(i), T_[i]);
+        }
+        T = T_;
+        if (hasArguments()) {
+            return TensorBasis(new_bases, arguments());
+        } else {
+            return TensorBasis(new_bases);
+        }
+    }
 } // namespace spline

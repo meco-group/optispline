@@ -340,7 +340,38 @@ class Test_Function_Function(BasisTestCase):
         p = Polynomial(np.random.randn(4))
         f = p.transform_to(TensorBasis(b))
         for x in np.random.random(10):
-            self.assertAlmostEqual(f(x), p(x))
+            self.assertEqualT(f(x), p(x))
+        np.random.seed(0)
+        d1 = 2
+        k1 = np.r_[0,0,0,0.5,0.8,1,1,1]
+        b1 = BSplineBasis(k1, d1)
+        k1b = np.r_[0,0,0,0.5,0.6,0.6,0.8,1,1,1]
+        b1b = BSplineBasis(k1b, d1)
+        d2 = 1
+        k2 = np.r_[0,0,0.5,0.7,1,1]
+        b2 = BSplineBasis(k2, d2)
+        k2b = np.r_[0,0,0,0.5,0.5,0.7,0.7,1,1,1]
+        b2b = BSplineBasis(k2b, d2+1)
+        d3 = 6
+        b3 = MonomialBasis(d3)
+        b3b = MonomialBasis(d3+2)
+        B = TensorBasis([b1,b2,b3], ['x', 'y', 'z'])
+        B2 = TensorBasis([b1b,b2b,b3b], ['x', 'y', 'z'])
+        dims = B.dimension()
+        dims2 = B2.dimension()
+        C = Coefficient(np.random.rand(dims[0], dims[1], dims[2]))
+        f1 = Function(B,C)
+        f2 = f1.transform_to(B2)
+        g1 = b1b.greville()
+        g2 = b2b.greville()
+        g3 = range(d3+3)
+        B3, T = B.transform_to(B2)
+        C2 = C.transform(T, [0, 1, 2])
+        self.assertEqualT(f2.coeff_tensor()[:,:,:,0,0], C2, 1e-6)
+        for i in g1:
+            for j in g2:
+                for k in g3:
+                    self.assertEqualT(f1(i,j,k), f2(i,j,k), 1e-6)
 
     def test_function_constant(self):
         f = Function(2)
