@@ -89,7 +89,7 @@ class TensorBasisNode : public SharedObjectNode {
             const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
 
         AnyTensor project_to(const TensorBasis& b) const ;
-        std::vector< spline::Function > basis_functions() const ;
+        spline::Function basis_functions() const ;
 
     // protected:
         std::vector< Basis > bases_;
@@ -201,7 +201,7 @@ public:
             const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
         AnyTensor project_to(const TensorBasis& b) const ;
-        std::vector< spline::Function > basis_functions() const ;
+        spline::Function basis_functions() const ;
 };
 
 }   // namespace spline

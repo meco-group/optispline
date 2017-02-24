@@ -542,15 +542,32 @@ namespace spline {
         return (*this)->partial_integral(domain, args, T);
     }
 
-    std::vector< spline::Function > TensorBasis::basis_functions() const {
+    spline::Function TensorBasis::basis_functions() const {
         return (*this)->basis_functions();
     }
 
-    std::vector< spline::Function > TensorBasisNode::basis_functions() const {
-        std::vector< spline::Function > basis_functions_;
-        for (int i = 0; i < n_basis(); i++) {
-            basis_functions_.push_back(basis(i).basis_functions());
+    spline::Function TensorBasisNode::basis_functions() const {
+        // Construct coefficient based on outer product of eye's
+        AnyTensor C = DT(casadi::DM::densify(casadi::DM::eye(dimension()[0])));
+        std::vector< int > dims_even = std::vector< int >{0};
+        std::vector< int > dims_odd = std::vector< int >{1};
+        for(int i = 1; i < n_basis(); i++) {
+            C = C.outer_product(DT(casadi::DM::densify(casadi::DM::eye(dimension()[i]))));
+            dims_even.push_back(2*i);
+            dims_odd.push_back(2*i+1);
         }
+
+        // Scramble dimensions of coefficient
+        dims_even.insert(dims_even.end(), dims_odd.begin(), dims_odd.end());
+        C = C.reorder_dims(dims_even);
+
+        // reshape tensor-valued function to vector-valued
+        std::vector< int > shape = C.dims();
+        shape.erase(shape.begin() + shape.size()/2, shape.end());
+        shape.push_back(product(shape));
+        C = C.shape(shape);
+
+        spline::Function basis_functions_ = spline::Function(shared_from_this<TensorBasis>(), Coefficient(C));
         return basis_functions_;
     }
 
@@ -559,11 +576,13 @@ namespace spline {
     }
 
     AnyTensor TensorBasisNode::project_to(const TensorBasis& b) const {
-        Function b1 = Function::vertcat(basis_functions());
-        Function b2 = Function::vertcat(b.basis_functions());
+        Function b1 = basis_functions(); //Function::vertcat(basis_functions());
+        Function b2 = b.basis_functions(); //Function::vertcat(b.basis_functions());
 
+        std::cout << "multiplying bases" << std::endl; 
         Function b21  = b2.mtimes(b1.transpose());
         Function b22  = b2.mtimes(b2.transpose());
+        std::cout << "done multiplying bases" << std::endl; 
 
         AnyTensor B21 = b21.integral();
         AnyTensor B22 = b22.integral();
@@ -571,12 +590,22 @@ namespace spline {
         std::cout << B21.dims() << std::endl;
         std::cout << B22.dims() << std::endl;
 
+        std::cout << "solving" << std::endl; 
         AnyTensor T = B22.solve(B21);
+        std::cout << "done solving" << std::endl; 
 
         std::vector< int > M = b.dimension();
         std::vector< int > N = dimension();
         std::vector< int > shapeT = M;
         shapeT.insert(shapeT.end(), N.begin(), N.end());
+
+        std::cout << "M: " << M << std::endl;
+        std::cout << "N: " << N << std::endl;
+        std::cout << "shapeT: " << shapeT << std::endl;
+
+        T.shape(shapeT);
+
+        std::cout << "done" << std::endl;
 
         return T.shape(shapeT);
     }
