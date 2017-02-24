@@ -964,6 +964,9 @@ using namespace spline;
 
 %template(STensorVector) std::vector< Tensor<casadi::SX> >;
 %template(MTensorVector) std::vector< Tensor<casadi::MX> >;
+%include <src/Domain/Domain.h>
+%include <src/Domain/Interval.h>
+%include <src/Domain/TensorDomain.h>
 
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/Basis.h>
@@ -979,10 +982,6 @@ using namespace spline;
 %include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 %include <src/Coefficients/Coefficient.h>
-
-%include <src/Domain/Domain.h>
-%include <src/Domain/Interval.h>
-%include <src/Domain/TensorDomain.h>
 
 #ifdef SWIGPYTHON
 %rename(call) spline::Function::operator();
