@@ -551,6 +551,10 @@ namespace spline {
         return Function(new_tbasis, new_coefficient);
     }
 
+    Function Function::transform_to(const Basis& basis) const {
+        return transform_to(TensorBasis(basis));
+    }
+
     Function Function::transform_to(const TensorBasis& basis) const {
 
       TensorBasis unionBasis = tensor_basis() + basis;
@@ -580,6 +584,10 @@ namespace spline {
 
       C = C.shape(shapeBasis);
       return Function(unionBasis, C);
+    }
+
+    Function Function::project_to(const Basis& basis) const {
+        return project_to(TensorBasis(basis));
     }
 
     Function Function::project_to(const TensorBasis& b) const {

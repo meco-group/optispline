@@ -576,36 +576,21 @@ namespace spline {
     }
 
     AnyTensor TensorBasisNode::project_to(const TensorBasis& b) const {
-        Function b1 = basis_functions(); //Function::vertcat(basis_functions());
-        Function b2 = b.basis_functions(); //Function::vertcat(b.basis_functions());
+        Function b1 = basis_functions();
+        Function b2 = b.basis_functions();
 
-        std::cout << "multiplying bases" << std::endl; 
         Function b21  = b2.mtimes(b1.transpose());
         Function b22  = b2.mtimes(b2.transpose());
-        std::cout << "done multiplying bases" << std::endl; 
 
         AnyTensor B21 = b21.integral();
         AnyTensor B22 = b22.integral();
 
-        std::cout << B21.dims() << std::endl;
-        std::cout << B22.dims() << std::endl;
-
-        std::cout << "solving" << std::endl; 
         AnyTensor T = B22.solve(B21);
-        std::cout << "done solving" << std::endl; 
 
         std::vector< int > M = b.dimension();
         std::vector< int > N = dimension();
         std::vector< int > shapeT = M;
         shapeT.insert(shapeT.end(), N.begin(), N.end());
-
-        std::cout << "M: " << M << std::endl;
-        std::cout << "N: " << N << std::endl;
-        std::cout << "shapeT: " << shapeT << std::endl;
-
-        T.shape(shapeT);
-
-        std::cout << "done" << std::endl;
 
         return T.shape(shapeT);
     }
