@@ -5,9 +5,6 @@ import random
 
 from helpers import *
 
-from Basis import *
-import casadi as C
-
 class Test_Basis_BSplineBasis(BasisTestCase):
 
 

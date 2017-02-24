@@ -5,10 +5,6 @@ import random
 
 from helpers import *
 
-from Basis import *
-import casadi as C
-import numpy as np
-
 class Test_Basis_MonomialBasis(BasisTestCase):
 
     def test_derivative(self):

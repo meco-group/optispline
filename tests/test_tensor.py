@@ -33,11 +33,11 @@ class Test_Tensor(BasisTestCase):
 
         knots1 = [0,0,0.4,1,1]
         degree = 1
-        basis1 = Basis.BSplineBasis(knots1,degree)
+        basis1 = splines.BSplineBasis(knots1,degree)
 
         knots2 = [0.,0.,0.5,1,1]
         degree = 1
-        basis2 = Basis.BSplineBasis(knots2,degree)
+        basis2 = splines.BSplineBasis(knots2,degree)
 
         basis3 = MonomialBasis(3);
 
@@ -138,7 +138,7 @@ class Test_Tensor(BasisTestCase):
       a = DTensor(a)
       print a
       a_ = Coefficient(a)
-      F = Basis.Function(B, a_)
+      F = splines.Function(B, a_)
 
       c = F.coeff()
       r = c.data()

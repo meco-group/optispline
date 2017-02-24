@@ -9,7 +9,7 @@ import os
 valgrind = int(os.environ.get("VALGRIND",'0'))
 
 import unittest
-from Basis import *
+from splines import *
 from casadi import *
 
 class Test_Basis_SubBasis(unittest.TestCase):

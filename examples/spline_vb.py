@@ -1,7 +1,7 @@
 import sys, os
 
 import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
-from Basis import *
+from splines import *
 import numpy as np
 import matplotlib.pyplot as plt
 import casadi as cas
