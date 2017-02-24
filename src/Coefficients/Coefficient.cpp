@@ -86,7 +86,7 @@ namespace spline {
             spline_assert_message(T.dims()[n+i] == dimension()[direction[i]], "Transformation matrix dimensions mismatch. For direction " << direction[i] << ": " << T.dims()[n+i] << " is not equal to " << dimension()[direction[i]] << ".");
 
             index_c[direction[i]] = index_t[n+i];
-            index_r.erase(index_r.begin()+n+direction[i]);
+            index_r.erase(index_r.begin()+n+direction[i]-i);
         }
 
         // Do crazy tensor shit
