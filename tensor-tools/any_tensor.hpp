@@ -331,6 +331,7 @@ class AnyVector : public AnyTensor {
     }
     std::vector<AnyScalar> to_scalar_vector() const;
     AnyVector sort(bool ascending=true) const;
+    AnyVector uniquify() const;
 };
 
 namespace casadi {
