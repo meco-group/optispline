@@ -154,12 +154,27 @@ namespace spline {
 
     AnyTensor MonomialBasisNode::integral(const Interval& dom) const {
         if (dom == domain()) {
-            return vertcat(std::vector<double>(dimension(), std::numeric_limits<double>::infinity())).shape({1, dimension()});
+            return vertcat(std::vector<double>(dimension(),
+                std::numeric_limits<double>::infinity())).shape({1, dimension()});
         } else {
             AnyTensor T;
             Basis basis_int = antiderivative(1, T);
-            return (basis_int({dom.max()}) - basis_int({dom.min()})).shape({1, dimension()+1}).mtimes(T);
+            return (basis_int({dom.max()}) -
+                basis_int({dom.min()})).shape({1, dimension()+1}).mtimes(T);
         }
+    }
+
+    Basis MonomialBasisNode::degree_elevation(int elevation, AnyTensor& T) const {
+        int dim = dimension();
+        int dim_new = dim+elevation;
+        // construct coefficient transformation matrix
+        std::vector<AnyScalar> data(dim_new*dim, 0);
+        for (int i=0; i<dim; i++) {
+            data[i*(dim_new+1)] = 1.;
+        }
+        Basis new_basis = MonomialBasis(degree()+elevation);
+        T = vertcat(data).shape({dim_new, dim});
+        return new_basis;
     }
 
 } // namespace spline

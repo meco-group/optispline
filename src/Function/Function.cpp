@@ -299,7 +299,7 @@ namespace spline {
 
     Function Function::insert_knots(const std::vector<AnyVector> & new_knots,
       const std::vector<std::string> & arg) const {
-      std::vector<NumericIndex> arg_ind(arg.size());
+      NumericIndexVector arg_ind(arg.size());
       for (int i=0; i<arg.size(); i++) {
         arg_ind[i] = tensor_basis().indexArgument(arg[i]);
       }
@@ -311,7 +311,7 @@ namespace spline {
       spline_assert(arg_ind.size() == new_knots.size())
       std::vector<AnyTensor> T;
       TensorBasis tbasis = tensor_basis();
-      TensorBasis new_tbasis = tbasis.insert_knots(new_knots, T, arg_ind);
+      TensorBasis new_tbasis = tbasis.insert_knots(new_knots, arg_ind, T);
       Coefficient new_coefficient = coeff().transform(T, arg_ind);
       return Function(new_tbasis, new_coefficient);
     }
@@ -337,7 +337,7 @@ namespace spline {
 
     Function Function::midpoint_refinement(const std::vector<int> & refinement,
       const std::vector<std::string> & arg) const {
-      std::vector<NumericIndex> arg_ind(arg.size());
+      NumericIndexVector arg_ind(arg.size());
       for (int i=0; i<arg.size(); i++) {
         arg_ind[i] = tensor_basis().indexArgument(arg[i]);
       }
@@ -349,7 +349,78 @@ namespace spline {
       spline_assert(arg_ind.size() == refinement.size())
       std::vector<AnyTensor> T;
       TensorBasis tbasis = tensor_basis();
-      TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement, T, arg_ind);
+      TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement, arg_ind, T);
+      Coefficient new_coefficient = coeff().transform(T, arg_ind);
+      return Function(new_tbasis, new_coefficient);
+    }
+
+    Function Function::degree_elevation(int elevation) const {
+      // apply on all directions
+      NumericIndexVector arg_ind(tensor_basis().n_basis());
+      std::vector<int> elevs(tensor_basis().n_basis());
+      for (int k=0; k<arg_ind.size(); k++) {
+        arg_ind[k] = k;
+        elevs[k] = elevation;
+      }
+      return degree_elevation(elevs, arg_ind);
+    }
+
+    Function Function::degree_elevation(int elevation, const NumericIndex& arg_ind) const {
+      return degree_elevation(std::vector<int>{elevation}, NumericIndexVector{arg_ind});
+    }
+
+    Function Function::degree_elevation(int elevation, const std::string & arg) const {
+      return degree_elevation(std::vector<int>{elevation}, std::vector<std::string>{arg});
+    }
+
+    Function Function::degree_elevation(const std::vector<int> & elevation,
+      const std::vector<std::string> & arg) const {
+      NumericIndexVector arg_ind(arg.size());
+      for (int i=0; i<arg.size(); i++) {
+        arg_ind[i] = tensor_basis().indexArgument(arg[i]);
+      }
+      return degree_elevation(elevation, arg_ind);
+    }
+
+    Function Function::degree_elevation(const std::vector<int> & elevation,
+      const NumericIndexVector & arg_ind) const {
+      spline_assert(arg_ind.size() == elevation.size())
+      std::vector<AnyTensor> T;
+      TensorBasis tbasis = tensor_basis();
+      TensorBasis new_tbasis = tbasis.degree_elevation(elevation, arg_ind, T);
+      Coefficient new_coefficient = coeff().transform(T, arg_ind);
+      return Function(new_tbasis, new_coefficient);
+    }
+
+    Function Function::kick_boundary(const TensorDomain& boundary) const {
+      // apply on all directions
+      NumericIndexVector arg_ind(tensor_basis().n_basis());
+      for (int k=0; k<arg_ind.size(); k++) {
+        arg_ind[k] = k;
+      }
+      return kick_boundary(boundary, arg_ind);
+    }
+
+    Function Function::kick_boundary(const TensorDomain& boundary, const NumericIndex& arg_ind) const {
+      return kick_boundary(boundary, NumericIndexVector{arg_ind});
+    }
+
+    Function Function::kick_boundary(const TensorDomain& boundary,
+      const std::vector<std::string>& args) const {
+      std::vector<AnyTensor> T;
+      TensorBasis new_tbasis = tensor_basis().kick_boundary(boundary, args, T);
+      NumericIndexVector arg_ind(args.size());
+      for (int i=0; i<args.size(); i++) {
+          arg_ind[i] = tensor_basis().indexArgument(args[i]);
+      }
+      Coefficient new_coefficient = coeff().transform(T, arg_ind);
+      return Function(new_tbasis, new_coefficient);
+    }
+
+    Function Function::kick_boundary(const TensorDomain& boundary,
+      const NumericIndexVector& arg_ind) const {
+      std::vector<AnyTensor> T;
+      TensorBasis new_tbasis = tensor_basis().kick_boundary(boundary, arg_ind, T);
       Coefficient new_coefficient = coeff().transform(T, arg_ind);
       return Function(new_tbasis, new_coefficient);
     }
@@ -369,31 +440,31 @@ namespace spline {
         return derivative(orders, arg_ind);
     }
 
-    Function Function::derivative(int order, const std::string& direction) const {
-      return derivative(std::vector<int>{order}, std::vector<std::string>{direction});
+    Function Function::derivative(int order, const std::string& arg) const {
+      return derivative(std::vector<int>{order}, std::vector<std::string>{arg});
     }
 
-    Function Function::derivative(int order, const NumericIndex& direction) const {
-      return derivative(std::vector<int>{order}, std::vector<NumericIndex>{direction});
+    Function Function::derivative(int order, const NumericIndex& arg_ind) const {
+      return derivative(std::vector<int>{order}, NumericIndexVector{arg_ind});
     }
 
     Function Function::derivative(const std::vector<int>& orders,
-          const std::vector<std::string>& directions) const {
-        std::vector<NumericIndex> direction_ind(directions.size());
-        for (int i=0; i<directions.size(); i++) {
-            direction_ind[i] = tensor_basis().indexArgument(directions[i]);
+          const std::vector<std::string>& args) const {
+        NumericIndexVector arg_ind(args.size());
+        for (int i=0; i<args.size(); i++) {
+            arg_ind[i] = tensor_basis().indexArgument(args[i]);
         }
-        return derivative(orders, direction_ind);
+        return derivative(orders, arg_ind);
     }
 
     Function Function::derivative(const std::vector<int>& orders,
-          const NumericIndexVector& direction_ind) const {
-        spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
+          const NumericIndexVector& arg_ind) const {
+        spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
         std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.derivative(orders, direction_ind, T);
-        NumericIndexVector directions(direction_ind.size());
-        Coefficient new_coefficient = coeff().transform(T, direction_ind);
+        TensorBasis new_tbasis = tbasis.derivative(orders, arg_ind, T);
+        NumericIndexVector args(arg_ind.size());
+        Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
 
@@ -412,31 +483,30 @@ namespace spline {
         return antiderivative(orders, arg_ind);
     }
 
-    Function Function::antiderivative(int order, const std::string& direction) const {
-        return antiderivative(std::vector<int>{order}, std::vector<std::string>{direction});
+    Function Function::antiderivative(int order, const std::string& arg) const {
+        return antiderivative(std::vector<int>{order}, std::vector<std::string>{arg});
     }
 
-    Function Function::antiderivative(int order, const NumericIndex& direction) const {
-        return antiderivative(std::vector<int>{order}, NumericIndexVector{direction});
+    Function Function::antiderivative(int order, const NumericIndex& arg_ind) const {
+        return antiderivative(std::vector<int>{order}, NumericIndexVector{arg_ind});
     }
 
     Function Function::antiderivative(const std::vector<int>& orders,
-        const std::vector<std::string>& directions) const {
-        std::vector<NumericIndex> direction_ind(directions.size());
-        for (int i=0; i<directions.size(); i++) {
-            direction_ind[i] = tensor_basis().indexArgument(directions[i]);
+        const std::vector<std::string>& args) const {
+        NumericIndexVector arg_ind(args.size());
+        for (int i=0; i<args.size(); i++) {
+            arg_ind[i] = tensor_basis().indexArgument(args[i]);
         }
-        return antiderivative(orders, direction_ind);
+        return antiderivative(orders, arg_ind);
     }
 
     Function Function::antiderivative(const std::vector<int>& orders,
-        const NumericIndexVector& direction_ind) const {
-        spline_assert(orders.size() == direction_ind.size())  // each direction should have an order
+        const NumericIndexVector& arg_ind) const {
+        spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
         std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.antiderivative(orders, direction_ind, T);
-        NumericIndexVector directions(direction_ind.size());
-        Coefficient new_coefficient = coeff().transform(T, direction_ind);
+        TensorBasis new_tbasis = tbasis.antiderivative(orders, arg_ind, T);
+        Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
 
@@ -454,33 +524,33 @@ namespace spline {
 
     AnyTensor Function::integral(const TensorDomain& domain) const {
         std::vector<AnyTensor> T = tensor_basis().integral(domain);
-        std::vector<NumericIndex> direction_ind(tensor_basis().n_basis());
+        NumericIndexVector arg_ind(tensor_basis().n_basis());
         for (int i=0; i<tensor_basis().n_basis(); i++) {
-            direction_ind[i] = i;
+            arg_ind[i] = i;
         }
-        Coefficient new_coefficient = coeff().transform(T, direction_ind);
+        Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return new_coefficient.data().shape(shape());
     }
 
     Function Function::partial_integral(const TensorDomain& domain,
-        const std::vector<std::string>& directions) const {
+        const std::vector<std::string>& args) const {
         std::vector<AnyTensor> T;
-        TensorBasis new_tbasis = tensor_basis().partial_integral(domain, directions, T);
-        std::vector<NumericIndex> direction_ind(directions.size());
-        for (int i=0; i<directions.size(); i++) {
-            direction_ind[i] = tensor_basis().indexArgument(directions[i]);
+        TensorBasis new_tbasis = tensor_basis().partial_integral(domain, args, T);
+        NumericIndexVector arg_ind(args.size());
+        for (int i=0; i<args.size(); i++) {
+            arg_ind[i] = tensor_basis().indexArgument(args[i]);
         }
-        Coefficient new_coefficient = coeff().transform(T, direction_ind);
-        new_coefficient = new_coefficient.rm_direction(direction_ind);
+        Coefficient new_coefficient = coeff().transform(T, arg_ind);
+        new_coefficient = new_coefficient.rm_direction(arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
 
     Function Function::partial_integral(const TensorDomain& domain,
-        const NumericIndexVector& direction_ind) const {
+        const NumericIndexVector& arg_ind) const {
         std::vector<AnyTensor> T;
-        TensorBasis new_tbasis = tensor_basis().partial_integral(domain, direction_ind, T);
-        Coefficient new_coefficient = coeff().transform(T, direction_ind);
-        new_coefficient = new_coefficient.rm_direction(direction_ind);
+        TensorBasis new_tbasis = tensor_basis().partial_integral(domain, arg_ind, T);
+        Coefficient new_coefficient = coeff().transform(T, arg_ind);
+        new_coefficient = new_coefficient.rm_direction(arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
 
