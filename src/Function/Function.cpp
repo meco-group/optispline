@@ -626,4 +626,8 @@ namespace spline {
       return Function(tensor_basis(), coeff_tensor().get_slice(i, j));
     }
 
+    Function Function::slice(const AnySlice& i) const {
+      return Function(tensor_basis(), coeff_tensor().get_slice(i));
+    }
+
 }  // namespace spline

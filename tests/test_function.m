@@ -58,6 +58,9 @@ R
 
 func2(2,1).eval(x,y)
 
+
+func2.slice(':',[3,2])
+
 assert(norm(func2([1,2],[3,2]).eval(x,y)-R([1,2],[3,2]))<1e-12)
 assert(norm(func2(:,[3,2]).eval(x,y)-R(:,[3,2]))<1e-12)
 assert(norm(func2([1,2],:).eval(x,y)-R([1,2],:))<1e-12)
@@ -79,3 +82,27 @@ assert(all(size(f)==[6 4]))
 func2.derivative(1, 2)
 
 func2.derivative([1 2],[1 2])
+
+coeff2 = DTensor(rand(9*3,1),[3,3,3,1]);
+func2 = Function(mbasis,coeff2);
+
+R = func2.eval(x,y);
+
+assert(norm(func2(:).eval(x,y)-R(:))<1e-12)
+assert(norm(func2([2,1]).eval(x,y)-R([2,1]))<1e-12)
+assert(norm(func2(2).eval(x,y)-R(2))<1e-12)
+assert(norm(func2(1:3).eval(x,y)-R(1:3))<1e-12)
+
+coeff2 = DTensor(rand(9*3,1),[3,3,1,3]);
+func2 = Function(mbasis,coeff2);
+
+R = func2.eval(x,y);
+
+func2([2,1]).eval(x,y)
+R([2,1])
+
+assert(norm(func2(:).eval(x,y)-R(:)')<1e-12)
+assert(norm(func2([2,1]).eval(x,y)-R([2,1]))<1e-12)
+assert(norm(func2(2).eval(x,y)-R(2))<1e-12)
+assert(norm(func2(1:3).eval(x,y)-R(1:3))<1e-12)
+

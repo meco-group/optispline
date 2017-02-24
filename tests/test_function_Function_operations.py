@@ -334,5 +334,52 @@ class Test_Function_Operations(BasisTestCase):
         f = func2[1:3,2:4]
         self.assertEqualT(func2(x,y)[1:3,2:4], f(x,y))
         
+        
+        with self.assertRaises(Exception):
+          func2[1]
+
+        with self.assertRaises(Exception):
+          func2[[0,1]]
+          
+        coeff2 = DTensor(numpy.random.randn(9*3,1),[3,3,1,3])
+        func2 = Function(mbasis,coeff2)
+        
+
+        R = func2(x,y).squeeze()
+        
+        f = func2[[0,1]]
+        
+        self.assertEqualT(R[np.ix_([0,1])], f(x,y).ravel())
+
+        f = func2[:]
+        self.assertEqualT(R[:], f(x,y).ravel())
+
+        f = func2[1]
+        self.assertEqualT(R[1], f(x,y))
+        
+        f = func2[1:3]
+        self.assertEqualT(R[1:3], f(x,y).ravel())
+
+        
+
+        coeff2 = DTensor(numpy.random.randn(9*3,1),[3,3,3,1])
+        func2 = Function(mbasis,coeff2)
+
+        R = func2(x,y).squeeze()
+        
+        f = func2[[0,1]]
+        self.assertEqualT(R[np.ix_([0,1])], f(x,y).ravel())
+
+        f = func2[:]
+        self.assertEqualT(R[:], f(x,y).ravel())
+
+        f = func2[1]
+        self.assertEqualT(R[1], f(x,y))
+        
+        f = func2[1:3]
+        self.assertEqualT(R[1:3], f(x,y).ravel())
+
+        
+        
 if __name__ == '__main__':
     unittest.main()
