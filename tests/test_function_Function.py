@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from helpers import *
-from Basis import vertcat
+from splines import vertcat
 
 class Test_Function_Function(BasisTestCase):
 

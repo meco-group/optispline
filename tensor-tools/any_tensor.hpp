@@ -194,6 +194,11 @@ class AnyTensor {
       return DT();
     }
 
+    AnyTensor get_slice(const AnySlice& i) const {
+      ANYTENSOR_METHOD(get_slice(i));
+      return DT();
+    }
+
     AnyTensor reorder_dims(const std::vector<int>& order) const {
       ANYTENSOR_METHOD(reorder_dims(order));
       return DT();

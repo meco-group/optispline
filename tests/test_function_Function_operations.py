@@ -56,8 +56,8 @@ class Test_Function_Operations(BasisTestCase):
     def test_const_function(self):
         knots = [0,0,0.4,1,1]
         degree = 1
-        basis = Basis.BSplineBasis(knots,degree)
-        basis2 = Basis.MonomialBasis(3)
+        basis = splines.BSplineBasis(knots,degree)
+        basis2 = splines.MonomialBasis(3)
 
         c = Function.Constant(basis,1)
         self.assertEqualT(c(0.5),DTensor(1))
@@ -65,7 +65,7 @@ class Test_Function_Operations(BasisTestCase):
 #    def test_const_function(self):
 #        knots = [0,0,0.4,1,1]
 #        degree = 1
-#        basis = Basis.BSplineBasis(knots,degree)
+#        basis = splines.BSplineBasis(knots,degree)
 #
 #        c = Function.Constant(basis,1)
 #        self.assertEqualT(c(0.5),DTensor(1))
@@ -73,15 +73,15 @@ class Test_Function_Operations(BasisTestCase):
 #        c2 = Function.Constant(basis,DTensor([2,2],[1,2]))
 #        self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
 #
-#        basis2 = Basis.MonomialBasis(3)
+#        basis2 = splines.MonomialBasis(3)
 #        c3 = Function.Constant(basis2,1)
 #        self.assertEqualT(c3(0.5),DTensor(1))
 
     def test_const_function(self):
         knots = [0,0,0.4,1,1]
         degree = 1
-        basis = Basis.BSplineBasis(knots,degree)
-        basis2 = Basis.MonomialBasis(3)
+        basis = splines.BSplineBasis(knots,degree)
+        basis2 = splines.MonomialBasis(3)
 
         c = Function.Constant(basis,1)
         self.assertEqualT(c(0.5),DTensor(1))
@@ -89,7 +89,7 @@ class Test_Function_Operations(BasisTestCase):
         c2 = Function.Constant(basis,DTensor([2,2],[1,2]))
         self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
 
-        basis2 = Basis.MonomialBasis(3)
+        basis2 = splines.MonomialBasis(3)
         c3 = Function.Constant(basis2,1)
         self.assertEqualT(c3(0.5),DTensor(1))
 
@@ -103,11 +103,11 @@ class Test_Function_Operations(BasisTestCase):
     def test_bspline_operation(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
-        basis1 = Basis.BSplineBasis(knots1,degree)
+        basis1 = splines.BSplineBasis(knots1,degree)
 
         knots2 = [0.,0.,0.5,1,1]
         degree = 1
-        basis2 = Basis.BSplineBasis(knots2,degree)
+        basis2 = splines.BSplineBasis(knots2,degree)
 
         coeff1 = DTensor(numpy.random.randn(3,1),[3,1,1])
         coeff2 = DTensor(numpy.random.randn(3,1),[3,1,1])
@@ -161,11 +161,11 @@ class Test_Function_Operations(BasisTestCase):
     def test_multivariate_operations(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
-        basis1 = Basis.BSplineBasis(knots1,degree)
+        basis1 = splines.BSplineBasis(knots1,degree)
 
         knots2 = [0.,0.,0.5,1,1]
         degree = 1
-        basis2 = Basis.BSplineBasis(knots2,degree)
+        basis2 = splines.BSplineBasis(knots2,degree)
 
         basis3 = MonomialBasis(3);
 
@@ -215,11 +215,11 @@ class Test_Function_Operations(BasisTestCase):
     def test_matrix_product(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
-        basis1 = Basis.BSplineBasis(knots1,degree)
+        basis1 = splines.BSplineBasis(knots1,degree)
 
         knots2 = [0.,0.,0.5,1,1]
         degree = 1
-        basis2 = Basis.BSplineBasis(knots2,degree)
+        basis2 = splines.BSplineBasis(knots2,degree)
 
         basis3 = MonomialBasis(3);
 
@@ -267,7 +267,7 @@ class Test_Function_Operations(BasisTestCase):
     def test_trace(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
-        basis1 = Basis.BSplineBasis(knots1,degree)
+        basis1 = splines.BSplineBasis(knots1,degree)
 
         basis2 = MonomialBasis(2);
 
@@ -294,7 +294,7 @@ class Test_Function_Operations(BasisTestCase):
     def test_slice(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
-        basis1 = Basis.BSplineBasis(knots1,degree)
+        basis1 = splines.BSplineBasis(knots1,degree)
 
         basis2 = MonomialBasis(2);
 
@@ -333,6 +333,53 @@ class Test_Function_Operations(BasisTestCase):
 
         f = func2[1:3,2:4]
         self.assertEqualT(func2(x,y)[1:3,2:4], f(x,y))
+        
+        
+        with self.assertRaises(Exception):
+          func2[1]
+
+        with self.assertRaises(Exception):
+          func2[[0,1]]
+          
+        coeff2 = DTensor(numpy.random.randn(9*3,1),[3,3,1,3])
+        func2 = Function(mbasis,coeff2)
+        
+
+        R = func2(x,y).squeeze()
+        
+        f = func2[[0,1]]
+        
+        self.assertEqualT(R[np.ix_([0,1])], f(x,y).ravel())
+
+        f = func2[:]
+        self.assertEqualT(R[:], f(x,y).ravel())
+
+        f = func2[1]
+        self.assertEqualT(R[1], f(x,y))
+        
+        f = func2[1:3]
+        self.assertEqualT(R[1:3], f(x,y).ravel())
+
+        
+
+        coeff2 = DTensor(numpy.random.randn(9*3,1),[3,3,3,1])
+        func2 = Function(mbasis,coeff2)
+
+        R = func2(x,y).squeeze()
+        
+        f = func2[[0,1]]
+        self.assertEqualT(R[np.ix_([0,1])], f(x,y).ravel())
+
+        f = func2[:]
+        self.assertEqualT(R[:], f(x,y).ravel())
+
+        f = func2[1]
+        self.assertEqualT(R[1], f(x,y))
+        
+        f = func2[1:3]
+        self.assertEqualT(R[1:3], f(x,y).ravel())
+
+        
         
 if __name__ == '__main__':
     unittest.main()

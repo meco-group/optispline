@@ -15,6 +15,13 @@ namespace spline {
     int  UnivariateBasis::degree() const { return (*this)->degree (); }
     int  UnivariateBasisNode::degree() const { return degree_ ; }
 
+    // std::string UnivariateBasis::to_string() const { return (*this)->to_string(); }
+    // std::string UnivariateBasisNode::to_string() const { "UnivariateBasis of degree " +
+    //                                                      std::to_string(degree_);}
+
+    // std::string UnivariateBasis::type() const { return (*this)->type(); }
+    // std::string UnivariateBasisNode::type() const { return "UnivariateBasis" ;}
+
     int UnivariateBasisNode::n_inputs() const { return 1; }
 
     AnyTensor UnivariateBasisNode::integral(const Domain& domain) const {

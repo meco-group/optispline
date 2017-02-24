@@ -84,7 +84,7 @@ AnyScalar& AnyScalar::operator+=(const AnyScalar& rhs) {
 }*/
 
 AnyScalar pow(const AnyScalar&x, int i) {
-  if (x.is_double()) return pow(x.as_double(), i);
+  if (x.is_double()) return pow(x.as_double(), static_cast<double>(i));
   if (x.is_SX()) return pow(x.as_SX(), casadi::SX(i));
   if (x.is_MX()) return pow(x.as_MX(), casadi::MX(i));
   tensor_assert(false);

@@ -3,7 +3,6 @@
 
 from helpers import *
 
-from Basis import vertcat, horzcat, blkdiag
 class Test_Function_Function_shape(BasisTestCase):
 
     def test_transpose(self):

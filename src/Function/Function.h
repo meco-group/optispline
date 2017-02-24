@@ -36,6 +36,7 @@ class Function {
         /* Function partial(const std::map<std::string, AnyScalar >& x) const; */
 
         Function slice(const AnySlice& i, const AnySlice& j) const;
+        Function slice(const AnySlice& i) const;
 
         Function operator+(const Function& f) const;
         Function operator+(const AnyTensor& t) const;

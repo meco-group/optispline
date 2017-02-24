@@ -583,7 +583,7 @@ namespace spline {
     }
 
     Function Function::project_to(const TensorBasis& b) const {
-        Function b2 = Function::vertcat(b.basis_functions());
+        Function b2 = b.basis_functions();
         Function f = reshape(std::vector< int >{1,spline::product(shape())});
 
         Function b22 = b2.mtimes(b2.transpose());
@@ -624,6 +624,10 @@ namespace spline {
 
     Function Function::slice(const AnySlice& i, const AnySlice& j) const {
       return Function(tensor_basis(), coeff_tensor().get_slice(i, j));
+    }
+
+    Function Function::slice(const AnySlice& i) const {
+      return Function(tensor_basis(), coeff_tensor().get_slice(i));
     }
 
 }  // namespace spline
