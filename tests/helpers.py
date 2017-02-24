@@ -44,7 +44,7 @@ class BasisTestCase(unittest.TestCase):
         self.assertEqualArray(dima, dimb)
         self.assertEqualTensor(a,b,tol=tol)
 
-    def assertEqualTensor(self, a, b,tol=1e-9):
+    def assertEqualTensor(self, a, b, tol=1e-9):
         try:
             a = C.vec(C.DM(a))
         except:
@@ -59,7 +59,7 @@ class BasisTestCase(unittest.TestCase):
             b = b.data()
           except:
             b = b.ravel('F')
-        self.assertTrue(float(C.norm_inf(a-b))<1e-9)
+        self.assertTrue(float(C.norm_inf(a-b)) < tol)
 
     def assertNotEqualTensor(self, a, b):
         try:
