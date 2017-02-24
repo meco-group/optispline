@@ -79,10 +79,10 @@ class Test_Function_Function_shape(BasisTestCase):
         degree = 1
         basis2 = BSplineBasis(knots2,degree)
 
-        basis3 = MonomialBasis(3);
+        basis3 = MonomialBasis(3)
 
-        mbasis1 = TensorBasis([basis1,basis2]);
-        mbasis2 = TensorBasis([basis2,basis3]);
+        mbasis1 = TensorBasis([basis1,basis2])
+        mbasis2 = TensorBasis([basis2,basis3])
 
         shape1 = [3,3,1,1]
         shape2 = [3,4,1,1]
@@ -104,6 +104,21 @@ class Test_Function_Function_shape(BasisTestCase):
         func5 = blkdiag(func1, constant2)
         self.assertEqual(func5.shape,[2,3])
         self.assertEqualT(func5(0.5,0.2),DTensor([func1(0.5,0.2),0,0,2,0,3],[2,3]))
+
+        # blkdiag of 3 functions
+        mbasis3 = TensorBasis([basis1,basis3])
+        shape3 = [3,4,1,1]
+        coeff3 = DTensor(numpy.random.randn(numpy.product(shape3),1),shape3)
+        func6 = Function(mbasis3, coeff3)
+        func7 = blkdiag(func1, func2, func6)
+        self.assertEqual(func7.shape,[3,3])
+        self.assertEqualT(func7(0.5,0.2),DTensor([func1(0.5,0.2),0,0,0,func2(0.5,0.2),0,0,0,func6(0.5,0.2)],[3,3]))
+
+        # blkdiag with SX
+        import casadi as cas
+        constant3 = Function.Constant(basis3, DTensor([1],[1,1]))
+        func10 = blkdiag(constant3, cas.SX.sym('x',1))
+        self.assertEqual(func10.shape,[2,2])
 
     def test_reshape(self):
         knots = [0,0,0.5,1,1]
@@ -127,7 +142,6 @@ class Test_Function_Function_shape(BasisTestCase):
             test_value = numpy.reshape((f.transpose())(x,y), [1,8])
             value = new_f(x,y)
             self.assertEqualT(value, test_value)
-
 
 if __name__ == '__main__':
     unittest.main()

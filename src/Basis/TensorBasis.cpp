@@ -238,11 +238,7 @@ namespace spline {
         return (*this)->totalNumberBasisFunctions();
     }
     int TensorBasisNode::totalNumberBasisFunctions() const {
-        int r = 1;
-        for (int i : dimension()) {
-            r *= i;
-        }
-        return r;
+        return spline::product(dimension());
     }
 
     int TensorBasis::n_inputs() const {

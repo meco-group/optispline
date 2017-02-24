@@ -116,7 +116,7 @@ namespace spline {
       int numberEval = basisEvaluated.size();
       int numberBasis = sumBasis.totalNumberBasisFunctions();
       std::vector< int > elemShape = sumFunctionEvaluated[0].dims();
-      int numberCoef = (elemShape.size() == 0)? 1: elemShape[0]*elemShape[1];
+      int numberCoef = (elemShape.size() == 0)? 1: spline::product(elemShape);
 
       std::vector< int > shapeA = {numberEval, numberBasis};
       std::vector< int > shapeB = {numberBasis, numberCoef};
@@ -569,7 +569,7 @@ namespace spline {
       int numberEval = basisEvaluated.size();
       int numberBasis = unionBasis.totalNumberBasisFunctions();
       std::vector< int > elemShape = thisFunctionEvaluated[0].dims();
-      int numberCoef = elemShape[0]*elemShape[1];
+      int numberCoef = spline::product(elemShape);
 
       std::vector< int > shapeA = {numberEval, numberBasis};
       std::vector< int > shapeB = {numberBasis, numberCoef};
@@ -587,7 +587,7 @@ namespace spline {
 
     Function Function::project_to(const TensorBasis& b) const {
         Function b2 = Function::vertcat(b.basis_functions());
-        Function f = reshape(std::vector< int >{1,shape()[0]*shape()[1]});
+        Function f = reshape(std::vector< int >{1,spline::product(shape())});
 
         Function b22 = b2.mtimes(b2.transpose());
         Function b2f = b2.mtimes(f); //f already is a row vector
