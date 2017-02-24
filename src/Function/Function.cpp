@@ -583,7 +583,7 @@ namespace spline {
     }
 
     Function Function::project_to(const TensorBasis& b) const {
-        Function b2 = Function::vertcat(b.basis_functions());
+        Function b2 = b.basis_functions();
         Function f = reshape(std::vector< int >{1,spline::product(shape())});
 
         Function b22 = b2.mtimes(b2.transpose());
