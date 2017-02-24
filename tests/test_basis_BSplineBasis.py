@@ -97,14 +97,14 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         elev = 2
         b2,T = b1.degree_elevation(elev)
         degree2 = degree+elev
-        knots2 = np.r_[np.zeros(degree), sorted(np.linspace(0, 1, knotsint).tolist()*elev), np.ones(degree)]
+        knots2 = np.r_[np.zeros(degree), sorted(np.linspace(0, 1, knotsint).tolist()*(elev+1)), np.ones(degree)]
         self.assertEqualT(knots2, b2.knots(), tol=1e-6)
         self.assertEqualT(degree2, b2.degree(), tol=1e-6)
-        # c2 = T.dot(c1)
-        # s2 = Function(b2,c2)
-        # g2 = b2.greville()
-        # for i in g2:
-        #     self.assertEqualT(s1(i), s2(i), 1e-6)
+        c2 = T.dot(c1)
+        s2 = Function(b2,c2)
+        g2 = b2.greville()
+        for i in g2:
+            self.assertEqualT(s1(i), s2(i), 1e-6)
 
     def test_kick_boundary(self):
         np.random.seed(0)

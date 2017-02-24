@@ -390,13 +390,13 @@ namespace spline {
     Basis BSplineBasisNode::degree_elevation(int elevation, AnyTensor& T) const {
       	// check if numeric knots
         spline_assert_message(AnyScalar::is_double(knots()),
-            "Midpoint refinement only possible with numeric knot sequence.");
+            "Degree elevation only possible with numeric knot sequence.");
         std::vector<double> kn = AnyScalar::as_double(knots());
         // construct new basis
         std::vector<AnyScalar> new_knots(0);
         int j;
         for (int i=0; i<kn.size(); i+=j) {
-            j = 1;
+            j = 0;
             while ((i+j < kn.size()) && (kn[i+j] == kn[i])) {
                 new_knots.push_back(kn[i+j]);
                 j++;
@@ -409,14 +409,14 @@ namespace spline {
         }
         BSplineBasis new_basis = BSplineBasis(new_knots, degree()+elevation);
         // project into new basis
-        // T = project_to(new_basis);
+        T = project_to(new_basis);
         return new_basis;
     }
 
     Basis BSplineBasisNode::kick_boundary(const Interval& boundary, AnyTensor& T) const {
         // check if numeric knots
         spline_assert_message(AnyScalar::is_double(knots()),
-            "Midpoint refinement only possible with numeric knot sequence.");
+            "Kick boundary only possible with numeric knot sequence.");
         std::vector<double> kn = AnyScalar::as_double(knots());
         int n_lb = 1;
         while ((n_lb < kn.size()) && (kn[n_lb] == kn[0])) {
