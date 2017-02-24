@@ -1,6 +1,6 @@
 meco_binaries('cpp_splines','fill_in_the_branch_you_want')
 
-import Basis.*
+import splines.*
 
 
 a = rand(2,2,2);
@@ -21,11 +21,11 @@ B1 = MonomialBasis(2);
 B2 = MonomialBasis(3);
 B3 = MonomialBasis(4);
 
-B = Basis.TensorBasis({B1,B2,B3});
+B = splines.TensorBasis({B1,B2,B3});
 
 a = rand(B.dimension());
 
-F = Basis.Function(B, a);
+F = splines.Function(B, a);
 
 c = F.coeff();
 r = c.data();

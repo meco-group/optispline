@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from helpers import *
-from Basis import vertcat
+from splines import vertcat
 
 class Test_Function_Function(BasisTestCase):
 
@@ -210,7 +210,6 @@ class Test_Function_Function(BasisTestCase):
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
     def test_degree_elevation(self):
-        return
         np.random.seed(0)
         d1 = 3
         nki1 = 8
@@ -236,8 +235,8 @@ class Test_Function_Function(BasisTestCase):
         self.assertEqualT(be_1.degree(), d1+elev1)
         self.assertEqualT(be_2.degree(), d2+elev2)
         self.assertEqualT(be_3.degree(), d3+elev3)
-        self.assertEqualT(be_1.knots(), np.r_[np.zeros(d1), sorted(np.linspace(0, 1, nki1).tolist()*elev1), np.ones(d1)])
-        self.assertEqualT(be_2.knots(), np.r_[np.zeros(d2), sorted(np.linspace(0, 1, nki2).tolist()*elev2), np.ones(d2)])
+        self.assertEqualT(be_1.knots(), np.r_[np.zeros(d1), sorted(np.linspace(0, 1, nki1).tolist()*(elev1+1)), np.ones(d1)])
+        self.assertEqualT(be_2.knots(), np.r_[np.zeros(d2), sorted(np.linspace(0, 1, nki2).tolist()*(elev2+1)), np.ones(d2)])
         g1 = be_1.greville()
         g2 = be_2.greville()
         for i in g1:
@@ -245,7 +244,7 @@ class Test_Function_Function(BasisTestCase):
                 for k in range(d3+1):
                     self.assertEqualT(f(i,j,k), f_e123(i,j,k), 1e-6)
         f.degree_elevation(3)
-        f.degree_elevation(3, [1])
+        f.degree_elevation([3], [1])
 
     def test_kick_boundary(self):
         return

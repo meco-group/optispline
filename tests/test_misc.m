@@ -1,9 +1,9 @@
 meco_binaries('cpp_splines','fill_in_the_branch_you_want')
 
-import Basis.*
+import splines.*
 
 try
-  F = Basis.Function(3);
+  F = splines.Function(3);
 except
   
 end
@@ -21,7 +21,7 @@ B2.knots()
 
 b1 = BSplineBasis([0,0,1/2,1,1],1);
 c1 = Coefficient(rand(3,1,1));
-s1 = Basis.Function(b1, c1);
+s1 = splines.Function(b1, c1);
 
 coeff_tensor(s1+casadi.SX.sym('x',2))
 coeff_tensor(casadi.SX.sym('x',2)+s1)

@@ -1,6 +1,6 @@
 meco_binaries('cpp_splines','develop')
 
-import Basis.*
+import splines.*
 
 % define two univariate subbases
 
@@ -34,7 +34,7 @@ B4 = B1*B2;
 
 % create Cartesian product of B1 and B2
 
-B = Basis.TensorBasis({B1,B2});
+B = TensorBasis({B1,B2});
 
 
 
@@ -42,7 +42,7 @@ B = Basis.TensorBasis({B1,B2});
 
 a = rand(B.dimension());
 
-mvar_spline = Basis.Function(B, a);
+mvar_spline = splines.Function(B, a);
 
 
 

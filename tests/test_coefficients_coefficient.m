@@ -1,6 +1,6 @@
 meco_binaries('cpp_splines','fill_in_the_branch_you_want')
 
-import Basis.*
+import splines.*
 
 rng(0);
 a_ = randi([-10 10],2,3);

@@ -4,8 +4,6 @@ import os
 import random
 
 from helpers import *
-from Basis import *
-
 
 class Test_Basis_Basis(BasisTestCase):
 

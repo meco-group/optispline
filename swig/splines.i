@@ -1,4 +1,4 @@
-%module(package="Basis") Basis
+%module(package="splines") splines
 
 // WORKAROUNDS BEGINS: Due to Python-related issues in casadi.i
 #ifdef SWIGPYTHON

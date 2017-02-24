@@ -2,7 +2,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
-from Basis import *
+from splines import *
 import casadi as ca
 import numpy as np
 import random
