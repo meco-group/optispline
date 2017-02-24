@@ -122,9 +122,6 @@ namespace spline {
       std::vector< int > shapeB = {numberBasis, numberCoef};
       A = A.shape(shapeA);
       B = B.shape(shapeB);
-      casadi::DM anum = A.as_DT().matrix();
-      casadi::write_matlab(casadi::userOut(), anum.nonzeros());
-      std::cout << shapeA << std::endl;
       AnyTensor C = A.solve(B);
 
       std::vector< int > shapeCoef = elemShape;

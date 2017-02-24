@@ -90,6 +90,24 @@ namespace spline {
         return (*this)->kick_boundary(boundary, T);
     }
 
+    AnyTensor BasisNode::project_to(const Basis& b) const {
+        Function b1 = basis_functions();
+        Function b2 = b.basis_functions();
+
+        Function b21  = b2.mtimes(b1.transpose());
+        Function b22  = b2.mtimes(b2.transpose());
+
+        AnyTensor B21 = b21.integral();
+        AnyTensor B22 = b22.integral();
+
+        AnyTensor T = B22.solve(B21);
+        return T;
+    }
+
+    AnyTensor Basis::project_to(const Basis& b) const {
+        return (*this)->project_to(b);
+    }
+
     Function BasisNode::basis_functions() const {
         AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(dimension())));
         return Function(shared_from_this<Basis>(), Coefficient(t));

@@ -135,7 +135,7 @@ using namespace spline;
 
 %fragment("casadi_extra_decl", "header") {
   namespace casadi {
-  
+
     void interpret_NumericIndex(spline::NumericIndex& a) {
       #ifdef SWIGMATLAB
         a--;
@@ -230,7 +230,7 @@ using namespace spline;
       }
       {
         std::vector<AnyScalar> tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.size()==2)) {
+        if(casadi::to_ptr(p, &mt) && tmp.size()==2) {
           if (m) **m = tmp;
           return true;
         }
@@ -922,9 +922,12 @@ using namespace spline;
 %casadi_typemaps("TensorBasis", PREC_MX, spline::TensorBasis)
 %casadi_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %casadi_template("[DTensor]", PREC_MXVector, std::vector< Tensor<casadi::DM> >)
+%casadi_template("[STensor]", PREC_MXVector, std::vector< Tensor<casadi::SX> >)
+%casadi_template("[MTensor]", PREC_MXVector, std::vector< Tensor<casadi::MX> >)
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 %casadi_template("[Function]", PREC_FUNCTION, std::vector< spline::Function >)
 %casadi_typemaps("Function", PREC_FUNCTION, spline::Function)
+%casadi_typemaps("[Coefficient]", PREC_MX, std::vector<spline::Coefficient>)
 
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
@@ -941,19 +944,18 @@ using namespace spline;
   interpret_NumericIndex(*$1);
  }
 
- 
+
 %typemap(in, doc="[index]", noblock=1, fragment="casadi_all") const spline::NumericIndexVector & (spline::NumericIndexVector m) {
   $1 = &m;
   if (!casadi::to_ptr($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' [index] '.");
   interpret_NumericIndex(m);
  }
- 
+
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
 
 %include <src/Function/Argument.h>
 %include <src/Function/NumericIndex.h>
-
 
 %include <tensor.hpp>
 %include <slice.hpp>
@@ -962,8 +964,9 @@ using namespace spline;
 %template(STensor) Tensor<casadi::SX>;
 %template(MTensor) Tensor<casadi::MX>;
 
-%template(STensorVector) std::vector< Tensor<casadi::SX> >;
-%template(MTensorVector) std::vector< Tensor<casadi::MX> >;
+%include <src/Domain/Domain.h>
+%include <src/Domain/Interval.h>
+%include <src/Domain/TensorDomain.h>
 
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/Basis.h>
@@ -979,10 +982,6 @@ using namespace spline;
 %include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 %include <src/Coefficients/Coefficient.h>
-
-%include <src/Domain/Domain.h>
-%include <src/Domain/Interval.h>
-%include <src/Domain/TensorDomain.h>
 
 #ifdef SWIGPYTHON
 %rename(call) spline::Function::operator();

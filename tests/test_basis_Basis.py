@@ -5,9 +5,6 @@ import random
 
 from helpers import *
 
-from splines import *
-from casadi import *
-
 class Test_Basis_Basis(BasisTestCase):
 
     def test_ubasis_n_basis(self):
@@ -201,6 +198,23 @@ class Test_Basis_Basis(BasisTestCase):
         self.assertEqualT(f(0.8).T,[[0,0,1,0]])
         self.assertEqualT(f(1).T,[[0,0,0,1]])
         self.assertEqualT(f(0.5).T,[[0,0.5,0.5,0]])
+
+    def test_project_to(self):
+        np.random.seed(0)
+        degree = 3
+        knotsint = 8
+        knots1 = [0,0,0,0,0.2,0.5,0.8,1,1,1,1]
+        b1 = BSplineBasis(knots1, degree)
+        c1 = Coefficient(np.random.rand(b1.dimension()))
+        s1 = Function(b1,c1)
+        knots2 = [0,0,0,0,0,0.2,0.2,0.5,0.5,0.7,0.8,0.8,1,1,1,1,1]
+        b2 = BSplineBasis(knots2, degree+1)
+        T = b1.project_to(b2)
+        c2 = c1.transform(T)
+        s2 = Function(b2, c2)
+        g2 = b2.greville()
+        for i in g2:
+            self.assertEqualT(s1(i), s2(i), 1e-6)
 
 # TODO constructor
     # def test_getEvaluation1(self):

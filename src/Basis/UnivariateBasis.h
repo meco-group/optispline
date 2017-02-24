@@ -51,8 +51,8 @@ namespace spline {
         UnivariateBasisNode* operator->() const ;
 #endif // SWIG
 
-        std::string to_string() const;
-        std::string type() const;
+        // std::string to_string() const;
+        // std::string type() const;
 
         int degree () const ;
     };
