@@ -62,6 +62,7 @@ namespace spline {
         virtual Basis degree_elevation(int elevation, AnyTensor& T) const;
         virtual Basis kick_boundary(const Domain& boundary, AnyTensor& T) const;
 
+        AnyTensor project_to(const Basis& b) const ;
         spline::Function basis_functions() const;
 
     protected:
@@ -99,6 +100,7 @@ namespace spline {
         Basis degree_elevation(int elevation, AnyTensor& SWIG_OUTPUT(T)) const;
         Basis kick_boundary(const Domain& boundary, AnyTensor& SWIG_OUTPUT(T)) const;
 
+        AnyTensor project_to(const Basis& b) const ;
         spline::Function basis_functions() const;
 
         int dimension() const;
