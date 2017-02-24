@@ -109,8 +109,8 @@ namespace spline {
         return domain(index);
     }
 
-    Domain TensorDomain::domain(const Index& index) const { return (*this)->domain(index); }
-    Domain TensorDomainNode::domain(const Index& index) const {
+    Domain TensorDomain::domain(const Argument& index) const { return (*this)->domain(index); }
+    Domain TensorDomainNode::domain(const Argument& index) const {
         int ind = index.concrete(arguments());
         spline_assert(ind < n_domains());
         return domains()[ind];

@@ -225,7 +225,7 @@ spline::Function OptiSpline::Function(const spline::TensorBasis& b) {
 }
 
 MT OptiSpline::var(const std::vector<int> & shape) {
-  return MT(var(product(shape)), shape);
+  return MT(var(spline::product(shape)), shape);
 }
 
 

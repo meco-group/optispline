@@ -5,6 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-sign-compare")
 
 add_library(Basis SHARED
     common.h
+	common.cpp
 
     SharedObject/SharedObject.cpp SharedObject/SharedObjectNode.cpp
     SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
@@ -29,7 +30,7 @@ add_library(Basis SHARED
 
     Function/Function.h Function/Function.cpp
     Function/Polynomial.h Function/Polynomial.cpp
-    Function/Index.h Function/Index.cpp
+    Function/Argument.h Function/Argument.cpp
     Function/NumericIndex.h
 
     Domain/Interval.h Domain/Interval.cpp

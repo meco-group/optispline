@@ -10,7 +10,7 @@
 #include "Interval.h"
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
-#include "../Function/Index.h"
+#include "../Function/Argument.h"
 
 namespace spline {
 
@@ -31,7 +31,7 @@ class TensorDomainNode : public SharedObjectNode {
         std::vector< Domain > domains() const;
         Domain domain() const;
         Domain domain(const std::string& a) const;
-        Domain domain(const Index& ind) const;
+        Domain domain(const Argument& ind) const;
         TensorDomain intersection(const TensorDomain& other) const;
         bool operator==(const TensorDomain& other) const;
 
@@ -64,7 +64,7 @@ public:
         std::vector< Domain > domains() const;
         Domain domain() const;
         Domain domain(const std::string& a) const;
-        Domain domain(const Index& ind) const;
+        Domain domain(const Argument& ind) const;
         TensorDomain intersection(const TensorDomain& other) const;
         bool operator==(const TensorDomain& other) const;
 };

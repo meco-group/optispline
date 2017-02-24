@@ -8,6 +8,7 @@
 #include <casadi/casadi.hpp>
 #include "tensor_exception.hpp"
 #include "slice.hpp"
+#include "../src/common.h"
 
 template <class T>
 std::vector<T> reorder(const std::vector<T>& data, const std::vector<int>& order) {
@@ -27,12 +28,6 @@ template <class T>
 std::vector<T> mrange(T start, T stop) {
   return casadi::range(-start-1, -stop-1, -1);
 }
-
-
-#ifndef SWIG
-int product(const std::vector<int>& a);
-int sum(const std::vector<int>& a);
-#endif
 
 std::vector<int> invert_order(const std::vector<int>& order);
 
@@ -76,7 +71,7 @@ class Tensor {
     */
 
     // The dimensions
-    int trailing_dim = product(dims)/dims[axis];
+    int trailing_dim = spline::product(dims)/dims[axis];
 
     std::vector<T> data;
     for (auto& t : v) {
@@ -100,7 +95,7 @@ class Tensor {
     tensor_assert(factors.size()>= e.n_dims());
 
     // e : {n m p q}   factors : {r1 r2 r3 r4 | r5}
-    Tensor<T> ones(casadi::DM::ones(product(factors)), factors);
+    Tensor<T> ones(casadi::DM::ones(spline::product(factors)), factors);
 
     // r : {n m p q r1 r2 r3 r4 | r5}
     Tensor<T> r = e.outer_product(ones);
@@ -145,7 +140,7 @@ class Tensor {
   }
 
   Tensor(const T& data, const std::vector<int>& dims) : data_(vec(densify(data))), dims_(dims) {
-    tensor_assert_message(data.numel()==product(dims), "Data of length " << data.numel()
+    tensor_assert_message(data.numel()==spline::product(dims), "Data of length " << data.numel()
       << " and dims " << dims << " are incompatible.");
   }
 

@@ -2,18 +2,6 @@
 
 #include <casadi/core/function/function_internal.hpp>
 
-int product(const std::vector<int>& a) {
-  int r = 1;
-  for (int i=0;i<a.size();++i) r*=a[i];
-  return r;
-}
-
-int sum(const std::vector<int>& a) {
-  int r = 0;
-  for (int i=0;i<a.size();++i) r+=a[i];
-  return r;
-}
-
 std::vector<int> invert_order(const std::vector<int>& order) {
   std::vector<int> ret(order.size());
   for (int i=0;i<order.size();++i) {

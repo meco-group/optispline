@@ -4,6 +4,7 @@
 #include <string>
 #include <exception>
 #include <sstream>
+#include <vector>
 
 namespace spline {
 
@@ -70,5 +71,10 @@ class SplineException : public std::exception {
 
 #define spline_error(msg) spline_assert_message(false, msg)
 
-}
+#ifndef SWIG
+int product(const std::vector<int>& a);  // number of elements in vector
+int sum(const std::vector<int>& a);  // sum of elements in vector
+#endif
+
+} // namespace spline
 #endif  // COMMON_H

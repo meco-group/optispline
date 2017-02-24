@@ -6,7 +6,7 @@
 
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
-#include "Index.h"
+#include "Argument.h"
 
 namespace spline {
   typedef int NumericIndex;

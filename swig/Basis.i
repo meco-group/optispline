@@ -115,7 +115,7 @@ def _swig_repr(self):
 
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
-#include <src/Function/Index.h>
+#include <src/Function/Argument.h>
 #include <src/Function/NumericIndex.h>
 #include <src/Optistack/optistack.h>
 
@@ -135,7 +135,7 @@ using namespace spline;
 
 %fragment("casadi_extra_decl", "header") {
   namespace casadi {
-  
+
     void interpret_NumericIndex(spline::NumericIndex& a) {
       #ifdef SWIGMATLAB
         a--;
@@ -155,7 +155,7 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, DT** m);
     bool to_ptr(GUESTOBJECT *p, ST** m);
     bool to_ptr(GUESTOBJECT *p, MT** m);
-    bool to_ptr(GUESTOBJECT *p, spline::Index** m);
+    bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
     bool to_ptr(GUESTOBJECT *p, spline::TensorBasis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Basis** m);
 
@@ -184,7 +184,7 @@ using namespace spline;
     GUESTOBJECT *from_ptr(const DT *a);
     GUESTOBJECT *from_ptr(const ST *a);
     GUESTOBJECT *from_ptr(const MT *a);
-    GUESTOBJECT *from_ptr(const spline::Index *a);
+    GUESTOBJECT *from_ptr(const spline::Argument *a);
   }
 }
 
@@ -230,7 +230,7 @@ using namespace spline;
       }
       {
         std::vector<AnyScalar> tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.size()==2)) {
+        if(casadi::to_ptr(p, &mt) && tmp.size()==2) {
           if (m) **m = tmp;
           return true;
         }
@@ -617,12 +617,12 @@ using namespace spline;
       return false;
     }
 
-    bool to_ptr(GUESTOBJECT *p, spline::Index** m) {
+    bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
       // Treat Null
       if (is_null(p)) return false;
 
       if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
-                                    $descriptor(spline::Index*), 0))) {
+                                    $descriptor(spline::Argument*), 0))) {
         return true;
       }
       // String scalar
@@ -688,7 +688,7 @@ using namespace spline;
       return 0;
     }
 
-    GUESTOBJECT * from_ptr(const spline::Index *a) {
+    GUESTOBJECT * from_ptr(const spline::Argument *a) {
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
@@ -904,8 +904,8 @@ using namespace spline;
 %casadi_typemaps("AnyVector", PREC_MX, AnyVector)
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
-%casadi_typemaps("index", PREC_MX, spline::Index)
-%casadi_template("[index]", PREC_MX, std::vector<spline::Index >)
+%casadi_typemaps("index", PREC_MX, spline::Argument)
+%casadi_template("[index]", PREC_MX, std::vector<spline::Argument >)
 %casadi_typemaps("STensor", PREC_MX, Tensor<casadi::SX>)
 %casadi_typemaps("DTensor", PREC_MX, Tensor<casadi::DM>)
 %casadi_typemaps("MTensor", PREC_MX, Tensor<casadi::MX>)
@@ -922,11 +922,14 @@ using namespace spline;
 %casadi_typemaps("TensorBasis", PREC_MX, spline::TensorBasis)
 %casadi_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %casadi_template("[DTensor]", PREC_MXVector, std::vector< Tensor<casadi::DM> >)
+%casadi_template("[STensor]", PREC_MXVector, std::vector< Tensor<casadi::SX> >)
+%casadi_template("[MTensor]", PREC_MXVector, std::vector< Tensor<casadi::MX> >)
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 %casadi_template("[Function]", PREC_FUNCTION, std::vector< spline::Function >)
 %casadi_typemaps("Function", PREC_FUNCTION, spline::Function)
+%casadi_typemaps("[Coefficient]", PREC_MX, std::vector<spline::Coefficient>)
 
-%casadi_template("[index]", PREC_IVector, std::vector< spline::Index >)
+%casadi_template("[index]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
 
 
@@ -941,19 +944,18 @@ using namespace spline;
   interpret_NumericIndex(*$1);
  }
 
- 
+
 %typemap(in, doc="[index]", noblock=1, fragment="casadi_all") const spline::NumericIndexVector & (spline::NumericIndexVector m) {
   $1 = &m;
   if (!casadi::to_ptr($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' [index] '.");
   interpret_NumericIndex(m);
  }
- 
+
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
 
-%include <src/Function/Index.h>
+%include <src/Function/Argument.h>
 %include <src/Function/NumericIndex.h>
-
 
 %include <tensor.hpp>
 %include <slice.hpp>
@@ -962,8 +964,9 @@ using namespace spline;
 %template(STensor) Tensor<casadi::SX>;
 %template(MTensor) Tensor<casadi::MX>;
 
-%template(STensorVector) std::vector< Tensor<casadi::SX> >;
-%template(MTensorVector) std::vector< Tensor<casadi::MX> >;
+%include <src/Domain/Domain.h>
+%include <src/Domain/Interval.h>
+%include <src/Domain/TensorDomain.h>
 
 %include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/Basis.h>
@@ -979,10 +982,6 @@ using namespace spline;
 %include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 %include <src/Coefficients/Coefficient.h>
-
-%include <src/Domain/Domain.h>
-%include <src/Domain/Interval.h>
-%include <src/Domain/TensorDomain.h>
 
 #ifdef SWIGPYTHON
 %rename(call) spline::Function::operator();

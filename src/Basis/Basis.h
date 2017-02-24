@@ -59,6 +59,9 @@ namespace spline {
 
         virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const;
         virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const;
+        virtual Basis degree_elevation(int elevation, AnyTensor& T) const;
+        virtual Basis kick_boundary(const Domain& boundary, AnyTensor& T) const;
+
         spline::Function basis_functions() const;
 
     protected:
@@ -93,6 +96,9 @@ namespace spline {
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;
         Basis midpoint_refinement(int refinement, AnyTensor& SWIG_OUTPUT(T)) const;
+        Basis degree_elevation(int elevation, AnyTensor& SWIG_OUTPUT(T)) const;
+        Basis kick_boundary(const Domain& boundary, AnyTensor& SWIG_OUTPUT(T)) const;
+
         spline::Function basis_functions() const;
 
         int dimension() const;

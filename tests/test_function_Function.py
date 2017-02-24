@@ -209,6 +209,81 @@ class Test_Function_Function(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
+    def test_degree_elevation(self):
+        return
+        np.random.seed(0)
+        d1 = 3
+        nki1 = 8
+        k1 = np.r_[np.zeros(d1),np.linspace(0., 1., nki1), np.ones(d1)]
+        b1 = BSplineBasis(k1, d1)
+        elev1 = 2
+        d2 = 2
+        nki2 = 5
+        k2 = np.r_[np.zeros(d2),np.linspace(0., 1., nki2), np.ones(d2)]
+        b2 = BSplineBasis(k2, d2)
+        elev2 = 1
+        d3 = 6
+        b3 = MonomialBasis(d3)
+        elev3 = 4
+        B = TensorBasis([b1,b2,b3], ['x', 'y', 'z'])
+        dims = B.dimension()
+        C = np.random.rand(dims[0], dims[1], dims[2])
+        f = Function(B,C)
+        f_e123 = f.degree_elevation([elev1, elev3, elev2], ['x', 'z', 'y'])
+        be_1 = f_e123.basis(0)
+        be_2 = f_e123.basis(1)
+        be_3 = f_e123.basis(2)
+        self.assertEqualT(be_1.degree(), d1+elev1)
+        self.assertEqualT(be_2.degree(), d2+elev2)
+        self.assertEqualT(be_3.degree(), d3+elev3)
+        self.assertEqualT(be_1.knots(), np.r_[np.zeros(d1), sorted(np.linspace(0, 1, nki1).tolist()*elev1), np.ones(d1)])
+        self.assertEqualT(be_2.knots(), np.r_[np.zeros(d2), sorted(np.linspace(0, 1, nki2).tolist()*elev2), np.ones(d2)])
+        g1 = be_1.greville()
+        g2 = be_2.greville()
+        for i in g1:
+            for j in g2:
+                for k in range(d3+1):
+                    self.assertEqualT(f(i,j,k), f_e123(i,j,k), 1e-6)
+        f.degree_elevation(3)
+        f.degree_elevation(3, [1])
+
+    def test_kick_boundary(self):
+        return
+        np.random.seed(0)
+        d1 = 3
+        nki1 = 8
+        k1 = np.r_[np.zeros(d1),np.linspace(0., 1., nki1), np.ones(d1)]
+        b1 = BSplineBasis(k1, d1)
+        dom1 = [0.05, 1.1]
+        d2 = 2
+        nki2 = 5
+        k2 = np.r_[np.zeros(d2),np.linspace(0., 1., nki2), np.ones(d2)]
+        b2 = BSplineBasis(k2, d2)
+        dom2 = [-0.1, 0.95]
+        d3 = 6
+        b3 = MonomialBasis(d3)
+        B = TensorBasis([b1,b2,b3], ['x', 'y', 'z'])
+        dims = B.dimension()
+        C = np.random.rand(dims[0], dims[1], dims[2])
+        f = Function(B,C)
+        f_e123 = f.kick_boundary([dom2, dom1], ['y', 'x'])
+        be_1 = f_e123.basis(0)
+        be_2 = f_e123.basis(1)
+        be_3 = f_e123.basis(2)
+        self.assertEqualT(be_1.degree(), d1)
+        self.assertEqualT(be_2.degree(), d2)
+        self.assertEqualT(be_3.degree(), d3)
+        self.assertEqualT(be_1.knots(), np.r_[dom1[0]*np.ones(d1), np.linspace(dom1[0], dom1[1], nki1), dom1[1]*np.ones(d1)])
+        self.assertEqualT(be_2.knots(), np.r_[dom2[0]*np.ones(d2), np.linspace(dom2[0], dom1[1], nki2), dom2[1]*np.ones(d2)])
+        g1 = be_1.greville()
+        g2 = be_2.greville()
+        for i in g1:
+            for j in g2:
+                for k in range(d3+1):
+                    self.assertEqualT(f(i,j,k), f_e123(i,j,k), 1e-6)
+        f.kick_boundary(dom1, [1])
+        with self.assertRaises(Exception):
+            f.insert_knots(dom1)
 
     def test_derivative_multivariate(self):
         d0 = 4

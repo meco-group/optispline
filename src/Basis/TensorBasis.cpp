@@ -122,11 +122,11 @@ namespace spline {
         }
     }
 
-    Basis TensorBasis::basis(const Index& index) const {
+    Basis TensorBasis::basis(const Argument& index) const {
         return (*this)->basis(index);
     }
 
-    Basis TensorBasisNode::basis(const Index& index) const {
+    Basis TensorBasisNode::basis(const Argument& index) const {
         int ind = index.concrete(arguments());
         spline_assert(ind < n_basis());
         return bases()[ind];
@@ -149,12 +149,12 @@ namespace spline {
         return TensorBasis(new_bases, arguments());
     }
 
-    TensorBasis TensorBasis::substitute_bases(const std::vector<Index>& indices,
+    TensorBasis TensorBasis::substitute_bases(const std::vector<Argument>& indices,
         const std::vector<Basis>& bases) const {
         return (*this)->substitute_bases(indices, bases);
     }
 
-    TensorBasis TensorBasisNode::substitute_bases(const std::vector<Index>& indices,
+    TensorBasis TensorBasisNode::substitute_bases(const std::vector<Argument>& indices,
         const std::vector<Basis>& bases) const {
         spline_assert(indices.size() == bases.size());
         std::vector<Basis> new_bases(0);
@@ -238,11 +238,7 @@ namespace spline {
         return (*this)->totalNumberBasisFunctions();
     }
     int TensorBasisNode::totalNumberBasisFunctions() const {
-        int r = 1;
-        for (int i : dimension()) {
-            r *= i;
-        }
-        return r;
+        return spline::product(dimension());
     }
 
     int TensorBasis::n_inputs() const {
@@ -271,21 +267,21 @@ namespace spline {
     }
 
     TensorBasis TensorBasis::insert_knots(const std::vector<AnyVector> & new_knots,
-        std::vector<AnyTensor> & T, const std::vector<std::string>& args) const {
-        std::vector<NumericIndex> arg_ind(args.size());
+            const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
+        NumericIndexVector arg_ind(args.size());
         for (int i = 0; i < args.size(); i++) {
             arg_ind[i] = indexArgument(args[i]);
         }
-        return (*this)->insert_knots(new_knots, T, arg_ind);
+        return (*this)->insert_knots(new_knots, arg_ind, T);
     }
 
     TensorBasis TensorBasis::insert_knots(const std::vector<AnyVector> & new_knots,
-        std::vector<AnyTensor> & T, const NumericIndexVector& arg_ind) const {
-        return (*this)->insert_knots(new_knots, T, arg_ind);
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        return (*this)->insert_knots(new_knots, arg_ind, T);
     }
 
     TensorBasis TensorBasisNode::insert_knots(const std::vector<AnyVector>& new_knots,
-        std::vector<AnyTensor>& T, const NumericIndexVector& arg_ind) const {
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
         spline_assert(arg_ind.size() == new_knots.size());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
@@ -293,25 +289,25 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).insert_knots(new_knots[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
-        std::vector<AnyTensor> & T, const std::vector<std::string>& args) const {
-        std::vector<int> arg_ind(args.size());
+            const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
+        NumericIndexVector arg_ind(args.size());
         for (int i = 0; i < args.size(); i++) {
             arg_ind[i] = indexArgument(args[i]);
         }
-        return (*this)->midpoint_refinement(refinement, T, arg_ind);
+        return (*this)->midpoint_refinement(refinement, arg_ind, T);
     }
 
     TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
-        std::vector<AnyTensor> & T, const NumericIndexVector& arg_ind) const {
-        return (*this)->midpoint_refinement(refinement, T, arg_ind);
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        return (*this)->midpoint_refinement(refinement, arg_ind, T);
     }
 
     TensorBasis TensorBasisNode::midpoint_refinement(const std::vector<int>& refinement,
-        std::vector<AnyTensor>& T, const NumericIndexVector& arg_ind) const {
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
         spline_assert(arg_ind.size() == refinement.size());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
@@ -319,95 +315,159 @@ namespace spline {
             new_bases[i] = basis(arg_ind[i]).midpoint_refinement(refinement[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(arg_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
-    TensorBasis TensorBasis::derivative(const std::vector<std::string>& directions,
-        std::vector<AnyTensor>& T) const {
-        // default derivative is with order = 1
-        NumericIndexVector direction_ind(directions.size());
-        std::vector<int> orders(directions.size(), 1);
-        for (int i = 0; i < directions.size(); i++) {
-            direction_ind[i] = indexArgument(directions[i]);
+    TensorBasis TensorBasis::degree_elevation(const std::vector<int>& elevation,
+            const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
+        NumericIndexVector arg_ind(args.size());
+        for (int i = 0; i < args.size(); i++) {
+            arg_ind[i] = indexArgument(args[i]);
         }
-        return (*this)->derivative(orders, direction_ind, T);
+        return (*this)->degree_elevation(elevation, arg_ind, T);
     }
 
-    TensorBasis TensorBasis::derivative(const NumericIndexVector& direction_ind,
+    TensorBasis TensorBasis::degree_elevation(const std::vector<int>& elevation,
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        return (*this)->degree_elevation(elevation, arg_ind, T);
+    }
+
+    TensorBasis TensorBasisNode::degree_elevation(const std::vector<int>& elevation,
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        spline_assert(arg_ind.size() == elevation.size());
+        std::vector<Basis> new_bases(arg_ind.size());
+        std::vector<AnyTensor> T_(arg_ind.size());
+        for (int i = 0; i < arg_ind.size(); i++) {
+            new_bases[i] = basis(arg_ind[i]).degree_elevation(elevation[i], T_[i]);
+        }
+        T = T_;
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
+    }
+
+    TensorBasis TensorBasisNode::kick_boundary(const TensorDomain& boundary,
+            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        spline_assert(arg_ind.size() == boundary.n_domains());
+        std::vector<Basis> new_bases(arg_ind.size());
+        std::vector<AnyTensor> T_(arg_ind.size());
+        for (int i = 0; i < arg_ind.size(); i++) {
+            new_bases[i] = basis(arg_ind[i]).kick_boundary(boundary.domain(i), T_[i]);
+        }
+        T = T_;
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
+    }
+
+    TensorBasis TensorBasisNode::kick_boundary(const TensorDomain& boundary,
+            const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
+        spline_assert(boundary.n_domains() == args.size());
+        NumericIndexVector arg_ind(args.size());
+        for (int i=0; i<args.size(); i++) {
+            arg_ind[i] = indexArgument(args[i]);
+        }
+        if (boundary.hasArguments()) { // order domain
+            std::vector<Domain> doms(args.size());
+            for (int i=0; i<args.size(); i++) {
+                doms[i] = boundary.domain(args[i]);
+            }
+            TensorDomain boundary2 = TensorDomain(doms, args);
+            return partial_integral(boundary2, arg_ind, T);
+        }
+        return kick_boundary(boundary, arg_ind, T);
+    }
+
+    TensorBasis TensorBasis::kick_boundary(const TensorDomain& boundary,
+        const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+        return (*this)->kick_boundary(boundary, arg_ind, T);
+    }
+
+    TensorBasis TensorBasis::kick_boundary(const TensorDomain& boundary,
+        const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
+        return (*this)->kick_boundary(boundary, args, T);
+    }
+
+    TensorBasis TensorBasis::derivative(const std::vector<std::string>& args,
+        std::vector<AnyTensor>& T) const {
+        NumericIndexVector arg_ind(args.size());
+        std::vector<int> orders(args.size(), 1);
+        for (int i = 0; i < args.size(); i++) {
+            arg_ind[i] = indexArgument(args[i]);
+        }
+        return (*this)->derivative(orders, arg_ind, T);
+    }
+
+    TensorBasis TensorBasis::derivative(const NumericIndexVector& arg_ind,
         std::vector<AnyTensor>& T) const {
         // default derivative is with order = 1
-        std::vector<int> orders(direction_ind.size(), 1);
-        return (*this)->derivative(orders, direction_ind, T);
+        std::vector<int> orders(arg_ind.size(), 1);
+        return (*this)->derivative(orders, arg_ind, T);
     }
 
     TensorBasis TensorBasis::derivative(const std::vector<int>& orders,
-        const std::vector<std::string>& directions, std::vector<AnyTensor>& T) const {
-        std::vector<NumericIndex> direction_ind(directions.size());
-        for (int i = 0; i < directions.size(); i++) {
-            direction_ind[i] = indexArgument(directions[i]);
+        const std::vector<std::string>& args, std::vector<AnyTensor>& T) const {
+        NumericIndexVector arg_ind(args.size());
+        for (int i = 0; i < args.size(); i++) {
+            arg_ind[i] = indexArgument(args[i]);
         }
-        return (*this)->derivative(orders, direction_ind, T);
+        return (*this)->derivative(orders, arg_ind, T);
     }
 
     TensorBasis TensorBasis::derivative(const std::vector<int>& orders,
-        const NumericIndexVector& direction_ind, std::vector<AnyTensor>& T) const {
-        return (*this)->derivative(orders, direction_ind, T);
+        const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
+        return (*this)->derivative(orders, arg_ind, T);
     }
 
     TensorBasis TensorBasisNode::derivative(const std::vector<int>& orders,
-        const NumericIndexVector& direction_ind, std::vector<AnyTensor>& T) const {
+        const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
         // Call derivative on basis, for corresponding direction
-        std::vector<Basis> new_bases(direction_ind.size());
-        std::vector<AnyTensor> T_(direction_ind.size());
-        for (int i = 0; i < direction_ind.size(); i++) {
-            new_bases[i] = basis(direction_ind[i]).derivative(orders[i], T_[i]);
+        std::vector<Basis> new_bases(arg_ind.size());
+        std::vector<AnyTensor> T_(arg_ind.size());
+        for (int i = 0; i < arg_ind.size(); i++) {
+            new_bases[i] = basis(arg_ind[i]).derivative(orders[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(direction_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
-    TensorBasis TensorBasis::antiderivative(const std::vector<std::string>& directions,
+    TensorBasis TensorBasis::antiderivative(const std::vector<std::string>& args,
         std::vector<AnyTensor>& T) const {
         // default antiderivative is with order = 1
-        std::vector<int> direction_ind(directions.size());
-        std::vector<int> orders(directions.size(), 1);
-        for (int i = 0; i < directions.size(); i++) {
-            direction_ind[i] = indexArgument(directions[i]);
+        NumericIndexVector arg_ind(args.size());
+        std::vector<int> orders(args.size(), 1);
+        for (int i = 0; i < args.size(); i++) {
+            arg_ind[i] = indexArgument(args[i]);
         }
-        return (*this)->antiderivative(orders, direction_ind, T);
+        return (*this)->antiderivative(orders, arg_ind, T);
     }
 
-    TensorBasis TensorBasis::antiderivative(const NumericIndexVector& direction_ind,
+    TensorBasis TensorBasis::antiderivative(const NumericIndexVector& arg_ind,
         std::vector<AnyTensor>& T) const {
-        // default antiderivative is with order = 1
-        std::vector<int> orders(direction_ind.size(), 1);
-        return (*this)->antiderivative(orders, direction_ind, T);
+        std::vector<int> orders(arg_ind.size(), 1);
+        return (*this)->antiderivative(orders, arg_ind, T);
     }
 
     TensorBasis TensorBasis::antiderivative(const std::vector<int>& orders,
-        const std::vector<std::string>& directions, std::vector<AnyTensor>& T) const {
-        std::vector<NumericIndex> direction_ind(directions.size());
-        for (int i = 0; i < directions.size(); i++) {
-            direction_ind[i] = indexArgument(directions[i]);
+        const std::vector<std::string>& args, std::vector<AnyTensor>& T) const {
+        NumericIndexVector arg_ind(args.size());
+        for (int i = 0; i < args.size(); i++) {
+            arg_ind[i] = indexArgument(args[i]);
         }
-        return (*this)->antiderivative(orders, direction_ind, T);
+        return (*this)->antiderivative(orders, arg_ind, T);
     }
 
     TensorBasis TensorBasis::antiderivative(const std::vector<int>& orders,
-        const NumericIndexVector& direction_ind, std::vector<AnyTensor>& T) const {
-        return (*this)->antiderivative(orders, direction_ind, T);
+        const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
+        return (*this)->antiderivative(orders, arg_ind, T);
     }
 
     TensorBasis TensorBasisNode::antiderivative(const std::vector<int>& orders,
-        const NumericIndexVector& direction_ind, std::vector<AnyTensor>& T) const {
+        const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
         // Call antiderivative on basis, for corresponding direction
-        std::vector<Basis> new_bases(direction_ind.size());
-        std::vector<AnyTensor> T_(direction_ind.size());
-        for (int i = 0; i < direction_ind.size(); i++) {
-            new_bases[i] = basis(direction_ind[i]).antiderivative(orders[i], T_[i]);
+        std::vector<Basis> new_bases(arg_ind.size());
+        std::vector<AnyTensor> T_(arg_ind.size());
+        for (int i = 0; i < arg_ind.size(); i++) {
+            new_bases[i] = basis(arg_ind[i]).antiderivative(orders[i], T_[i]);
         }
         T = T_;
-        return substitute_bases(Index::from_vector(direction_ind), new_bases);
+        return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
     std::vector<AnyTensor> TensorBasisNode::integral(const TensorDomain& dom) const {
@@ -424,22 +484,22 @@ namespace spline {
     }
 
     TensorBasis TensorBasisNode::partial_integral(const TensorDomain& dom,
-        const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
-        spline_assert(dom.n_domains() == direction_ind.size());
+        const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
+        spline_assert(dom.n_domains() == arg_ind.size());
         std::vector<Basis> bases(0);
         std::vector<std::string> args(0);
-        std::vector<AnyTensor> T_(direction_ind.size());
-        for (int i=0; i<direction_ind.size(); i++) {
-            T_[i] = basis(direction_ind[i]).integral(dom.domain(i));
+        std::vector<AnyTensor> T_(arg_ind.size());
+        for (int i=0; i<arg_ind.size(); i++) {
+            T_[i] = basis(arg_ind[i]).integral(dom.domain(i));
         }
         int i;
         for (int j=0; j<n_basis(); j++) {
-            for (i=0; i<direction_ind.size(); i++) {
-                if (direction_ind[i] == j) {
+            for (i=0; i<arg_ind.size(); i++) {
+                if (arg_ind[i] == j) {
                     break;
                 }
             }
-            if (i == direction_ind.size()) {
+            if (i == arg_ind.size()) {
                 bases.push_back(basis(j));
                 if (hasArguments()) {
                     args.push_back(argument(j));
@@ -451,21 +511,21 @@ namespace spline {
     }
 
     TensorBasis TensorBasisNode::partial_integral(const TensorDomain& dom,
-        const std::vector<std::string>& directions, std::vector<AnyTensor>& T) const {
-        spline_assert(dom.n_domains() == directions.size());
-        std::vector<NumericIndex> direction_ind(directions.size());
-        for (int i=0; i<directions.size(); i++) {
-            direction_ind[i] = indexArgument(directions[i]);
+        const std::vector<std::string>& args, std::vector<AnyTensor>& T) const {
+        spline_assert(dom.n_domains() == args.size());
+        NumericIndexVector arg_ind(args.size());
+        for (int i=0; i<args.size(); i++) {
+            arg_ind[i] = indexArgument(args[i]);
         }
         if (dom.hasArguments()) { // order domain
-            std::vector<Domain> doms(directions.size());
-            for (int i=0; i<directions.size(); i++) {
-                doms[i] = dom.domain(directions[i]);
+            std::vector<Domain> doms(args.size());
+            for (int i=0; i<args.size(); i++) {
+                doms[i] = dom.domain(args[i]);
             }
-            TensorDomain dom2 = TensorDomain(doms, directions);
-            return partial_integral(dom2, direction_ind, T);
+            TensorDomain dom2 = TensorDomain(doms, args);
+            return partial_integral(dom2, arg_ind, T);
         }
-        return partial_integral(dom, direction_ind, T);
+        return partial_integral(dom, arg_ind, T);
     }
 
     std::vector<AnyTensor> TensorBasis::integral(const TensorDomain& domain) const {
@@ -473,13 +533,13 @@ namespace spline {
     }
 
     TensorBasis TensorBasis::partial_integral(const TensorDomain& domain,
-        const std::vector<NumericIndex>& direction_ind, std::vector<AnyTensor>& T) const {
-        return (*this)->partial_integral(domain, direction_ind, T);
+        const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
+        return (*this)->partial_integral(domain, arg_ind, T);
     }
 
     TensorBasis TensorBasis::partial_integral(const TensorDomain& domain,
-        const std::vector<std::string>& directions, std::vector<AnyTensor>& T) const {
-        return (*this)->partial_integral(domain, directions, T);
+        const std::vector<std::string>& args, std::vector<AnyTensor>& T) const {
+        return (*this)->partial_integral(domain, args, T);
     }
 
     std::vector< spline::Function > TensorBasis::basis_functions() const {
