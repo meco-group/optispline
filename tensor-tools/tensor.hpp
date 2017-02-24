@@ -229,6 +229,17 @@ class Tensor {
     return ret;
   }
 
+  Tensor get_slice(const AnySlice& i) {
+    int n = dims()[n_dims()-2];
+    int m = dims()[n_dims()-1];
+    tensor_assert(n==1 || m==1);
+    if (m==1) {
+      return get_slice(i, 0);
+    } else {
+      return get_slice(0, i);
+    }
+  }
+
   Tensor get_slice(const AnySlice& i, const AnySlice& j) {
     int n = dims()[n_dims()-2];
     int m = dims()[n_dims()-1];

@@ -607,11 +607,9 @@ using namespace spline;
       {
         std::string tmp;
         if (to_val(p, &tmp)) {
-          if (m) {
-            if (tmp!=":") return false;
-            **m = AnySlice();
-            return true;
-          }
+          if (tmp!=":") return false;
+          if (m) **m = AnySlice();
+          return true;
         }
       }
       return false;
@@ -1077,7 +1075,9 @@ namespace spline {
 #ifdef SWIGPYTHON
   %pythoncode %{
   def __getitem__(self, s):
-      return self.slice(*s)
+      if isinstance(s, tuple):
+        return self.slice(*s)
+      return self.slice(s)
   %}
 #endif
 
