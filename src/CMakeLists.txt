@@ -3,7 +3,7 @@ include_directories(${CASADI_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-sign-compare")
 
-add_library(Basis SHARED
+add_library(splines SHARED
     common.h
 	common.cpp
 
@@ -47,5 +47,5 @@ add_library(Basis SHARED
     ../tensor-tools/slice.hpp
     ../tensor-tools/slice.cpp
     )
-target_link_libraries(Basis ${CASADI_LIBRARIES})
+target_link_libraries(splines ${CASADI_LIBRARIES})
 add_definitions(-DSHARED_LIBRARY)

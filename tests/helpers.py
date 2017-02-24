@@ -14,8 +14,8 @@ import numpy as np
 import casadi as C
 
 from casadi import *
-from Basis import *
-import Basis
+from splines import *
+import splines
 
 class BasisTestCase(unittest.TestCase):
 

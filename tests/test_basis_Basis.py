@@ -5,7 +5,7 @@ import random
 
 from helpers import *
 
-from Basis import *
+from splines import *
 from casadi import *
 
 class Test_Basis_Basis(BasisTestCase):
