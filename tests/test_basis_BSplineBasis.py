@@ -116,8 +116,8 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         s1 = Function(b1,c1)
         elev = 2
         lb, ub = -0.1, 0.95
-        return
         b2,T = b1.kick_boundary([lb, ub])
+        return
         knots2 = np.r_[lb*np.ones(degree), np.linspace(lb, ub, knotsint), ub*np.ones(degree)]
         self.assertEqualT(knots2, b2.knots(), tol=1e-6)
         self.assertEqualT(degree, b2.degree(), tol=1e-6)
