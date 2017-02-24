@@ -186,7 +186,7 @@ namespace spline {
 
     std::vector< std::vector<AnyScalar> > BSplineBasisNode::getEvaluationGrid() const {
         std::vector< std::vector<AnyScalar> > ret;
-        for (auto const& point : greville()) {
+        for (auto const& point : AnyVector(greville()).uniquify().to_scalar_vector()) {
           ret.push_back(std::vector<AnyScalar> {point});
         }
         return ret;
