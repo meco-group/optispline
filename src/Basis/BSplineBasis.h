@@ -104,6 +104,7 @@ namespace spline{
         BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree);
 
         virtual std::string type() const override {return "BSplineBasis";}
+        virtual std::string to_string() const override;
 
         virtual Basis operator+(const MonomialBasis& other) const override;
         virtual Basis operator+(const BSplineBasis& other) const override;
@@ -118,7 +119,6 @@ namespace spline{
         std::vector<AnyScalar> knots() const;
         std::vector<AnyScalar> greville() const;
 
-        virtual std::string getRepresentation() const override;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 

@@ -11,8 +11,11 @@ namespace spline {
     BasisNode* Basis::get() const { return static_cast<BasisNode*>(SharedObject::get()); };
     BasisNode* Basis::operator->() const { return get(); }
 
-    std::string BasisNode::getRepresentation() const {return "Basis";};
-    std::string Basis::getRepresentation() const { return (*this)->getRepresentation() ;};
+    std::string Basis::type() const { return (*this)->type() ;}
+    std::string BasisNode::type() const { return "Basis";}
+
+    std::string Basis::to_string() const { return (*this)->to_string() ;};
+    std::string BasisNode::to_string() const {return "A Basis object on " + domain().to_string();};
 
     Domain BasisNode::domain() const {return domain_;}
     Domain Basis::domain() const {return (*this)->domain();}
@@ -56,7 +59,7 @@ namespace spline {
     }
 
     Basis BasisNode::insert_knots(const AnyVector & new_knots, AnyTensor & T) const {
-        spline_assert_message(false, getRepresentation() << " can not insert knots.");
+        spline_assert_message(false, type() << " can not insert knots.");
         return Basis();
     }
 
@@ -65,7 +68,7 @@ namespace spline {
     }
 
     Basis BasisNode::midpoint_refinement(int refinement, AnyTensor& T) const {
-        spline_assert_message(false, getRepresentation() << " can not refine knots.");
+        spline_assert_message(false, type() << " can not refine knots.");
         return Basis();
     }
 
@@ -74,7 +77,7 @@ namespace spline {
     }
 
     Basis BasisNode::degree_elevation(int elevation, AnyTensor& T) const {
-        spline_assert_message(false, getRepresentation() << " can not elevate the degree.");
+        spline_assert_message(false, type() << " can not elevate the degree.");
         return Basis();
     }
 
@@ -83,7 +86,7 @@ namespace spline {
     }
 
     Basis BasisNode::kick_boundary(const Domain& boundary, AnyTensor& T) const {
-        spline_assert_message(false, getRepresentation() << " can not kick its boundaries.");
+        spline_assert_message(false, type() << " can not kick its boundaries.");
         return Basis();
     }
 
