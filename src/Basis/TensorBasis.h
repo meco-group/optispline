@@ -17,6 +17,7 @@
 namespace spline {
 
 class TensorBasis;
+class TensorBasisConstant;
 class BSplineBasis;
 class MonomialBasis;
 class Function;
@@ -30,9 +31,9 @@ class TensorBasisNode : public SharedObjectNode {
 
         virtual std::string type() const {return "TensorBasis";}
 
-        int n_basis() const;
-        std::vector<int> dimension() const;
-        int n_inputs() const;
+        virtual int n_basis() const;
+        virtual std::vector<int> dimension() const;
+        virtual int n_inputs() const;
 
         std::vector< std::string > arguments() const;
 
@@ -42,7 +43,7 @@ class TensorBasisNode : public SharedObjectNode {
         bool hasArguments() const;
 
         TensorDomain domain() const;
-        std::string getRepresentation() const;
+        virtual std::string getRepresentation() const;
 
         std::vector< Basis > bases() const;
         TensorBasis bases(int index) const;
@@ -57,10 +58,12 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis substitute_bases(const std::vector<Argument>& arg_ind,
             const std::vector<Basis>& bases) const;
 
-        TensorBasis operator+(const TensorBasis& rhs) const;
-        TensorBasis operator*(const TensorBasis& rhs) const;
+        virtual TensorBasis operator+(const TensorBasis& rhs) const;
+        virtual TensorBasis operator+(const TensorBasisConstant& rhs) const;
+        virtual TensorBasis operator*(const TensorBasis& rhs) const;
+        virtual TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
-        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         int totalNumberBasisFunctions() const;
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
@@ -149,7 +152,9 @@ public:
             const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
+        TensorBasis operator+(const TensorBasisConstant& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
+        TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
