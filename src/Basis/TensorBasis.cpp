@@ -52,8 +52,6 @@ namespace spline {
       : bases_(bases), allArguments(std::vector<std::string>{})
       {}
 
-    std::string TensorBasis::type() const { return (*this)->type(); }
-
     TensorBasisNode::TensorBasisNode(const std::vector< Basis >& bases,
         const std::vector< std::string >& args) :
         bases_(bases), allArguments(args)
@@ -197,14 +195,40 @@ namespace spline {
 
     TensorDomain TensorBasis::domain() const { return (*this)->domain(); }
 
-    std::string TensorBasisNode::getRepresentation() const {
-        return "TensorBasis"  + std::to_string(allArguments.size()) +
-            std::to_string(bases_.size());
+    std::string TensorBasis::type() const { return (*this)->type() ;}
+    std::string TensorBasisNode::type() const { return "TensorBasis";}
+
+    std::string TensorBasis::to_string() const { return (*this)->to_string() ;}
+    std::string TensorBasisNode::to_string() const {
+        const std::string n_basis = (bases_.size()==1) ? "basis" : "bases";
+
+        std::string str_basis;  // basis info
+        std::vector<std::string> args = arguments();
+        if (args.size() == 0){
+            for (int i=0 ; i<bases_.size(); i++) {
+                str_basis += "\t";
+                str_basis += bases_[i].to_string();
+                // str_basis += " over "
+                // str_basis += domain(i).to_string();
+                str_basis += "\n";
+            }            
+            return "TensorBasis containing "  + std::to_string(bases_.size()) + " " + 
+                    n_basis + ":\n" + str_basis;
+        }
+        else{
+            for (int i=0 ; i<bases_.size(); i++) {
+                str_basis += "\t";
+                str_basis += args[i] + ": ";
+                str_basis += bases_[i].to_string();
+                str_basis += "\n";
+            }      
+            return "TensorBasis containing "  + std::to_string(bases_.size()) + " " + n_basis + " in " +
+                std::to_string(allArguments.size()) + " arguments: \n " + str_basis;
+        }
     }
 
-    std::string TensorBasis::getRepresentation() const { return (*this)->getRepresentation() ;}
     std::ostream& operator<<(std::ostream &stream, const TensorBasis& base) {
-        return stream << base.getRepresentation();
+        return stream << base.to_string();
     }
 
     TensorBasis TensorBasis::operator+ (const TensorBasis& other) const {

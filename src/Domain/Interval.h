@@ -20,7 +20,8 @@ class IntervalNode : public DomainNode {
 
         AnyScalar min() const;
         AnyScalar max() const;
-        virtual std::string getRepresentation() const ;
+        virtual std::string to_string() const ;
+        virtual std::string type() const ;
         virtual Domain intersection(const Domain & dom) const;
         virtual Domain intersection(const Interval & dom) const override;
         virtual bool operator==(const Domain& other) const override;

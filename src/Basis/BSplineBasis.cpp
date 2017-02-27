@@ -86,10 +86,10 @@ namespace spline {
 
     BSplineBasisNode* BSplineBasis::operator->() const { return get(); }
 
-    std::string BSplineBasisNode::getRepresentation() const {
-        std::stringstream s;
-        s << "BSplineBasis object";
-        return s.str();
+    std::string BSplineBasisNode::to_string() const {
+        return "BSplineBasis of degree " + std::to_string(degree()) + 
+               ", with " + std::to_string(knots().size()-2*degree()) + " internal knots, on "
+               + domain().to_string();
     }
 
     Basis BSplineBasisNode::operator+ (const Basis& other) const {

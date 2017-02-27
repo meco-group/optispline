@@ -13,9 +13,8 @@ namespace spline {
     EmptyBasis::EmptyBasis() {
         assign_node(new EmptyBasisNode());
     }
-    std::string EmptyBasisNode::getRepresentation() const {
-        return "EmptyBasis object";
-    }
+
+    std::string EmptyBasisNode::to_string() const { return "An EmptyBasis object"; }
 
     Basis EmptyBasisNode::operator+ (const Basis& other) const  {
         return other + shared_from_this< EmptyBasis >();

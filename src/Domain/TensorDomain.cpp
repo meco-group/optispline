@@ -116,16 +116,40 @@ namespace spline {
         return domains()[ind];
     }
 
+    std::string TensorDomain::type() const {return (*this)->type(); }
+    std::string TensorDomainNode::type() const {return "TensorDomain"; }
 
-    /* std::string TensorDomainNode::getRepresentation() const { */
-    /*     return "TensorDomain"  + std::to_string(arguments_.size()) + */
-    /*         std::to_string(allSubDomain.size()); */
-    /* } */
+    std::string TensorDomain::to_string() const { return (*this)->to_string() ;}
+    std::string TensorDomainNode::to_string() const {
+         const std::string n_domain = (domains_.size()==1) ? "domain" : "domains";
 
-    /* std::string TensorDomain::getRepresentation() const { return (*this)->getRepresentation() ;} */
-    /* std::ostream& operator<<(std::ostream &stream, const TensorDomain& base) { */
-    /*     return stream << base.getRepresentation(); */
-    /* } */
+        std::string str_domain;  // domain info
+        if (hasArguments()){
+            for (int i=0 ; i<=domains_.size(); i++) {
+                str_domain += "\t";
+                str_domain += argument(i) + ": ";
+                str_domain += domains_[i].to_string();
+                // over domain
+                str_domain += "\n";
+            }      
+            return "TensorDomain containing "  + std::to_string(domains_.size()) + " " + n_domain + " in " +
+                std::to_string(arguments_.size()) + " arguments: \n " + str_domain;
+        }
+        else {
+            for (int i=0 ; i<=domains_.size(); i++) {
+                str_domain += "\t";
+                str_domain += domains_[i].to_string();
+                // over domain
+                str_domain += "\n";
+            }            
+            return "TensorDomain containing "  + std::to_string(domains_.size()) + " " + 
+                    n_domain + ":\n" + str_domain;
+        }
+    }
+
+    std::ostream& operator<<(std::ostream &stream, const TensorDomain& base) {
+         return stream << base.to_string();
+    } 
 
     TensorDomain TensorDomain::intersection(const TensorDomain& other) const {
         return (*this)->intersection(other);

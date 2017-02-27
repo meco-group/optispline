@@ -3,9 +3,6 @@
 #include "operations/operationsBasis.h"
 
 namespace spline {
-    std::string MonomialBasisNode::getRepresentation() const {
-        return "MonomialBasis";
-    }
 
     MonomialBasisNode* MonomialBasis::get() const {
         return static_cast<MonomialBasisNode*>(SharedObject::get());
@@ -17,8 +14,14 @@ namespace spline {
           Interval(-std::numeric_limits<double>::infinity(),
                    +std::numeric_limits<double>::infinity())) {};
 
+
     MonomialBasis::MonomialBasis(int degree)  {
         assign_node(new MonomialBasisNode(degree));
+    }
+
+    std::string MonomialBasisNode::to_string() const {
+        return "MonomialBasis of degree " + std::to_string(degree()) +
+               ", on " + domain().to_string();
     }
 
     Basis MonomialBasisNode::operator+ (const Basis& other) const {

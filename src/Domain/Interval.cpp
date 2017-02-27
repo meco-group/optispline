@@ -58,12 +58,24 @@ namespace spline {
         return data_[1];
     }
 
-    std::string IntervalNode::getRepresentation() const {
+    std::string IntervalNode::type() const {
+        return "Interval";
+    };
+
+    std::string IntervalNode::to_string() const {
         if (vertcat(data()).is_DT()) {
-            return "Interval [" + std::to_string(min().as_double()) + ", " +
+            return "interval [" + std::to_string(min().as_double()) + ", " +
             std::to_string(max().as_double()) + "]";
         }
-        return "Interval";
+        else if (vertcat(data()).is_ST()) {
+            return "interval [" + min().as_SX().getDescription() + ", " +
+            max().as_SX().getDescription() + "]";
+        }
+        else if (vertcat(data()).is_MT()) {
+            return "interval [" + min().as_MX().getDescription() + ", " +
+            max().as_MX().getDescription() + "]";
+        }
+        return "Undefined interval";
     };
 
     Domain IntervalNode::intersection(const Domain & other) const {
