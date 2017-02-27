@@ -596,7 +596,6 @@ using namespace spline;
             ? std::numeric_limits<int>::max() : PyInt_AsLong(r->stop);
           int step = (r->step !=Py_None)? PyInt_AsLong(r->step) : 1;
 
-          userOut() << "start" << start << "stop" << stop << "step" << step << std::endl;
           **m = AnySlice(start, stop, step);
         }
         return true;
