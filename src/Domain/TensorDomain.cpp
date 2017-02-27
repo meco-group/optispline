@@ -121,25 +121,23 @@ namespace spline {
 
     std::string TensorDomain::to_string() const { return (*this)->to_string() ;}
     std::string TensorDomainNode::to_string() const {
-         const std::string n_domain = (domains_.size()==1) ? "domain" : "domains";
+        const std::string n_domain = (domains_.size()==1) ? "domain" : "domains";
 
         std::string str_domain;  // domain info
         if (hasArguments()){
-            for (int i=0 ; i<=domains_.size(); i++) {
+            for (int i=0 ; i<domains_.size(); i++) {
                 str_domain += "\t";
                 str_domain += argument(i) + ": ";
                 str_domain += domains_[i].to_string();
-                // over domain
                 str_domain += "\n";
             }      
             return "TensorDomain containing "  + std::to_string(domains_.size()) + " " + n_domain + " in " +
                 std::to_string(arguments_.size()) + " arguments: \n " + str_domain;
         }
         else {
-            for (int i=0 ; i<=domains_.size(); i++) {
+            for (int i=0 ; i<domains_.size(); i++) {
                 str_domain += "\t";
                 str_domain += domains_[i].to_string();
-                // over domain
                 str_domain += "\n";
             }            
             return "TensorDomain containing "  + std::to_string(domains_.size()) + " " + 

@@ -63,9 +63,13 @@ namespace spline {
     };
 
     std::string IntervalNode::to_string() const {
-        if (vertcat(data()).is_DT()) {
-            return "interval [" + std::to_string(min().as_double()) + ", " +
-            std::to_string(max().as_double()) + "]";
+        if (vertcat(data()).is_DT()) {            
+            std::stringstream min_ss;
+            std::stringstream max_ss;
+            min_ss << std::fixed << std::setprecision(2) << min().as_double();
+            max_ss << std::fixed << std::setprecision(2) << max().as_double();
+            return "interval [" + min_ss.str() + ", " +
+                   max_ss.str() + "]";
         }
         else if (vertcat(data()).is_ST()) {
             return "interval [" + min().as_SX().getDescription() + ", " +
