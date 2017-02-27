@@ -42,9 +42,10 @@ namespace spline {
     }
 
     AnyTensor EmptyBasis::operator() (const AnyVector & x) const {
-      return (*this)->operator()(a);
+        std::vector<AnyScalar> a = x.to_scalar_vector();
+        return (*this)->operator()(a);
     }
     AnyTensor EmptyBasisNode::operator() (const std::vector< AnyScalar > & x) const {
-        return AnyTensor(1);
+        return AnyScalar(1.0);
     }
 }  // namespace spline

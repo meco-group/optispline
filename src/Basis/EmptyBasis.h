@@ -25,7 +25,7 @@ namespace spline {
 
         virtual std::string getRepresentation() const override;
 
-        virtual AnyTensor operator()(const AnyVector& x) const override;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
     };
 #endif // SWIG
 
