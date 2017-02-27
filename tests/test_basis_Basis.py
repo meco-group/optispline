@@ -216,6 +216,32 @@ class Test_Basis_Basis(BasisTestCase):
         for i in g2:
             self.assertEqualT(s1(i), s2(i), 1e-6)
 
+    def test_transform_to(self):
+        np.random.seed(0)
+        degree = 3
+        knotsint = 8
+        knots1 = [0,0,0,0,0.2,0.5,0.8,1,1,1,1]
+        b1 = BSplineBasis(knots1, degree)
+        c1 = Coefficient(np.random.rand(b1.dimension()))
+        s1 = Function(b1,c1)
+        bm = MonomialBasis(degree)
+        cm = Coefficient(np.random.rand(bm.dimension()))
+        sm = Function(bm,cm)
+        knots2 = [0,0,0,0,0,0.2,0.2,0.5,0.5,0.7,0.8,0.8,1,1,1,1,1]
+        b2 = BSplineBasis(knots2, degree+1)
+        b12, T = b1.transform_to(b2)
+        c2 = c1.transform(T)
+        s2 = Function(b12, c2)
+        g2 = b12.greville()
+        for i in g2:
+            self.assertEqualT(s1(i), s2(i), 1e-6)
+        b12, T = b1.transform_to(bm)
+        c2 = c1.transform(T)
+        s2 = Function(b12, c2)
+        g2 = b12.greville()
+        for i in g2:
+            self.assertEqualT(s1(i), s2(i), 1e-6)
+
 # TODO constructor
     # def test_getEvaluation1(self):
     # def test_getEvaluation2(self):
