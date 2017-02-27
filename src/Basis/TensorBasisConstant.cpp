@@ -13,6 +13,10 @@ namespace spline {
 
     TensorBasisConstantNode* TensorBasisConstant::operator->() const { return get(); }
 
+    TensorBasisConstant::TensorBasisConstant() {
+        assign_node(new TensorBasisConstantNode());
+    }
+
     int TensorBasisConstantNode::n_basis() const {
         return 0;
     }

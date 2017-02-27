@@ -26,7 +26,7 @@ class Function;
 
 class TensorBasisConstantNode : public TensorBasisNode {
     public:
-        /* TensorBasisConstantNode(); */
+        TensorBasisConstantNode() : TensorBasisNode(std::vector< Basis > {}) {};
 
         virtual std::string type() const {return "TensorBasisConstant";}
 
@@ -59,7 +59,7 @@ class TensorBasisConstantNode : public TensorBasisNode {
 class TensorBasisConstant : public TensorBasis{
 public:
 #ifndef SWIG
-        TensorBasisConstant() {};
+        TensorBasisConstant();
         TensorBasisConstantNode* get() const;
         TensorBasisConstantNode* operator->() const;
 #endif // SWIG
