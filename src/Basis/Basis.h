@@ -127,8 +127,8 @@ namespace spline {
     };
 
     template< class T >
-        void BasisNode::assert_vector_lenght_correct( const std::vector< T >& x) const{
-            spline_assert_message(x.size() == n_inputs(), "input vector has wrong dimention");  // input vector has wrong dimention
+        void BasisNode::assert_vector_lenght_correct(const std::vector< T >& x) const {
+            spline_assert_message(x.size() == n_inputs(), "Input vector has wrong dimension.");
         }
 
 }  // namespace spline
