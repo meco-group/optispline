@@ -113,6 +113,29 @@ class Test_Tensor(BasisTestCase):
           self.assertEqualT( B.index(myslice(1,k)), C.index(myslice(3,k)))
 
 
+        A = DTensor([],[2,0,4])
+        B = DTensor([],[2,0,4])
+        C = DTensor(range(2*2*4),[2,2,4])
+
+        R = DTensor.concat([C,A],1)
+        self.assertEqualT(C, R)
+        
+        R = DTensor.concat([A,C],1)
+        self.assertEqualT(C, R)
+
+        with self.assertRaises(Exception):
+          R = DTensor.concat([A,C],0)
+        self.assertEqual(C.dims(), R.dims())
+
+        R = DTensor.concat([A,B],0)
+        self.assertEqual(R.dims(), [4, 0, 4])
+
+        R = DTensor.concat([A,B],1)
+        self.assertEqual(R.dims(), [2, 0, 4])        
+        
+        R = DTensor.concat([A,B],2)
+        self.assertEqual(R.dims(), [2, 0, 8])
+
     def test_cross(self):
         STensor(DTensor(5,[]))
         MTensor(DTensor(5,[]))

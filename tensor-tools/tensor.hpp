@@ -71,9 +71,10 @@ class Tensor {
     */
 
     // The dimensions
-    tensor_assert(dims[axis]>0);
-    int trailing_dim = spline::product(dims)/dims[axis];
-    tensor_assert_message(trailing_dim>0, "Dimensions " << dims << " on axis " << axis << ".");
+    int trailing_dim = 1;
+    for (int i=0;i<dims.size();++i) {
+      if (axis!=i) trailing_dim*= dims[i];
+    }
 
     std::vector<T> data;
     for (auto& t : v) {
@@ -85,7 +86,7 @@ class Tensor {
     T res = horzcat(data);
 
     std::vector<int> new_dims = dims;
-    new_dims[axis] = res.numel()/trailing_dim;
+    new_dims[axis] = res.size2();
 
     std::vector<int> permuted_dims = reorder(new_dims, order);
 
