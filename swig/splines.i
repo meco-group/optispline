@@ -230,7 +230,7 @@ using namespace spline;
       }
       {
         std::vector<AnyScalar> tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, &mt) && tmp.size()==2) {
+        if(casadi::to_ptr(p, &mt) && (*mt).size()==2) {
           if (m) **m = tmp;
           return true;
         }
@@ -325,7 +325,7 @@ using namespace spline;
       // Try first converting to a temporary SX
       {
         SX tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, &mt) && tmp.is_scalar()) {
+        if(casadi::to_ptr(p, &mt) && (*mt).is_scalar()) {
           if (m) **m = *mt;
           return true;
         }
@@ -334,7 +334,7 @@ using namespace spline;
       // Try first converting to a temporary MX
       {
         MX tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, &mt) && tmp.is_scalar()) {
+        if(casadi::to_ptr(p, &mt) && (*mt).is_scalar()) {
           if (m) **m = *mt;
           return true;
         }
@@ -353,7 +353,7 @@ using namespace spline;
       {
         std::vector<SX> tmp, *mt=&tmp;
         if(casadi::to_ptr(p, &mt)) {
-            for (auto& e : tmp) {
+            for (auto& e : *mt) {
               if (!e.is_scalar()) return false;
             }
             **m = AnyScalar::from_vector(*mt);
@@ -363,7 +363,7 @@ using namespace spline;
       {
         std::vector<MX> tmp, *mt=&tmp;
         if(casadi::to_ptr(p, &mt)) {
-          for (auto& e : tmp) {
+          for (auto& e : *mt) {
             if (!e.is_scalar()) return false;
           }
           if (m) **m = AnyScalar::from_vector(*mt);
@@ -499,14 +499,14 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, AnyVector** m) {
       {
         DT tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_vector())) {
+        if(casadi::to_ptr(p, &mt) && ((*mt).is_vector())) {
           if (m) **m = *mt;
           return true;
         }
       }
       {
         ST tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_vector())) {
+        if(casadi::to_ptr(p, &mt) && ((*mt).is_vector())) {
           if (m) **m = *mt;
           return true;
         }
@@ -514,7 +514,7 @@ using namespace spline;
 
       {
         MT tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0) && (!m || tmp.is_vector())) {
+        if(casadi::to_ptr(p, &mt) && ((*mt).is_vector())) {
           if (m) **m = *mt;
           return true;
         }
@@ -522,7 +522,7 @@ using namespace spline;
       {
         std::vector<AnyScalar> tmp, *mt = &tmp;
         if (casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) **m = vertcat(tmp);
+          if (m) **m = vertcat(*mt);
           return true;
         }
       }
@@ -596,7 +596,6 @@ using namespace spline;
             ? std::numeric_limits<int>::max() : PyInt_AsLong(r->stop);
           int step = (r->step !=Py_None)? PyInt_AsLong(r->step) : 1;
 
-          userOut() << "start" << start << "stop" << stop << "step" << step << std::endl;
           **m = AnySlice(start, stop, step);
         }
         return true;
