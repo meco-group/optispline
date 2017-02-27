@@ -12,15 +12,11 @@ namespace spline {
     };
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
 
-    int  UnivariateBasis::degree() const { return (*this)->degree (); }
+    int  UnivariateBasis::degree() const { return (*this)->degree(); }
     int  UnivariateBasisNode::degree() const { return degree_ ; }
 
-    // std::string UnivariateBasis::to_string() const { return (*this)->to_string(); }
-    // std::string UnivariateBasisNode::to_string() const { "UnivariateBasis of degree " +
-    //                                                      std::to_string(degree_);}
-
-    // std::string UnivariateBasis::type() const { return (*this)->type(); }
-    // std::string UnivariateBasisNode::type() const { return "UnivariateBasis" ;}
+    std::string UnivariateBasisNode::to_string() const { return "UnivariateBasis of degree " +
+                                                         std::to_string(degree()) + " on " + domain().to_string();}
 
     int UnivariateBasisNode::n_inputs() const { return 1; }
 
@@ -33,7 +29,7 @@ namespace spline {
     }
 
     Basis UnivariateBasisNode::kick_boundary(const Interval& boundary, AnyTensor& T) const {
-        spline_assert_message(false, getRepresentation() << " can not kick its boundaries.");
+        spline_assert_message(false, type() << " can not kick its boundaries.");
         return Basis();
     }
 

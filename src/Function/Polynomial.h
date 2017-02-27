@@ -12,7 +12,9 @@ public:
     Polynomial(const std::vector< double >& coef);
     Polynomial(const std::vector< double >& coef, std::string& a);
     Polynomial(const std::vector< double >& coef, const std::string &name);
-    // virtual std::string getRepresentation() const ;
+
+    virtual std::string type() const override;
+    virtual std::string to_string() const override;
 };
 } // namespace spline
 #endif /* POLYNOMIAL_H */

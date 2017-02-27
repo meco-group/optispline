@@ -14,4 +14,12 @@ namespace spline {
         Function(TensorBasis(MonomialBasis(coef.size()-1), std::vector< std::string > { std::string(name)}), Coefficient(coef)) {
     }
 
+    std::string Polynomial::type() const{
+    	return "Polynomial";
+    }
+
+    std::string Polynomial::to_string() const{
+    	return "Polynomial, consisting of:\n" + basis_.to_string() + "and:\n\t " + coeff_.to_string();
+    }
+
 } // namespace spline

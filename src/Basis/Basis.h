@@ -27,7 +27,6 @@ namespace spline {
         BasisNode(const Domain& domain);
         BasisNode() { }
 
-        virtual std::string type() const {return "Basis";}
 
         virtual Basis operator+(const Basis& rhs) const = 0;
         virtual Basis operator+(const EmptyBasis& rhs) const;
@@ -38,7 +37,8 @@ namespace spline {
         virtual Basis operator*(const MonomialBasis& rhs) const = 0;
         virtual Basis operator*(const BSplineBasis& rhs) const = 0;
 
-        virtual std::string getRepresentation() const ;
+        virtual std::string type() const;
+        virtual std::string to_string() const;
         Domain domain() const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
@@ -92,7 +92,9 @@ namespace spline {
 
         virtual AnyTensor operator()(const AnyVector& x) const;
 
-        std::string getRepresentation() const ;
+        std::string type() const ;
+        std::string to_string() const ;
+
         Domain domain() const;
         std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
@@ -121,14 +123,14 @@ namespace spline {
 #ifndef SWIG
         inline friend
             std::ostream& operator<<(std::ostream &stream, const Basis& obj) {
-                return stream << obj.getRepresentation();
+                return stream << obj.to_string();
             }
 #endif // SWIG
     };
 
     template< class T >
-        void BasisNode::assert_vector_lenght_correct( const std::vector< T >& x) const{
-            spline_assert_message(x.size() == n_inputs(), "input vector has wrong dimention");  // input vector has wrong dimention
+        void BasisNode::assert_vector_lenght_correct(const std::vector< T >& x) const {
+            spline_assert_message(x.size() == n_inputs(), "Input vector has wrong dimension.");
         }
 
 }  // namespace spline

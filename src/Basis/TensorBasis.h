@@ -29,7 +29,8 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasisNode(const std::vector< Basis >& bases_);
         TensorBasisNode(const std::vector< Basis >& bases_, const std::vector< std::string >& args);
 
-        virtual std::string type() const {return "TensorBasis";}
+        virtual std::string type() const;
+        virtual std::string to_string() const;
 
         virtual int n_basis() const;
         virtual std::vector<int> dimension() const;
@@ -43,7 +44,6 @@ class TensorBasisNode : public SharedObjectNode {
         bool hasArguments() const;
 
         TensorDomain domain() const;
-        virtual std::string getRepresentation() const;
 
         std::vector< Basis > bases() const;
         TensorBasis bases(int index) const;
@@ -121,6 +121,7 @@ public:
         TensorBasis(const std::vector< TensorBasis >& allBasis);
 
         std::string type() const;
+        std::string to_string() const;
 
         int n_basis() const;  // Number of bases, building up the TensorBasis
         int n_inputs() const; // Total number of inputs, over all bases
@@ -133,7 +134,6 @@ public:
 
         bool hasArguments() const;
 
-        std::string getRepresentation() const;
         TensorDomain domain() const;
 
         Basis basis() const;

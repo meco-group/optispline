@@ -14,6 +14,7 @@ namespace spline {
     class EmptyBasisNode : public BasisNode {
       public:
         virtual std::string type() const override {return "EmptyBasis";}
+        virtual std::string to_string() const override;
 
         virtual Basis operator+(const Basis& other) const override;
         virtual Basis operator+(const MonomialBasis& other) const override;
@@ -22,8 +23,6 @@ namespace spline {
         virtual Basis operator*(const Basis& other) const override;
         virtual Basis operator*(const MonomialBasis& other) const override;
         virtual Basis operator*(const BSplineBasis& other) const override;
-
-        virtual std::string getRepresentation() const override;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
     };
