@@ -84,6 +84,14 @@ namespace spline {
       return basis_.basis(index);
     }
 
+    std::string Function::type() const{
+        return "Function";
+    }
+
+    std::string Function::to_string() const{
+        return "Function, consisting of a " + basis_.to_string() + "and:\n\t" + coeff_.to_string();
+    }
+
     Function Function::generic_operation(const Function& f,
         const BasisComposition & bc, const TensorComposition & tc) const  {
 
@@ -268,8 +276,6 @@ namespace spline {
 
         return b;
     }
-
-    std::string Function::getRepresentation() const {return "Function";};
 
     int Function::n_inputs() const {
         return basis_.n_inputs();

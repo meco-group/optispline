@@ -26,6 +26,33 @@ namespace spline {
         return dims_;
     }
 
+    std::string Coefficient::type() const {return (*this)->type();};
+    std::string CoefficientNode::type() const {return "Coefficient";};
+
+    std::string Coefficient::to_string() const {return (*this)->to_string();};
+    std::string CoefficientNode::to_string() const {
+        const std::string coeff_str = (n_coeff()==1) ? "coefficient" : "coefficients";
+
+        std::string shape_str;
+        shape_str += "[";
+        shape_str += std::to_string(shape()[0]);
+        shape_str += ",";
+        shape_str += std::to_string(shape()[1]);
+        shape_str += "]";
+
+        std::vector<int> dims = dimension();
+        std::string dim_str;
+        dim_str += "[";
+        for (int i = 0; i<dims.size(); i++){
+            dim_str += std::to_string(dims[i]);
+            dim_str += ",";
+        }
+        dim_str.pop_back();
+        dim_str += "]";
+        return "Coefficient, consisting of " + std::to_string(n_coeff()) + " " + coeff_str + " with shape " +
+                shape_str + ", of dimension " + dim_str;
+    }
+
     std::vector< int > Coefficient::shape() const { return (*this)->shape(); }
     std::vector< int > CoefficientNode::shape() const {
         std::vector< int > dims = data_.dims();
@@ -45,7 +72,6 @@ namespace spline {
         return i*j;
     }
 
-    std::string CoefficientNode::getRepresentation() const {return "Coefficient";};
 
     Coefficient::Coefficient(const AnyTensor& t) {
       assign_node(new CoefficientNode(t));
@@ -58,7 +84,6 @@ namespace spline {
         return Coefficient(-data());
     }
     AnyTensor Coefficient::data() const  { return (*this)->data(); }
-    std::string Coefficient::getRepresentation() const { return (*this)->getRepresentation(); }
 
     AnyTensor Coefficient::transform(const AnyTensor& T) const {
         std::vector< int > direction = casadi::range((int)T.n_dims()/2);

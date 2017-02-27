@@ -57,6 +57,9 @@ class Function {
         static Function cat(NumericIndex index, const std::vector< spline::Function >& f);
         static Function blkdiag(const std::vector< spline::Function >& f);
 
+        virtual std::string type() const;
+        virtual std::string to_string() const;
+
         Basis basis() const;
         Basis basis(const Argument& i) const;
         TensorBasis tensor_basis() const {return basis_;}
@@ -70,8 +73,7 @@ class Function {
 
         bool is_scalar() const { return shape()[0] == 1 && shape()[1] == 1; }
 
-        std::string getRepresentation() const;
-        void repr() const { casadi::userOut() << getRepresentation() << std::endl;}
+        void repr() const { casadi::userOut() << to_string() << std::endl;}
         // std::string& getArgument (){ return basis().getArgument();}
 
         int n_inputs() const;  // Number of inputs of the function
