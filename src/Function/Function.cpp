@@ -1,7 +1,7 @@
 #include <vector>
 #include "Function.h"
 #include "../Basis/utils/EvaluationGrid.h"
-#include "../Basis/EmptyBasis.h"
+#include "../Basis/TensorBasisConstant.h"
 #include "../common.h"
 
 namespace spline {
@@ -16,10 +16,9 @@ namespace spline {
 
     Function::Function(const AnyTensor& c) {
         spline_assert_message(c.dims().size() <= 2, "Constant has dimention higher than 2");
-        Basis basis = EmptyBasis();
         std::vector< int > new_dims = c.dims();
         new_dims.insert(new_dims.begin(), 1);
-        basis_ = basis;
+        basis_ = TensorBasisConstant();
         coeff_ = c.shape(new_dims);
     }
 
