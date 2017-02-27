@@ -71,7 +71,9 @@ class Tensor {
     */
 
     // The dimensions
+    tensor_assert(dims[axis]>0);
     int trailing_dim = spline::product(dims)/dims[axis];
+    tensor_assert_message(trailing_dim>0, "Dimensions " << dims << " on axis " << axis << ".");
 
     std::vector<T> data;
     for (auto& t : v) {
