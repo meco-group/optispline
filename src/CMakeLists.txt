@@ -18,6 +18,7 @@ add_library(splines SHARED
     Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
     Basis/MonomialBasis.h Basis/MonomialBasis.cpp
     Basis/TensorBasis.h Basis/TensorBasis.cpp
+    Basis/TensorBasisConstant.h Basis/TensorBasisConstant.cpp
     Basis/BSplineBasis.h Basis/BSplineBasis.cpp
     Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
     Basis/MonomialBasis.h Basis/MonomialBasis.cpp
