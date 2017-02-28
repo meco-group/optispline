@@ -1,5 +1,5 @@
 #ifndef SRC_BASIS_TENSORBASISCONSTANT_H_
-#define SRC_BASIS_TENSORBASISCONSTAN_H_
+#define SRC_BASIS_TENSORBASISCONSTANT_H_
 
 #include <iostream>
 #include <string>
