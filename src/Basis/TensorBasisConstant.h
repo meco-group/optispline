@@ -39,7 +39,7 @@ class TensorBasisConstantNode : public TensorBasisNode {
 
         /* bool hasArguments() const; */
 
-        virtual std::string getRepresentation() const override;
+        virtual std::string to_string() const override;
 
         virtual TensorBasis operator+(const TensorBasis& rhs) const override;
         virtual TensorBasis operator+(const TensorBasisConstant& rhs) const override;

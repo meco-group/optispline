@@ -26,12 +26,12 @@ namespace spline {
     /*     return shape; */
     /* } */
 
-    std::string TensorBasisConstantNode::getRepresentation() const {
+    std::string TensorBasisConstantNode::to_string() const {
         return "TensorBasisConstant";
     }
 
     std::ostream& operator<<(std::ostream &stream, const TensorBasisConstant& base) {
-        return stream << base.getRepresentation();
+        return stream << base.to_string();
     }
 
     AnyTensor TensorBasisConstantNode::operator() (const std::vector< AnyScalar > &  x) const {
