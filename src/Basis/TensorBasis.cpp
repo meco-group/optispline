@@ -232,6 +232,9 @@ namespace spline {
     }
 
     TensorBasis TensorBasis::operator+ (const TensorBasis& other) const {
+        if(other.type() == "TensorBasisConstant"){
+            return (*this)->operator+((TensorBasisConstant) other);
+        }
         return (*this)->operator+(other);
     }
     TensorBasis TensorBasisNode::operator+ (const TensorBasis& other) const {
