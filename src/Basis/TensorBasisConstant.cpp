@@ -19,6 +19,8 @@ namespace spline {
 
     int TensorBasisConstantNode::n_basis() const {
         return 0;
+    TensorBasisConstant::TensorBasisConstant(const TensorBasis& tb) {
+        assign_node(new TensorBasisConstantNode());
     }
 
     /* std::vector<int> TensorBasisConstantNode::dimension() const { */

@@ -61,6 +61,7 @@ class TensorBasisConstant : public TensorBasis{
 public:
 #ifndef SWIG
         TensorBasisConstant();
+        TensorBasisConstant(const TensorBasis& tb);
         TensorBasisConstantNode* get() const;
         TensorBasisConstantNode* operator->() const;
 #endif // SWIG
