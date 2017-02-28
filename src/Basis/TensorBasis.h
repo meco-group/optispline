@@ -49,7 +49,7 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis bases(int index) const;
         Basis basis() const;
         Basis basis(const std::string& a) const;
-        Basis basis(const Argument& index) const;
+        virtual Basis basis(const Argument& index) const;
         // Basis bases( std::string a) const;
 
         TensorBasis add_basis(TensorBasis basis) const;
@@ -121,8 +121,8 @@ public:
         TensorBasis(const std::vector< Basis >& bases_, const std::vector< std::string >& args);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
 
-        std::string type() const;
-        std::string to_string() const;
+        virtual std::string type() const;
+        virtual std::string to_string() const;
 
         int n_basis() const;  // Number of bases, building up the TensorBasis
         int n_inputs() const; // Total number of inputs, over all bases
