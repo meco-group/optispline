@@ -38,8 +38,8 @@ swig_typename_convertor_python2cpp = casadi.swig_typename_convertor_python2cpp
 
 _swig_repr_default = _swig_repr
 def _swig_repr(self):
-  if hasattr(self,'getRepresentation'):
-    return self.getRepresentation()
+  if hasattr(self,'to_string'):
+    return self.to_string()
   else:
     return _swig_repr_default(self)
 
@@ -1019,7 +1019,7 @@ namespace spline {
 %extend SharedObject {
   %matlabcode %{
     function [] = disp(self)
-      disp(self.getRepresentation())
+      disp(self.to_string())
     end
   %}
  }
