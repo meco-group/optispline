@@ -52,7 +52,7 @@ class Test_Function_Function_shape(BasisTestCase):
         coeff2 = DTensor(numpy.random.randn(numpy.prod(shape2),1),shape2)
         func1 = Function(mbasis1,coeff1)
         func2 = Function(mbasis2,coeff2)
-        
+
         func3 = vertcat(func1, func2)
         self.assertEqual(func3.shape,[2,1])
         self.assertEqualT(func3(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2)],[2,1]))
@@ -68,9 +68,8 @@ class Test_Function_Function_shape(BasisTestCase):
         func5 = horzcat(func5, constant3)
         self.assertEqual(func5.shape,[1,1])
 
-        return
-        func6 = vertcat(func1, func2, [3,1])
-        self.assertEqualT(func6.shape,func1.shape+func2.shape+[1,2])
+        func6 = vertcat(func1, func2,  3 , 1 )
+        self.assertEqualT(func6.shape, [4,1])
 
     def test_blockdiagonal(self):
         knots1 = [0,0,0.4,1,1]
@@ -116,7 +115,6 @@ class Test_Function_Function_shape(BasisTestCase):
         self.assertEqual(func7.shape,[3,3])
         self.assertEqualT(func7(0.5,0.2),DTensor([func1(0.5,0.2),0,0,0,func2(0.5,0.2),0,0,0,func6(0.5,0.2)],[3,3]))
 
-        return
         # blkdiag with SX
         import casadi as cas
         constant3 = Function.Constant(mbasis3, DTensor([1],[1,1]))
