@@ -31,7 +31,7 @@ namespace spline{
         std::vector< AnyTensor > postStep ;
 
         for(int i = 0; i < griddedBasis.n_basis(); i++){
-            Basis subBasis = griddedBasis.bases()[i];
+            Basis subBasis = griddedBasis.basis(i);
             std::vector< std::vector< AnyScalar > > evaluationGrid = subBasis.getEvaluationGrid();
             for(auto const & subPoint : evaluationGrid){
                 if(indexPermutation[i] < 0){
@@ -39,7 +39,7 @@ namespace spline{
                         postStep.push_back(pre);
                     }
                 }else{
-                    Basis correspondingSubBasis = basis.bases()[indexPermutation[i]];
+                    Basis correspondingSubBasis = basis.basis(indexPermutation[i]);
                     AnyTensor subEvaluation = correspondingSubBasis(subPoint);
                     for( AnyTensor pre : preStep){
                         postStep.push_back(pre.outer_product( subEvaluation ));
