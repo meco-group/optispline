@@ -95,6 +95,7 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis transform_to(const TensorBasis& b, std::vector<AnyTensor>& T) const;
         spline::Function basis_functions() const ;
 
+        virtual std::vector< int > get_permutation(const TensorBasis& grid) const;
     // protected:
         std::vector< Basis > bases_;
         std::vector< std::string > allArguments;
@@ -209,6 +210,8 @@ public:
         AnyTensor project_to(const TensorBasis& b) const ;
         TensorBasis transform_to(const TensorBasis& b, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         spline::Function basis_functions() const ;
+
+        std::vector< int > get_permutation(const TensorBasis& grid) const;
 };
 
 }   // namespace spline

@@ -82,4 +82,12 @@ namespace spline {
     /*     spline::Function basis_functions_ = spline::Function(shared_from_this<TensorBasis>(), Coefficient(C)); */
     /*     return basis_functions_; */
     /* } */
+
+    std::vector< int > TensorBasisConstantNode::get_permutation(const TensorBasis& grid_basis) const{
+        std::vector< int > index;
+        for(int i = 0; i < grid_basis.n_basis(); i++){
+            index.push_back(-1);
+        }
+        return index;
+    }
 } // namespace spline

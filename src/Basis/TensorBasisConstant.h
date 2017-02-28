@@ -51,6 +51,7 @@ class TensorBasisConstantNode : public TensorBasisNode {
         /* int totalNumberBasisFunctions() const; */
 
         /* spline::Function basis_functions() const ; */
+        virtual std::vector< int > get_permutation(const TensorBasis& grid) const override;
 
 };
 
