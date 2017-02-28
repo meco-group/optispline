@@ -563,6 +563,10 @@ namespace spline {
     }
 
     Function Function::transform_to(const TensorBasis& basis) const {
+      if(basis_.type() == "TensorBasisConstant"){
+          AnyTensor T = coeff_.rm_direction( std::vector< int > {0} ).data();
+          return Function(basis, basis.const_coeff_tensor(T));
+      }
 
       TensorBasis unionBasis = tensor_basis() + basis;
       EvaluationGrid evaluationGrid = EvaluationGrid(unionBasis);
