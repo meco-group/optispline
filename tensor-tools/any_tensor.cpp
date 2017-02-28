@@ -402,13 +402,13 @@ AnyVector::AnyVector() : AnyTensor() { }
 
 AnyScalar AnyVector::operator[](int index) const {
   if (is_DT()) {
-    return static_cast<double>(as_DT().data()[index]);
+    return static_cast<double>(as_DT().data().nz(index));
   }
   if (is_ST()) {
-    return as_ST().data()[index];
+    return as_ST().data().nz(index);
   }
   if (is_MT()) {
-    return as_MT().data()[index];
+    return as_MT().data().nz(index);
   }
   assert(false);
   return 0;
@@ -434,6 +434,8 @@ namespace casadi {
       ret->construct(opts);
       return ret;
     }
+    
+    virtual std::string type_name() const { return "Sorter"; }
 
     Sorter(const std::string &name, int size, int ascending) : casadi::FunctionInternal(name),
       size_(size), ascending_(ascending) {};
@@ -500,6 +502,8 @@ class Uniquifier : public FunctionInternal {
 
     Uniquifier(const std::string &name, int size) : casadi::FunctionInternal(name),
       size_(size) {};
+      
+    virtual std::string type_name() const { return "Uniquifier";}
 
     /** \brief  Destructor */
     virtual ~Uniquifier() {};

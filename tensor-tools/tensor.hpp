@@ -170,7 +170,7 @@ class Tensor {
 #endif
 
   bool is_scalar() const { return squeeze().n_dims()==0; }
-  T as_scalar() const { tensor_assert(is_scalar()); return data_[0]; }
+  T as_scalar() const { tensor_assert(is_scalar()); return data_.nz(0); }
 
   bool is_vector() const { return squeeze().n_dims()<=1; }
 
@@ -284,7 +284,7 @@ class Tensor {
   }
 
   Tensor solve(const Tensor& B) const {
-    return T::solve(matrix(), B.matrix(), "lapacklu", casadi::Dict());
+    return T::solve(matrix(), B.matrix(), "lapackqr", casadi::Dict());
   }
 
   Tensor operator+(const Tensor& rhs) const {
