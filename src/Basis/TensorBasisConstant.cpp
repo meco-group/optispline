@@ -17,11 +17,13 @@ namespace spline {
         assign_node(new TensorBasisConstantNode());
     }
 
-    int TensorBasisConstantNode::n_basis() const {
-        return 0;
     TensorBasisConstant::TensorBasisConstant(const TensorBasis& tb) {
         assign_node(new TensorBasisConstantNode());
     }
+
+    /* int TensorBasisConstantNode::n_basis() const { */
+    /*     return 0; */
+    /* } */
 
     /* std::vector<int> TensorBasisConstantNode::dimension() const { */
     /*     std::vector<int> shape; */
@@ -40,10 +42,10 @@ namespace spline {
         return AnyScalar(1.0);
     }
 
-    int TensorBasisConstantNode::n_inputs() const {
-        spline_assert(false);
-        return -1;
-    }
+    /* int TensorBasisConstantNode::n_inputs() const { */
+    /*     spline_assert(false); */
+    /*     return -1; */
+    /* } */
 
     TensorBasis TensorBasisConstantNode::operator+ (const TensorBasis& other) const {
         return other;
@@ -60,6 +62,33 @@ namespace spline {
     TensorBasis TensorBasisConstantNode::operator* (const TensorBasisConstant& other) const {
         return other;
     }
+
+
+
+
+
+    /* TensorBasis TensorBasisConstantNode::transform_to(const TensorBasis& tb, std::vector<AnyTensor>& T) const { */
+    /*     spline_assert(n_basis() == tb.n_basis()); */
+    /*     std::vector<Basis> new_bases(n_basis()); */
+    /*     std::vector<AnyTensor> T_(n_basis()); */
+    /*     for (int i = 0; i <n_basis(); i++) { */
+    /*         new_bases[i] = basis(i).transform_to(tb.basis(i), T_[i]); */
+    /*     } */
+    /*     T = T_; */
+    /*     if (hasArguments()) { */
+    /*         return TensorBasis(new_bases, arguments()); */
+    /*     } else { */
+    /*         return TensorBasis(new_bases); */
+    /*     } */
+    /* } */
+    /* /1* Basis TensorBasisNode::basis(const Argument& index) const { *1/ */
+    /* /1*     int ind = index.concrete(arguments()); *1/ */
+    /* /1*     if (ind == 0) { *1/ */
+    /* /1*         return EmptyBasis(); *1/ */
+    /* /1*     } *1/ */
+    /* /1*     return EmptyBasis(); *1/ */
+    /* /1* } *1/ */
+
     /* spline::Function TensorBasisConstantNode::basis_functions() const { */
     /*     // Construct coefficient based on outer product of eye's */
     /*     AnyTensor C = DT(casadi::DM::densify(casadi::DM::eye(dimension()[0]))); */

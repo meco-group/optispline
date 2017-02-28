@@ -28,11 +28,13 @@ class TensorBasisConstantNode : public TensorBasisNode {
     public:
         TensorBasisConstantNode() : TensorBasisNode(std::vector< Basis > {}) {};
 
+        /* virtual Basis basis(const Argument& index) const override; */
+
         virtual std::string type() const {return "TensorBasisConstant";}
 
-        virtual int n_basis() const override;
+        /* virtual int n_basis() const override; */
         /* virtual std::vector<int> dimension() const override; */
-        virtual int n_inputs() const override;
+        /* virtual int n_inputs() const override; */
 
         /* std::string argument(int index) const; */
         /* int indexArgument(std::string a) const; */
