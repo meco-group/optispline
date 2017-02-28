@@ -160,6 +160,7 @@ class Test_Function_Function(BasisTestCase):
             self.assertEqualT(s1(i), float(s2_ev(knots_add, i)), 1e-6)
 
     def test_insert_knots_multivariate(self):
+        if valgrind: return
         np.random.seed(0)
         d1 = 3
         nki1 = 8
@@ -223,6 +224,7 @@ class Test_Function_Function(BasisTestCase):
     #     b = TensorBasis([m])
 
     def test_derivative_multivariate(self):
+        if valgrind: return
         d0 = 4
         k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,8),np.ones(d0)]
         b0 = BSplineBasis(k0,d0)
@@ -290,6 +292,7 @@ class Test_Function_Function(BasisTestCase):
             self.assertAlmostEqual(f(x), 2)
 
     def test_antiderivative(self):
+        if valgrind: return
         d0 = 4
         k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,7),np.ones(d0)]
         b0 = BSplineBasis(k0,d0)
