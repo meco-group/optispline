@@ -87,7 +87,7 @@ namespace spline {
     BSplineBasisNode* BSplineBasis::operator->() const { return get(); }
 
     std::string BSplineBasisNode::to_string() const {
-        return "BSplineBasis of degree " + std::to_string(degree()) + 
+        return "BSplineBasis of degree " + std::to_string(degree()) +
                ", with " + std::to_string(knots().size()-2*degree()) + " internal knots, on "
                + domain().to_string();
     }
@@ -153,7 +153,7 @@ namespace spline {
     }
 
     BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree)
-        : UnivariateBasisNode(degree, Interval(knots[0], knots[knots.size()-1])),
+        : UnivariateBasisNode(degree, Interval(knots[degree], knots[knots.size()-degree-1])),
       bspline_evaluator_(casadi::BSplineEvaluator::create("f", knots.size(), degree)) {
         AnyVector kn(vertcat(knots));
         knots_ = kn.sort().to_scalar_vector();
