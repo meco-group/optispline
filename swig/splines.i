@@ -357,7 +357,7 @@ using namespace spline;
             for (auto& e : *mt) {
               if (!e.is_scalar()) return false;
             }
-            **m = AnyScalar::from_vector(*mt);
+            if (m) **m = AnyScalar::from_vector(*mt);
           return true;
         }
       }
@@ -899,8 +899,7 @@ using namespace spline;
 %casadi_typemaps("AnyTensor", PREC_MX, AnyTensor)
 %casadi_typemaps("AnySlice", PREC_MX, AnySlice)
 %casadi_template("[AnyTensor]", PREC_MX, std::vector<AnyTensor>)
-%casadi_typemaps("AnyVector", PREC_MX, AnyVector)
-%casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
+%casadi_typemaps("AnyVector", PREC_MXVector, AnyVector)
 %casadi_template("[AnyVector]", PREC_MX, std::vector<AnyVector>)
 %casadi_typemaps("index", PREC_MX, spline::Argument)
 %casadi_template("[index]", PREC_MX, std::vector<spline::Argument >)
