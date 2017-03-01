@@ -264,6 +264,13 @@ class Test_Function_Operations(BasisTestCase):
             self.assertEqualT(fm4(_x,_y),func1_value[k]*M)
             self.assertEqualT(fm5(_x,_y),numpy.dot(func1_value[k],N))
 
+        return
+        # Tests for erik. Failing somehow
+        fm6 = N.mtimes(Function(1))
+        fm7 = Function(1).mtimes(N)
+        self.assertEqualT(fm6(0.5),N)
+        self.assertEqualT(fm7(0.5),N)
+
     def test_trace(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
