@@ -64,12 +64,7 @@ namespace spline {
 
     int Coefficient::n_coeff() const { return (*this)->n_coeff(); }
     int CoefficientNode::n_coeff() const {
-        /* TODO use coefficient::size */
-        std::vector< int > dims = data_.dims();
-        int d = dims.size();
-        int i = dims[d-2];
-        int j = dims[d-1];
-        return i*j;
+        return spline::product(dimension());
     }
 
 
