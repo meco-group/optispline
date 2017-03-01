@@ -65,8 +65,39 @@ namespace spline {
         return Function(basis, coeff);
     }
 
-    AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const {
-        return basis_(x).inner(coeff().data());
+/*     AnyTensor Function::operator()(const std::vector< AnyScalar >& x) const { */
+/*         std::cout << x.size() << std::endl; */
+/*         return basis_(x).inner(coeff().data()); */
+/*     } */
+
+/*     std::vector< AnyTensor > Function::operator()(const std::vector< std::vector< AnyScalar > >& x) const{ */
+/*         std::vector< AnyTensor > tensor = {}; */
+
+/*         std::cout << "place to be" << std::endl; */
+/*         std::cout << x.size() << std::endl; */
+/*         for(int i = 0; i < x.size(); i++){ */
+/*             tensor.push_back(operator()(x[i])); */
+/*         } */
+/*         return tensor; */
+/*     } */
+
+
+    AnyTensor Function::operator()(const AnyVector& x) const {
+        std::cout << "een anyvector " <<  x.size() << std::endl;
+        std::vector< AnyScalar > x_ = x.to_scalar_vector();
+        std::cout << x_.size() << std::endl;
+        return basis_(x_).inner(coeff().data());
+    }
+
+    std::vector< AnyTensor > Function::operator()(const std::vector< AnyVector >& x) const{
+        std::vector< AnyTensor > tensor = {};
+
+        std::cout << "place to be" << std::endl;
+        std::cout << x.size() << std::endl;
+        for(int i = 0; i < x.size(); i++){
+            tensor.push_back(operator()(x[i]));
+        }
+        return tensor;
     }
 
     casadi::MX Function::operator<=(const casadi::MX& x) const {
