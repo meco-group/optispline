@@ -89,7 +89,7 @@ namespace spline {
     BSplineBasisNode* BSplineBasis::operator->() const { return get(); }
 
     std::string BSplineBasisNode::to_string() const {
-        return "BSplineBasis of degree " + std::to_string(degree()) + 
+        return "BSplineBasis of degree " + std::to_string(degree()) +
                ", with " + std::to_string(knots().size()-2*degree()) + " internal knots, on "
                + domain().to_string();
     }
@@ -226,6 +226,29 @@ namespace spline {
         return AnyTensor();
     }
 
+    template<typename T>
+    T derivative_transform(const T& knots, int degree, int order) {
+      tensor_assert(order>0);
+      int n_knots = knots.numel();
+      int n = n_knots - degree - 1;
+
+      T delta_knots = knots(casadi::range(1+degree, n_knots-1))
+                       - knots(casadi::range(1, n_knots-degree-1));
+
+      casadi::Sparsity sp_diag = vertsplit(casadi::Sparsity::diag(n), {0, n-1, n})[0];
+      casadi::Sparsity sp_band = vertsplit(casadi::Sparsity::band(n, -1), {0, n-1, n})[0];
+
+      T delta_knots_inv = degree>0? degree/delta_knots : 0;
+
+      T res = T(sp_diag, -delta_knots_inv) + T(sp_band, delta_knots_inv);
+
+      if (order>1) {
+        T new_knots = knots(casadi::range(1, n_knots-1));
+        res = mtimes(derivative_transform(new_knots, degree-1, order-1), res);
+      }
+      return res;
+    }
+
     Basis BSplineBasisNode::derivative(int order, AnyTensor& T) const {
         /* Computes the BSplineBasis derivative using eq. (16) in [de Boor, Chapter X, 2001].
         * Args:
@@ -234,47 +257,22 @@ namespace spline {
         *     Derivative of the basis (new_basis) and transformation matrix to transform
         *     the coefficients of the function (T)
         */
-        int n_dim = dimension();  // Number of basis functions in the basis
-        int n_dim_new = n_dim-1;
-        int deg = degree();;
+        int deg = degree();
 
         std::vector<AnyScalar> kn = knots();
         std::vector<AnyScalar> new_knots(kn.begin() + order, kn.end() - order);
         Basis new_basis = BSplineBasis(new_knots, deg - order);  // New basis
 
-        // initialization of data of transformation matrix
-        std::vector<AnyScalar> data(n_dim*n_dim, 0);
-        for (int i = 0; i < n_dim; i++) {
-            data[i*(n_dim+1)] = 1.;  // to make eye matrix
+        AnyTensor knots = vertcat(kn);
+
+        if (knots.is_DT()) {
+          T = DT(densify(derivative_transform<casadi::DM>(knots.as_DT().matrix(), deg, order)));
+        } else if (knots.is_ST()) {
+          T = ST(densify(derivative_transform<casadi::SX>(knots.as_ST().matrix(), deg, order)));
+        } else if (knots.is_MT()) {
+          T = MT(densify(derivative_transform<casadi::MX>(knots.as_MT().matrix(), deg, order)));
         }
-        AnyTensor T_ = vertcat(data).shape({n_dim, n_dim});  // initialize matrix to multiply
 
-        AnyScalar c_j;
-        for (int i = 0; i < order; i++) {
-            kn.erase(kn.begin()); // remove first element
-            kn.pop_back();  // remove last element
-
-            data.resize(n_dim_new*n_dim);
-            std::fill(data.begin(), data.end(), 0);
-
-            for (int j = 0; j <= n_dim-2; j++) {
-                if (deg <= 0) {
-                    //  This is the case if taking the degree+n'th derivative
-                    //  In that case the T-matrix is all zero
-                    c_j = 0;
-                } else {
-                    c_j = deg/(kn[j+deg]-kn[j]);
-                }
-                data[j*(n_dim-1)+j] = -c_j;
-                data[(j+1)*(n_dim-1)+j] = c_j;
-            }
-            // multiply transformation matrices, for higher order
-            T_ = mtimes(vertcat(data).shape({n_dim_new, n_dim}), T_);
-            n_dim_new--;
-            n_dim--;
-            deg--;
-        }
-        T = T_;
         return new_basis;
     }
 
