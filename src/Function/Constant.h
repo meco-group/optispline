@@ -15,6 +15,7 @@ namespace spline {
 class Constant : public GenericFunction {
 
     public :
+        Constant(const AnyTensor& c);
 
         AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const;
         /* evaluation options */
