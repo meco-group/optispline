@@ -1,4 +1,5 @@
 #include "TensorBasis.h"
+#include "TensorBasisConstant.h"
 #include "EmptyBasis.h"
 #include "BSplineBasis.h"
 #include "../common.h"
@@ -113,11 +114,7 @@ namespace spline {
 
     Basis TensorBasisNode::basis(const std::string& a) const {
         int index = indexArgument(a);
-        if (index < 0) {
-            return EmptyBasis();
-        } else {
-            return basis(index);
-        }
+        return basis(index);
     }
 
     Basis TensorBasis::basis(const Argument& index) const {
@@ -127,6 +124,9 @@ namespace spline {
     Basis TensorBasisNode::basis(const Argument& index) const {
         int ind = index.concrete(arguments());
         spline_assert(ind < n_basis());
+        if (ind < 0) {
+            return EmptyBasis();
+        }
         return bases()[ind];
     }
 
@@ -211,8 +211,8 @@ namespace spline {
                 // str_basis += " over "
                 // str_basis += domain(i).to_string();
                 str_basis += "\n";
-            }            
-            return "TensorBasis containing "  + std::to_string(bases_.size()) + " " + 
+            }
+            return "TensorBasis containing "  + std::to_string(bases_.size()) + " " +
                     n_basis + ":\n" + str_basis;
         }
         else{
@@ -221,7 +221,7 @@ namespace spline {
                 str_basis += args[i] + ": ";
                 str_basis += bases_[i].to_string();
                 str_basis += "\n";
-            }      
+            }
             return "TensorBasis containing "  + std::to_string(bases_.size()) + " " + n_basis + " in " +
                 std::to_string(allArguments.size()) + " arguments: \n " + str_basis;
         }
@@ -232,11 +232,34 @@ namespace spline {
     }
 
     TensorBasis TensorBasis::operator+ (const TensorBasis& other) const {
-        return plus_tensor_basis(*this, other);
+        if(other.type() == "TensorBasisConstant"){
+            return (*this)->operator+((TensorBasisConstant) other);
+        }
+        return (*this)->operator+(other);
+    }
+    TensorBasis TensorBasisNode::operator+ (const TensorBasis& other) const {
+        return plus_tensor_basis(shared_from_this<TensorBasis>(), other);
+    }
+
+    TensorBasis TensorBasis::operator+ (const TensorBasisConstant& other) const {
+        return (*this)->operator+(other);
+    }
+    TensorBasis TensorBasisNode::operator+ (const TensorBasisConstant& other) const {
+        return shared_from_this<TensorBasis>();
     }
 
     TensorBasis TensorBasis::operator* (const TensorBasis& other) const {
-        return times_tensor_basis(*this, other);
+        return (*this)->operator*(other);
+    }
+    TensorBasis TensorBasisNode::operator* (const TensorBasis& other) const {
+        return times_tensor_basis(shared_from_this<TensorBasis>(), other);
+    }
+
+    TensorBasis TensorBasis::operator* (const TensorBasisConstant& other) const {
+        return (*this)->operator+(other);
+    }
+    TensorBasis TensorBasisNode::operator* (const TensorBasisConstant& other) const {
+        return shared_from_this<TensorBasis>();
     }
 
     AnyTensor TensorBasis::operator() (const std::vector< AnyScalar > &  x) const {
@@ -637,4 +660,25 @@ namespace spline {
             return TensorBasis(new_bases);
         }
     }
+
+
+    std::vector< int > TensorBasis::get_permutation(const TensorBasis& grid) const{
+        return (*this)->get_permutation(grid);
+    }
+
+    std::vector< int > TensorBasisNode::get_permutation(const TensorBasis& grid_basis) const{
+        std::vector< int > index;
+        if(grid_basis.hasArguments() && hasArguments()){
+            for(auto & a : grid_basis.arguments()){
+                index.push_back(indexArgument(a));
+            }
+        }else{
+            spline_assert(grid_basis.n_basis() == n_basis());
+            for(int i = 0; i < grid_basis.n_basis(); i++){
+                index.push_back(i);
+            }
+        }
+        return index;
+    }
+
 } // namespace spline

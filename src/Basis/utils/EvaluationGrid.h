@@ -7,6 +7,7 @@
 
 #include "../Function/Function.h"
 #include "../TensorBasis.h"
+#include "../TensorBasisConstant.h"
 namespace spline{
 
 
@@ -19,8 +20,6 @@ namespace spline{
         EvaluationGrid(TensorBasis basis);
         std::vector< AnyTensor > eval() const;
         std::vector< AnyTensor > eval(const spline::Function & f) const;
-
-        std::vector< int > getPermutation(TensorBasis basis) const;
     private:
         TensorBasis griddedBasis;
     };

@@ -25,13 +25,13 @@ namespace spline{
 
     std::vector< AnyTensor > EvaluationGrid::eval(const spline::Function & f) const {
         TensorBasis basis = f.tensor_basis();
-        std::vector< int > indexPermutation = getPermutation(basis);
+        std::vector< int > indexPermutation = basis.get_permutation(griddedBasis);
 
         std::vector< AnyTensor > preStep { AnyTensor::unity() };
         std::vector< AnyTensor > postStep ;
 
         for(int i = 0; i < griddedBasis.n_basis(); i++){
-            Basis subBasis = griddedBasis.bases()[i];
+            Basis subBasis = griddedBasis.basis(i);
             std::vector< std::vector< AnyScalar > > evaluationGrid = subBasis.getEvaluationGrid();
             for(auto const & subPoint : evaluationGrid){
                 if(indexPermutation[i] < 0){
@@ -39,7 +39,7 @@ namespace spline{
                         postStep.push_back(pre);
                     }
                 }else{
-                    Basis correspondingSubBasis = basis.bases()[indexPermutation[i]];
+                    Basis correspondingSubBasis = basis.basis(indexPermutation[i]);
                     AnyTensor subEvaluation = correspondingSubBasis(subPoint);
                     for( AnyTensor pre : preStep){
                         postStep.push_back(pre.outer_product( subEvaluation ));
@@ -57,26 +57,10 @@ namespace spline{
         return postStep;
     }
 
-    std::vector< int > EvaluationGrid::getPermutation(TensorBasis basis) const{
-        std::vector< int > index;
-        if(griddedBasis.hasArguments() && basis.hasArguments()){
-            for(auto & a : griddedBasis.arguments()){
-                index.push_back(basis.indexArgument(a));
-            }
-        }else{
-            spline_assert(griddedBasis.n_basis() == basis.n_basis());
-            for(int i = 0; i < griddedBasis.n_basis(); i++){
-                index.push_back(i);
-            }
-        }
-
-        return index;
-    }
-
     std::string EvaluationGrid::type() const {
         return "EvaluationGrid";
     }
-
+    
     std::string EvaluationGrid::to_string() const {
         return type();
     }

@@ -17,6 +17,7 @@
 namespace spline {
 
 class TensorBasis;
+class TensorBasisConstant;
 class BSplineBasis;
 class MonomialBasis;
 class Function;
@@ -31,9 +32,9 @@ class TensorBasisNode : public SharedObjectNode {
         virtual std::string type() const;
         virtual std::string to_string() const;
 
-        int n_basis() const;
-        std::vector<int> dimension() const;
-        int n_inputs() const;
+        virtual int n_basis() const;
+        virtual std::vector<int> dimension() const;
+        virtual int n_inputs() const;
 
         std::vector< std::string > arguments() const;
 
@@ -48,7 +49,7 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis bases(int index) const;
         Basis basis() const;
         Basis basis(const std::string& a) const;
-        Basis basis(const Argument& index) const;
+        virtual Basis basis(const Argument& index) const;
         // Basis bases( std::string a) const;
 
         TensorBasis add_basis(TensorBasis basis) const;
@@ -57,10 +58,12 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis substitute_bases(const std::vector<Argument>& arg_ind,
             const std::vector<Basis>& bases) const;
 
-        TensorBasis operator+(const TensorBasis& rhs) const;
-        TensorBasis operator*(const TensorBasis& rhs) const;
+        virtual TensorBasis operator+(const TensorBasis& rhs) const;
+        virtual TensorBasis operator+(const TensorBasisConstant& rhs) const;
+        virtual TensorBasis operator*(const TensorBasis& rhs) const;
+        virtual TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
-        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
         int totalNumberBasisFunctions() const;
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
@@ -92,6 +95,7 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis transform_to(const TensorBasis& b, std::vector<AnyTensor>& T) const;
         spline::Function basis_functions() const ;
 
+        virtual std::vector< int > get_permutation(const TensorBasis& grid) const;
     // protected:
         std::vector< Basis > bases_;
         std::vector< std::string > allArguments;
@@ -117,8 +121,8 @@ public:
         TensorBasis(const std::vector< Basis >& bases_, const std::vector< std::string >& args);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
 
-        std::string type() const; 
-        std::string to_string() const;
+        virtual std::string type() const;
+        virtual std::string to_string() const;
 
         int n_basis() const;  // Number of bases, building up the TensorBasis
         int n_inputs() const; // Total number of inputs, over all bases
@@ -149,7 +153,9 @@ public:
             const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
+        TensorBasis operator+(const TensorBasisConstant& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
+        TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
@@ -204,6 +210,8 @@ public:
         AnyTensor project_to(const TensorBasis& b) const ;
         TensorBasis transform_to(const TensorBasis& b, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         spline::Function basis_functions() const ;
+
+        std::vector< int > get_permutation(const TensorBasis& grid) const;
 };
 
 }   // namespace spline

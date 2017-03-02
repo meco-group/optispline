@@ -38,13 +38,13 @@ namespace spline {
     StringArgumentNode::StringArgumentNode(const std::string &name) : name_(name) { }
 
     int IntArgumentNode::concrete(const std::vector<std::string> & args) const {
-      spline_assert_message(index_>=0,
-        "Argumenting out-of-range: supplied " + std::to_string(index_) +
-        ". Must be >0.");
+      /* spline_assert_message(index_>=0, */
+      /*   "Argumenting out-of-range: supplied " + std::to_string(index_) + */
+      /*   ". Must be >0."); */
       if (args.size()==0) return index_;
-      spline_assert_message(index_< args.size(),
-        "Argumenting out-of-range: supplied " + std::to_string(index_) +
-        ". Must be < " + std::to_string(args.size()) + ".");
+      /* spline_assert_message(index_< args.size(), */
+      /*   "Argumenting out-of-range: supplied " + std::to_string(index_) + */
+      /*   ". Must be < " + std::to_string(args.size()) + "."); */
       return index_;
     }
 
