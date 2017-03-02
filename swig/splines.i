@@ -1025,6 +1025,9 @@ namespace spline {
     function [] = disp(self)
       disp(self.to_string())
     end
+    function varargout = subsasgn(self,varargin)
+        error('Not supported: subsasgn');
+    end
   %}
  }
 
