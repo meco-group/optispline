@@ -7,11 +7,12 @@
 #include "../Basis/TensorBasis.h"
 #include "../Coefficients/Coefficient.h"
 #include <any_tensor.hpp>
+#include "GenericFunction.h"
 #include "Argument.h"
 
 namespace spline {
 
-class Function {
+class Function : public GenericFunction {
 
     public :
         Function(const TensorBasis& basis, const Coefficient& coef);
