@@ -335,7 +335,7 @@ std::vector<AnyTensor> AnyTensor::unpack(const AnyTensor& v, int axis) {
   
   for (int i=0;i<n;++i) {
     casadi::DM ind = casadi::DM::zeros(n, 1);
-    ind[i] = 1;
+    ind.nz(i) = 1;
     ret.push_back(v.einstein(DT(ind, {n}), a_e, {-axis-1}, c_e));
   }
   
