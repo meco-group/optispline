@@ -110,7 +110,7 @@ namespace spline {
     }
 
     std::string Function::type() const{
-        return "Function";
+        return "Constant";
     }
 
     std::string Function::to_string() const{

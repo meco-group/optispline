@@ -36,7 +36,7 @@ namespace spline {
     }
 
     std::string GenericFunction::type() const{
-        return "Function";
+        return "GenericFunction";
     }
 
     std::string GenericFunction::to_string() const{
