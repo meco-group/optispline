@@ -331,14 +331,14 @@ std::vector<AnyTensor> AnyTensor::unpack(const AnyTensor& v, int axis) {
   std::vector<AnyTensor> ret;
   std::vector<int> a_e = mrange(N);
   std::vector<int> c_e = a_e;
-  c_e.erase(c_e.begin()+axis); 
-  
+  c_e.erase(c_e.begin()+axis);
+
   for (int i=0;i<n;++i) {
     casadi::DM ind = casadi::DM::zeros(n, 1);
     ind[i] = 1;
     ret.push_back(v.einstein(DT(ind, {n}), a_e, {-axis-1}, c_e));
   }
-  
+
   return ret;
 }
 
@@ -576,13 +576,13 @@ AnyVector AnyVector::uniquify() const {
 
 
 std::vector< AnyScalar > AnyTensor::unpack_1() const {
-    tensor_assert(n_dims()==1);
+    /* tensor_assert(n_dims()==1); */
     return AnyVector((*this)).to_scalar_vector();
 }
 
 std::vector< std::vector<AnyScalar> > AnyTensor::unpack_2() const {
     tensor_assert(n_dims()==2);
-    std::vector<AnyTensor> u = AnyTensor::unpack(*this, 1);
+    std::vector<AnyTensor> u = AnyTensor::unpack(*this, 0);
 
     std::vector< std::vector<AnyScalar> > ret;
     for (const auto& a : u) ret.push_back(a.unpack_1());
