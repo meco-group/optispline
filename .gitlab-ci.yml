@@ -127,5 +127,5 @@ windows-python:
     - cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain32.cmake -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
     - cp src/*.dll swig
-    - sed -i -e "s/'SwigPyObject'/'SwigPyCasadiObject'/g" swig/Basis.py
+    - sed -i -e "s/'SwigPyObject'/'SwigPyCasadiObject'/g" swig/splines.py
     

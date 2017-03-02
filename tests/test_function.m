@@ -17,11 +17,11 @@ b = TensorBasis({s1,s2},{'x','y'});
 
 fail = false;
 try,p = b.basis(0),catch,fail = true;end
-assert(fail);
+%assert(fail);
 
 fail = false;
 try,p = b.basis(3),catch,fail = true;end
-assert(fail);
+%assert(fail);
 
 p = b.basis(1);
 assert(p.degree()== 2);
@@ -70,6 +70,11 @@ assert(norm(func2(2,1).eval(x,y)-R(2,1))<1e-12)
 assert(norm(func2(1:3,2).eval(x,y)-R(1:3,2))<1e-12)
 assert(norm(func2(2:3,2:4).eval(x,y)-R(2:3,2:4))<1e-12)
 
+shape(func2(:,1))
+
+try,func2(:,1) = [],catch,fail = true;end
+assert(fail)
+
 size(func2)
 
 f = [func2 func2]
@@ -105,4 +110,6 @@ assert(norm(func2(:).eval(x,y)-R(:)')<1e-12)
 assert(norm(func2([2,1]).eval(x,y)-R([2,1]))<1e-12)
 assert(norm(func2(2).eval(x,y)-R(2))<1e-12)
 assert(norm(func2(1:3).eval(x,y)-R(1:3))<1e-12)
+
+
 
