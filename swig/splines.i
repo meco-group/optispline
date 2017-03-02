@@ -440,6 +440,15 @@ using namespace spline;
         }
       }
 
+      // Try first converting to a temporary DM
+      {
+        std::vector< std::vector<double> > tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = DM(*mt);
+          return true;
+        }
+      }
+
       return false;
     }
     bool to_ptr(GUESTOBJECT *p, ST** m) {
