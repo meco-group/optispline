@@ -75,6 +75,10 @@ def _swig_repr(self):
 #ifdef SWIGMATLAB
 %rename(eval) spline::Function::operator();
 %feature("varargin","1") spline::Function::operator();
+%rename(eval) spline::TensorBasis::operator();
+%feature("varargin","1") spline::TensorBasis::operator();
+%rename(eval) spline::Basis::operator();
+%feature("varargin","1") spline::TensorBasis::operator();
 #endif //SWIGMATLAB
 
 

@@ -13,7 +13,9 @@ namespace spline{
 
     class EvaluationGrid : public SharedObject {
     public:
-        std::string getRepresentation() const ;
+
+        std::string type() const;
+        std::string to_string() const ;
 
         EvaluationGrid(TensorBasis basis);
         std::vector< AnyTensor > eval() const;

@@ -4,14 +4,21 @@
 #include <algorithm>
 namespace spline {
 
-    std::string StringArgumentNode::getRepresentation() const { return "Argument " + name_ ;};
-    std::string IntArgumentNode::getRepresentation() const{
-      return "Argument " + std::to_string(index_) ;};
-    std::string NullArgumentNode::getRepresentation() const { return "NullArgument ";};
+    std::string Argument::type() const{
+      return (*this)->type();
+    }
+    std::string ArgumentNode::type() const{
+      return "Argument";
+    }
 
-    std::string Argument::getRepresentation() const { return (*this)->getRepresentation() ;};
+    std::string StringArgumentNode::to_string() const { return "Argument " + name_ ;};
+    std::string IntArgumentNode::to_string() const{
+      return "Argument " + std::to_string(index_) ;};
+    std::string NullArgumentNode::to_string() const { return "NullArgument ";};
+
+    std::string Argument::to_string() const { return (*this)->to_string() ;};
     std::ostream& operator<<(std::ostream &stream, const Argument& argument) {
-        return stream << argument.getRepresentation();
+        return stream << argument.to_string();
     }
 
     ArgumentNode* Argument::get() const { return static_cast<ArgumentNode*>(SharedObject::get()); };

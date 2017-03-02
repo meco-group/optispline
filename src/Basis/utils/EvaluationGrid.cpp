@@ -57,23 +57,11 @@ namespace spline{
         return postStep;
     }
 
-    std::string EvaluationGrid::getRepresentation() const {
-        std::stringstream s;
-        // s << "EvaluationGrid" << std::endl;
-        s << "EvaluationGrid";
-        // for(Basis b : griddedBasis.bases()){
-        //     std::vector< std::vector< AnyScalar > > evalutionGrid = b.getEvaluationGrid();
-        //     for(auto const & subPoint : evalutionGrid){
-        //         for(auto const & sP : subPoint){
-        //             std::cout << sP.is_double() << std::endl;
-        //         s << std::to_string(sP.is_double());
-        //         s << " ";
-        //
-        //         }
-        //     }
-        //         s << "|";
-        // }
-        return s.str();
-    };
-
+    std::string EvaluationGrid::type() const {
+        return "EvaluationGrid";
+    }
+    
+    std::string EvaluationGrid::to_string() const {
+        return type();
+    }
 }
