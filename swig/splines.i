@@ -1064,7 +1064,23 @@ namespace spline {
 %extend Function {
   %pythoncode %{
     def __call__(self, *args):
-      return self.call(args)
+      assert len(args)>0
+      if len(args)==1:
+        return self.call(args[0])
+      else:
+        arguments = False
+        try:
+            if isinstance(args[1][0],str):
+                arguments = True
+        except:
+            pass
+
+        if arguments:
+            return self.call(*args)
+        else:
+            return self.call(casadi.hcat(args))
+
+
     @property
     def shape(self):
       return self._shape()
