@@ -527,7 +527,7 @@ class Uniquifier : public FunctionInternal {
           res[0][i+1] = (res[0][i+1]+res[0][i+2])/2;
         }
       }
-      
+
     }
 
     /** \brief  Print description */
@@ -561,6 +561,20 @@ AnyVector AnyVector::uniquify() const {
   }
 }
 
+
+std::vector< AnyScalar > AnyTensor::unpack_1() const {
+    tensor_assert(n_dims()==1);
+    return AnyVector((*this)).to_scalar_vector();
+}
+
+std::vector< std::vector<AnyScalar> > AnyTensor::unpack_2() const {
+    tensor_assert(n_dims()==2);
+    std::vector<AnyTensor> u = AnyTensor::unpack(*this, 1);
+
+    std::vector< std::vector<AnyScalar> > ret;
+    for (const auto& a : u) ret.push_back(a.unpack_1());
+    return ret;
+}
 
 
 namespace casadi {
@@ -604,4 +618,7 @@ template <>
 Tensor<casadi::SX> Tensor<casadi::SX>::solve(const Tensor<casadi::SX>& B) const {
   return casadi::SX::solve(matrix(), B.matrix());
 }
+
+
+
 } //namespace casadi

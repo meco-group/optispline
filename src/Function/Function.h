@@ -26,12 +26,11 @@ class Function {
             const std::vector< int >& size);
         static Function Constant(const Basis& basis, const AnyTensor& t);
 
-        /* AnyTensor operator()(const std::vector< AnyScalar >& x) const; */
-        /* std::vector< AnyTensor > operator()(const std::vector< std::vector< AnyScalar > >& x) const; */
-
+#ifndef SWIG
         AnyTensor operator()(const AnyVector& x) const;
-        std::vector< AnyTensor > operator()(const std::vector< AnyVector >& x) const;
-
+        /* AnyTensor operator()(const std::vector< AnyScalar >& x) const; */
+#endif // SWIG
+        AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const;
         /* evaluation options */
         /* AnyTensor operator()(const std::map<std::string, AnyScalar >& x) const; */
         /* AnyTensor operator()(const std::map<std::string, std::vector<AnyScalar> >& x) const; */

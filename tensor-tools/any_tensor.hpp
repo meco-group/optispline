@@ -187,6 +187,8 @@ class AnyTensor {
 
     static AnyTensor pack(const std::vector<AnyTensor>& v, int axis);
     static std::vector<AnyTensor> unpack(const AnyTensor& v, int axis);
+    std::vector< std::vector<AnyScalar> > unpack_2() const;
+    std::vector< AnyScalar > unpack_1() const;
 
 
     AnyTensor get_slice(const AnySlice& i, const AnySlice& j) const {
