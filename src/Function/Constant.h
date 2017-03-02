@@ -1,5 +1,5 @@
-#ifndef SRC_FUNCTION_FUNCTION_H_
-#define SRC_FUNCTION_FUNCTION_H_
+#ifndef SRC_FUNCTION_CONSTANT_H_
+#define SRC_FUNCTION_CONSTANT_H_
 
 #include <string>
 #include <vector>
@@ -165,4 +165,4 @@ class Function {
 
 } // namespace spline
 
-#endif // SRC_FUNCTION_FUNCTION_H_
+#endif // SRC_FUNCTION_CONSTANT_H_
