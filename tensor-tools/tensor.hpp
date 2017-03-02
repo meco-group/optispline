@@ -249,6 +249,10 @@ class Tensor {
 
     std::vector<int> i_e = i.indices(n);
     std::vector<int> j_e = j.indices(m);
+    
+    if (n_dims()==2) {
+      return T::reshape(data_, n, m)(i_e, j_e);
+    }
 
     casadi::DM R = casadi::DM::zeros(m, j_e.size());
     for (int ii=0;ii<j_e.size();++ii) {
