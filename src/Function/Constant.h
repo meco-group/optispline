@@ -47,8 +47,8 @@ class Constant : public GenericFunction {
         static Function cat(NumericIndex index, const std::vector< spline::Function >& f);
         static Function blkdiag(const std::vector< spline::Function >& f);
 
-        virtual std::string type() const;
-        virtual std::string to_string() const;
+        virtual std::string type() const override;
+        virtual std::string to_string() const override;
 
         Coefficient coeff() const {return coeff_;}
         AnyTensor coeff_tensor() const {return coeff_.data();}
