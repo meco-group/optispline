@@ -441,42 +441,8 @@ class Tensor {
       new_dims.push_back(dim_map[ci]);
     }
 
-    T data = T::zeros(normalize_dim(new_dims));
-
-    // Compute the total number of iterations needed
-    int n_iter = 1;
-    std::vector<int> dim_map_keys;
-    std::vector<int> dim_map_values;
-    for (const auto& e : dim_map) {
-      n_iter*= e.second;
-      dim_map_keys.push_back(e.first);
-      dim_map_values.push_back(e.second);
-    }
-
-    // Main loop
-    for (int i=0;i<n_iter;++i) {
-      std::vector<int> ind_total = sub2ind(dim_map_values, i);
-      std::vector<int> ind_a, ind_b, ind_c;
-      int sub_a, sub_b, sub_c;
-
-      for (const auto& ai : a) {
-        ind_a.push_back(ai<0 ? ind_total[distance(dim_map.begin(), dim_map.find(ai))] : ai);
-      }
-      for (const auto& bi : b) {
-        ind_b.push_back(bi<0 ? ind_total[distance(dim_map.begin(), dim_map.find(bi))] : bi);
-      }
-      for (const auto& ci : c) {
-        if (ci<0) {
-          ind_c.push_back(ind_total[distance(dim_map.begin(), dim_map.find(ci))]);
-        }
-      }
-
-      sub_a = ind2sub(A.dims(), ind_a);
-      sub_b = ind2sub(B.dims(), ind_b);
-      sub_c = ind2sub(new_dims, ind_c);
-      data.nz(sub_c)+= data_.nz(sub_a)*B.data().nz(sub_b);
-
-    }
+    T data = T::zeros(casadi::product(new_dims), 1);
+    data = T::einstein(A.data(), B.data(), data, A.dims(), B.dims(), new_dims, a, b, c);
 
     return Tensor(data, new_dims);
   }
