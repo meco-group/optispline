@@ -61,8 +61,8 @@ class Function : public GenericFunction {
         static Function cat(NumericIndex index, const std::vector< spline::Function >& f);
         static Function blkdiag(const std::vector< spline::Function >& f);
 
-        virtual std::string type() const;
-        virtual std::string to_string() const;
+        virtual std::string type() const override;
+        virtual std::string to_string() const override;
 
         Basis basis() const;
         Basis basis(const Argument& i) const;
