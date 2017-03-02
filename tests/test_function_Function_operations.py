@@ -236,7 +236,7 @@ class Test_Function_Operations(BasisTestCase):
         c = Function.Constant(mbasis1,1)
         fm2 = func1.mtimes(c)
         fm3 = c.mtimes(func2)
-        
+
         M = numpy.random.randn(3,2);
         N = numpy.random.randn(2,2);
         fm4 = func1*M;
@@ -263,7 +263,14 @@ class Test_Function_Operations(BasisTestCase):
             self.assertEqualT(fm3(_x,_y),func2_value[k])
             self.assertEqualT(fm4(_x,_y),func1_value[k]*M)
             self.assertEqualT(fm5(_x,_y),numpy.dot(func1_value[k],N))
-            
+
+        return
+        # Tests for erik. Failing somehow
+        fm6 = N.mtimes(Function(1))
+        fm7 = Function(1).mtimes(N)
+        self.assertEqualT(fm6(0.5),N)
+        self.assertEqualT(fm7(0.5),N)
+
     def test_trace(self):
         knots1 = [0,0,0.4,1,1]
         degree = 1
@@ -299,16 +306,16 @@ class Test_Function_Operations(BasisTestCase):
         basis2 = MonomialBasis(2);
 
         mbasis = TensorBasis([basis1,basis2]);
-        
+
         numpy.random.seed(0)
 
         coeff2 = DTensor(numpy.random.randn(9*12,1),[3,3,3,4])
         func2 = Function(mbasis,coeff2)
-        
+
         xy = numpy.random.random((2,1))
         x = float(xy[0])
         y = float(xy[1])
-        
+
 
         f = func2[[0,1],[2,1]]
         self.assertEqualT(func2(x,y)[np.ix_([0,1],[2,1])], f(x,y))
@@ -318,37 +325,37 @@ class Test_Function_Operations(BasisTestCase):
 
         f = func2[[0,1],:]
         self.assertEqualT(func2(x,y)[[0,1],:], f(x,y))
-    
+
         f = func2[[0,1],2]
         self.assertEqualT(func2(x,y)[[0,1],2], f(x,y).ravel())
 
         f = func2[1,[2,1]]
         self.assertEqualT(func2(x,y)[1,[2,1]], f(x,y).ravel())
-        
+
         f = func2[1,2]
         self.assertEqual(func2(x,y)[1,2], f(x,y))
-           
+
         f = func2[1:3,2]
         self.assertEqualT(func2(x,y)[1:3,2], f(x,y).ravel())
 
         f = func2[1:3,2:4]
         self.assertEqualT(func2(x,y)[1:3,2:4], f(x,y))
-        
-        
+
+
         with self.assertRaises(Exception):
           func2[1]
 
         with self.assertRaises(Exception):
           func2[[0,1]]
-          
+
         coeff2 = DTensor(numpy.random.randn(9*3,1),[3,3,1,3])
         func2 = Function(mbasis,coeff2)
-        
+
 
         R = func2(x,y).squeeze()
-        
+
         f = func2[[0,1]]
-        
+
         self.assertEqualT(R[np.ix_([0,1])], f(x,y).ravel())
 
         f = func2[:]
@@ -356,17 +363,17 @@ class Test_Function_Operations(BasisTestCase):
 
         f = func2[1]
         self.assertEqualT(R[1], f(x,y))
-        
+
         f = func2[1:3]
         self.assertEqualT(R[1:3], f(x,y).ravel())
 
-        
+
 
         coeff2 = DTensor(numpy.random.randn(9*3,1),[3,3,3,1])
         func2 = Function(mbasis,coeff2)
 
         R = func2(x,y).squeeze()
-        
+
         f = func2[[0,1]]
         self.assertEqualT(R[np.ix_([0,1])], f(x,y).ravel())
 
@@ -375,11 +382,20 @@ class Test_Function_Operations(BasisTestCase):
 
         f = func2[1]
         self.assertEqualT(R[1], f(x,y))
-        
+
         f = func2[1:3]
         self.assertEqualT(R[1:3], f(x,y).ravel())
 
-        
-        
+
+    def test_const_const(self):
+        c = Function(2)
+        d = Function(2)
+
+        p = Polynomial([0,1])
+
+        print "de test ------------------"
+        # c + d
+        c + p
+
 if __name__ == '__main__':
     unittest.main()

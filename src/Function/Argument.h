@@ -12,14 +12,15 @@ namespace spline {
     class Argument;
     class ArgumentNode : public SharedObjectNode {
     public:
-        virtual std::string getRepresentation() const = 0;
+        virtual std::string type() const;
+        virtual std::string to_string() const = 0;
         virtual int concrete(const std::vector<std::string> & args) const = 0;
     };
 
     class StringArgumentNode : public ArgumentNode {
     public:
         StringArgumentNode(const std::string &name);
-        virtual std::string getRepresentation() const ;
+        virtual std::string to_string() const ;
         virtual int concrete(const std::vector<std::string> & args) const;
     private:
         std::string name_;
@@ -28,7 +29,7 @@ namespace spline {
     class IntArgumentNode : public ArgumentNode {
     public:
         IntArgumentNode(int index);
-        virtual std::string getRepresentation() const ;
+        virtual std::string to_string() const ;
         virtual int concrete(const std::vector<std::string> & args) const;
     private:
         int index_;
@@ -37,7 +38,7 @@ namespace spline {
     class NullArgumentNode : public ArgumentNode {
     public:
         NullArgumentNode();
-        virtual std::string getRepresentation() const ;
+        virtual std::string to_string() const ;
         virtual int concrete(const std::vector<std::string> & args) const;
     };
 
@@ -60,7 +61,8 @@ namespace spline {
 
         static std::vector<Argument> from_vector(const std::vector<int>& ind);
 
-        virtual std::string getRepresentation() const ;
+        virtual std::string type() const;
+        virtual std::string to_string() const ;
     };
 } // namespace spline
 #endif //CPP_SPLINES_INDEX_H

@@ -7,18 +7,19 @@
 
 #include "../Function/Function.h"
 #include "../TensorBasis.h"
+#include "../TensorBasisConstant.h"
 namespace spline{
 
 
     class EvaluationGrid : public SharedObject {
     public:
-        std::string getRepresentation() const ;
+
+        std::string type() const;
+        std::string to_string() const ;
 
         EvaluationGrid(TensorBasis basis);
         std::vector< AnyTensor > eval() const;
         std::vector< AnyTensor > eval(const spline::Function & f) const;
-
-        std::vector< int > getPermutation(TensorBasis basis) const;
     private:
         TensorBasis griddedBasis;
     };

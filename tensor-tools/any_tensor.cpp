@@ -324,9 +324,22 @@ AnyTensor AnyTensor::repeat(const AnyTensor&e, const std::vector<int>& factors) 
   return {DT()};
 }
 
-std::vector<AnyTensor> unpack(const AnyTensor& v, int axis) {
-  tensor_assert_message(false, "Not implemented yet");
-  return {DT()};
+std::vector<AnyTensor> AnyTensor::unpack(const AnyTensor& v, int axis) {
+  spline_assert(axis<v.n_dims());
+  int n = v.dims()[axis];
+  int N = v.n_dims();
+  std::vector<AnyTensor> ret;
+  std::vector<int> a_e = mrange(N);
+  std::vector<int> c_e = a_e;
+  c_e.erase(c_e.begin()+axis); 
+  
+  for (int i=0;i<n;++i) {
+    casadi::DM ind = casadi::DM::zeros(n, 1);
+    ind[i] = 1;
+    ret.push_back(v.einstein(DT(ind, {n}), a_e, {-axis-1}, c_e));
+  }
+  
+  return ret;
 }
 
 

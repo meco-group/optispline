@@ -75,6 +75,10 @@ def _swig_repr(self):
 #ifdef SWIGMATLAB
 %rename(eval) spline::Function::operator();
 %feature("varargin","1") spline::Function::operator();
+%rename(eval) spline::TensorBasis::operator();
+%feature("varargin","1") spline::TensorBasis::operator();
+%rename(eval) spline::Basis::operator();
+%feature("varargin","1") spline::TensorBasis::operator();
 #endif //SWIGMATLAB
 
 
@@ -102,6 +106,7 @@ def _swig_repr(self):
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/TensorBasis.h>
+#include <src/Basis/TensorBasisConstant.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
@@ -972,6 +977,7 @@ using namespace spline;
 %include <src/Basis/BSplineBasis.h>
 
 %include <src/Basis/TensorBasis.h>
+%include <src/Basis/TensorBasisConstant.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>
@@ -1018,6 +1024,9 @@ namespace spline {
   %matlabcode %{
     function [] = disp(self)
       disp(self.to_string())
+    end
+    function varargout = subsasgn(self,varargin)
+        error('Not supported: subsasgn');
     end
   %}
  }

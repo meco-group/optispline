@@ -63,6 +63,7 @@ class Function {
         Basis basis() const;
         Basis basis(const Argument& i) const;
         TensorBasis tensor_basis() const {return basis_;}
+        TensorDomain domain() const {return basis_.domain();}
         Coefficient coeff() const {return coeff_;}
         AnyTensor coeff_tensor() const {return coeff_.data();}
 

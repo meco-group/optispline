@@ -24,6 +24,7 @@ namespace spline {
         virtual Basis operator*(const MonomialBasis& other) const override;
         virtual Basis operator*(const BSplineBasis& other) const override;
 
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
     };
 #endif // SWIG
 
@@ -36,6 +37,7 @@ namespace spline {
 
         EmptyBasis() ;
 
+        virtual AnyTensor operator()(const AnyVector& x) const override;
     };
 } // namespace spline
 

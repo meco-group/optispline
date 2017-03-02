@@ -90,7 +90,7 @@ namespace spline {
         Basis operator*(const MonomialBasis& rhs) const;
         Basis operator*(const BSplineBasis& rhs) const;
 
-        AnyTensor operator()(const AnyVector& x) const;
+        virtual AnyTensor operator()(const AnyVector& x) const;
 
         std::string type() const ;
         std::string to_string() const ;
