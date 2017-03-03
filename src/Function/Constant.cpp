@@ -109,38 +109,7 @@ namespace spline {
     }
 
     GenericFunction Constant::transform_to(const TensorBasis& basis) const {
-        if(basis_.type() == "TensorBasisConstant"){
-            AnyTensor T = coeff_.rm_direction( std::vector< int > {0} ).data();
-            return Function(basis, basis.const_coeff_tensor(T));
-        }
-
-        TensorBasis unionBasis = tensor_basis() + basis;
-        EvaluationGrid evaluationGrid = EvaluationGrid(unionBasis);
-        std::vector< AnyTensor > basisEvaluated;
-        std::vector< AnyTensor > thisFunctionEvaluated;
-
-        basisEvaluated = evaluationGrid.eval();
-        thisFunctionEvaluated = evaluationGrid.eval(*this);
-
-        AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
-        AnyTensor B = AnyTensor::pack(thisFunctionEvaluated, 0);
-        int numberEval = basisEvaluated.size();
-        int numberBasis = unionBasis.totalNumberBasisFunctions();
-        std::vector< int > elemShape = thisFunctionEvaluated[0].dims();
-        int numberCoef = spline::product(elemShape);
-
-        std::vector< int > shapeA = {numberEval, numberBasis};
-        std::vector< int > shapeB = {numberBasis, numberCoef};
-        A = A.shape(shapeA);
-        B = B.shape(shapeB);
-        AnyTensor C = A.solve(B);
-
-        std::vector< int > shapeCoef = elemShape;
-        std::vector< int > shapeBasis = unionBasis.dimension();
-        shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
-
-        C = C.shape(shapeBasis);
-        return Function(unionBasis, C);
+        return Function(basis, basis.const_coeff_tensor(T));
     }
 
     GenericFunction Constant::project_to(const Basis& basis) const {
@@ -148,35 +117,18 @@ namespace spline {
     }
 
     GenericFunction Constant::project_to(const TensorBasis& b) const {
-        Function b2 = b.basis_functions();
-        Function f = reshape(std::vector< int >{1,spline::product(shape())});
-
-        Function b22 = b2.mtimes(b2.transpose());
-        Function b2f = b2.mtimes(f); //f already is a row vector
-
-        AnyTensor B22 = b22.integral();
-        AnyTensor B2f = b2f.integral();
-
-        AnyTensor C = B22.solve(B2f);
-
-        std::vector< int > M = b.dimension();
-        std::vector< int > N = shape();
-        std::vector< int > shapeC = M;
-        shapeC.insert(shapeC.end(), N.begin(), N.end());
-        C = C.shape(shapeC);
-
-        return Function(b,C);
+        return Function(basis, basis.const_coeff_tensor(T));
     }
 
     GenericFunction Constant::reshape(const std::vector< int >& shape) const {
-        return Function(tensor_basis(), coeff().reshape(shape));
+        return Constant(coeff().reshape(shape));
     }
 
     GenericFunction Constant::slice(const AnySlice& i, const AnySlice& j) const {
-        return Function(tensor_basis(), coeff_tensor().get_slice(i, j));
+        return Constant(coeff_tensor().get_slice(i, j));
     }
 
     GenericFunction Constant::slice(const AnySlice& i) const {
-        return Function(tensor_basis(), coeff_tensor().get_slice(i));
+        return Constant(coeff_tensor().get_slice(i));
     }
 }  // namespace spline
