@@ -19,9 +19,6 @@ class Constant : public GenericFunction {
 
         virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
 
-        virtual GenericFunction slice(const AnySlice& i, const AnySlice& j) const override;
-        virtual GenericFunction slice(const AnySlice& i) const override;
-
         virtual GenericFunction operator+(const GenericFunction& f) const override;
         virtual GenericFunction operator+(const Function& f) const override;
         virtual GenericFunction operator+(const Conastant& f) const override;
@@ -50,6 +47,8 @@ class Constant : public GenericFunction {
 
         virtual GenericFunction reshape(const std::vector< int >& shape) const override;
 
+        virtual GenericFunction slice(const AnySlice& i, const AnySlice& j) const override;
+        virtual GenericFunction slice(const AnySlice& i) const override;
 };
 
 
