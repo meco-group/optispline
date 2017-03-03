@@ -27,25 +27,25 @@ namespace spline {
         return "Constant\t" + coeff_.to_string();
     }
 
-    Function Constant::operator+(const Function& f) const {
+    GenericFunction Constant::operator+(const Function& f) const {
         return generic_operation(f,
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
-    Function Constant::operator+(const AnyTensor& t) const {
+    GenericFunction Constant::operator+(const AnyTensor& t) const {
         if (t.is_scalar() && t.dims()!=shape())
             return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
         return operator+(Constant::Constant(this->tensor_basis(), t));
     }
 
-    Function Constant::operator*(const Function& f) const {
+    GenericFunction Constant::operator*(const Function& f) const {
         return generic_operation(f,
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
-    Function Constant::operator*(const AnyTensor& rhs) const {
+    GenericFunction Constant::operator*(const AnyTensor& rhs) const {
         Function f = *this;
         AnyTensor t = rhs;
         homogenize_args(f, t);
@@ -61,13 +61,13 @@ namespace spline {
         return Function(f.tensor_basis(), Coefficient(data));
     }
 
-    Function Constant::mtimes(const Function& f) const {
+    GenericFunction Constant::mtimes(const Function& f) const {
         return generic_operation(f,
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs);});
     }
 
-    Function Constant::mtimes(const AnyTensor& t) const {
+    GenericFunction Constant::mtimes(const AnyTensor& t) const {
         if (t.is_scalar()) return operator*(t);
         spline_assert(t.n_dims() == 2);
         Coefficient c = coeff();
@@ -75,20 +75,20 @@ namespace spline {
         return Function(tensor_basis(), c.transform(t.reorder_dims({1, 0}), dir));
     }
 
-    Function Constant::rmtimes(const AnyTensor& t) const {
+    GenericFunction Constant::rmtimes(const AnyTensor& t) const {
         if (t.is_scalar()) return operator*(t);
         return Constant::Constant(this->tensor_basis(), t).mtimes(*this);
     }
 
-    Function Constant::operator-() const {
+    GenericFunction Constant::operator-() const {
         return Function(basis_, -coeff_);
     }
 
-    Function Constant::transpose() const {
+    GenericFunction Constant::transpose() const {
         return Function(tensor_basis(), coeff().transpose());
     }
 
-    Function Constant::trace() const {
+    GenericFunction Constant::trace() const {
         std::vector< int > shape_ = shape();
         spline_assert_message(shape_[0] == shape_[1],
                 "Trace only defined for square matrices. Dimensions are " << shape_ << ".");
@@ -104,11 +104,11 @@ namespace spline {
         return Function(tensor_basis(), cdiag);
     }
 
-    Function Constant::transform_to(const Basis& basis) const {
+    GenericFunction Constant::transform_to(const Basis& basis) const {
         return transform_to(TensorBasis(basis));
     }
 
-    Function Constant::transform_to(const TensorBasis& basis) const {
+    GenericFunction Constant::transform_to(const TensorBasis& basis) const {
         if(basis_.type() == "TensorBasisConstant"){
             AnyTensor T = coeff_.rm_direction( std::vector< int > {0} ).data();
             return Function(basis, basis.const_coeff_tensor(T));
@@ -143,11 +143,11 @@ namespace spline {
         return Function(unionBasis, C);
     }
 
-    Function Constant::project_to(const Basis& basis) const {
+    GenericFunction Constant::project_to(const Basis& basis) const {
         return project_to(TensorBasis(basis));
     }
 
-    Function Constant::project_to(const TensorBasis& b) const {
+    GenericFunction Constant::project_to(const TensorBasis& b) const {
         Function b2 = b.basis_functions();
         Function f = reshape(std::vector< int >{1,spline::product(shape())});
 
@@ -168,15 +168,15 @@ namespace spline {
         return Function(b,C);
     }
 
-    Function Constant::reshape(const std::vector< int >& shape) const {
+    GenericFunction Constant::reshape(const std::vector< int >& shape) const {
         return Function(tensor_basis(), coeff().reshape(shape));
     }
 
-    Function Constant::slice(const AnySlice& i, const AnySlice& j) const {
+    GenericFunction Constant::slice(const AnySlice& i, const AnySlice& j) const {
         return Function(tensor_basis(), coeff_tensor().get_slice(i, j));
     }
 
-    Function Constant::slice(const AnySlice& i) const {
+    GenericFunction Constant::slice(const AnySlice& i) const {
         return Function(tensor_basis(), coeff_tensor().get_slice(i));
     }
 }  // namespace spline
