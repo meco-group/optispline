@@ -14,11 +14,33 @@ namespace spline {
 class GenericFunction {
 
     public :
-        virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const;
+        virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const = 0;
 
         casadi::MX operator<=(const casadi::MX& x) const;
         casadi::MX operator>=(const casadi::MX& x) const;
 
+        virtual GenericFunction slice(const AnySlice& i, const AnySlice& j) const = 0;
+        virtual GenericFunction slice(const AnySlice& i) const = 0;
+
+        virtual GenericFunction operator+(const GenericFunction& f) const = 0;
+        virtual GenericFunction operator+(const Function& f) const = 0;
+        virtual GenericFunction operator+(const Constant& f) const = 0;
+        virtual GenericFunction operator+(const AnyTensor& t) const = 0;
+        virtual GenericFunction operator*(const GenericFunction& f) const = 0;
+        virtual GenericFunction operator*(const Function& f) const = 0;
+        virtual GenericFunction operator*(const Constant& f) const = 0;
+        virtual GenericFunction operator*(const AnyTensor& t) const = 0;
+        virtual GenericFunction operator-() const = 0;
+        virtual GenericFunction operator-(const GenericFunction& f) const;
+        virtual GenericFunction operator-(const AnyTensor& t) const = 0;
+        virtual GenericFunction mtimes(const GenericFunction& f) const = 0;
+        virtual GenericFunction mtimes(const Function& f) const = 0;
+        virtual GenericFunction mtimes(const Constant& f) const = 0;
+        virtual GenericFunction mtimes(const AnyTensor& f) const = 0;
+        virtual GenericFunction rmtimes(const AnyTensor& f) const = 0;
+        virtual GenericFunction pow(int power) const = 0;
+        virtual GenericFunction transpose() const = 0;
+        virtual GenericFunction trace() const = 0;
 
         static Function vertcat(const std::vector< spline::Function >& f);
         static Function horzcat(const std::vector< spline::Function >& f);
@@ -43,12 +65,12 @@ class GenericFunction {
 
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
 
-        virtual Function transform_to(const Basis& basis) const;
-        virtual Function transform_to(const TensorBasis& basis) const;
-        virtual Function project_to(const Basis& basis) const;
-        virtual Function project_to(const TensorBasis& basis) const;
+        virtual GenericFunction transform_to(const Basis& basis) const = 0;
+        virtual GenericFunction transform_to(const TensorBasis& basis) const = 0;
+        virtual GenericFunction project_to(const Basis& basis) const = 0;
+        virtual GenericFunction project_to(const TensorBasis& basis) const = 0;
 
-        virtual Function reshape(const std::vector< int >& shape) const;
+        virtual GenericFunction reshape(const std::vector< int >& shape) const = 0;
     public:
         Coefficient coeff_;
 

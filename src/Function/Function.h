@@ -20,6 +20,7 @@ class Function : public GenericFunction {
         Function(const AnyTensor& c);
         Function() {}
 
+        virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
 
         virtual GenericFunction slice(const AnySlice& i, const AnySlice& j) const override;
         virtual GenericFunction slice(const AnySlice& i) const override;
