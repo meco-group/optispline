@@ -57,6 +57,8 @@ class GenericFunction {
         Coefficient coeff() const {return coeff_;}
         AnyTensor coeff_tensor() const {return coeff_.data();}
 
+        virtual TensorBasis tensor_basis() const = 0;
+
         AnyTensor data() const {return coeff_tensor().squeeze(); }
 
         bool is_scalar() const { return shape()[0] == 1 && shape()[1] == 1; }

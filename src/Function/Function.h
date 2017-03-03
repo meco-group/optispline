@@ -55,7 +55,7 @@ class Function : public GenericFunction {
 
         Basis basis() const;
         Basis basis(const Argument& i) const;
-        TensorBasis tensor_basis() const {return basis_;}
+        virtual TensorBasis tensor_basis() const override {return basis_;}
         TensorDomain domain() const {return basis_.domain();}
 
         void repr() const { casadi::userOut() << to_string() << std::endl;}

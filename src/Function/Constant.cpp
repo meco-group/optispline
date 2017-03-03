@@ -131,4 +131,8 @@ namespace spline {
     GenericFunction Constant::slice(const AnySlice& i) const {
         return Constant(coeff_tensor().get_slice(i));
     }
+
+    TensorBasis Constant::tensor_basis() const {
+        return TensorBasisConstant();
+    }
 }  // namespace spline

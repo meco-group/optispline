@@ -50,6 +50,8 @@ class Constant : public GenericFunction {
 
         virtual GenericFunction slice(const AnySlice& i, const AnySlice& j) const override;
         virtual GenericFunction slice(const AnySlice& i) const override;
+
+        virtual TensorBasis tensor_basis() const override;
 };
 
 } // namespace spline
