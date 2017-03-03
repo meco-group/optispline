@@ -53,8 +53,6 @@ class Function : public GenericFunction {
 
         virtual GenericFunction reshape(const std::vector< int >& shape) const override;
 
-        virtual std::string type() const override;
-        virtual std::string to_string() const override;
 
         Basis basis() const;
         Basis basis(const Argument& i) const;
@@ -117,20 +115,12 @@ class Function : public GenericFunction {
 
         std::vector<spline::Function> jacobian() const;
 
-        Function transform_to(const Basis& basis) const;
-        Function transform_to(const TensorBasis& basis) const;
-        Function project_to(const Basis& basis) const;
-        Function project_to(const TensorBasis& basis) const;
-
         AnyTensor integral() const;
         AnyTensor integral(const TensorDomain& domain) const;
         Function partial_integral(const TensorDomain& domain,
             const std::vector<std::string>& args) const;
         Function partial_integral(const TensorDomain& domain,
          const NumericIndexVector& arg_ind) const;
-
-        Function reshape(const std::vector< int >& shape) const;
-
     public:
         TensorBasis basis_;
 

@@ -55,9 +55,6 @@ class GenericFunction {
 
         AnyTensor data() const {return coeff_tensor().squeeze(); }
 
-        casadi::MX operator<=(const casadi::MX& x) const;
-        casadi::MX operator>=(const casadi::MX& x) const;
-
         bool is_scalar() const { return shape()[0] == 1 && shape()[1] == 1; }
 
         void repr() const { casadi::userOut() << to_string() << std::endl;}
@@ -76,11 +73,6 @@ class GenericFunction {
 
     private:
         static void homogenize_args(Function& f, AnyTensor& t);
-
-        typedef std::function<TensorBasis(const TensorBasis&, const TensorBasis&)> BasisComposition;
-        typedef std::function<AnyTensor(const AnyTensor&, const AnyTensor&)> TensorComposition;
-        Function generic_operation(const Function& f,
-                const BasisComposition & bc, const TensorComposition & tc) const;
 };
 
 
