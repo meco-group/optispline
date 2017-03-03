@@ -19,24 +19,24 @@ class Constant : public GenericFunction {
 
         virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
 
-        virtual GenericFunction operator+(const GenericFunction& f) const override;
-        virtual GenericFunction operator+(const Function& f) const override;
-        virtual GenericFunction operator+(const Conastant& f) const override;
-        virtual GenericFunction operator+(const AnyTensor& t) const override;
-        virtual GenericFunction operator*(const GenericFunction& f) const override;
-        virtual GenericFunction operator*(const Function& f) const override;
-        virtual GenericFunction operator*(const Constant& f) const override;
-        virtual GenericFunction operator*(const AnyTensor& t) const override;
+        /* virtual GenericFunction operator+(const GenericFunction& f) const override; */
+        /* virtual GenericFunction operator+(const Function& f) const override; */
+        /* virtual GenericFunction operator+(const Conastant& f) const override; */
+        /* virtual GenericFunction operator+(const AnyTensor& t) const override; */
+        /* virtual GenericFunction operator*(const GenericFunction& f) const override; */
+        /* virtual GenericFunction operator*(const Function& f) const override; */
+        /* virtual GenericFunction operator*(const Constant& f) const override; */
+        /* virtual GenericFunction operator*(const AnyTensor& t) const override; */
         virtual GenericFunction operator-() const override;
 
-        virtual GenericFunction mtimes(const GenericFunction& f) const override;
-        virtual GenericFunction mtimes(const Function& f) const override;
-        virtual GenericFunction mtimes(const Constant& f) const override;
-        virtual GenericFunction mtimes(const AnyTensor& f) const override;
-        virtual GenericFunction rmtimes(const AnyTensor& f) const override;
+        /* virtual GenericFunction mtimes(const GenericFunction& f) const override; */
+        /* virtual GenericFunction mtimes(const Function& f) const override; */
+        /* virtual GenericFunction mtimes(const Constant& f) const override; */
+        /* virtual GenericFunction mtimes(const AnyTensor& f) const override; */
+        /* virtual GenericFunction rmtimes(const AnyTensor& f) const override; */
 
         virtual GenericFunction transpose() const override;
-        virtual GenericFunction trace() const override;
+        /* virtual GenericFunction trace() const override; */
 
         virtual std::string type() const override override;
         virtual std::string to_string() const override override;
