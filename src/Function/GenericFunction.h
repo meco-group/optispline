@@ -30,15 +30,19 @@ class GenericFunction {
         virtual GenericFunction operator*(const Function& f) const = 0;
         virtual GenericFunction operator*(const Constant& f) const = 0;
         virtual GenericFunction operator*(const AnyTensor& t) const = 0;
+
         virtual GenericFunction operator-() const = 0;
-        virtual GenericFunction operator-(const GenericFunction& f) const;
+        GenericFunction operator-(const GenericFunction& f) const;
         virtual GenericFunction operator-(const AnyTensor& t) const = 0;
+
         virtual GenericFunction mtimes(const GenericFunction& f) const = 0;
         virtual GenericFunction mtimes(const Function& f) const = 0;
         virtual GenericFunction mtimes(const Constant& f) const = 0;
         virtual GenericFunction mtimes(const AnyTensor& f) const = 0;
         virtual GenericFunction rmtimes(const AnyTensor& f) const = 0;
-        virtual GenericFunction pow(int power) const = 0;
+
+        GenericFunction pow(int power) const = 0;
+
         virtual GenericFunction transpose() const = 0;
         virtual GenericFunction trace() const = 0;
 
