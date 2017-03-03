@@ -91,8 +91,8 @@ namespace spline {
             std::vector< int > shape12 = std::vector< int >{b.shape()[0], f[i].shape()[1]};
             std::vector< int > shape21 = std::vector< int >{f[i].shape()[0], b.shape()[1]};
 
-            Function zero12 = GenericFunction::Constant(b.tensor_basis(), 0, shape12);
-            Function zero21 = GenericFunction::Constant(b.tensor_basis(), 0, shape21);
+            Function zero12 = Constant(0, shape12);
+            Function zero21 = Constant(0, shape21);
 
             Function upper = GenericFunction::horzcat(std::vector< Function >{b, zero12});
             Function lower = GenericFunction::horzcat(std::vector< Function >{zero21, f[i]});

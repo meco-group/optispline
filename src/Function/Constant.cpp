@@ -14,6 +14,14 @@ namespace spline {
         coeff_ = c;
     }
 
+    Constant::Constant(const AnyScalar& c, const std::vector< int >& sha) {
+        spline_assert_message(c.dims().size() <= 2, "Constant has dimention higher than 2");
+        /* std::vector< int > new_dims = c.dims(); */
+        /* new_dims.insert(new_dims.begin(), 1); */
+        /* coeff_ = c.shape(new_dims); */
+        coeff_ = c;
+    }
+
     AnyTensor Constant::operator()(const AnyTensor& x, const std::vector< std::string >& args) const{
         spline_assert_message(false, "not implemented: evaluation conastan");
         return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze();

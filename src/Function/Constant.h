@@ -16,6 +16,7 @@ class Constant : public GenericFunction {
 
     public :
         Constant(const AnyTensor& c);
+        Constant(const AnyConstant& c, const std::vector< int >& sha);
 
         virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
 
