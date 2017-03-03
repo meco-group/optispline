@@ -61,23 +61,8 @@ class Constant : public GenericFunction {
         Function project_to(const Basis& basis) const;
         Function project_to(const TensorBasis& basis) const;
 
-        AnyTensor integral() const;
-        AnyTensor integral(const TensorDomain& domain) const;
-        Function partial_integral(const TensorDomain& domain,
-            const std::vector<std::string>& args) const;
-        Function partial_integral(const TensorDomain& domain,
-         const NumericIndexVector& arg_ind) const;
-
         Function reshape(const std::vector< int >& shape) const;
 
-    private:
-        static void homogenize_args(Function& f, AnyTensor& t);
-
-        void init(const TensorBasis& basis, const Coefficient& coef);
-        typedef std::function<TensorBasis(const TensorBasis&, const TensorBasis&)> BasisComposition;
-        typedef std::function<AnyTensor(const AnyTensor&, const AnyTensor&)> TensorComposition;
-        Function generic_operation(const Function& f,
-                const BasisComposition & bc, const TensorComposition & tc) const;
 };
 
 

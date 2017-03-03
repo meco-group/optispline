@@ -14,34 +14,6 @@ namespace spline {
         coeff_ = c.shape(new_dims);
     }
 
-    Function Constant::Constant(const TensorBasis& basis, const AnyScalar& a,
-            const std::vector< int >& size) {
-        AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
-        return Constant::Constant(basis, value);
-    }
-
-    Function Constant::Constant(const TensorBasis& basis, const AnyTensor& t) {
-        Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
-        return Function(basis, coeff);
-    }
-
-    Function Constant::Constant(const Basis& basis, const AnyScalar& a,
-            const std::vector< int >& size) {
-        AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
-        return Constant::Constant(basis, value);
-    }
-
-    Function Constant::Constant(const Basis& basis, const AnyTensor& t) {
-        Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
-        return Function(basis, coeff);
-    }
-
-
-
-    /* AnyTensor Constant::operator()(const AnyVector& x) const { */
-    /*     return basis_(x_).inner(coeff().data()); */
-    /* } */
-
     AnyTensor Constant::operator()(const AnyTensor& x, const std::vector< std::string >& args) const{
         if(x.dims()[0] == n_inputs() && x.dims()[1] == 1){
             std::vector< AnyScalar > x_ = x.unpack_1();
@@ -71,53 +43,6 @@ namespace spline {
     std::string Constant::to_string() const{
         return "Function, consisting of a " + basis_.to_string() + "and:\n\t" + coeff_.to_string();
     }
-
-    Function Constant::generic_operation(const Function& f,
-            const BasisComposition & bc, const TensorComposition & tc) const  {
-
-        TensorBasis sumBasis = bc(tensor_basis(), f.tensor_basis());
-        EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
-        std::vector< AnyTensor > basisEvaluated;
-        std::vector< AnyTensor > thisFunctionEvaluated;
-        std::vector< AnyTensor > otherFunctionEvaluated;
-        std::vector< AnyTensor > sumFunctionEvaluated;
-
-        basisEvaluated = evaluationGrid.eval();
-        thisFunctionEvaluated = evaluationGrid.eval(*this);
-        otherFunctionEvaluated = evaluationGrid.eval(f);
-
-        for (int i = 0; i < basisEvaluated.size(); i++) {
-            AnyTensor lhs = thisFunctionEvaluated[i];
-            AnyTensor rhs = otherFunctionEvaluated[i];
-            if (lhs.dims() == std::vector< int > {1, 1}) {
-                lhs = lhs.shape({});
-            }
-            if (rhs.dims() == std::vector< int > {1, 1}) {
-                rhs = rhs.shape({});
-            }
-            sumFunctionEvaluated.push_back(tc(lhs, rhs));
-        }
-
-        AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
-        AnyTensor B = AnyTensor::pack(sumFunctionEvaluated, 0);
-
-        int numberEval = basisEvaluated.size();
-        int numberBasis = sumBasis.totalNumberBasisFunctions();
-        std::vector< int > elemShape = sumFunctionEvaluated[0].dims();
-        int numberCoef = (elemShape.size() == 0)? 1: spline::product(elemShape);
-
-        std::vector< int > shapeA = {numberEval, numberBasis};
-        std::vector< int > shapeB = {numberBasis, numberCoef};
-        A = A.shape(shapeA);
-        B = B.shape(shapeB);
-        AnyTensor C = A.solve(B);
-
-        std::vector< int > shapeCoef = elemShape;
-        std::vector< int > shapeBasis = sumBasis.dimension();
-        shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
-
-        C = C.shape(shapeBasis);
-        return Function(sumBasis, C);
     }
 
     Function Constant::operator+(const Function& f) const {
