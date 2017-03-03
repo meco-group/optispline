@@ -8,31 +8,14 @@ namespace spline {
 
     Constant::Function(const AnyTensor& c) {
         spline_assert_message(c.dims().size() <= 2, "Constant has dimention higher than 2");
-        std::vector< int > new_dims = c.dims();
-        new_dims.insert(new_dims.begin(), 1);
-        basis_ = TensorBasisConstant();
-        coeff_ = c.shape(new_dims);
+        /* std::vector< int > new_dims = c.dims(); */
+        /* new_dims.insert(new_dims.begin(), 1); */
+        /* coeff_ = c.shape(new_dims); */
+        coeff_ = c;
     }
 
     AnyTensor Constant::operator()(const AnyTensor& x, const std::vector< std::string >& args) const{
-        if(x.dims()[0] == n_inputs() && x.dims()[1] == 1){
-            std::vector< AnyScalar > x_ = x.unpack_1();
-            return basis_(x_).inner(coeff().data());
-        }
-        spline_assert_message(x.dims()[1] == n_inputs(), "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " + std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
-        std::vector< AnyTensor > tensor = {};
-
-        std::vector< std::vector< AnyScalar > > X_ = x.unpack_2();
-        for(int i = 0; i < X_.size(); i++){
-            tensor.push_back(basis_(X_[i]));
-        }
-        AnyTensor packed_tensor = AnyTensor::pack(tensor, 0);
-        int shared_dim = packed_tensor.n_dims();
-        std::vector<int> a_r = mrange(0, shared_dim);
-        std::vector<int> b_r = mrange(1, shared_dim + 2);
-        std::vector<int> c_r = { a_r[0] };
-        c_r.push_back(b_r[b_r.size() - 2]);
-        c_r.push_back(b_r[b_r.size() - 1]);
+        spline_assert_message(false, "not implemented: evaluation conastan");
         return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze();
     }
 
@@ -41,8 +24,7 @@ namespace spline {
     }
 
     std::string Constant::to_string() const{
-        return "Function, consisting of a " + basis_.to_string() + "and:\n\t" + coeff_.to_string();
-    }
+        return "Constant\t" + coeff_.to_string();
     }
 
     Function Constant::operator+(const Function& f) const {
