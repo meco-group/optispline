@@ -93,13 +93,6 @@ namespace spline {
         return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze();
     }
 
-    casadi::MX Function::operator<=(const casadi::MX& x) const {
-        return coeff().data().as_MT().data()<=x;
-    }
-    casadi::MX Function::operator>=(const casadi::MX& x) const {
-        return coeff().data().as_MT().data()>=x;
-    }
-
     Basis Function::basis() const {
         spline_assert_message(basis_.n_basis()==1,
                 ".basis() syntax only works for a 1-D TensorBasis.");

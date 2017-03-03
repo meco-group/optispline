@@ -18,6 +18,8 @@ class GenericFunction {
 
         virtual Function slice(const AnySlice& i, const AnySlice& j) const;
         virtual Function slice(const AnySlice& i) const;
+        casadi::MX operator<=(const casadi::MX& x) const;
+        casadi::MX operator>=(const casadi::MX& x) const;
 
         virtual Function operator+(const Function& f) const;
         virtual Function operator+(const AnyTensor& t) const;

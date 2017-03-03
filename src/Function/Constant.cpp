@@ -64,13 +64,6 @@ namespace spline {
         return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze();
     }
 
-    casadi::MX Constant::operator<=(const casadi::MX& x) const {
-        return coeff().data().as_MT().data()<=x;
-    }
-    casadi::MX Constant::operator>=(const casadi::MX& x) const {
-        return coeff().data().as_MT().data()>=x;
-    }
-
     std::string Constant::type() const{
         return "Constant";
     }
@@ -262,10 +255,6 @@ namespace spline {
         }
 
         return b;
-    }
-
-    std::vector< int > Constant::shape() const {
-        return coeff_.shape();
     }
 
     Function Constant::transform_to(const Basis& basis) const {

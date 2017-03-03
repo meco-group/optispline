@@ -56,10 +56,6 @@ class Function : public GenericFunction {
         Function transpose() const;
         Function trace() const;
 
-        static Function vertcat(const std::vector< spline::Function >& f);
-        static Function horzcat(const std::vector< spline::Function >& f);
-        static Function cat(NumericIndex index, const std::vector< spline::Function >& f);
-        static Function blkdiag(const std::vector< spline::Function >& f);
 
         virtual std::string type() const override;
         virtual std::string to_string() const override;
@@ -68,21 +64,11 @@ class Function : public GenericFunction {
         Basis basis(const Argument& i) const;
         TensorBasis tensor_basis() const {return basis_;}
         TensorDomain domain() const {return basis_.domain();}
-        Coefficient coeff() const {return coeff_;}
-        AnyTensor coeff_tensor() const {return coeff_.data();}
-
-        AnyTensor data() const {return coeff_tensor().squeeze(); }
-
-        casadi::MX operator<=(const casadi::MX& x) const;
-        casadi::MX operator>=(const casadi::MX& x) const;
-
-        bool is_scalar() const { return shape()[0] == 1 && shape()[1] == 1; }
 
         void repr() const { casadi::userOut() << to_string() << std::endl;}
         // std::string& getArgument (){ return basis().getArgument();}
 
         int n_inputs() const;  // Number of inputs of the function
-        std::vector< int > shape() const;  // Shape result obtained after function evaluation
 
         Function insert_knots(const AnyVector & new_knots) const;
         Function insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const;
@@ -151,7 +137,6 @@ class Function : public GenericFunction {
 
     public:
         TensorBasis basis_;
-        Coefficient coeff_;
 
     private:
         static void homogenize_args(Function& f, AnyTensor& t);

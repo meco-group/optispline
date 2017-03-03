@@ -50,20 +50,11 @@ class Constant : public GenericFunction {
         virtual std::string type() const override;
         virtual std::string to_string() const override;
 
-        Coefficient coeff() const {return coeff_;}
-        AnyTensor coeff_tensor() const {return coeff_.data();}
-
-        AnyTensor data() const {return coeff_tensor().squeeze(); }
-
-        casadi::MX operator<=(const casadi::MX& x) const;
-        casadi::MX operator>=(const casadi::MX& x) const;
 
         bool is_scalar() const { return shape()[0] == 1 && shape()[1] == 1; }
 
         void repr() const { casadi::userOut() << to_string() << std::endl;}
         // std::string& getArgument (){ return basis().getArgument();}
-
-        std::vector< int > shape() const;  // Shape result obtained after function evaluation
 
         Function transform_to(const Basis& basis) const;
         Function transform_to(const TensorBasis& basis) const;
@@ -78,9 +69,6 @@ class Constant : public GenericFunction {
          const NumericIndexVector& arg_ind) const;
 
         Function reshape(const std::vector< int >& shape) const;
-
-    public:
-        Coefficient coeff_;
 
     private:
         static void homogenize_args(Function& f, AnyTensor& t);
