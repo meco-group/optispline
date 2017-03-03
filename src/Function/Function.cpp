@@ -1,5 +1,6 @@
 #include <vector>
 #include "Function.h"
+#include "Constant.h"
 #include "../Basis/utils/EvaluationGrid.h"
 /* #include "../Basis/TensorBasisConstant.h" */
 #include "../common.h"
@@ -139,7 +140,7 @@ namespace spline {
     Function Function::operator+(const AnyTensor& t) const {
         if (t.is_scalar() && t.dims()!=shape())
             return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
-        return operator+(Function::Constant(this->tensor_basis(), t));
+        return operator+(Constant(t));
     }
 
     Function Function::operator*(const Function& f) const {
@@ -190,7 +191,7 @@ namespace spline {
 
     Function Function::rmtimes(const AnyTensor& t) const {
         if (t.is_scalar()) return operator*(t);
-        return Function::Constant(this->tensor_basis(), t).mtimes(*this);
+        return Constant(t).mtimes(*this);
     }
 
     Function Function::pow(int power) const {
@@ -199,7 +200,7 @@ namespace spline {
         Function fpow = *this;
 
         if (power == 0) {
-            fpow = Function::Constant(tensor_basis(), 1, shape());
+            fpow = Constant(1, shape());
         } else {
             for (int i = 1; i < power; i++) {
                 fpow = fpow*f;
@@ -255,8 +256,8 @@ namespace spline {
             std::vector< int > shape12 = std::vector< int >{b.shape()[0], f[i].shape()[1]};
             std::vector< int > shape21 = std::vector< int >{f[i].shape()[0], b.shape()[1]};
 
-            Function zero12 = Function::Constant(b.tensor_basis(), 0, shape12);
-            Function zero21 = Function::Constant(b.tensor_basis(), 0, shape21);
+            Function zero12 = Constant(0, shape12);
+            Function zero21 = Constant(0, shape21);
 
             Function upper = Function::horzcat(std::vector< Function >{b, zero12});
             Function lower = Function::horzcat(std::vector< Function >{zero21, f[i]});
