@@ -16,24 +16,9 @@ class GenericFunction {
     public :
         virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const;
 
-        virtual Function slice(const AnySlice& i, const AnySlice& j) const;
-        virtual Function slice(const AnySlice& i) const;
         casadi::MX operator<=(const casadi::MX& x) const;
         casadi::MX operator>=(const casadi::MX& x) const;
 
-        virtual Function operator+(const Function& f) const;
-        virtual Function operator+(const AnyTensor& t) const;
-        virtual Function operator*(const Function& f) const;
-        virtual Function operator*(const AnyTensor& t) const;
-        virtual Function pow(int power) const;
-        virtual Function operator-() const;
-        virtual Function operator-(const Function& f) const;
-        virtual Function operator-(const AnyTensor& t) const;
-        virtual Function mtimes(const Function& f) const;
-        virtual Function mtimes(const AnyTensor& f) const;
-        virtual Function rmtimes(const AnyTensor& f) const;
-        virtual Function transpose() const;
-        virtual Function trace() const;
 
         static Function vertcat(const std::vector< spline::Function >& f);
         static Function horzcat(const std::vector< spline::Function >& f);

@@ -21,26 +21,36 @@ class Function : public GenericFunction {
         Function() {}
 
 
+        virtual GenericFunction slice(const AnySlice& i, const AnySlice& j) const override;
+        virtual GenericFunction slice(const AnySlice& i) const override;
 
-        /* Function partial(const std::map<std::string, AnyScalar >& x) const; */
+        virtual GenericFunction operator+(const GenericFunction& f) const override;
+        virtual GenericFunction operator+(const Function& f) const override;
+        virtual GenericFunction operator+(const Conastant& f) const override;
+        virtual GenericFunction operator+(const AnyTensor& t) const override;
+        virtual GenericFunction operator*(const GenericFunction& f) const override;
+        virtual GenericFunction operator*(const Function& f) const override;
+        virtual GenericFunction operator*(const Constant& f) const override;
+        virtual GenericFunction operator*(const AnyTensor& t) const override;
+        virtual GenericFunction operator-() const override;
+        virtual GenericFunction mtimes(const GenericFunction& f) const override;
+        virtual GenericFunction mtimes(const Function& f) const override;
+        virtual GenericFunction mtimes(const Constant& f) const override;
+        virtual GenericFunction mtimes(const AnyTensor& f) const override;
+        virtual GenericFunction rmtimes(const AnyTensor& f) const override;
+        virtual GenericFunction pow(int power) const override;
+        virtual GenericFunction transpose() const override;
+        virtual GenericFunction trace() const override;
 
-        Function slice(const AnySlice& i, const AnySlice& j) const;
-        Function slice(const AnySlice& i) const;
+        virtual std::string type() const override override;
+        virtual std::string to_string() const override override;
 
-        Function operator+(const Function& f) const;
-        Function operator+(const AnyTensor& t) const;
-        Function operator*(const Function& f) const;
-        Function operator*(const AnyTensor& t) const;
-        Function pow(int power) const;
-        Function operator-() const;
-        Function operator-(const Function& f) const;
-        Function operator-(const AnyTensor& t) const;
-        Function mtimes(const Function& f) const;
-        Function mtimes(const AnyTensor& f) const;
-        Function rmtimes(const AnyTensor& f) const;
-        Function transpose() const;
-        Function trace() const;
+        virtual GenericFunction transform_to(const Basis& basis) const override;
+        virtual GenericFunction transform_to(const TensorBasis& basis) const override;
+        virtual GenericFunction project_to(const Basis& basis) const override;
+        virtual GenericFunction project_to(const TensorBasis& basis) const override;
 
+        virtual GenericFunction reshape(const std::vector< int >& shape) const override;
 
         virtual std::string type() const override;
         virtual std::string to_string() const override;
