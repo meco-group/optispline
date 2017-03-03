@@ -6,7 +6,7 @@
 
 namespace spline {
 
-    Constant::Function(const AnyTensor& c) {
+    Constant::Constant(const AnyTensor& c) {
         spline_assert_message(c.dims().size() <= 2, "Constant has dimention higher than 2");
         /* std::vector< int > new_dims = c.dims(); */
         /* new_dims.insert(new_dims.begin(), 1); */
