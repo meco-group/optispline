@@ -45,16 +45,6 @@ namespace spline {
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
-    void Constant::homogenize_args(Function& f, AnyTensor& t) {
-        if (t.is_scalar() && t.dims()!=f.shape()) t = AnyTensor::repeat(t.as_scalar(), f.shape());
-        if (f.is_scalar() && !t.is_scalar()) {
-            AnyTensor ones = AnyTensor::repeat(AnyScalar(1), t.dims());
-            Coefficient C = f.coeff();
-            f =  Function(f.tensor_basis(),
-                    C.data().shape(C.dimension()).outer_product(ones)).operator*(t);
-        }
-    }
-
     Function Constant::operator*(const AnyTensor& rhs) const {
         Function f = *this;
         AnyTensor t = rhs;
@@ -106,14 +96,6 @@ namespace spline {
         return fpow;
     }
 
-    Function Constant::operator-(const Function& f) const {
-        return operator+(-f);
-    }
-
-    Function Constant::operator-(const AnyTensor& t) const {
-        return operator+(-t);
-    }
-
     Function Constant::operator-() const {
         return Function(basis_, -coeff_);
     }
@@ -136,32 +118,6 @@ namespace spline {
         cdiag = cdiag.transform(ones, cdiag.dimension().size()+1); //sum over all rows
 
         return Function(tensor_basis(), cdiag);
-    }
-
-    Function Constant::vertcat(const std::vector< spline::Function >& f) {
-        return Constant::cat(0, f);
-    }
-
-    Function Constant::horzcat(const std::vector< spline::Function >& f) {
-        return Constant::cat(1, f);
-    }
-
-    Function Constant::blkdiag(const std::vector< spline::Function >& f) {
-        Function b = f[0];
-        for (int i = 1; i < f.size(); i++) {
-            std::vector< int > shape12 = std::vector< int >{b.shape()[0], f[i].shape()[1]};
-            std::vector< int > shape21 = std::vector< int >{f[i].shape()[0], b.shape()[1]};
-
-            Function zero12 = Constant::Constant(b.tensor_basis(), 0, shape12);
-            Function zero21 = Constant::Constant(b.tensor_basis(), 0, shape21);
-
-            Function upper = Constant::horzcat(std::vector< Function >{b, zero12});
-            Function lower = Constant::horzcat(std::vector< Function >{zero21, f[i]});
-
-            b = Constant::vertcat(std::vector< Function >{upper, lower});
-        }
-
-        return b;
     }
 
     Function Constant::transform_to(const Basis& basis) const {
@@ -228,21 +184,6 @@ namespace spline {
         return Function(b,C);
     }
 
-    Function Constant::cat(NumericIndex index,
-            const std::vector< spline::Function >& functions) {
-        TensorBasis unionBasis = functions[0].tensor_basis();  // load first basis
-        for (int i = 1; i< functions.size(); i++) {
-            unionBasis = unionBasis + functions[i].tensor_basis();  // add other bases
-        }
-
-        std::vector< Coefficient > coefVec;
-        for (int i = 0; i< functions.size(); i++) {
-            coefVec.push_back(functions[i].transform_to(unionBasis).coeff());
-        }
-
-        return Function(unionBasis, Coefficient::cat(index, coefVec));
-    }
-
     Function Constant::reshape(const std::vector< int >& shape) const {
         return Function(tensor_basis(), coeff().reshape(shape));
     }
@@ -254,5 +195,4 @@ namespace spline {
     Function Constant::slice(const AnySlice& i) const {
         return Function(tensor_basis(), coeff_tensor().get_slice(i));
     }
-
 }  // namespace spline
