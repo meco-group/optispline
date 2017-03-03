@@ -20,22 +20,7 @@ class Function : public GenericFunction {
         Function(const AnyTensor& c);
         Function() {}
 
-        static Function Constant(const TensorBasis& basis, const AnyScalar& a,
-            const std::vector< int >& size);
-        static Function Constant(const TensorBasis& basis, const AnyTensor& t);
-        static Function Constant(const Basis& basis, const AnyScalar& a,
-            const std::vector< int >& size);
-        static Function Constant(const Basis& basis, const AnyTensor& t);
 
-/* #ifndef SWIG */
-/*         AnyTensor operator()(const AnyVector& x) const; */
-/*         /1* AnyTensor operator()(const std::vector< AnyScalar >& x) const; *1/ */
-/* #endif // SWIG */
-        AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const;
-        /* evaluation options */
-        /* AnyTensor operator()(const std::map<std::string, AnyScalar >& x) const; */
-        /* AnyTensor operator()(const std::map<std::string, std::vector<AnyScalar> >& x) const; */
-        /* AnyTensor operator()(const std:vector< std::vector<AnyScalar> >& x, const std::vector< std::string > = std::vector< std::string > {} ) const; */
 
         /* Function partial(const std::map<std::string, AnyScalar >& x) const; */
 

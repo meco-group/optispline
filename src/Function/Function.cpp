@@ -1,7 +1,7 @@
 #include <vector>
 #include "Function.h"
 #include "../Basis/utils/EvaluationGrid.h"
-#include "../Basis/TensorBasisConstant.h"
+/* #include "../Basis/TensorBasisConstant.h" */
 #include "../common.h"
 
 namespace spline {
@@ -14,13 +14,13 @@ namespace spline {
         init(TensorBasis(basis), coeff);
     }
 
-    Function::Function(const AnyTensor& c) {
-        spline_assert_message(c.dims().size() <= 2, "Constant has dimention higher than 2");
-        std::vector< int > new_dims = c.dims();
-        new_dims.insert(new_dims.begin(), 1);
-        basis_ = TensorBasisConstant();
-        coeff_ = c.shape(new_dims);
-    }
+/*     Function::Function(const AnyTensor& c) { */
+/*         spline_assert_message(c.dims().size() <= 2, "Constant has dimention higher than 2"); */
+/*         std::vector< int > new_dims = c.dims(); */
+/*         new_dims.insert(new_dims.begin(), 1); */
+/*         basis_ = TensorBasisConstant(); */
+/*         coeff_ = c.shape(new_dims); */
+/*     } */
 
     void Function::init(const TensorBasis& basis, const Coefficient& coeff) {
         std::vector< int > dim_basis = basis.dimension();
@@ -42,34 +42,6 @@ namespace spline {
         basis_ = basis;
         coeff_ = coeff.add_trival_dimension(2 + dim_basis.size() - dim_coef.size());
     }
-
-    Function Function::Constant(const TensorBasis& basis, const AnyScalar& a,
-            const std::vector< int >& size) {
-        AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
-        return Function::Constant(basis, value);
-    }
-
-    Function Function::Constant(const TensorBasis& basis, const AnyTensor& t) {
-        Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
-        return Function(basis, coeff);
-    }
-
-    Function Function::Constant(const Basis& basis, const AnyScalar& a,
-            const std::vector< int >& size) {
-        AnyTensor value = AnyTensor::repeat(AnyTensor(a), size);
-        return Function::Constant(basis, value);
-    }
-
-    Function Function::Constant(const Basis& basis, const AnyTensor& t) {
-        Coefficient coeff = Coefficient(basis.const_coeff_tensor(t));
-        return Function(basis, coeff);
-    }
-
-
-
-    /* AnyTensor Function::operator()(const AnyVector& x) const { */
-    /*     return basis_(x_).inner(coeff().data()); */
-    /* } */
 
     AnyTensor Function::operator()(const AnyTensor& x, const std::vector< std::string >& args) const{
         if(x.dims()[0] == n_inputs() && x.dims()[1] == 1){
@@ -580,11 +552,6 @@ namespace spline {
     }
 
     Function Function::transform_to(const TensorBasis& basis) const {
-        if(basis_.type() == "TensorBasisConstant"){
-            AnyTensor T = coeff_.rm_direction( std::vector< int > {0} ).data();
-            return Function(basis, basis.const_coeff_tensor(T));
-        }
-
         TensorBasis unionBasis = tensor_basis() + basis;
         EvaluationGrid evaluationGrid = EvaluationGrid(unionBasis);
         std::vector< AnyTensor > basisEvaluated;
