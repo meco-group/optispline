@@ -201,22 +201,6 @@ namespace spline {
         return Constant(t).mtimes(*this);
     }
 
-    GenericFunction Function::pow(int power) const {
-        spline_assert(power >= 0);
-        Function f = *this;
-        Function fpow = *this;
-
-        if (power == 0) {
-            fpow = Constant(1, shape());
-        } else {
-            for (int i = 1; i < power; i++) {
-                fpow = fpow*f;
-            }
-        }
-
-        return fpow;
-    }
-
     Function Function::operator-(const Function& f) const {
         return operator+(-f);
     }
