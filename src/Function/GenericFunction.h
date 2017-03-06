@@ -11,6 +11,9 @@
 
 namespace spline {
 
+    class Constant;
+    class Function;
+
 class GenericFunction {
 
     public :
@@ -19,32 +22,29 @@ class GenericFunction {
         casadi::MX operator<=(const casadi::MX& x) const;
         casadi::MX operator>=(const casadi::MX& x) const;
 
-        virtual GenericFunction slice(const AnySlice& i, const AnySlice& j) const = 0;
-        virtual GenericFunction slice(const AnySlice& i) const = 0;
+        virtual Function slice(const AnySlice& i, const AnySlice& j) const = 0;
+        virtual Function slice(const AnySlice& i) const = 0;
 
-        virtual GenericFunction operator+(const GenericFunction& f) const = 0;
-        virtual GenericFunction operator+(const Function& f) const = 0;
-        virtual GenericFunction operator+(const Constant& f) const = 0;
-        virtual GenericFunction operator+(const AnyTensor& t) const = 0;
-        virtual GenericFunction operator*(const GenericFunction& f) const = 0;
-        virtual GenericFunction operator*(const Function& f) const = 0;
-        virtual GenericFunction operator*(const Constant& f) const = 0;
-        virtual GenericFunction operator*(const AnyTensor& t) const = 0;
+        virtual Function operator+(const Function& f) const = 0;
+        virtual Function operator+(const Constant& f) const = 0;
+        Function operator+(const AnyTensor& t) const;
+        virtual Function operator*(const Function& f) const = 0;
+        virtual Function operator*(const Constant& f) const = 0;
+        Function operator*(const AnyTensor& t) const;
 
-        virtual GenericFunction operator-() const = 0;
-        GenericFunction operator-(const GenericFunction& f) const;
-        virtual GenericFunction operator-(const AnyTensor& t) const = 0;
+        virtual Function operator-() const = 0;
+        Function operator-(const GenericFunction& f) const;
+        Function operator-(const AnyTensor& t) const;
 
-        virtual GenericFunction mtimes(const GenericFunction& f) const = 0;
-        virtual GenericFunction mtimes(const Function& f) const = 0;
-        virtual GenericFunction mtimes(const Constant& f) const = 0;
-        virtual GenericFunction mtimes(const AnyTensor& f) const = 0;
-        virtual GenericFunction rmtimes(const AnyTensor& f) const = 0;
+        virtual Function mtimes(const Function& f) const = 0;
+        virtual Function mtimes(const Constant& f) const = 0;
+        Function mtimes(const AnyTensor& f) const;
+        Function rmtimes(const AnyTensor& f) const;
 
-        GenericFunction pow(int power) const = 0;
+        Function pow(int power) const;
 
-        virtual GenericFunction transpose() const = 0;
-        virtual GenericFunction trace() const = 0;
+        virtual Function transpose() const = 0;
+        virtual Function trace() const = 0;
 
         static Function vertcat(const std::vector< spline::Function >& f);
         static Function horzcat(const std::vector< spline::Function >& f);
@@ -68,12 +68,12 @@ class GenericFunction {
 
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
 
-        virtual GenericFunction transform_to(const Basis& basis) const = 0;
-        virtual GenericFunction transform_to(const TensorBasis& basis) const = 0;
-        virtual GenericFunction project_to(const Basis& basis) const = 0;
-        virtual GenericFunction project_to(const TensorBasis& basis) const = 0;
+        virtual Function transform_to(const Basis& basis) const = 0;
+        virtual Function transform_to(const TensorBasis& basis) const = 0;
+        virtual Function project_to(const Basis& basis) const = 0;
+        virtual Function project_to(const TensorBasis& basis) const = 0;
 
-        virtual GenericFunction reshape(const std::vector< int >& shape) const = 0;
+        /* virtual GenericFunction reshape(const std::vector< int >& shape) const = 0; */
     public:
         Coefficient coeff_;
 

@@ -21,8 +21,38 @@ namespace spline {
         return "Function, consisting of a " + basis_.to_string() + "and:\n\t" + coeff_.to_string();
     }
 
-    GenericFunction GenericFunction::operator-(const Function& f) const {
+    Function GenericFunction::operator+(const AnyTensor& t) const {
+        if (t.is_scalar() && t.dims()!=shape())
+            return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
+        return operator+(Constant(t));
+    }
+
+    Function GenericFunction::operator*(const AnyTensor& t) const {
+        if (t.is_scalar() && t.dims()!=shape())
+            return operator*(AnyTensor::repeat(t.as_scalar(), shape()));
+        return operator*(Constant(t));
+    }
+
+    Function GenericFunction::operator-(const Function& f) const {
         return operator+(-f);
+    }
+
+    Function GenericFunction::operator-(const AnyTensor& t) const {
+        if (t.is_scalar() && t.dims()!=shape())
+            return operator+(AnyTensor::repeat( -t.as_scalar(), shape()));
+        return operator+(Constant(-t));
+    }
+
+    Function GenericFunction::mtimes(const AnyTensor& t) const {
+        if (t.is_scalar() && t.dims()!=shape())
+            return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
+        return operator+(Constant(t));
+    }
+
+    Function GenericFunction::mtimes(const AnyTensor& t) const {
+        if (t.is_scalar() && t.dims()!=shape())
+            return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
+        return operator+(Constant(t));
     }
 
     void GenericFunction::homogenize_args(Function& f, AnyTensor& t) {
@@ -35,15 +65,15 @@ namespace spline {
         }
     }
 
-    GenericFunction GenericFunction::vertcat(const std::vector< spline::Function >& f) {
+    Function GenericFunction::vertcat(const std::vector< spline::Function >& f) {
         return GenericFunction::cat(0, f);
     }
 
-    GenericFunction GenericFunction::horzcat(const std::vector< spline::Function >& f) {
+    Function GenericFunction::horzcat(const std::vector< spline::Function >& f) {
         return GenericFunction::cat(1, f);
     }
 
-    GenericFunction GenericFunction::blkdiag(const std::vector< spline::Function >& f) {
+    Function GenericFunction::blkdiag(const std::vector< spline::Function >& f) {
         Function b = f[0];
         for (int i = 1; i < f.size(); i++) {
             std::vector< int > shape12 = std::vector< int >{b.shape()[0], f[i].shape()[1]};
@@ -61,7 +91,7 @@ namespace spline {
         return b;
     }
 
-    GenericFunction GenericFunction::cat(NumericIndex index,
+    Function GenericFunction::cat(NumericIndex index,
             const std::vector< spline::Function >& functions) {
         TensorBasis unionBasis = functions[0].tensor_basis();  // load first basis
         for (int i = 1; i< functions.size(); i++) {

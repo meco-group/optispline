@@ -14,12 +14,8 @@ namespace spline {
         coeff_ = c;
     }
 
-    Constant::Constant(const AnyScalar& c, const std::vector< int >& sha) {
-        spline_assert_message(c.dims().size() <= 2, "Constant has dimention higher than 2");
-        /* std::vector< int > new_dims = c.dims(); */
-        /* new_dims.insert(new_dims.begin(), 1); */
-        /* coeff_ = c.shape(new_dims); */
-        coeff_ = c;
+    Constant::Constant(const AnyScalar& c, const std::vector< int >& size) {
+        coeff_ = AnyTensor::repeat(AnyTensor(c), size);
     }
 
     AnyTensor Constant::operator()(const AnyTensor& x, const std::vector< std::string >& args) const{

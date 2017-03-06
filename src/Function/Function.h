@@ -11,6 +11,7 @@
 #include "Argument.h"
 
 namespace spline {
+class Constant;
 
 class Function : public GenericFunction {
 
@@ -22,36 +23,33 @@ class Function : public GenericFunction {
 
         virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
 
-        virtual GenericFunction operator+(const GenericFunction& f) const override;
-        virtual GenericFunction operator+(const Function& f) const override;
-        virtual GenericFunction operator+(const Conastant& f) const override;
-        virtual GenericFunction operator+(const AnyTensor& t) const override;
-        virtual GenericFunction operator*(const GenericFunction& f) const override;
-        virtual GenericFunction operator*(const Function& f) const override;
-        virtual GenericFunction operator*(const Constant& f) const override;
-        virtual GenericFunction operator*(const AnyTensor& t) const override;
-        virtual GenericFunction operator-() const override;
+        virtual Function operator+(const Function& f) const override;
+        virtual Function operator+(const Constant& f) const override;
+        virtual Function operator*(const Function& f) const override;
+        virtual Function operator*(const Constant& f) const override;
+        virtual Function operator-() const override;
+        virtual Function operator-(const AnyTensor& t) const override;
 
-        virtual GenericFunction mtimes(const GenericFunction& f) const override;
-        virtual GenericFunction mtimes(const Function& f) const override;
-        virtual GenericFunction mtimes(const Constant& f) const override;
-        virtual GenericFunction mtimes(const AnyTensor& f) const override;
-        virtual GenericFunction rmtimes(const AnyTensor& f) const override;
+        virtual Function mtimes(const GenericFunction& f) const override;
+        virtual Function mtimes(const Function& f) const override;
+        virtual Function mtimes(const Constant& f) const override;
+        virtual Function mtimes(const AnyTensor& f) const override;
+        virtual Function rmtimes(const AnyTensor& f) const override;
 
-        virtual GenericFunction transpose() const override;
-        virtual GenericFunction trace() const override;
+        virtual Function transpose() const override;
+        virtual Function trace() const override;
 
-        virtual std::string type() const override override;
-        virtual std::string to_string() const override override;
+        virtual std::string type() const override;
+        virtual std::string to_string() const override;
 
-        virtual GenericFunction transform_to(const Basis& basis) const override;
-        virtual GenericFunction transform_to(const TensorBasis& basis) const override;
-        virtual GenericFunction project_to(const Basis& basis) const override;
-        virtual GenericFunction project_to(const TensorBasis& basis) const override;
+        virtual Function transform_to(const Basis& basis) const override;
+        virtual Function transform_to(const TensorBasis& basis) const override;
+        virtual Function project_to(const Basis& basis) const override;
+        virtual Function project_to(const TensorBasis& basis) const override;
 
-        virtual GenericFunction slice(const AnySlice& i, const AnySlice& j) const override;
-        virtual GenericFunction slice(const AnySlice& i) const override;
-        virtual GenericFunction reshape(const std::vector< int >& shape) const override;
+        virtual Function slice(const AnySlice& i, const AnySlice& j) const override;
+        virtual Function slice(const AnySlice& i) const override;
+        Function reshape(const std::vector< int >& shape) const;
 
         Basis basis() const;
         Basis basis(const Argument& i) const;

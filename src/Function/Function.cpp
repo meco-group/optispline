@@ -131,26 +131,20 @@ namespace spline {
         return Function(sumBasis, C);
     }
 
-    GenericFunction Function::operator+(const GenericFunction& f) const {
+    Function Function::operator+(const GenericFunction& f) const {
     }
 
-    GenericFunction Function::operator+(const Function& f) const {
+    Function Function::operator+(const Function& f) const {
         return generic_operation(f,
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
-    GenericFunction Function::operator+(const Constant& f) const {
+    Function Function::operator+(const Constant& f) const {
 
     }
 
-    GenericFunction Function::operator+(const AnyTensor& t) const {
-        if (t.is_scalar() && t.dims()!=shape())
-            return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
-        return operator+(Constant(t));
-    }
-
-    GenericFunction Function::operator*(const Function& f) const {
+    Function Function::operator*(const Function& f) const {
         return generic_operation(f,
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
@@ -166,7 +160,7 @@ namespace spline {
         }
     }
 
-    GenericFunction Function::operator*(const AnyTensor& rhs) const {
+    Function Function::operator*(const AnyTensor& rhs) const {
         Function f = *this;
         AnyTensor t = rhs;
         homogenize_args(f, t);
@@ -182,13 +176,13 @@ namespace spline {
         return Function(f.tensor_basis(), Coefficient(data));
     }
 
-    GenericFunction Function::mtimes(const Function& f) const {
+    Function Function::mtimes(const Function& f) const {
         return generic_operation(f,
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs);});
     }
 
-    GenericFunction Function::mtimes(const AnyTensor& t) const {
+    Function Function::mtimes(const AnyTensor& t) const {
         if (t.is_scalar()) return operator*(t);
         spline_assert(t.n_dims() == 2);
         Coefficient c = coeff();
@@ -196,7 +190,7 @@ namespace spline {
         return Function(tensor_basis(), c.transform(t.reorder_dims({1, 0}), dir));
     }
 
-    GenericFunction Function::rmtimes(const AnyTensor& t) const {
+    Function Function::rmtimes(const AnyTensor& t) const {
         if (t.is_scalar()) return operator*(t);
         return Constant(t).mtimes(*this);
     }
