@@ -118,9 +118,10 @@ def _swig_repr(self):
 #include <src/Domain/Domain.h>
 #include <src/Domain/TensorDomain.h>
 
-#include <src/Function/GenericFunction.h>
+#include <src/Function/FunNode.h>
+#include <src/Function/FunctionNode.h>
+#include <src/Function/ConstantNode.h>
 #include <src/Function/Function.h>
-#include <src/Function/Constant.h>
 #include <src/Function/Polynomial.h>
 #include <src/Function/Argument.h>
 #include <src/Function/NumericIndex.h>
@@ -1024,9 +1025,10 @@ using namespace spline;
 
 #endif
 
-%include <src/Function/GenericFunction.h>
+%include <src/Function/FunNode.h>
+%include <src/Function/FunctionNode.h>
+%include <src/Function/ConstantNode.h>
 %include <src/Function/Function.h>
-%include <src/Function/Constant.h>
 %include <src/Function/Polynomial.h>
 %include <src/Optistack/optistack.h>
 

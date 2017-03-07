@@ -29,9 +29,10 @@ add_library(splines SHARED
     Basis/operations/plus.h Basis/operations/plus.cpp
     Basis/operations/times.h Basis/operations/times.cpp
 
+    Function/FunNode.h Function/FunNode.cpp
+    Function/FunctionNode.h Function/FunctionNode.cpp
+    Function/ConstantNode.h Function/ConstantNode.cpp
     Function/Function.h Function/Function.cpp
-    Function/GenericFunction.h Function/GenericFunction.cpp
-    Function/Constant.h Function/Constant.cpp
     Function/Polynomial.h Function/Polynomial.cpp
     Function/Argument.h Function/Argument.cpp
     Function/NumericIndex.h

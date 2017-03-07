@@ -4,60 +4,78 @@
 #include <string>
 #include <vector>
 #include <casadi/casadi.hpp>
+#include <any_tensor.hpp>
+
+#include "../SharedObject/SharedObject.h"
+
 #include "../Basis/TensorBasis.h"
 #include "../Coefficients/Coefficient.h"
-#include <any_tensor.hpp>
-#include "GenericFunction.h"
 #include "Argument.h"
+#include "FunNode.h"
 
 namespace spline {
-class Constant;
 
-class Function : public GenericFunction {
+    class Function : public SharedObject{
+        public:
+        Function(const TensorBasis& basis, const Coefficient& coeff);
+        Function(const AnyTensor& tensor);
+        Function(const AnyScalar& value, const std::vector< int > shape);
 
-    public :
-        Function(const TensorBasis& basis, const Coefficient& coef);
-        Function(const Basis& basis, const Coefficient& coef);
-        Function(const AnyTensor& c);
-        Function() {}
+#ifndef SWIG
+        FunNode* get() const ;
+        FunNode* operator->() const ;
+#endif // SWIG
 
-        virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
+        virtual std::string type() const;
+        virtual std::string to_string() const;
 
-        virtual Function operator+(const Function& f) const override;
-        virtual Function operator+(const Constant& f) const override;
-        virtual Function operator*(const Function& f) const override;
-        virtual Function operator*(const Constant& f) const override;
-        virtual Function operator-() const override;
-        virtual Function operator-(const AnyTensor& t) const override;
+        casadi::MX operator<=(const casadi::MX& x) const;
+        casadi::MX operator>=(const casadi::MX& x) const;
 
-        virtual Function mtimes(const GenericFunction& f) const override;
-        virtual Function mtimes(const Function& f) const override;
-        virtual Function mtimes(const Constant& f) const override;
-        virtual Function mtimes(const AnyTensor& f) const override;
-        virtual Function rmtimes(const AnyTensor& f) const override;
+        AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const;
 
-        virtual Function transpose() const override;
-        virtual Function trace() const override;
+        Function operator+(const Function& f) const;
+        Function operator+(const AnyTensor& t) const;
+        Function operator*(const Function& f) const;
+        Function operator*(const AnyTensor& t) const;
+        Function operator-(const Function& f) const;
+        Function operator-(const AnyTensor& t) const;
+        Function operator-() const;
 
-        virtual std::string type() const override;
-        virtual std::string to_string() const override;
+        Function mtimes(const Function& f) const;
+        Function mtimes(const AnyTensor& f) const;
+        Function rmtimes(const AnyTensor& f) const;
 
-        virtual Function transform_to(const Basis& basis) const override;
-        virtual Function transform_to(const TensorBasis& basis) const override;
-        virtual Function project_to(const Basis& basis) const override;
-        virtual Function project_to(const TensorBasis& basis) const override;
+        Function pow(int power) const;
+        Function mpow(int power) const;
 
-        virtual Function slice(const AnySlice& i, const AnySlice& j) const override;
-        virtual Function slice(const AnySlice& i) const override;
-        Function reshape(const std::vector< int >& shape) const;
+        Function slice(const AnySlice& i, const AnySlice& j) const;
+        Function slice(const AnySlice& i) const;
 
-        Basis basis() const;
-        Basis basis(const Argument& i) const;
-        virtual TensorBasis tensor_basis() const override {return basis_;}
-        TensorDomain domain() const {return basis_.domain();}
+        Function transpose() const;
+        Function trace() const;
+
+        static Function vertcat(const std::vector< spline::Function >& f);
+        static Function horzcat(const std::vector< spline::Function >& f);
+        static Function cat(NumericIndex index, const std::vector< spline::Function >& f);
+        static Function blkdiag(const std::vector< spline::Function >& f);
+
+        Coefficient coeff() const;
+        AnyTensor coeff_tensor() const;
+        AnyTensor data() const;
+
+        TensorBasis tensor_basis() const;
+
+        bool is_scalar() const;
 
         void repr() const { casadi::userOut() << to_string() << std::endl;}
-        // std::string& getArgument (){ return basis().getArgument();}
+
+        std::vector< int > shape() const;  // Shape result obtained after function evaluation
+
+        Function transform_to(const Basis& basis) const;
+        Function transform_to(const TensorBasis& basis) const;
+        Function project_to(const Basis& basis) const;
+        Function project_to(const TensorBasis& basis) const;
 
         int n_inputs() const;  // Number of inputs of the function
 
@@ -118,20 +136,17 @@ class Function : public GenericFunction {
             const std::vector<std::string>& args) const;
         Function partial_integral(const TensorDomain& domain,
          const NumericIndexVector& arg_ind) const;
-    public:
-        TensorBasis basis_;
 
-    private:
-        static void homogenize_args(Function& f, AnyTensor& t);
 
-        void init(const TensorBasis& basis, const Coefficient& coef);
-        typedef std::function<TensorBasis(const TensorBasis&, const TensorBasis&)> BasisComposition;
-        typedef std::function<AnyTensor(const AnyTensor&, const AnyTensor&)> TensorComposition;
-        Function generic_operation(const Function& f,
-                const BasisComposition & bc, const TensorComposition & tc) const;
-};
 
+#ifndef SWIG
+            inline friend
+                std::ostream& operator<<(std::ostream &stream, const Function& obj) {
+                    return stream << obj.to_string();
+                }
+#endif // SWIG
+    };
 
 } // namespace spline
 
-#endif // SRC_FUNCTION_FUNCTION_H_
+#endif //       SRC_FUNCTION_FUNCTION_H_

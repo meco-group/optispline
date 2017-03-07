@@ -19,7 +19,7 @@ namespace spline {
     }
 
     std::string Polynomial::to_string() const{
-    	return "Polynomial, consisting of:\n" + basis_.to_string() + "and:\n\t " + coeff_.to_string();
+    	return "Polynomial, consisting of:\n" + tensor_basis().to_string() + "and:\n\t " + coeff().to_string();
     }
 
 } // namespace spline
