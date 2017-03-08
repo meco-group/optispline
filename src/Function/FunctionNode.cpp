@@ -6,6 +6,7 @@
 #include "../common.h"
 
 namespace spline {
+    FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : FunNode(coeff), basis_(basis) {}
 
     AnyTensor FunctionNode::operator()(const AnyTensor& x, const std::vector< std::string >& args) const{
         if(x.dims()[0] == n_inputs() && x.dims()[1] == 1){
@@ -212,6 +213,10 @@ namespace spline {
         return Function(tensor_basis(), coeff_tensor().get_slice(i, j));
     }
 
+    int FunctionNode::n_inputs() const {
+        return tensor_basis().n_inputs();
+    }
+
     Function FunctionNode::slice(const AnySlice& i) const {
         return Function(tensor_basis(), coeff_tensor().get_slice(i));
     }
@@ -219,7 +224,6 @@ namespace spline {
     TensorBasis FunctionNode::tensor_basis() const {
         return TensorBasisConstant();
     }
-
 
     Function FunctionNode::insert_knots(const AnyVector & new_knots) const {
         spline_assert_message(tensor_basis().n_basis() == 1,

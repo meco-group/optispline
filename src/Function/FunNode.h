@@ -20,6 +20,7 @@ namespace spline {
     class FunNode : public SharedObjectNode{
         public:
             FunNode() {}
+            FunNode(const Coefficient& coeff) : coeff_(coeff) {}
 
             virtual std::string type() const;
             virtual std::string to_string() const;

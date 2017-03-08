@@ -95,6 +95,8 @@ namespace spline{
 
     std::vector< int > Function::shape() const { return (*this)->shape() ;}
 
+    Function Function::reshape(const std::vector< int >& shape) const { return (*this)->reshape(shape) ;}
+
     Function Function::transform_to(const Basis& basis) const { return (*this)->transform_to(TensorBasis( basis )) ;}
     Function Function::transform_to(const TensorBasis& basis) const { return (*this)->transform_to( basis ) ;}
     Function Function::project_to(const Basis& basis) const { return (*this)->project_to(TensorBasis( basis )) ;}

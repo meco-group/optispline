@@ -51,65 +51,65 @@ namespace spline {
 
         virtual TensorBasis tensor_basis() const override;
 
-        int n_inputs() const;  // Number of inputs of the function
+        virtual int n_inputs() const override;  // Number of inputs of the function
 
-        Function insert_knots(const AnyVector & new_knots) const;
-        Function insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const;
-        Function insert_knots(const AnyVector & new_knots, const std::string & arg) const;
-        Function insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<std::string> & arg) const;
-        Function insert_knots(const std::vector<AnyVector> & new_knots,
-            const NumericIndexVector & arg_ind) const;
+        virtual Function insert_knots(const AnyVector & new_knots) const override;
+        virtual Function insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const override;
+        virtual Function insert_knots(const AnyVector & new_knots, const std::string & arg) const override;
+        virtual Function insert_knots(const std::vector<AnyVector> & new_knots,
+            const std::vector<std::string> & arg) const override;
+        virtual Function insert_knots(const std::vector<AnyVector> & new_knots,
+            const NumericIndexVector & arg_ind) const override;
 
-        Function midpoint_refinement(int refinement) const;
-        Function midpoint_refinement(int refinement, const NumericIndex & arg_ind) const;
-        Function midpoint_refinement(int refinement, const std::string & arg) const;
-        Function midpoint_refinement(const std::vector<int> & refinement,
-            const std::vector<std::string> & arg) const;
-        Function midpoint_refinement(const std::vector<int> & refinement,
-            const NumericIndexVector & arg_ind) const;
+        virtual Function midpoint_refinement(int refinement) const override;
+        virtual Function midpoint_refinement(int refinement, const NumericIndex & arg_ind) const override;
+        virtual Function midpoint_refinement(int refinement, const std::string & arg) const override;
+        virtual Function midpoint_refinement(const std::vector<int> & refinement,
+            const std::vector<std::string> & arg) const override;
+        virtual Function midpoint_refinement(const std::vector<int> & refinement,
+            const NumericIndexVector & arg_ind) const override;
 
-        Function degree_elevation(int elevation) const;
-        Function degree_elevation(int elevation, const NumericIndex& arg_ind) const;
-        Function degree_elevation(int elevation, const std::string& arg) const;
-        Function degree_elevation(const std::vector<int> & elevation,
-            const std::vector<std::string> & args) const;
-        Function degree_elevation(const std::vector<int> & elevation,
-            const NumericIndexVector & arg_ind) const;
+        virtual Function degree_elevation(int elevation) const override;
+        virtual Function degree_elevation(int elevation, const NumericIndex& arg_ind) const override;
+        virtual Function degree_elevation(int elevation, const std::string& arg) const override;
+        virtual Function degree_elevation(const std::vector<int> & elevation,
+            const std::vector<std::string> & args) const override;
+        virtual Function degree_elevation(const std::vector<int> & elevation,
+            const NumericIndexVector & arg_ind) const override;
 
-        Function kick_boundary(const TensorDomain& boundary) const;
-        Function kick_boundary(const TensorDomain& boundary, const NumericIndex& arg_ind) const;
-        Function kick_boundary(const TensorDomain& boundary,
-            const std::vector<std::string> & args) const;
-        Function kick_boundary(const TensorDomain& boundary,
-            const NumericIndexVector & arg_ind) const;
+        virtual Function kick_boundary(const TensorDomain& boundary) const override;
+        virtual Function kick_boundary(const TensorDomain& boundary, const NumericIndex& arg_ind) const override;
+        virtual Function kick_boundary(const TensorDomain& boundary,
+            const std::vector<std::string> & args) const override;
+        virtual Function kick_boundary(const TensorDomain& boundary,
+            const NumericIndexVector & arg_ind) const override;
 
-        Function derivative() const;
-        Function derivative(int order) const;
-        Function derivative(int order, const std::string& arg) const;
-        Function derivative(int order, const NumericIndex& arg_ind) const;
-        Function derivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args) const;
-        Function derivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind) const;
+        virtual Function derivative() const override;
+        virtual Function derivative(int order) const override;
+        virtual Function derivative(int order, const std::string& arg) const override;
+        virtual Function derivative(int order, const NumericIndex& arg_ind) const override;
+        virtual Function derivative(const std::vector<int>& orders,
+            const std::vector<std::string>& args) const override;
+        virtual Function derivative(const std::vector<int>& orders,
+            const NumericIndexVector& arg_ind) const override;
 
-        Function antiderivative() const;
-        Function antiderivative(int order) const;
-        Function antiderivative(int order, const std::string& arg) const;
-        Function antiderivative(int order, const NumericIndex& arg_ind) const;
-        Function antiderivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args) const;
-        Function antiderivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind) const;
+        virtual Function antiderivative() const override;
+        virtual Function antiderivative(int order) const override;
+        virtual Function antiderivative(int order, const std::string& arg) const override;
+        virtual Function antiderivative(int order, const NumericIndex& arg_ind) const override;
+        virtual Function antiderivative(const std::vector<int>& orders,
+            const std::vector<std::string>& args) const override;
+        virtual Function antiderivative(const std::vector<int>& orders,
+            const NumericIndexVector& arg_ind) const override;
 
-        std::vector<spline::Function> jacobian() const;
+        virtual std::vector<spline::Function> jacobian() const override;
 
-        AnyTensor integral() const;
-        AnyTensor integral(const TensorDomain& domain) const;
-        Function partial_integral(const TensorDomain& domain,
-            const std::vector<std::string>& args) const;
-        Function partial_integral(const TensorDomain& domain,
-         const NumericIndexVector& arg_ind) const;
+        virtual AnyTensor integral() const override;
+        virtual AnyTensor integral(const TensorDomain& domain) const override;
+        virtual Function partial_integral(const TensorDomain& domain,
+            const std::vector<std::string>& args) const override;
+        virtual Function partial_integral(const TensorDomain& domain,
+         const NumericIndexVector& arg_ind) const override;
 
     protected:
         TensorBasis basis_;
