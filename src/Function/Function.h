@@ -20,7 +20,7 @@ namespace spline {
         Function();
         Function(const TensorBasis& basis, const Coefficient& coeff);
         Function(const AnyTensor& tensor);
-        Function(const AnyScalar& value, const std::vector< int > shape);
+        Function(const AnyScalar& value, const std::vector< int >& shape);
 
 #ifndef SWIG
         FunNode* get() const ;

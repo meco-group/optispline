@@ -30,7 +30,7 @@ namespace spline{
         assign_node(new ConstantNode(tensor));
     }
 
-    Function::Function(const AnyScalar& value, const std::vector< int > size) {
+    Function::Function(const AnyScalar& value, const std::vector< int >& size) {
         assign_node(new ConstantNode(AnyTensor::repeat(AnyTensor(value), size)));
     }
 
