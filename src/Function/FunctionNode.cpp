@@ -31,11 +31,11 @@ namespace spline {
     }
 
     std::string FunctionNode::type() const{
-        return "Constant";
+        return "Function";
     }
 
     std::string FunctionNode::to_string() const{
-        return "Constant\t" + coeff_.to_string();
+        return "Function, consisting of a " + basis_.to_string() + "and:\n\t" + coeff_.to_string();
     }
 
     Function FunctionNode::generic_operation(const Function& f,
