@@ -7,7 +7,23 @@ namespace spline{
 
     Function::Function(){}
     Function::Function(const TensorBasis& basis, const Coefficient& coeff) {
-        assign_node(new FunctionNode(basis, coeff));
+        std::vector< int > dim_basis = basis.dimension();
+        std::vector< int > dim_coef = coeff.data().dims();
+
+        int total_size_coef = dim_coef.size();
+        spline_assert_message(dim_basis.size() <= total_size_coef,
+                "Dimensions of basis " << dim_basis << " and coefficient " <<
+                dim_coef << " can not be connected.");
+        spline_assert_message(dim_basis.size() + 2 >= total_size_coef,
+                "Dimensions of basis " << dim_basis << " and coefficient " <<
+                dim_coef << " can not be connected.");
+        for (int i = 0; i < dim_basis.size(); i++) {
+            spline_assert_message(dim_basis[i] == dim_coef[i],
+                    "Mismatch of dimention " + std::to_string(i) + " between basis and coefficient: "
+                    << "Got basis " << dim_basis << " and coefficient" << dim_coef <<".");
+        }
+
+        assign_node(new FunctionNode(basis, coeff.add_trival_dimension(2 + dim_basis.size() - dim_coef.size())));
     }
 
     Function::Function(const AnyTensor& tensor) {
