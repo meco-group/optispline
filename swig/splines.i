@@ -1025,9 +1025,6 @@ using namespace spline;
 
 #endif
 
-%include <src/Function/FunNode.h>
-%include <src/Function/FunctionNode.h>
-%include <src/Function/ConstantNode.h>
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
 %include <src/Optistack/optistack.h>
