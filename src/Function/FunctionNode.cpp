@@ -222,7 +222,7 @@ namespace spline {
     }
 
     TensorBasis FunctionNode::tensor_basis() const {
-        return TensorBasisConstant();
+        return basis_;
     }
 
     Function FunctionNode::insert_knots(const AnyVector & new_knots) const {
