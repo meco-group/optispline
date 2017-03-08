@@ -155,7 +155,7 @@ namespace spline {
         spline_assert_message(false, "invalid method antiderivative on " + to_string());
     }
 
- Function FunNode::antiderivative(const std::vector<int>& orders, const std::vector<std::string>& args) const {
+    Function FunNode::antiderivative(const std::vector<int>& orders, const std::vector<std::string>& args) const {
         spline_assert_message(false, "invalid method antiderivative on " + to_string());
     }
 

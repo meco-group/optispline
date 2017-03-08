@@ -96,9 +96,9 @@ namespace spline {
         return Function(basis, basis.const_coeff_tensor(coeff_tensor()));
     }
 
-/*     Function ConstantNode::reshape(const std::vector< int >& shape) const { */
-/*         return Function(coeff().reshape(shape).data()); */
-/*     } */
+    Function ConstantNode::reshape(const std::vector< int >& shape) const {
+        return Function(coeff().reshape(shape).data());
+    }
 
     Function ConstantNode::slice(const AnySlice& i, const AnySlice& j) const {
         return Function(coeff_tensor().get_slice(i, j));

@@ -61,6 +61,7 @@ namespace spline {
             void repr() const { casadi::userOut() << to_string() << std::endl;}
 
             std::vector< int > shape() const;  // Shape result obtained after function evaluation
+            virtual Function reshape(const std::vector< int >& shape) const = 0;
 
             virtual Function transform_to(const TensorBasis& basis) const = 0;
             virtual Function project_to(const TensorBasis& basis) const = 0;

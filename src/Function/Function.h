@@ -17,6 +17,7 @@ namespace spline {
 
     class Function : public SharedObject{
         public:
+        Function();
         Function(const TensorBasis& basis, const Coefficient& coeff);
         Function(const AnyTensor& tensor);
         Function(const AnyScalar& value, const std::vector< int > shape);
@@ -71,6 +72,7 @@ namespace spline {
         void repr() const { casadi::userOut() << to_string() << std::endl;}
 
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
+        Function reshape(const std::vector< int >& shape) const;
 
         Function transform_to(const Basis& basis) const;
         Function transform_to(const TensorBasis& basis) const;

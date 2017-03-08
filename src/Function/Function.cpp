@@ -5,6 +5,7 @@
 
 namespace spline{
 
+    Function::Function(){}
     Function::Function(const TensorBasis& basis, const Coefficient& coeff) {
         assign_node(new FunctionNode(basis, coeff));
     }
