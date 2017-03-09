@@ -209,7 +209,7 @@ class Tensor {
   static std::vector<int> binary_dims(const Tensor& a, const Tensor& b) {
     if (a.is_scalar()) return b.dims();
     if (b.is_scalar()) return a.dims();
-    tensor_assert(a.dims()==b.dims());
+    tensor_assert_message(a.dims()==b.dims(), "Mismatch dimentions, got " << a.dims() << " and " << b.dims() );
     return b.dims();
   }
 
