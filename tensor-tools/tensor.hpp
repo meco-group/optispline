@@ -402,8 +402,8 @@ class Tensor {
     const Tensor& A = *this;
 
     // Dimension check
-    tensor_assert(A.n_dims()==a.size());
-    tensor_assert(B.n_dims()==b.size());
+    tensor_assert_message(A.n_dims()==a.size(), "Incompatible dimention and size of indeces, got " << A.n_dims() << " and " << a.size());
+    tensor_assert_message(B.n_dims()==b.size(), "Incompatible dimention and size of indeces, got " << B.n_dims() << " and " << b.size());
 
     tensor_assert(c.size()<=a.size()+b.size());
 
