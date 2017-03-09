@@ -67,12 +67,13 @@ namespace spline{
     Function Function::operator-(const AnyTensor& t) const { return operator+(-t) ;}
     Function Function::operator-() const { return (*this)->operator-() ;}
 
-    Function Function::mtimes(const Function& f) const { return (*this)->mtimes(f) ;}
-    Function Function::mtimes(const AnyTensor& t) const {
-        if (t.is_scalar() && t.dims()!=shape())
-            return operator*(t);
-        return mtimes(Function(t));
+    Function Function::mtimes(const Function& f) const {
+        if (f.is_scalar() || is_scalar())
+            return operator*(f);
+        return (*this)->mtimes(f);
     }
+
+    Function Function::mtimes(const AnyTensor& t) const { return mtimes(Function(t)); }
 
     Function Function::rmtimes(const AnyTensor& t) const {
         if (t.is_scalar() && t.dims()!=shape())
