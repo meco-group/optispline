@@ -59,8 +59,8 @@ namespace spline{
     Function Function::operator*(const Function& f) const { return (*this)->operator*(f) ;}
     Function Function::operator*(const AnyTensor& t) const {
         if (t.is_scalar() && t.dims()!=shape())
-            return operator+(AnyTensor::repeat(t.as_scalar(), shape()));
-        return operator+(Function(t));
+            return operator*(AnyTensor::repeat(t.as_scalar(), shape()));
+        return operator*(Function(t));
     }
 
     Function Function::operator-(const Function& f) const { return (*this)->operator+(-f) ;}
