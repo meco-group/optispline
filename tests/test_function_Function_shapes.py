@@ -55,13 +55,14 @@ class Test_Function_Function_shape(BasisTestCase):
 
         func3 = vertcat(func1, func2)
         self.assertEqual(func3.shape,[2,1])
-        self.assertEqualT(func3(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2)],[2,1]))
+
+        self.assertEqualTensor(func3(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2)],[2,1]))
 
         constant1 = Function(DTensor([2,2],[2,1]))
         func4 = horzcat(func3, constant1)
         self.assertEqual(func4.shape,[2,2])
 
-        self.assertEqualT(func4(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2),2,2],[2,2]))
+        self.assertEqualTensor(func4(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2),2,2],[2,2]))
         constant2 = Function(DTensor([],[0,1]));
         constant3 = Function(DTensor([],[1,0]));
         func5 = vertcat(func1, constant2)
@@ -99,7 +100,7 @@ class Test_Function_Function_shape(BasisTestCase):
         constant1 = Function(DTensor([],[2,0]))
         func4 = blkdiag(func1, constant1)
         self.assertEqual(func4.shape,[3,1])
-        self.assertEqualT(func4(0.5,0.2),DTensor([func1(0.5,0.2),0,0],[3,1]))
+        self.assertEqualTensor(func4(0.5,0.2),DTensor([func1(0.5,0.2),0,0],[3,1]))
 
         constant2 = Function(DTensor([2,3],[1,2]))
         func5 = blkdiag(func1, constant2)
@@ -142,7 +143,7 @@ class Test_Function_Function_shape(BasisTestCase):
 
             test_value = numpy.reshape((f.transpose())(x,y), [1,8])
             value = new_f(x,y)
-            self.assertEqualT(value, test_value)
+            self.assertEqualTensor(value, test_value)
 
 if __name__ == '__main__':
     unittest.main()

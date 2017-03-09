@@ -59,7 +59,7 @@ class Test_Function_Operations(BasisTestCase):
         basis = splines.BSplineBasis(knots,degree)
         basis2 = splines.MonomialBasis(3)
 
-        c = Function.Constant(basis,1)
+        c = Function(1)
         self.assertEqualT(c(0.5),DTensor(1))
 
     def test_const_function(self):
@@ -75,7 +75,7 @@ class Test_Function_Operations(BasisTestCase):
         self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
 
         basis2 = splines.MonomialBasis(3)
-        c3 = Function(basis2,1)
+        c3 = Function(1)
         self.assertEqualT(c3(0.5),DTensor(1))
 
         mbasis = TensorBasis([basis,basis2]);
@@ -218,7 +218,7 @@ class Test_Function_Operations(BasisTestCase):
 
         fm = func1.mtimes(func2)
 
-        c = Function.Constant(mbasis1,1)
+        c = Function(1)
         fm2 = func1.mtimes(c)
         fm3 = c.mtimes(func2)
 
@@ -303,10 +303,10 @@ class Test_Function_Operations(BasisTestCase):
 
 
         f = func2[[0,1],[2,1]]
-        self.assertEqualT(func2(x,y)[np.ix_([0,1],[2,1])], f(x,y))
+        self.assertEqualTensor(func2(x,y)[np.ix_([0,1],[2,1])], f(x,y))
 
         f = func2[:,[2,1]]
-        self.assertEqualT(func2(x,y)[:,[2,1]], f(x,y))
+        self.assertEqualTensor(func2(x,y)[:,[2,1]], f(x,y))
 
         f = func2[[0,1],:]
         self.assertEqualT(func2(x,y)[[0,1],:], f(x,y))
