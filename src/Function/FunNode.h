@@ -45,6 +45,8 @@ namespace spline {
             virtual Function mtimes(const FunNode& f) const = 0;
             virtual Function mtimes(const FunctionNode& f) const = 0;
             virtual Function mtimes(const ConstantNode& f) const = 0;
+            virtual Function rmtimes(const FunctionNode& f) const = 0;
+            virtual Function rmtimes(const ConstantNode& f) const = 0;
 
             virtual Function slice(const AnySlice& i, const AnySlice& j) const = 0;
             virtual Function slice(const AnySlice& i) const = 0;

@@ -51,16 +51,27 @@ namespace spline {
 
 
     Function ConstantNode::mtimes(const FunNode& f) const {
-        return f.mtimes(*this);
+        return f.rmtimes(*this);
     }
 
     Function ConstantNode::mtimes(const FunctionNode& f) const {
-        /* Coefficient c = coeff(); */
-        /* return Function(c.transform(t.reorder_dims({1, 0}), 0)); */
+        AnyTensor data = coeff_tensor().trailing_mtimes(f.coeff_tensor());
+        return Function(f.tensor_basis(), data);
     }
 
     Function ConstantNode::mtimes(const ConstantNode& f) const {
-        spline_assert_message(false, "not implemented: mtimes(ConstantNode)");
+        AnyTensor data = coeff_tensor().trailing_mtimes(f.coeff_tensor());
+        return Function(data);
+    }
+
+    Function ConstantNode::rmtimes(const FunctionNode& f) const {
+        AnyTensor data = coeff_tensor().trailing_rmtimes(f.coeff_tensor());
+        return Function(f.tensor_basis(), data);
+    }
+
+    Function ConstantNode::rmtimes(const ConstantNode& f) const {
+        AnyTensor data = coeff_tensor().trailing_rmtimes(f.coeff_tensor());
+        return Function(data);
     }
 
     Function ConstantNode::operator-() const {

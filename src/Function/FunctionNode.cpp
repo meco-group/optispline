@@ -117,7 +117,7 @@ namespace spline {
 
 
     Function FunctionNode::mtimes(const FunNode& f) const {
-        return f.mtimes(*this);
+        return f.rmtimes(*this);
     }
 
     Function FunctionNode::mtimes(const FunctionNode& f) const {
@@ -127,6 +127,16 @@ namespace spline {
     }
 
     Function FunctionNode::mtimes(const ConstantNode& f) const {
+        return (f.transpose().mtimes((*this).transpose())).transpose();
+    }
+
+    Function FunctionNode::rmtimes(const FunctionNode& f) const {
+        return generic_operation(f.shared_from_this<Function>(),
+                [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
+                [](const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.mtimes(lhs);});
+    }
+
+    Function FunctionNode::rmtimes(const ConstantNode& f) const {
         return f.mtimes(*this);
     }
 

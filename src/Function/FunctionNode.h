@@ -37,6 +37,8 @@ namespace spline {
         virtual Function mtimes(const FunNode& f) const override;
         virtual Function mtimes(const FunctionNode& f) const override;
         virtual Function mtimes(const ConstantNode& f) const override;
+        virtual Function rmtimes(const FunctionNode& f) const override;
+        virtual Function rmtimes(const ConstantNode& f) const override;
 
         virtual Function reshape(const std::vector< int >& shape) const override;
 
