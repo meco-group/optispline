@@ -127,7 +127,7 @@ namespace spline {
     }
 
     Function FunctionNode::mtimes(const ConstantNode& f) const {
-        return (f.transpose().mtimes((*this).transpose())).transpose();
+        return f.rmtimes(*this);
     }
 
     Function FunctionNode::rmtimes(const FunctionNode& f) const {
