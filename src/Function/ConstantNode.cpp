@@ -43,7 +43,27 @@ namespace spline {
     }
 
     Function ConstantNode::operator*(const FunctionNode& f) const {
-        return Function(f.tensor_basis(), coeff_tensor() * f.coeff_tensor());
+        AnyTensor r_coeff;
+        if(is_scalar()){
+            r_coeff = f.coeff_tensor() * coeff_tensor();
+        } else {
+            int dims = f.coeff().dimension().size();
+            if(f.is_scalar()){
+                std::vector<int> a_r = mrange(dims);
+                std::vector<int> b_r;
+                std::vector<int> c_r = mrange(dims + 2);
+                b_r = {c_r[c_r.size() - 2], c_r[c_r.size() - 1]};
+                return r_coeff = f.coeff_tensor().einstein(coeff_tensor(), a_r, b_r, c_r);
+            } else {
+
+                std::vector<int> a_r = mrange(dims + 2);
+                std::vector<int> b_r;
+                std::vector<int> c_r = mrange(dims + 2);
+                b_r = {c_r[c_r.size() - 2], c_r[c_r.size() - 1]};
+                return r_coeff = f.coeff_tensor().einstein(coeff_tensor(), a_r, b_r, c_r);
+            }
+        }
+        return Function(f.tensor_basis(), r_coeff);
     }
 
     Function ConstantNode::operator*(const ConstantNode& f) const {
