@@ -217,9 +217,15 @@ using namespace spline;
                                     $descriptor(spline::TensorBasis*), 0))) {
         return true;
       }
-
       {
         std::vector<Basis> tmp, *mt=&tmp;
+        if(casadi::to_ptr(p, m ? &mt : 0)) {
+          if (m) **m = *mt;
+          return true;
+        }
+      }
+      {
+        Basis tmp, *mt=&tmp;
         if(casadi::to_ptr(p, m ? &mt : 0)) {
           if (m) **m = *mt;
           return true;

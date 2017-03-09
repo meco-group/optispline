@@ -225,6 +225,16 @@ namespace spline {
         return basis_;
     }
 
+        Basis FunctionNode::basis() const {
+        spline_assert_message(tensor_basis().n_basis()==1,
+                ".basis() syntax only works for a 1-D TensorBasis.");
+        return tensor_basis().bases()[0];
+    }
+
+        Basis FunctionNode::basis(const Argument& index) const {
+        return tensor_basis().basis(index);
+    }
+
     Function FunctionNode::insert_knots(const AnyVector & new_knots) const {
         spline_assert_message(tensor_basis().n_basis() == 1,
                 "I don't know the direction for knot insertion. Please supply argument.")
@@ -327,7 +337,7 @@ namespace spline {
 
     Function FunctionNode::degree_elevation(const std::vector<int> & elevation,
             const NumericIndexVector & arg_ind) const {
-        spline_assert(arg_ind.size() == elevation.size())
+        spline_assert(arg_ind.size() == elevation.size());
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
         TensorBasis new_tbasis = tbasis.degree_elevation(elevation, arg_ind, T);

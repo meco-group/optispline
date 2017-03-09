@@ -11,6 +11,7 @@
 #include "../Basis/TensorBasis.h"
 #include "../Coefficients/Coefficient.h"
 #include "Argument.h"
+#include "../Domain/TensorDomain.h"
 
 namespace spline {
     class Function;
@@ -55,7 +56,11 @@ namespace spline {
             AnyTensor coeff_tensor() const {return coeff_.data();}
             AnyTensor data() const {return coeff_tensor().squeeze(); }
 
+
+            virtual Basis basis() const;
+            virtual Basis basis(const Argument& i) const;
             virtual TensorBasis tensor_basis() const = 0;
+            virtual TensorDomain domain() const;
 
             bool is_scalar() const;
 

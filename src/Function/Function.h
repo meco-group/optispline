@@ -65,7 +65,10 @@ namespace spline {
         AnyTensor coeff_tensor() const;
         AnyTensor data() const;
 
+        Basis basis() const;
+        Basis basis(const Argument& i) const;
         TensorBasis tensor_basis() const;
+        TensorDomain domain() const;
 
         bool is_scalar() const;
 

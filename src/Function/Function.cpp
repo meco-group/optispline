@@ -105,7 +105,11 @@ namespace spline{
     AnyTensor Function::coeff_tensor() const {return (*this)->coeff_tensor() ;}
     AnyTensor Function::data() const {return (*this)->data() ;}
 
-    TensorBasis Function::tensor_basis() const { return (*this)->tensor_basis() ;}
+
+    Basis Function::basis() const { return (*this)->basis(); }
+    Basis Function::basis(const Argument& i) const { return (*this)->basis( i); }
+    TensorBasis Function::tensor_basis() const { return (*this)->tensor_basis(); }
+    TensorDomain Function::domain() const { return (*this)->domain(); }
 
     bool Function::is_scalar() const { return (*this)->is_scalar() ;}
 

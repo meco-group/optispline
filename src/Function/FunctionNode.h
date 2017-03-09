@@ -50,6 +50,8 @@ namespace spline {
         virtual Function project_to(const TensorBasis& basis) const override;
 
         virtual TensorBasis tensor_basis() const override;
+        virtual Basis basis() const override;
+        virtual Basis basis(const Argument& i) const override;
 
         virtual int n_inputs() const override;  // Number of inputs of the function
 

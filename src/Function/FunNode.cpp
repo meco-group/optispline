@@ -34,6 +34,18 @@ namespace spline {
         return coeff_.shape();
     }
 
+    Basis FunNode::basis() const {
+        spline_assert_message(false, "invalided method basis on " + to_string());
+    }
+
+    Basis FunNode::basis(const Argument& i) const {
+        spline_assert_message(false, "invalided method basis on " + to_string());
+    }
+
+    TensorDomain FunNode::domain() const {
+        spline_assert_message(false, "invalided method domain on " + to_string());
+    }
+
     int FunNode::n_inputs() const {
         spline_assert_message(false, "invalided method n_inputs on " + to_string());
     }

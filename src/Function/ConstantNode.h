@@ -48,6 +48,7 @@ namespace spline {
         virtual Function trace() const override;
 
         virtual TensorBasis tensor_basis() const override;
+        /* virtual TensorDomain domain() const override; */
 
         virtual Function transform_to(const TensorBasis& basis) const override;
         virtual Function project_to(const TensorBasis& basis) const override;
