@@ -84,19 +84,13 @@ namespace spline {
 
     Function ConstantNode::trace() const {
        spline_assert_message(false, "not implemented trace");
-    /*     std::vector< int > shape_ = shape(); */
-    /*     spline_assert_message(shape_[0] == shape_[1], */
-    /*             "Trace only defined for square matrices. Dimensions are " << shape_ << "."); */
+        std::vector< int > shape_ = shape();
+        spline_assert_message(shape_[0] == shape_[1],
+                "Trace only defined for square matrices. Dimensions are " << shape_ << ".");
 
-    /*     AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(shape_[0]))); */
-    /*     Function fdiag = operator*(t); //keep diagonal entries only */
+        AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(shape_[0])));
 
-    /*     Coefficient cdiag = fdiag.coeff(); */
-    /*     AnyTensor ones = AnyTensor::repeat(AnyScalar(1), std::vector< int >{1, shape_[0]}); */
-    /*     cdiag = cdiag.transform(ones, cdiag.dimension().size()); //sum over all columns */
-    /*     cdiag = cdiag.transform(ones, cdiag.dimension().size()+1); //sum over all rows */
-
-    /*     return Function(tensor_basis(), cdiag); */
+        return Function( t*coeff_tensor() );
     }
 
     Function ConstantNode::transform_to(const TensorBasis& basis) const {
