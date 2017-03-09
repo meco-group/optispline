@@ -57,13 +57,13 @@ class Test_Function_Function_shape(BasisTestCase):
         self.assertEqual(func3.shape,[2,1])
         self.assertEqualT(func3(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2)],[2,1]))
 
-        constant1 = Function.Constant(mbasis1, DTensor([2,2],[2,1]))
+        constant1 = Function(DTensor([2,2],[2,1]))
         func4 = horzcat(func3, constant1)
         self.assertEqual(func4.shape,[2,2])
 
         self.assertEqualT(func4(0.5,0.2),DTensor([func1(0.5,0.2),func2(0.5,0.2),2,2],[2,2]))
-        constant2 = Function.Constant(mbasis1,DTensor([],[0,1]));
-        constant3 = Function.Constant(mbasis2,DTensor([],[1,0]));
+        constant2 = Function(DTensor([],[0,1]));
+        constant3 = Function(DTensor([],[1,0]));
         func5 = vertcat(func1, constant2)
         func5 = horzcat(func5, constant3)
         self.assertEqual(func5.shape,[1,1])
@@ -96,12 +96,12 @@ class Test_Function_Function_shape(BasisTestCase):
         self.assertEqual(func3.shape,[2,2])
         self.assertEqualT(func3(0.5,0.2),DTensor([func1(0.5,0.2),0,0,func2(0.5,0.2)],[2,2]))
 
-        constant1 = Function.Constant(mbasis2, DTensor([],[2,0]))
+        constant1 = Function(DTensor([],[2,0]))
         func4 = blkdiag(func1, constant1)
         self.assertEqual(func4.shape,[3,1])
         self.assertEqualT(func4(0.5,0.2),DTensor([func1(0.5,0.2),0,0],[3,1]))
 
-        constant2 = Function.Constant(mbasis1, DTensor([2,3],[1,2]))
+        constant2 = Function(DTensor([2,3],[1,2]))
         func5 = blkdiag(func1, constant2)
         self.assertEqual(func5.shape,[2,3])
         self.assertEqualT(func5(0.5,0.2),DTensor([func1(0.5,0.2),0,0,2,0,3],[2,3]))
@@ -117,7 +117,7 @@ class Test_Function_Function_shape(BasisTestCase):
 
         # blkdiag with SX
         import casadi as cas
-        constant3 = Function.Constant(mbasis3, DTensor([1],[1,1]))
+        constant3 = Function(DTensor([1],[1,1]))
         func10 = blkdiag(constant3, cas.SX.sym('x',1))
         self.assertEqual(func10.shape,[2,2])
 

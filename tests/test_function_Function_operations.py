@@ -62,40 +62,25 @@ class Test_Function_Operations(BasisTestCase):
         c = Function.Constant(basis,1)
         self.assertEqualT(c(0.5),DTensor(1))
 
-#    def test_const_function(self):
-#        knots = [0,0,0.4,1,1]
-#        degree = 1
-#        basis = splines.BSplineBasis(knots,degree)
-#
-#        c = Function.Constant(basis,1)
-#        self.assertEqualT(c(0.5),DTensor(1))
-#
-#        c2 = Function.Constant(basis,DTensor([2,2],[1,2]))
-#        self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
-#
-#        basis2 = splines.MonomialBasis(3)
-#        c3 = Function.Constant(basis2,1)
-#        self.assertEqualT(c3(0.5),DTensor(1))
-
     def test_const_function(self):
         knots = [0,0,0.4,1,1]
         degree = 1
         basis = splines.BSplineBasis(knots,degree)
         basis2 = splines.MonomialBasis(3)
 
-        c = Function.Constant(basis,1)
+        c = Function(1)
         self.assertEqualT(c(0.5),DTensor(1))
 
-        c2 = Function.Constant(basis,DTensor([2,2],[1,2]))
+        c2 = Function(DTensor([2,2],[1,2]))
         self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
 
         basis2 = splines.MonomialBasis(3)
-        c3 = Function.Constant(basis2,1)
+        c3 = Function(basis2,1)
         self.assertEqualT(c3(0.5),DTensor(1))
 
         mbasis = TensorBasis([basis,basis2]);
-        f = Function.Constant(mbasis,2);
-        f2 = Function.Constant(mbasis,[2,2]);
+        f = Function(2);
+        f2 = Function([2,2]);
 
         self.assertEqualT(f(0.1,0.1), 2)
         self.assertEqualT(f2(0.2,0.2), DTensor([2,2]))
