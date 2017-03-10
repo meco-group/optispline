@@ -76,7 +76,13 @@ namespace spline {
     }
 
     Function ConstantNode::mtimes(const FunctionNode& f) const {
-        AnyTensor data = coeff_tensor().trailing_mtimes(f.coeff_tensor());
+        AnyTensor rhs = f.coeff_tensor();
+        int n_dims = rhs.dims().size();
+        std::vector<int> c_e = mrange(n_dims);
+        std::vector<int> a_e = {-n_dims+1, -n_dims+1};
+        std::vector<int> b_e = mrange(n_dims);
+        b_e[n_dims - 2] = -n_dims - 1;
+        AnyTensor data = coeff_tensor().einstein(rhs, a_e, b_e, c_e);
         return Function(f.tensor_basis(), data);
     }
 
@@ -86,7 +92,13 @@ namespace spline {
     }
 
     Function ConstantNode::rmtimes(const FunctionNode& f) const {
-        AnyTensor data = coeff_tensor().trailing_rmtimes(f.coeff_tensor());
+        AnyTensor rhs = f.coeff_tensor();
+        int n_dims = rhs.dims().size();
+        std::vector<int> c_e = mrange(n_dims);
+        std::vector<int> a_e = {-n_dims - 1, -n_dims };
+        std::vector<int> b_e = mrange(n_dims);
+        b_e[n_dims - 1] = -n_dims - 1 ;
+        AnyTensor data = coeff_tensor().einstein(rhs, a_e, b_e, c_e);
         return Function(f.tensor_basis(), data);
     }
 
@@ -104,7 +116,7 @@ namespace spline {
     }
 
     Function ConstantNode::trace() const {
-       spline_assert_message(false, "not implemented trace");
+        spline_assert_message(false, "not implemented trace");
         std::vector< int > shape_ = shape();
         spline_assert_message(shape_[0] == shape_[1],
                 "Trace only defined for square matrices. Dimensions are " << shape_ << ".");
