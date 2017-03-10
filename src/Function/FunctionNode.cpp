@@ -13,6 +13,11 @@ namespace spline {
             std::vector< AnyScalar > x_ = x.unpack_1();
             return basis_(x_).inner(coeff().data());
         }
+        if(x.dims()[0] == 1 && x.dims()[1] == n_inputs()){
+            std::vector< AnyScalar > x_ = x.unpack_1();
+            return basis_(x_).inner(coeff().data());
+        }
+
         spline_assert_message(x.dims()[1] == n_inputs(), "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " + std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
         std::vector< AnyTensor > tensor = {};
 
