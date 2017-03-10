@@ -281,14 +281,6 @@ class AnyTensor {
       ANYTENSOR_BINARY((*this), rhs, mtimes);
     }
 
-    AnyTensor trailing_mtimes(const AnyTensor& rhs) const {
-      ANYTENSOR_BINARY((*this), rhs, trailing_mtimes);
-    }
-
-    AnyTensor trailing_rmtimes(const AnyTensor& rhs) const {
-      ANYTENSOR_BINARY((*this), rhs, trailing_rmtimes);
-    }
-
     AnyTensor einstein(const AnyTensor &B, const std::vector<int>& a, const std::vector<int>& b, const std::vector<int>& c) const {
       const AnyTensor& X = *this;
       const AnyTensor& Y = B;
