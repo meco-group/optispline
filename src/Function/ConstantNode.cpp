@@ -53,14 +53,14 @@ namespace spline {
                 std::vector<int> b_r;
                 std::vector<int> c_r = mrange(dims + 2);
                 b_r = {c_r[c_r.size() - 2], c_r[c_r.size() - 1]};
-                return r_coeff = f.coeff_tensor().einstein(coeff_tensor(), a_r, b_r, c_r);
+                r_coeff = f.coeff_tensor().einstein(coeff_tensor(), a_r, b_r, c_r);
             } else {
 
                 std::vector<int> a_r = mrange(dims + 2);
                 std::vector<int> b_r;
                 std::vector<int> c_r = mrange(dims + 2);
                 b_r = {c_r[c_r.size() - 2], c_r[c_r.size() - 1]};
-                return r_coeff = f.coeff_tensor().einstein(coeff_tensor(), a_r, b_r, c_r);
+                r_coeff = f.coeff_tensor().einstein(coeff_tensor(), a_r, b_r, c_r);
             }
         }
         return Function(f.tensor_basis(), r_coeff);
