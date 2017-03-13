@@ -80,13 +80,16 @@ namespace spline {
         } else {
             int dims = f.coeff().dimension().size();
             if(f.is_scalar()){
+                std::cout << "here" << std::endl;
                 std::vector<int> a_r = mrange(dims);
                 std::vector<int> b_r;
                 std::vector<int> c_r = mrange(dims + 2);
                 b_r = {c_r[c_r.size() - 2], c_r[c_r.size() - 1]};
-                r_coeff = f.coeff_tensor().einstein(coeff_tensor(), a_r, b_r, c_r);
-            } else {
 
+                AnyTensor f_coeff = f.coeff_tensor();
+                f_coeff = f_coeff.shape(f.coeff().dimension());
+                r_coeff = f_coeff.einstein(coeff_tensor(), a_r, b_r, c_r);
+            } else {
                 std::vector<int> a_r = mrange(dims + 2);
                 std::vector<int> b_r;
                 std::vector<int> c_r = mrange(dims + 2);
