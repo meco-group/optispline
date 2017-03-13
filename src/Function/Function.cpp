@@ -27,6 +27,7 @@ namespace spline{
     }
 
     Function::Function(const AnyTensor& tensor) {
+        spline_assert_message(tensor.dims().size() <= 2, "Tensor constant not supported ");
         assign_node(new ConstantNode(tensor));
     }
 
