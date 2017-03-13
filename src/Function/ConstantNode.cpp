@@ -47,18 +47,11 @@ namespace spline {
                 std::vector<int> a_r = mrange(dims);
                 std::vector<int> b_r;
                 std::vector<int> c_r = mrange(dims + 2);
-
                 b_r = {c_r[c_r.size() - 2], c_r[c_r.size() - 1]};
-                /* std::cout << "=========" << std::endl; */
-                /* std::cout << "a_r " << a_r << std::endl; */
-                /* std::cout << "c_r " << c_r << std::endl; */
-                /* std::cout <<  dummy.coeff_tensor() << std::endl; */
+
                 AnyTensor unite = AnyTensor::repeat(AnyTensor::unity(), shape());
                 return_coeff =   f_coeff.einstein(unite,a_r,b_r , c_r) ;
-                /* std::cout << return_coeff << std::endl; */
-                /* std::cout << f_coeff.einstein(a_r, c_r) << std::endl; */
                 return_coeff = dummy.coeff_tensor() + return_coeff;
-                /* std::cout << "return " << return_coeff << std::endl; */
             }
         }
         return Function(f.tensor_basis(), return_coeff);
@@ -80,7 +73,6 @@ namespace spline {
         } else {
             int dims = f.coeff().dimension().size();
             if(f.is_scalar()){
-                std::cout << "here" << std::endl;
                 std::vector<int> a_r = mrange(dims);
                 std::vector<int> b_r;
                 std::vector<int> c_r = mrange(dims + 2);
