@@ -29,8 +29,39 @@ namespace spline {
     }
 
     Function ConstantNode::operator+(const FunctionNode& f) const {
-        Function dummy = transform_to(f.tensor_basis());
-        return Function(f.tensor_basis(), dummy.coeff_tensor() + f.coeff_tensor());
+        AnyTensor return_coeff;
+        if(shape() == f.shape()){
+            Function dummy = transform_to(f.tensor_basis());
+            return_coeff = dummy.coeff_tensor() + f.coeff_tensor();
+        } else {
+            if(is_scalar()) {
+                Function dummy = ConstantNode(AnyTensor::repeat(coeff_tensor(), f.shape())).transform_to(f.tensor_basis());
+                return_coeff = dummy.coeff_tensor() + f.coeff_tensor();
+            } else {
+                AnyTensor f_coeff = f.coeff_tensor();
+                f_coeff = f_coeff.shape(f.coeff().dimension());
+
+                Function dummy = ConstantNode(AnyTensor::repeat(coeff_tensor(), f.shape())).transform_to(f.tensor_basis());
+
+                int dims = f_coeff.dims().size();
+                std::vector<int> a_r = mrange(dims);
+                std::vector<int> b_r;
+                std::vector<int> c_r = mrange(dims + 2);
+
+                b_r = {c_r[c_r.size() - 2], c_r[c_r.size() - 1]};
+                /* std::cout << "=========" << std::endl; */
+                /* std::cout << "a_r " << a_r << std::endl; */
+                /* std::cout << "c_r " << c_r << std::endl; */
+                /* std::cout <<  dummy.coeff_tensor() << std::endl; */
+                AnyTensor unite = AnyTensor::repeat(AnyTensor::unity(), shape());
+                return_coeff =   f_coeff.einstein(unite,a_r,b_r , c_r) ;
+                /* std::cout << return_coeff << std::endl; */
+                /* std::cout << f_coeff.einstein(a_r, c_r) << std::endl; */
+                return_coeff = dummy.coeff_tensor() + return_coeff;
+                /* std::cout << "return " << return_coeff << std::endl; */
+            }
+        }
+        return Function(f.tensor_basis(), return_coeff);
     }
 
     Function ConstantNode::operator+(const ConstantNode& f) const {
