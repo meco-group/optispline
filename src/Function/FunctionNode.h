@@ -73,13 +73,8 @@ namespace spline {
         virtual Function midpoint_refinement(const std::vector<int> & refinement,
             const NumericIndexVector & arg_ind) const override;
 
-        virtual Function degree_elevation(int elevation) const override;
-        virtual Function degree_elevation(int elevation, const NumericIndex& arg_ind) const override;
-        virtual Function degree_elevation(int elevation, const std::string& arg) const override;
-        virtual Function degree_elevation(const std::vector<int> & elevation,
-            const std::vector<std::string> & args) const override;
-        virtual Function degree_elevation(const std::vector<int> & elevation,
-            const NumericIndexVector & arg_ind) const override;
+        virtual Function degree_elevation(const std::vector<int>& orders,
+                const std::vector< int >& arg_ind) const override;
 
         virtual Function kick_boundary(const TensorDomain& boundary) const override;
         virtual Function kick_boundary(const TensorDomain& boundary, const NumericIndex& arg_ind) const override;

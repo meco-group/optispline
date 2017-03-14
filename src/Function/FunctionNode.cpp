@@ -320,36 +320,8 @@ namespace spline {
         return Function(new_tbasis, new_coefficient);
     }
 
-    Function FunctionNode::degree_elevation(int elevation) const {
-        // apply on all directions
-        NumericIndexVector arg_ind(tensor_basis().n_basis());
-        std::vector<int> elevs(tensor_basis().n_basis());
-        for (int k=0; k<arg_ind.size(); k++) {
-            arg_ind[k] = k;
-            elevs[k] = elevation;
-        }
-        return degree_elevation(elevs, arg_ind);
-    }
-
-    Function FunctionNode::degree_elevation(int elevation, const NumericIndex& arg_ind) const {
-        return degree_elevation(std::vector<int>{elevation}, NumericIndexVector{arg_ind});
-    }
-
-    Function FunctionNode::degree_elevation(int elevation, const std::string & arg) const {
-        return degree_elevation(std::vector<int>{elevation}, std::vector<std::string>{arg});
-    }
-
-    Function FunctionNode::degree_elevation(const std::vector<int> & elevation,
-            const std::vector<std::string> & arg) const {
-        NumericIndexVector arg_ind(arg.size());
-        for (int i=0; i<arg.size(); i++) {
-            arg_ind[i] = tensor_basis().indexArgument(arg[i]);
-        }
-        return degree_elevation(elevation, arg_ind);
-    }
-
-    Function FunctionNode::degree_elevation(const std::vector<int> & elevation,
-            const NumericIndexVector & arg_ind) const {
+    Function FunctionNode::degree_elevation(const std::vector<int>& orders,
+            const std::vector< int >& arg_ind) const {
         spline_assert(arg_ind.size() == elevation.size());
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();

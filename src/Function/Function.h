@@ -100,13 +100,10 @@ namespace spline {
         Function midpoint_refinement(const std::vector<int> & refinement,
             const NumericIndexVector & arg_ind) const;
 
-        Function degree_elevation(int elevation) const;
-        Function degree_elevation(int elevation, const NumericIndex& arg_ind) const;
-        Function degree_elevation(int elevation, const std::string& arg) const;
-        Function degree_elevation(const std::vector<int> & elevation,
-            const std::vector<std::string> & args) const;
-        Function degree_elevation(const std::vector<int> & elevation,
-            const NumericIndexVector & arg_ind) const;
+
+        Function degree_elevation(int order = 1, const Argument& arg = Argument()) const;
+        Function degree_elevation(const std::vector<int>& orders,
+            const std::vector< Argument >& arg_ind) const;
 
         Function kick_boundary(const TensorDomain& boundary) const;
         Function kick_boundary(const TensorDomain& boundary, const NumericIndex& arg_ind) const;

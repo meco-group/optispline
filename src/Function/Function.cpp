@@ -137,11 +137,12 @@ namespace spline{
     Function Function::midpoint_refinement(const std::vector<int> & refinement, const std::vector<std::string> & arg) const { return (*this)->midpoint_refinement(refinement, arg);}
     Function Function::midpoint_refinement(const std::vector<int> & refinement, const NumericIndexVector & arg_ind) const { return (*this)->midpoint_refinement(refinement, arg_ind) ;}
 
-    Function Function::degree_elevation(int elevation) const { return (*this)->degree_elevation(elevation) ;}
-    Function Function::degree_elevation(int elevation, const NumericIndex& arg_ind) const { return (*this)->degree_elevation(elevation, arg_ind) ;}
-    Function Function::degree_elevation(int elevation, const std::string& arg) const { return (*this)->degree_elevation(elevation, arg) ;}
-    Function Function::degree_elevation(const std::vector<int> & elevation, const std::vector<std::string> & args) const { return (*this)->degree_elevation(elevation, args) ;}
-    Function Function::degree_elevation(const std::vector<int> & elevation, const NumericIndexVector & arg_ind) const { return (*this)->degree_elevation(elevation, arg_ind);}
+    Function Function::degree_elevation(int order, const Argument& arg) const {
+        return (*this)->degree_elevation(vectorize(arg, order), vectorize(arg));
+    }
+    Function Function::degree_elevation(const std::vector<int>& orders, const std::vector< Argument >& arg_ind) const {
+        return (*this)->degree_elevation( orders, Argument::concrete(arg_ind, tensor_basis().arguments()));
+    }
 
     Function Function::kick_boundary(const TensorDomain& boundary) const { return (*this)->kick_boundary( boundary) ;}
     Function Function::kick_boundary(const TensorDomain& boundary, const NumericIndex& arg_ind) const { return (*this)->kick_boundary(boundary, arg_ind);}
