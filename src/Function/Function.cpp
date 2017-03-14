@@ -225,4 +225,12 @@ namespace spline{
         return Function(unionBasis, Coefficient::cat(index, coefVec));
     }
 
+    std::vector<int> Function::vectorize(const Argument& arg) const{
+        if(arg.is_all()){
+            return casadi::range(tensor_basis().n_basis());
+        } else {
+            return {arg.concrete(tensor_basis().arguments())};
+        }
+    }
+
     } // namespace spline

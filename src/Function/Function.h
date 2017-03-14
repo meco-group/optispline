@@ -149,6 +149,21 @@ namespace spline {
                     return stream << obj.to_string();
                 }
 #endif // SWIG
+
+    private:
+        template<class T>
+        std::vector<T> vectorize(const Argument& arg, const T& e) const {
+            std::vector< T > ret;
+            if(arg.is_all()){
+                ret = std::vector<T>(tensor_basis().n_basis(), e);
+            } else {
+                ret = { e };
+            }
+            return ret;
+        }
+
+        std::vector<int> vectorize(const Argument& arg) const;
+
     };
 
 } // namespace spline
