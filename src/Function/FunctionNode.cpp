@@ -320,7 +320,7 @@ namespace spline {
         return Function(new_tbasis, new_coefficient);
     }
 
-    Function FunctionNode::degree_elevation(const std::vector<int>& orders,
+    Function FunctionNode::degree_elevation(const std::vector<int>& elevation,
             const std::vector< int >& arg_ind) const {
         spline_assert(arg_ind.size() == elevation.size());
             std::vector<AnyTensor> T;

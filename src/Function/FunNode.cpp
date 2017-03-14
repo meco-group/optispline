@@ -90,7 +90,7 @@ namespace spline {
         spline_assert_message(false, "invalid method midpoint_refinement on " + to_string());
     }
 
-    Function FunNode::degree_elevation(const std::vector<int>& orders, const std::vector< int >& arg_ind) const {:
+    Function FunNode::degree_elevation(const std::vector<int>& orders, const std::vector< int >& arg_ind) const {
         spline_assert_message(false, "invalid method degree_elevation on " + to_string());
     }
 
