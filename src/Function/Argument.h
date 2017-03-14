@@ -63,9 +63,9 @@ namespace spline {
 
         static std::vector<Argument> from_vector(const std::vector<int>& ind);
 
-        virtual std::string type() const;
-        virtual std::string to_string() const ;
+        std::string type() const;
         bool is_all() const;
+        std::string to_string() const ;
     };
 } // namespace spline
 #endif //CPP_SPLINES_INDEX_H
