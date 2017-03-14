@@ -18,7 +18,7 @@ foreach(file ${files})
         python ${file}) 
     set_tests_properties(valgrind_${BASE} PROPERTIES ENVIRONMENT "VALGRIND=1")
     add_test("python_${BASE}" python ${file})
-    set_tests_properties("python_${BASE}" valgrind_${BASE} PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_CURRENT_BINARY_DIR}/../swig;")
+    set_tests_properties("python_${BASE}" valgrind_${BASE} PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_BINARY_DIR}/swig;")
 endforeach()
 
 file(GLOB_RECURSE files "${CMAKE_SOURCE_DIR}/examples/*.py")
@@ -31,7 +31,7 @@ foreach(file ${files})
     # Allow the receiving script to check if it is running inside valgrind
     # This makes it possible to short-circuit expensive tests
     add_test("python_${BASE}" python ${file} -dAgg)
-    set_tests_properties("python_${BASE}" PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_CURRENT_BINARY_DIR}/../swig")
+    set_tests_properties("python_${BASE}" PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_BINARY_DIR}/swig")
 endforeach()
 endif()
 
@@ -50,7 +50,7 @@ foreach(file ${files})
     add_test(matlab_${BASE}
     matlab -nojvm -nodesktop -r "try,cd '${folder}',${fileshort},catch e,e.getReport,exit(1),end,exit force")
 
-    set_tests_properties(matlab_${BASE} PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_CURRENT_BINARY_DIR}/../swig")
+    set_tests_properties(matlab_${BASE} PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_BINARY_DIR}/swig")
 
 endforeach()
 endif()

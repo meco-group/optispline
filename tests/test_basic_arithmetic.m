@@ -276,7 +276,8 @@ s1 = splines.Function(b1, c1);
 s0 = s1^0; % to the power 0
 assert(isequal(s0.data,ones(3,1)));
 s4 = s1^4;
-assert(abs(s4.eval(0.2)-81) < 1e-14);
+s4.eval(0.2)-81
+assert(abs(s4.eval(0.2)-81) < 1e-13);
 
 % % scalar spline random coeffs
 b2 = BSplineBasis([0,0,1,1],1);

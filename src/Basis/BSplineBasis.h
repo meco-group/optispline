@@ -40,7 +40,7 @@ namespace casadi {
     /** \brief  Evaluate numerically, work vectors given */
     virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override;
 
-    virtual void eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, int mem) override;
+    virtual void eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, int mem) const override;
 
     template<class T>
     void eval_generic(void* mem, const T** arg, T** res, int* iw, T* w) const {
@@ -80,10 +80,14 @@ namespace casadi {
       std::copy(temp+degree_*n1, temp+degree_*n1+length, res[0]);
     }
     virtual bool hasFullJacobian() const override { return true;}
-    virtual casadi::Function getFullJacobian(const std::string& name, const Dict& opts) override;
+    virtual casadi::Function getFullJacobian(const std::string& name,
+      const std::vector<std::string>& i_names,
+      const std::vector<std::string>& o_names, const Dict& opts) override;
 
     /** \brief  Print description */
     virtual void print(std::ostream &stream) const override;
+
+    virtual std::string type_name() const override { return "BSplineEvaluator"; }
 
     int n_knots_;
     int degree_;

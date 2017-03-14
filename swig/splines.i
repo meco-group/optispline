@@ -1042,7 +1042,7 @@ namespace spline {
     function [] = disp(self)
       disp(self.to_string())
     end
-    function varargout = subsasgn(self,varargin)
+    function self = subsasgn(self,varargin)
         error('Not supported: subsasgn');
     end
   %}
@@ -1060,6 +1060,9 @@ namespace spline {
         [varargout{1:nargout}] = builtin('subsref',self,s);
       end
    end
+   function self = subsasgn(self,varargin)
+        error('Not supported: subsasgn');
+    end
   function r = size(self)
     r = shape(self);
   end

@@ -335,7 +335,7 @@ std::vector<AnyTensor> AnyTensor::unpack(const AnyTensor& v, int axis) {
 
   for (int i=0;i<n;++i) {
     casadi::DM ind = casadi::DM::zeros(n, 1);
-    ind[i] = 1;
+    ind.nz(i) = 1;
     ret.push_back(v.einstein(DT(ind, {n}), a_e, {-axis-1}, c_e));
   }
 
@@ -415,13 +415,13 @@ AnyVector::AnyVector() : AnyTensor() { }
 
 AnyScalar AnyVector::operator[](int index) const {
   if (is_DT()) {
-    return static_cast<double>(as_DT().data()[index]);
+    return static_cast<double>(as_DT().data().nz(index));
   }
   if (is_ST()) {
-    return as_ST().data()[index];
+    return as_ST().data().nz(index);
   }
   if (is_MT()) {
-    return as_MT().data()[index];
+    return as_MT().data().nz(index);
   }
   assert(false);
   return 0;
@@ -447,6 +447,8 @@ namespace casadi {
       ret->construct(opts);
       return ret;
     }
+    
+    virtual std::string type_name() const { return "Sorter"; }
 
     Sorter(const std::string &name, int size, int ascending) : casadi::FunctionInternal(name),
       size_(size), ascending_(ascending) {};
@@ -513,6 +515,8 @@ class Uniquifier : public FunctionInternal {
 
     Uniquifier(const std::string &name, int size) : casadi::FunctionInternal(name),
       size_(size) {};
+      
+    virtual std::string type_name() const { return "Uniquifier";}
 
     /** \brief  Destructor */
     virtual ~Uniquifier() {};
