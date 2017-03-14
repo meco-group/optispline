@@ -304,6 +304,20 @@ class AnyTensor {
       }
     }
 
+    AnyTensor einstein(const std::vector<int>& a, const std::vector<int>& c) const {
+      const AnyTensor& X = *this;
+      switch (X.type()) {
+        case TENSOR_DOUBLE:
+          return X.as_DT().einstein(a, c);
+        case TENSOR_SX:
+          return X.as_ST().einstein(a, c);
+        case TENSOR_MX:
+          return X.as_MT().einstein(a, c);
+        default:
+           assert(false); return DT();
+      }
+    }
+
     inline friend AnyTensor mtimes(const AnyTensor &a, const AnyTensor &b) {
       return a.mtimes(b);
     }
