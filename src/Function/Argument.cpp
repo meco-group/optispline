@@ -37,6 +37,12 @@ namespace spline {
       return ret;
     }
 
+    std::vector<Argument> Argument::from_vector(const std::vector<std::string>& ind) {
+      std::vector<Argument> ret(ind.size());
+      for (int i=0;i<ind.size();++i) ret[i] = ind[i];
+      return ret;
+    }
+
     int Argument::concrete(const std::vector<std::string> & args) const {
       return (*this)->concrete(args); };
 
