@@ -82,7 +82,7 @@ namespace spline {
         return true;
     }
 
-    static std::vector< int > Argument::concrete(const std::vector< Argument >& args, std::vector< std::string >& strings){
+    std::vector< int > Argument::concrete(const std::vector< Argument >& args, const std::vector< std::string >& strings){
         std::vector< int > ard_ind = {};
         for(auto& a : args){
             ard_ind.push_back( a.concrete(strings));
