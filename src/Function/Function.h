@@ -16,7 +16,7 @@
 namespace spline {
 
     class Function : public SharedObject{
-        public:
+    public:
         Function();
         Function(const TensorBasis& basis, const Coefficient& coeff);
         Function(const AnyTensor& tensor);
@@ -115,11 +115,12 @@ namespace spline {
         Function kick_boundary(const TensorDomain& boundary,
             const NumericIndexVector & arg_ind) const;
 
-        Function derivative() const;
-        Function derivative(int order) const;
-        Function derivative(int order, const std::string& arg) const;
-        Function derivative(int order, const NumericIndex& arg_ind) const;
-        Function derivative(int order, const Argument& arg = Argument()) const;
+        /* Function derivative() const; */
+        Function derivative(int order = 1, const Argument& arg = Argument()) const;
+        /* Function derivative(int order, const std::string& arg) const; */
+        /* Function derivative(int order, const NumericIndex& arg_ind) const; */
+        /* Function derivative(const std::vector<int>& orders, */
+        /*     const std::vector<std::string>& args) const; */
         Function derivative(const std::vector<int>& orders,
             const std::vector< Argument >& arg_ind) const;
 

@@ -107,12 +107,13 @@ namespace spline {
             virtual Function kick_boundary(const TensorDomain& boundary,
                     const NumericIndexVector & arg_ind) const;
 
-            virtual Function derivative() const;
-            virtual Function derivative(int order) const;
-            virtual Function derivative(int order, const std::string& arg) const;
-            virtual Function derivative(int order, const NumericIndex& arg_ind) const;
+            /* virtual Function derivative() const; */
+            /* virtual Function derivative(int order, const Argument& arg) const; */
+            /* virtual Function derivative(int order, const std::string& arg) const; */
+            /* virtual Function derivative(int order, const NumericIndex& arg_ind) const; */
+            /* virtual Function derivative(const std::vector<int>& orders, */
+                    /* const std::vector<std::string>& args) const; */
             virtual Function derivative(const std::vector<int>& orders,
-                    const std::vector<std::string>& args) const;
                     const std::vector< int >& arg_ind) const;
 
             virtual Function antiderivative() const;

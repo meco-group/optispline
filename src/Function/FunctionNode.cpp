@@ -393,37 +393,37 @@ namespace spline {
         return Function(new_tbasis, new_coefficient);
     }
 
-    Function FunctionNode::derivative() const {
-        return derivative(1);
-    }
+/*     Function FunctionNode::derivative() const { */
+/*         return derivative(1); */
+/*     } */
 
-    Function FunctionNode::derivative(int order) const {
-        // apply on all directions
-        NumericIndexVector arg_ind(tensor_basis().n_basis());
-        std::vector<int> orders(tensor_basis().n_basis());
-        for (int k=0; k<arg_ind.size(); k++) {
-            arg_ind[k] = k;
-            orders[k] = order;
-        }
-        return derivative(orders, arg_ind);
-    }
+/*     Function FunctionNode::derivative(int order, const Argument& arg) const { */
+/*         // apply on all directions */
+/*         std::vector<Argument> arg_ind(tensor_basis().n_basis()); */
+/*         std::vector<int> orders(tensor_basis().n_basis()); */
+/*         for (int k=0; k<arg_ind.size(); k++) { */
+/*             arg_ind[k] = k; */
+/*             orders[k] = order; */
+/*         } */
+/*         return derivative(orders, arg_ind); */
+/*     } */
 
-    Function FunctionNode::derivative(int order, const std::string& arg) const {
-        return derivative(std::vector<int>{order}, std::vector<std::string>{arg});
-    }
+/*     Function FunctionNode::derivative(int order, const std::string& arg) const { */
+/*         return derivative(std::vector<int>{order}, std::vector<std::string>{arg}); */
+/*     } */
 
-    Function FunctionNode::derivative(int order, const NumericIndex& arg_ind) const {
-        return derivative(std::vector<int>{order}, NumericIndexVector{arg_ind});
-    }
+/*     Function FunctionNode::derivative(int order, const NumericIndex& arg_ind) const { */
+/*         return derivative(std::vector<int>{order}, NumericIndexVector{arg_ind}); */
+/*     } */
 
-    Function FunctionNode::derivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args) const {
-        NumericIndexVector arg_ind(args.size());
-        for (int i=0; i<args.size(); i++) {
-            arg_ind[i] = tensor_basis().indexArgument(args[i]);
-        }
-        return derivative(orders, arg_ind);
-    }
+/*     Function FunctionNode::derivative(const std::vector<int>& orders, */
+/*             const std::vector<std::string>& args) const { */
+/*         NumericIndexVector arg_ind(args.size()); */
+/*         for (int i=0; i<args.size(); i++) { */
+/*             arg_ind[i] = tensor_basis().indexArgument(args[i]); */
+/*         } */
+/*         return derivative(orders, arg_ind); */
+/*     } */
 
     Function FunctionNode::derivative(const std::vector<int>& orders,
             const std::vector< int >& arg_ind) const {

@@ -127,25 +127,25 @@ namespace spline {
 
     }
 
-    Function FunNode::derivative() const {
-        spline_assert_message(false, "invalid method derivative on " + to_string());
-    }
+/*     Function FunNode::derivative() const { */
+/*         spline_assert_message(false, "invalid method derivative on " + to_string()); */
+/*     } */
 
-    Function FunNode::derivative(int order) const {
-        spline_assert_message(false, "invalid method derivative on " + to_string());
-    }
+/*     Function FunNode::derivative(int order, const Argument& arg) const { */
+/*         spline_assert_message(false, "invalid method derivative on " + to_string()); */
+/*     } */
 
-    Function FunNode::derivative(int order, const std::string& arg) const {
-        spline_assert_message(false, "invalid method derivative on " + to_string());
-    }
+/*     Function FunNode::derivative(int order, const std::string& arg) const { */
+/*         spline_assert_message(false, "invalid method derivative on " + to_string()); */
+/*     } */
 
-    Function FunNode::derivative(int order, const NumericIndex& arg_ind) const {
-        spline_assert_message(false, "invalid method derivative on " + to_string());
-    }
+/*     Function FunNode::derivative(int order, const NumericIndex& arg_ind) const { */
+/*         spline_assert_message(false, "invalid method derivative on " + to_string()); */
+/*     } */
 
-    Function FunNode::derivative(const std::vector<int>& orders, const std::vector<std::string>& args) const {
-        spline_assert_message(false, "invalid method derivative on " + to_string());
-    }
+/*     Function FunNode::derivative(const std::vector<int>& orders, const std::vector<std::string>& args) const { */
+/*         spline_assert_message(false, "invalid method derivative on " + to_string()); */
+/*     } */
 
     Function FunNode::derivative(const std::vector<int>& orders, const std::vector< int >& arg_ind) const {
         spline_assert_message(false, "invalid method derivative on " + to_string());

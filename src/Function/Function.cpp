@@ -148,15 +148,13 @@ namespace spline{
     Function Function::kick_boundary(const TensorDomain& boundary, const std::vector<std::string> & args) const { return (*this)->kick_boundary( boundary, args);}
     Function Function::kick_boundary(const TensorDomain& boundary, const NumericIndexVector & arg_ind) const { return (*this)->kick_boundary( boundary, arg_ind) ;}
 
-    Function Function::derivative() const { return (*this)->derivative() ;}
-    Function Function::derivative(int order) const { return (*this)->derivative(order) ;}
-    Function Function::derivative(int order, const std::string& arg) const { return (*this)->derivative(order, arg);}
-    Function Function::derivative(int order, const NumericIndex& arg_ind) const { return (*this)->derivative(order, arg_ind) ;}
-    Function Function::derivative(const std::vector<int>& orders, const std::vector<std::string>& args) const { return (*this)->derivative( orders, args);}
-    Function Function::derivative(const std::vector<int>& orders, const NumericIndexVector& arg_ind) const { return (*this)->derivative( orders, arg_ind);}
+    /* Function Function::derivative() const { return (*this)->derivative() ;} */
     Function Function::derivative(int order, const Argument& arg) const {
         return (*this)->derivative(vectorize(arg, order), vectorize(arg));
     }
+    /* Function Function::derivative(int order, const std::string& arg) const { return (*this)->derivative(order, arg);} */
+    /* Function Function::derivative(int order, const NumericIndex& arg_ind) const { return (*this)->derivative(order, arg_ind) ;} */
+    /* Function Function::derivative(const std::vector<int>& orders, const std::vector<std::string>& args) const { return (*this)->derivative( orders, args);} */
     Function Function::derivative(const std::vector<int>& orders, const std::vector< Argument >& arg_ind) const {
         return (*this)->derivative( orders, Argument::concrete(arg_ind, tensor_basis().arguments()));
     }
