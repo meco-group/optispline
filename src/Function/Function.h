@@ -119,10 +119,9 @@ namespace spline {
         Function derivative(int order) const;
         Function derivative(int order, const std::string& arg) const;
         Function derivative(int order, const NumericIndex& arg_ind) const;
+        Function derivative(int order, const Argument& arg = Argument()) const;
         Function derivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args) const;
-        Function derivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind) const;
+            const std::vector< Argument >& arg_ind) const;
 
         Function antiderivative() const;
         Function antiderivative(int order) const;

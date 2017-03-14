@@ -154,6 +154,21 @@ namespace spline{
     Function Function::derivative(int order, const NumericIndex& arg_ind) const { return (*this)->derivative(order, arg_ind) ;}
     Function Function::derivative(const std::vector<int>& orders, const std::vector<std::string>& args) const { return (*this)->derivative( orders, args);}
     Function Function::derivative(const std::vector<int>& orders, const NumericIndexVector& arg_ind) const { return (*this)->derivative( orders, arg_ind);}
+    Function Function::derivative(int order, const Argument& arg) const {
+        std::vector< int > arg_ind;
+        std::vector< int > orders;
+        if(arg.is_all()){
+            arg_ind = casadi::range(tensor_basis().n_basis());
+            orders = std::vector<int>(tensor_basis().n_basis(), order);
+        } else {
+            arg_ind = {arg.concrete(tensor_basis().arguments())};
+            orders = { order };
+        }
+        return (*this)->derivative(orders, arg_ind) ;
+    }
+    Function Function::derivative(const std::vector<int>& orders, const std::vector< Argument >& arg_ind) const {
+        return (*this)->derivative( orders, Argument::concrete(arg_ind, tensor_basis().arguments()));
+    }
 
     Function Function::antiderivative() const { return (*this)->antiderivative() ;}
     Function Function::antiderivative(int order) const { return (*this)->antiderivative(order) ;}

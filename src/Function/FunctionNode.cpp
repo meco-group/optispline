@@ -426,7 +426,7 @@ namespace spline {
     }
 
     Function FunctionNode::derivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind) const {
+            const std::vector< int >& arg_ind) const {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();

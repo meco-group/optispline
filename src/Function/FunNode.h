@@ -113,8 +113,7 @@ namespace spline {
             virtual Function derivative(int order, const NumericIndex& arg_ind) const;
             virtual Function derivative(const std::vector<int>& orders,
                     const std::vector<std::string>& args) const;
-            virtual Function derivative(const std::vector<int>& orders,
-                    const NumericIndexVector& arg_ind) const;
+                    const std::vector< int >& arg_ind) const;
 
             virtual Function antiderivative() const;
             virtual Function antiderivative(int order) const;

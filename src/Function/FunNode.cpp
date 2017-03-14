@@ -147,7 +147,7 @@ namespace spline {
         spline_assert_message(false, "invalid method derivative on " + to_string());
     }
 
-    Function FunNode::derivative(const std::vector<int>& orders, const NumericIndexVector& arg_ind) const {
+    Function FunNode::derivative(const std::vector<int>& orders, const std::vector< int >& arg_ind) const {
         spline_assert_message(false, "invalid method derivative on " + to_string());
     }
 
