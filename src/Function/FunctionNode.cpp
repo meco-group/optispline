@@ -481,7 +481,7 @@ namespace spline {
     std::vector<Function> FunctionNode::jacobian() const {
         std::vector<Function> Jacobian(n_inputs());
         for (int i=0; i<n_inputs(); i++) {
-            Jacobian[i] = derivative(1, i);
+            Jacobian[i] = derivative({ 1 }, {i});
         }
         return Jacobian;
     }
