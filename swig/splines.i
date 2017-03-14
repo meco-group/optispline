@@ -164,6 +164,7 @@ using namespace spline;
     bool to_ptr(GUESTOBJECT *p, ST** m);
     bool to_ptr(GUESTOBJECT *p, MT** m);
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m);
+    bool to_ptr(GUESTOBJECT *p, std::vector<spline::Argument>** m);
     bool to_ptr(GUESTOBJECT *p, spline::TensorBasis** m);
     bool to_ptr(GUESTOBJECT *p, spline::Basis** m);
 
@@ -635,6 +636,32 @@ using namespace spline;
         }
       }
       return false;
+    }
+    bool to_ptr(GUESTOBJECT *p, std::vector<spline::Argument>** m) {
+      // Treat Null
+      if (is_null(p)) return false;
+
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(std::vector<spline::Argument>*), 0))) {
+        return true;
+      }
+      {
+        std::vector<int> tmp;
+        if (to_val(p, &tmp)) {
+#ifdef SWIGMATLAB
+          for (int i=0;i<tmp.size();++i) tmp[i]-=1;
+#endif
+          if (m) **m = Argument::from_vector(tmp);
+          return true;
+        }
+      }
+      {
+        std::vector<std::string> tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m = Argument::from_vector(tmp);
+          return true;
+        }
+      }
     }
 
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
