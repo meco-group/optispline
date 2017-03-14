@@ -88,23 +88,11 @@ namespace spline {
         virtual Function kick_boundary(const TensorDomain& boundary,
             const NumericIndexVector & arg_ind) const override;
 
-        /* virtual Function derivative() const override; */
-        /* virtual Function derivative(int order, const Argument& arg) const override; */
-        /* virtual Function derivative(int order, const std::string& arg) const override; */
-        /* virtual Function derivative(int order, const NumericIndex& arg_ind) const override; */
-        /* virtual Function derivative(const std::vector<int>& orders, */
-        /*     const std::vector<std::string>& args) const override; */
         virtual Function derivative(const std::vector<int>& orders,
             const std::vector< int >& arg_ind) const override;
 
-        virtual Function antiderivative() const override;
-        virtual Function antiderivative(int order) const override;
-        virtual Function antiderivative(int order, const std::string& arg) const override;
-        virtual Function antiderivative(int order, const NumericIndex& arg_ind) const override;
         virtual Function antiderivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args) const override;
-        virtual Function antiderivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind) const override;
+                const std::vector< int >& arg_ind) const override;
 
         virtual std::vector<spline::Function> jacobian() const override;
 

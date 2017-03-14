@@ -115,23 +115,13 @@ namespace spline {
         Function kick_boundary(const TensorDomain& boundary,
             const NumericIndexVector & arg_ind) const;
 
-        /* Function derivative() const; */
         Function derivative(int order = 1, const Argument& arg = Argument()) const;
-        /* Function derivative(int order, const std::string& arg) const; */
-        /* Function derivative(int order, const NumericIndex& arg_ind) const; */
-        /* Function derivative(const std::vector<int>& orders, */
-        /*     const std::vector<std::string>& args) const; */
         Function derivative(const std::vector<int>& orders,
             const std::vector< Argument >& arg_ind) const;
 
-        Function antiderivative() const;
-        Function antiderivative(int order) const;
-        Function antiderivative(int order, const std::string& arg) const;
-        Function antiderivative(int order, const NumericIndex& arg_ind) const;
+        Function antiderivative(int order = 1, const Argument& arg = Argument()) const;
         Function antiderivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args) const;
-        Function antiderivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind) const;
+            const std::vector< Argument >& arg_ind) const;
 
         std::vector<spline::Function> jacobian() const;
 
