@@ -11,6 +11,13 @@ namespace spline {
       return "Argument";
     }
 
+    bool Argument::is_all() const{
+        return (*this)->is_all();
+    }
+    bool ArgumentNode::is_all() const{
+        return false;
+    }
+
     std::string StringArgumentNode::to_string() const { return "Argument " + name_ ;};
     std::string IntArgumentNode::to_string() const{
       return "Argument " + std::to_string(index_) ;};
@@ -70,4 +77,16 @@ namespace spline {
     Argument::Argument() { assign_node(new NullArgumentNode()); };
     Argument::Argument(const std::string &name) { assign_node(new StringArgumentNode(name)); };
     Argument::Argument(int index) { assign_node(new IntArgumentNode(index)); };
+
+    bool NullArgumentNode::is_all() const{
+        return true;
+    }
+
+    static std::vector< int > Argument::concrete(const std::vector< Argument >& args, std::vector< std::string >& strings){
+        std::vector< int > ard_ind = {};
+        for(auto& a : args){
+            ard_ind.push_back( a.concrete(strings));
+        }
+        return ard_ind;
+    }
 } // namespace spline

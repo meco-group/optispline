@@ -15,6 +15,7 @@ namespace spline {
         virtual std::string type() const;
         virtual std::string to_string() const = 0;
         virtual int concrete(const std::vector<std::string> & args) const = 0;
+        virtual bool is_all() const ;
     };
 
     class StringArgumentNode : public ArgumentNode {
@@ -40,6 +41,7 @@ namespace spline {
         NullArgumentNode();
         virtual std::string to_string() const ;
         virtual int concrete(const std::vector<std::string> & args) const;
+        virtual bool is_all() const override;
     };
 
 #endif // SWIG
@@ -63,6 +65,7 @@ namespace spline {
 
         virtual std::string type() const;
         virtual std::string to_string() const ;
+        bool is_all() const;
     };
 } // namespace spline
 #endif //CPP_SPLINES_INDEX_H
