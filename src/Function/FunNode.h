@@ -84,13 +84,8 @@ namespace spline {
             virtual Function insert_knots(const std::vector<AnyVector> & new_knots,
                     const NumericIndexVector & arg_ind) const;
 
-            virtual Function midpoint_refinement(int refinement) const;
-            virtual Function midpoint_refinement(int refinement, const NumericIndex & arg_ind) const;
-            virtual Function midpoint_refinement(int refinement, const std::string & arg) const;
-            virtual Function midpoint_refinement(const std::vector<int> & refinement,
-                    const std::vector<std::string> & arg) const;
-            virtual Function midpoint_refinement(const std::vector<int> & refinement,
-                    const NumericIndexVector & arg_ind) const;
+        virtual Function midpoint_refinement(const std::vector<int>& refinement,
+                const std::vector< int >& arg_ind) const;
 
         virtual Function degree_elevation(const std::vector<int>& orders,
                 const std::vector< int >& arg_ind) const;

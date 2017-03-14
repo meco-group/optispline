@@ -131,11 +131,12 @@ namespace spline{
     Function Function::insert_knots(const std::vector<AnyVector> & new_knots, const std::vector<std::string> & arg) const { return (*this)->insert_knots(new_knots, arg);}
     Function Function::insert_knots(const std::vector<AnyVector> & new_knots, const NumericIndexVector & arg_ind) const { return (*this)->insert_knots(new_knots, arg_ind);}
 
-    Function Function::midpoint_refinement(int refinement) const { return (*this)->midpoint_refinement(refinement) ;}
-    Function Function::midpoint_refinement(int refinement, const NumericIndex & arg_ind) const { return (*this)->midpoint_refinement(refinement, arg_ind) ;}
-    Function Function::midpoint_refinement(int refinement, const std::string & arg) const  { return (*this)->midpoint_refinement(refinement, arg) ;}
-    Function Function::midpoint_refinement(const std::vector<int> & refinement, const std::vector<std::string> & arg) const { return (*this)->midpoint_refinement(refinement, arg);}
-    Function Function::midpoint_refinement(const std::vector<int> & refinement, const NumericIndexVector & arg_ind) const { return (*this)->midpoint_refinement(refinement, arg_ind) ;}
+    Function Function::midpoint_refinement(int refinement, const Argument& arg) const {
+        return (*this)->midpoint_refinement(vectorize(arg, refinement), vectorize(arg));
+    }
+    Function Function::midpoint_refinement(const std::vector<int>& refinement, const std::vector< Argument >& arg_ind) const {
+        return (*this)->midpoint_refinement( refinement, Argument::concrete(arg_ind, tensor_basis().arguments()));
+    }
 
     Function Function::degree_elevation(int order, const Argument& arg) const {
         return (*this)->degree_elevation(vectorize(arg, order), vectorize(arg));

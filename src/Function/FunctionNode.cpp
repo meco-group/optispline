@@ -282,36 +282,8 @@ namespace spline {
         return Function(new_tbasis, new_coefficient);
     }
 
-    Function FunctionNode::midpoint_refinement(int refinement) const {
-        // apply on all directions
-        NumericIndexVector arg_ind(tensor_basis().n_basis());
-        std::vector<int> refs(tensor_basis().n_basis());
-        for (int k=0; k<arg_ind.size(); k++) {
-            arg_ind[k] = k;
-            refs[k] = refinement;
-        }
-        return midpoint_refinement(refs, arg_ind);
-    }
-
-    Function FunctionNode::midpoint_refinement(int refinement, const NumericIndex& arg_ind) const {
-        return midpoint_refinement(std::vector<int>{refinement}, NumericIndexVector{arg_ind});
-    }
-
-    Function FunctionNode::midpoint_refinement(int refinement, const std::string & arg) const {
-        return midpoint_refinement(std::vector<int>{refinement}, std::vector<std::string>{arg});
-    }
-
-    Function FunctionNode::midpoint_refinement(const std::vector<int> & refinement,
-            const std::vector<std::string> & arg) const {
-        NumericIndexVector arg_ind(arg.size());
-        for (int i=0; i<arg.size(); i++) {
-            arg_ind[i] = tensor_basis().indexArgument(arg[i]);
-        }
-        return midpoint_refinement(refinement, arg_ind);
-    }
-
-    Function FunctionNode::midpoint_refinement(const std::vector<int> & refinement,
-            const NumericIndexVector & arg_ind) const {
+    Function FunctionNode::midpoint_refinement(const std::vector<int>& refinement,
+            const std::vector< int >& arg_ind) const {
         spline_assert(arg_ind.size() == refinement.size())
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();

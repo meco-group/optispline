@@ -70,23 +70,7 @@ namespace spline {
         spline_assert_message(false, "invalid method insert_knots on " + to_string());
     }
 
-    Function FunNode::midpoint_refinement(int refinement) const {
-        spline_assert_message(false, "invalid method midpoint_refinement on " + to_string());
-    }
-
-    Function FunNode::midpoint_refinement(int refinement, const NumericIndex & arg_ind) const {
-        spline_assert_message(false, "invalid method midpoint_refinement on " + to_string());
-    }
-
-    Function FunNode::midpoint_refinement(int refinement, const std::string & arg) const {
-        spline_assert_message(false, "invalid method midpoint_refinement on " + to_string());
-    }
-
-    Function FunNode::midpoint_refinement(const std::vector<int> & refinement, const std::vector<std::string> & arg) const {
-        spline_assert_message(false, "invalid method midpoint_refinement on " + to_string());
-    }
-
-    Function FunNode::midpoint_refinement(const std::vector<int> & refinement, const NumericIndexVector & arg_ind) const {
+    Function FunNode::midpoint_refinement(const std::vector<int>& orders, const std::vector< int >& arg_ind) const {
         spline_assert_message(false, "invalid method midpoint_refinement on " + to_string());
     }
 
