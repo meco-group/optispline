@@ -113,3 +113,41 @@ assert(norm(func2(1:3).eval(x,y)-R(1:3))<1e-12)
 
 
 
+% Advanced evaluations
+
+x = Polynomial([0,1],'x');
+r = (0:10).^2*0.01;
+r2 = [(0:10)*0.1;(0:10)*0.3]';
+
+assert(norm(x.eval(0.2)-0.2)<1e-12)
+
+assert(norm(x.eval(0.2, {'x'})-0.2)<1e-12)
+
+% why?
+%assert(norm(x.eval(0.2, {'y'})-0.2)<1e-12)
+
+assert(norm(x.eval(r')-r')<1e-12)
+assert(norm(x.eval(r',{'x'})-r')<1e-12)
+
+y = Polynomial([0,0.5],'y');
+f = x * y;
+
+assert(norm(f.eval([0.1 0.3])-0.015)<1e-12)
+
+assert(norm(f.eval([0.1 0.3],{'x','y'})-0.015)<1e-12)
+% wrong?
+%assert(norm(f.eval([0.1 0.3],{'y','x'})-0.015)<1e-12)
+
+ref = [0
+    0.0150
+    0.0600
+    0.1350
+    0.2400
+    0.3750
+    0.5400
+    0.7350
+    0.9600
+    1.2150
+    1.5000];
+
+assert(norm(f.eval(r2)-ref)<1e-12)

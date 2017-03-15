@@ -73,8 +73,7 @@ def _swig_repr(self):
 
 // Renameing MATLAB
 #ifdef SWIGMATLAB
-%rename(eval) spline::Function::operator();
-%feature("varargin","1") spline::Function::operator();
+%rename(eval_internal) spline::Function::operator();
 %rename(eval) spline::TensorBasis::operator();
 %feature("varargin","1") spline::TensorBasis::operator();
 %rename(eval) spline::Basis::operator();
@@ -1158,6 +1157,29 @@ namespace spline {
     out = self.slice(args{:});
   end
 
+  function out = eval(self,varargin)
+      assert(numel(varargin)>0);
+      if (numel(varargin)==1)
+        out=self.eval_internal(varargin{1});
+      else
+        arg2 = varargin{2};
+        arguments = false;
+        if ischar(arg2)
+          arguments = true;
+        end
+        if iscell(arg2) && numel(arg2)>0 && ischar(arg2{1})
+          arguments = true;
+        end
+
+        if (arguments)
+            out = self.eval_internal(varargin{:});
+        else
+            out = self.eval_internal([varargin{:}]);
+        end
+      end
+
+  end
+  
   %}
 #endif
 
