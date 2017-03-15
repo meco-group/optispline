@@ -326,14 +326,14 @@ class AnyTensor {
     /// Print a representation of the object to a stream (shorthand)
     inline friend
         std::ostream& operator<<(std::ostream &stream, const AnyTensor& obj) {
-            return stream << obj.getRepresentation();
+            return stream << obj.to_string();
         }
     #endif // SWIG
 
-    std::string getRepresentation() const {
-      if (is_DT()) return "AnyTensor:" + as_DT().getRepresentation();
-      if (is_ST()) return "AnyTensor:" + as_ST().getRepresentation();
-      if (is_MT()) return "AnyTensor:" + as_MT().getRepresentation();
+    std::string to_string() const {
+      if (is_DT()) return "AnyTensor:" + as_DT().to_string();
+      if (is_ST()) return "AnyTensor:" + as_ST().to_string();
+      if (is_MT()) return "AnyTensor:" + as_MT().to_string();
       return "";
     }
 

@@ -545,14 +545,14 @@ class Tensor {
       }
   #endif // SWIG
 
-  std::string getRepresentation() const {
+  std::string to_string() const {
     std::stringstream ss;
     ss << (*this);
     return ss.str();
   }
 
   void repr() const {
-    casadi::userOut() << getRepresentation() << std::endl;
+    casadi::userOut() << to_string() << std::endl;
   }
 
   private:
