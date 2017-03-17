@@ -262,6 +262,11 @@ class AnyTensor {
       ANYTENSOR_BINARY((*this), b, inner);
     }
     AnyTensor solve(const AnyTensor&b) const {
+      if (is_DT() && !b.is_DT()) {
+         casadi::DM A = as_DT().matrix();
+         casadi::DM Ainv = casadi::DM::solve(A, casadi::DM::eye(A.size1()), "lapackqr", casadi::Dict());
+         return AnyTensor(DT(Ainv)).mtimes(b);
+      }
       ANYTENSOR_BINARY((*this), b, solve);
     }
     AnyTensor operator+(const AnyTensor&b) const {
