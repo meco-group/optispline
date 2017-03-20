@@ -42,10 +42,10 @@ namespace spline {
         virtual Basis operator*(const MonomialBasisNode& rhs) const = 0;
         virtual Basis operator*(const BSplineBasisNode& rhs) const = 0;
 
-        virtual bool operator==(const BasisNode& rhs) const = 0;
-        virtual bool operator==(const EmptyBasisNode& rhs) const = 0;
-        virtual bool operator==(const MonomialBasisNode& rhs) const = 0;
-        virtual bool operator==(const BSplineBasisNode& rhs) const = 0;
+        virtual bool operator==(const BasisNode& rhs) const;
+        virtual bool operator==(const EmptyBasisNode& rhs) const;
+        virtual bool operator==(const MonomialBasisNode& rhs) const;
+        virtual bool operator==(const BSplineBasisNode& rhs) const;
 
         virtual std::string type() const;
         virtual std::string to_string() const;

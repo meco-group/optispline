@@ -29,6 +29,23 @@ namespace spline {
         return (*this)->operator==(*rhs.get());
     }
 
+    bool BasisNode::operator==(const BasisNode& rhs) const {
+        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+    }
+
+    bool BasisNode::operator==(const EmptyBasisNode& rhs) const {
+        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+    }
+
+    bool BasisNode::operator==(const MonomialBasisNode& rhs) const {
+        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+    }
+
+    bool BasisNode::operator==(const BSplineBasisNode& rhs) const {
+        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+    }
+
+
     AnyTensor Basis::operator() (const AnyVector & x) const {
       std::vector<AnyScalar> a = x.to_scalar_vector();
       (*this)->assert_vector_lenght_correct(a);
