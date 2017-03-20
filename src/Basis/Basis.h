@@ -32,11 +32,10 @@ namespace spline {
         BasisNode(const Domain& domain);
         BasisNode() { }
 
-
-        virtual Basis operator+(const Basis& rhs) const = 0;
-        virtual Basis operator+(const EmptyBasis& rhs) const;
-        virtual Basis operator+(const MonomialBasis& rhs) const = 0;
-        virtual Basis operator+(const BSplineBasis& rhs) const = 0;
+        virtual Basis operator+(const BasisNode& rhs) const = 0;
+        virtual Basis operator+(const EmptyBasisNode& rhs) const = 0;
+        virtual Basis operator+(const MonomialBasisNode& rhs) const = 0;
+        virtual Basis operator+(const BSplineBasisNode& rhs) const = 0;
         virtual Basis operator*(const Basis& rhs) const = 0;
         virtual Basis operator*(const EmptyBasis& rhs) const;
         virtual Basis operator*(const MonomialBasis& rhs) const = 0;
@@ -92,9 +91,6 @@ namespace spline {
 #endif // SWIG
 
         Basis operator+(const Basis& rhs) const;
-        Basis operator+(const EmptyBasis& rhs) const;
-        Basis operator+(const MonomialBasis& rhs) const;
-        Basis operator+(const BSplineBasis& rhs) const;
         Basis operator*(const Basis& rhs) const;
         Basis operator*(const EmptyBasis& rhs) const;
         Basis operator*(const MonomialBasis& rhs) const;

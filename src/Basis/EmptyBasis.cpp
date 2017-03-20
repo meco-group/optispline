@@ -16,16 +16,20 @@ namespace spline {
 
     std::string EmptyBasisNode::to_string() const { return "An EmptyBasis object"; }
 
-    Basis EmptyBasisNode::operator+ (const Basis& other) const  {
-        return other + shared_from_this< EmptyBasis >();
+    Basis EmptyBasisNode::operator+ (const BasisNode& other) const  {
+        return other + *this;
     }
 
-    Basis EmptyBasisNode::operator+ (const MonomialBasis& other) const  {
-        return other.get()->shared_from_this< MonomialBasis >();
+    Basis EmptyBasisNode::operator+ (const EmptyBasisNode& other) const  {
+        return shared_from_this< EmptyBasis >();
     }
 
-    Basis EmptyBasisNode::operator+ (const BSplineBasis& other) const  {
-        return other.get()->shared_from_this< BSplineBasis >();
+    Basis EmptyBasisNode::operator+ (const MonomialBasisNode& other) const  {
+        return other.shared_from_this< MonomialBasis >();
+    }
+
+    Basis EmptyBasisNode::operator+ (const BSplineBasisNode& other) const  {
+        return other.shared_from_this< BSplineBasis >();
     }
 
     Basis EmptyBasisNode::operator* (const Basis& other) const  {

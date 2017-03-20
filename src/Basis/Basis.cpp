@@ -20,16 +20,8 @@ namespace spline {
     Domain BasisNode::domain() const {return domain_;}
     Domain Basis::domain() const {return (*this)->domain();}
 
-    Basis Basis::operator+ (const Basis& other) const { return (*this)->operator+(other);}
+    Basis Basis::operator+ (const Basis& other) const { return (*this)->operator+(*other.get());}
 
-    Basis Basis::operator+ (const EmptyBasis& other) const { return (*this)->operator+(other);}
-    Basis BasisNode::operator+ (const EmptyBasis& other) const {
-        spline_assert(false);
-        return Basis();
-    }
-
-    Basis Basis::operator+ (const MonomialBasis& other) const { return (*this)->operator+(other); }
-    Basis Basis::operator+ (const BSplineBasis& other) const {return (*this)->operator+(other);}
 
     Basis Basis::operator* (const Basis& other) const { return (*this)->operator*(other);}
     Basis Basis::operator* (const EmptyBasis& other) const { return (*this)->operator*(other);}

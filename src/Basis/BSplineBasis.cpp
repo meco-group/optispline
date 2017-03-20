@@ -94,20 +94,20 @@ namespace spline {
                + domain().to_string();
     }
 
-    Basis BSplineBasisNode::operator+ (const Basis& other) const {
-        return other + shared_from_this<BSplineBasis>();
+    Basis BSplineBasisNode::operator+ (const BasisNode& other) const {
+        return other + *this;
     }
 
-    Basis BSplineBasisNode::operator+ (const EmptyBasis& other) const {
+    Basis BSplineBasisNode::operator+ (const EmptyBasisNode& other) const {
         return shared_from_this<BSplineBasis>();
     }
 
-    Basis BSplineBasisNode::operator+ (const BSplineBasis& other) const {
-        return plus_basis (shared_from_this<BSplineBasis>(), other);
+    Basis BSplineBasisNode::operator+ (const BSplineBasisNode& other) const {
+        return plus_basis (*this, other);
     }
 
-    Basis BSplineBasisNode::operator+ (const MonomialBasis& other) const {
-        return plus_basis (shared_from_this<BSplineBasis>(), other);
+    Basis BSplineBasisNode::operator+ (const MonomialBasisNode& other) const {
+        return plus_basis (*this, other);
     }
 
     Basis BSplineBasisNode::operator* (const Basis& other) const {
