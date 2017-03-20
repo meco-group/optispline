@@ -117,6 +117,8 @@ class AnyScalar {
     static std::vector<AnyScalar> from_vector(const std::vector<double>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<casadi::SX>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<casadi::MX>& v);
+    
+    bool is_equal(const AnyScalar & rhs) const;
 
     #ifndef SWIG
     /// Print a representation of the object to a stream (shorthand)
@@ -366,6 +368,7 @@ class AnyVector : public AnyTensor {
     std::vector<AnyScalar> to_scalar_vector() const;
     AnyVector sort(bool ascending=true) const;
     AnyVector uniquify() const;
+    bool is_equal(const AnyVector& rhs) const;
 };
 
 namespace casadi {

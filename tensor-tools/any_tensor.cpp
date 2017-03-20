@@ -387,6 +387,21 @@ std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<casadi::MX>& v) 
   return ret;
 }
 
+bool AnyScalar::is_equal(const AnyScalar & rhs) const {
+  if (type()!=rhs.type()) return false;
+  switch (type()) {
+    case TENSOR_DOUBLE:
+      return as_double()==rhs.as_double();
+    case TENSOR_SX:
+      return casadi::SX::is_equal(as_SX(), rhs.as_SX());
+    case TENSOR_MX:
+      return casadi::MX::is_equal(as_MX(), rhs.as_MX());
+    default:
+      return false;
+  }
+}
+
+
 AnyVector::AnyVector(const AnyTensor& s) : AnyTensor(s.as_vector()) {
   tensor_assert_message(n_dims()<=1,
     "AnyVector can have only one dimension. Got " << s.dims() << ".")
@@ -576,6 +591,16 @@ AnyVector AnyVector::uniquify() const {
   } else {
     return MT(uniquifier(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
   }
+}
+
+bool AnyVector::is_equal(const AnyVector& rhs) const {
+  std::vector< AnyScalar > a = to_scalar_vector();
+  std::vector< AnyScalar > b = rhs.to_scalar_vector();
+  if (a.size()!=b.size()) return false;
+  for (int i=0;i<a.size();++i) {
+    if (!a[i].is_equal(b[i])) return false;
+  }
+  return true;
 }
 
 
