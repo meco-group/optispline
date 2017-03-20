@@ -40,20 +40,20 @@ namespace spline {
         return plus_basis (*this, other);
     }
 
-    Basis MonomialBasisNode::operator* (const Basis& other) const {
-        return other * shared_from_this<MonomialBasis>();
+    Basis MonomialBasisNode::operator* (const BasisNode& other) const {
+        return other * *this;
     }
 
-    Basis MonomialBasisNode::operator* (const EmptyBasis& other) const {
+    Basis MonomialBasisNode::operator* (const EmptyBasisNode& other) const {
         return shared_from_this<MonomialBasis>();
     }
 
-    Basis MonomialBasisNode::operator* (const BSplineBasis& other) const {
-        return times_basis (shared_from_this<MonomialBasis>(), other);
+    Basis MonomialBasisNode::operator* (const BSplineBasisNode& other) const {
+        return times_basis (*this, other);
     }
 
-    Basis MonomialBasisNode::operator* (const MonomialBasis& other) const {
-        return times_basis (shared_from_this<MonomialBasis>(), other);
+    Basis MonomialBasisNode::operator* (const MonomialBasisNode& other) const {
+        return times_basis (*this, other);
     }
 
     bool MonomialBasisNode::operator== (const BasisNode& other) const {

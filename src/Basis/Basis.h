@@ -36,21 +36,22 @@ namespace spline {
         virtual Basis operator+(const EmptyBasisNode& rhs) const = 0;
         virtual Basis operator+(const MonomialBasisNode& rhs) const = 0;
         virtual Basis operator+(const BSplineBasisNode& rhs) const = 0;
-        virtual Basis operator*(const Basis& rhs) const = 0;
-        virtual Basis operator*(const EmptyBasis& rhs) const;
-        virtual Basis operator*(const MonomialBasis& rhs) const = 0;
-        virtual Basis operator*(const BSplineBasis& rhs) const = 0;
+
+        virtual Basis operator*(const BasisNode& rhs) const = 0;
+        virtual Basis operator*(const EmptyBasisNode& rhs) const = 0;
+        virtual Basis operator*(const MonomialBasisNode& rhs) const = 0;
+        virtual Basis operator*(const BSplineBasisNode& rhs) const = 0;
+
+        virtual bool operator==(const BasisNode& rhs) const = 0;
+        virtual bool operator==(const EmptyBasisNode& rhs) const = 0;
+        virtual bool operator==(const MonomialBasisNode& rhs) const = 0;
+        virtual bool operator==(const BSplineBasisNode& rhs) const = 0;
 
         virtual std::string type() const;
         virtual std::string to_string() const;
         Domain domain() const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
-
-        virtual bool operator==(const BasisNode& rhs) const = 0;
-        virtual bool operator==(const EmptyBasisNode& rhs) const = 0;
-        virtual bool operator==(const MonomialBasisNode& rhs) const = 0;
-        virtual bool operator==(const BSplineBasisNode& rhs) const = 0;
 
         template< class T >
             void assert_vector_lenght_correct( const std::vector< T >& x) const;
@@ -92,9 +93,6 @@ namespace spline {
 
         Basis operator+(const Basis& rhs) const;
         Basis operator*(const Basis& rhs) const;
-        Basis operator*(const EmptyBasis& rhs) const;
-        Basis operator*(const MonomialBasis& rhs) const;
-        Basis operator*(const BSplineBasis& rhs) const;
 
         virtual AnyTensor operator()(const AnyVector& x) const;
 

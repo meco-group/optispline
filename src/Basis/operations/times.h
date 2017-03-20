@@ -6,13 +6,11 @@
 #include "BSplineBasis.h"
 
 namespace spline{
-//TODO specify return type
-    Basis times_basis(const BSplineBasis& b1 , const BSplineBasis& b2);
-    Basis times_basis(const MonomialBasis& b1 , const MonomialBasis& b2);
-    Basis times_basis(const MonomialBasis& b1 , const BSplineBasis& b2);
-    Basis times_basis(const BSplineBasis& b1 , const MonomialBasis& b2);
-
 #ifndef SWIG
+    Basis times_basis(const BSplineBasisNode& b1 , const BSplineBasisNode& b2);
+    Basis times_basis(const MonomialBasisNode& b1 , const MonomialBasisNode& b2);
+    Basis times_basis(const MonomialBasisNode& b1 , const BSplineBasisNode& b2);
+    Basis times_basis(const BSplineBasisNode& b1 , const MonomialBasisNode& b2);
 #endif // SWIG */
 } // namespace spline
 
