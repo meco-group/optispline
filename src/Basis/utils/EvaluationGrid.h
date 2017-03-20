@@ -19,7 +19,7 @@ namespace spline{
 
         EvaluationGrid(TensorBasis basis);
         std::vector< AnyTensor > eval() const;
-        std::vector< AnyTensor > eval(const spline::Function & f) const;
+        AnyTensor eval(const spline::Function & f) const;
     private:
         TensorBasis griddedBasis;
     };

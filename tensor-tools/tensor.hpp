@@ -97,6 +97,20 @@ class Tensor {
   static Tensor<T> repeat(const Tensor<T>&e, const std::vector<int>& factors) {
     tensor_assert(factors.size()>= e.n_dims());
 
+    // Eventual return dimensions
+    std::vector<int> dims = factors;
+    for (int i=0;i<e.n_dims();++i) {
+      dims[i]*= e.dims()[i];
+    }
+
+    if (spline::product(factors)==1) {
+      return Tensor<T>(e.data(), dims);
+    }
+
+    if (spline::product(std::vector<int>(factors.begin(), factors.begin()+e.n_dims()))==1) {
+      return Tensor<T>(repmat(e.data(),spline::product(factors),1), dims);
+    }
+
     // e : {n m p q}   factors : {r1 r2 r3 r4 | r5}
     Tensor<T> ones(casadi::DM::ones(spline::product(factors)), factors);
 
@@ -113,11 +127,6 @@ class Tensor {
 
     r = r.reorder_dims(order_interleave);
 
-    // Eventual return dimensions
-    std::vector<int> dims = factors;
-    for (int i=0;i<e.n_dims();++i) {
-      dims[i]*= e.dims()[i];
-    }
 
     return r.shape(dims);
   }
@@ -446,6 +455,9 @@ class Tensor {
     }
 
     T data = T::zeros(casadi::product(new_dims), 1);
+
+    if (b==c && a.empty()) return Tensor(B.data()*A.data(), new_dims);
+    if (a==c && b.empty()) return Tensor(A.data()*B.data(), new_dims);
     data = T::einstein(A.data(), B.data(), data, A.dims(), B.dims(), new_dims, a, b, c);
 
     return Tensor(data, new_dims);
@@ -467,8 +479,10 @@ class Tensor {
     if (n_dims()==2 && rhs.n_dims()==0) {
         return einstein(rhs, {-1, -2}, {}, {-1, -2});
     }
-    tensor_assert(n_dims()==2 && rhs.n_dims()==2);
-    return einstein(rhs, {-1, -2}, {-2, -3}, {-1, -3});
+    tensor_assert_message(n_dims()==2 && rhs.n_dims()==2, "mtimes dim mismatch: " << dims() << ", " << rhs.dims() << ".");
+
+    return T::mtimes(T::reshape(data_,dims()[0],dims()[1]), T::reshape(rhs.data_, rhs.dims()[0],rhs.dims()[1]));
+    //return einstein(rhs, {-1, -2}, {-2, -3}, {-1, -3});
   }
 
   Tensor trailing_mtimes(const Tensor &rhs) const {

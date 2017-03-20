@@ -23,7 +23,7 @@ namespace spline{
         return preStep;
     }
 
-    std::vector< AnyTensor > EvaluationGrid::eval(const spline::Function & f) const {
+    AnyTensor EvaluationGrid::eval(const spline::Function & f) const {
         TensorBasis basis = f.tensor_basis();
         std::vector< int > indexPermutation = basis.get_permutation(griddedBasis);
 
@@ -50,11 +50,18 @@ namespace spline{
             postStep.clear();
         }
 
-        for (AnyTensor pre : preStep) {
-            postStep.push_back(pre.inner(f.coeff().data()));
-        }
 
-        return postStep;
+        int n = f.coeff_tensor().n_dims();
+        std::vector<int> b_i = mrange(n);
+        std::vector<int> a_i = std::vector<int>(b_i.begin(), b_i.begin()+b_i.size()-2);
+        a_i.insert(a_i.begin(), -n-1);
+        std::vector<int> c_i = {-n-1, -n+1, -n};
+
+        AnyTensor P = AnyTensor::pack(preStep, 0);
+
+        return P.einstein(f.coeff().data(), a_i, b_i, c_i);
+
+
     }
 
     std::string EvaluationGrid::type() const {
