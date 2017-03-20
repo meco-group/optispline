@@ -186,6 +186,23 @@ namespace spline {
         return basis_evaluation(x);
     }
 
+    bool BSplineBasisNode::operator== (const BasisNode& other) const {
+        spline_assert_message(false, type() << " == ");
+        return false;
+    }
+
+    bool BSplineBasisNode::operator== (const EmptyBasisNode& other) const {
+        spline_assert_message(false, type() << " == ");
+    }
+
+    bool BSplineBasisNode::operator== (const BSplineBasisNode& other) const {
+        spline_assert_message(false, type() << " == ");
+    }
+
+    bool BSplineBasisNode::operator== (const MonomialBasisNode& other) const {
+        spline_assert_message(false, type() << " == ");
+    }
+
     std::vector< std::vector<AnyScalar> > BSplineBasisNode::getEvaluationGrid() const {
         std::vector< std::vector<AnyScalar> > ret;
         for (auto const& point : AnyVector(greville()).uniquify().to_scalar_vector()) {

@@ -120,9 +120,13 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const override;
         virtual Basis operator*(const EmptyBasis& other) const override;
 
+        virtual bool operator==(const MonomialBasisNode& other) const override;
+        virtual bool operator==(const BSplineBasisNode& other) const override;
+        virtual bool operator==(const BasisNode& other) const override;
+        virtual bool operator==(const EmptyBasisNode& other) const override;
+
         std::vector<AnyScalar> knots() const;
         std::vector<AnyScalar> greville() const;
-
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
 

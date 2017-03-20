@@ -10,6 +10,9 @@
 
 namespace spline {
 
+    class MonomialBasisNode;
+    class BSplineBasisNode;
+
     class MonomialBasis;
     class BSplineBasis;
 
@@ -49,7 +52,7 @@ namespace spline {
         UnivariateBasisNode* get() const ;
         UnivariateBasisNode* operator->() const ;
 #endif // SWIG
-        
+
         int degree () const ;
     };
 } // namespace spline

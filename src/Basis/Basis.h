@@ -14,6 +14,11 @@
 #include <any_tensor.hpp>
 
 namespace spline {
+
+    class EmptyBasisNode;
+    class BSplineBasisNode;
+    class MonomialBasisNode;
+
     class Basis;
     class EmptyBasis;
     class BSplineBasis;
@@ -42,6 +47,11 @@ namespace spline {
         Domain domain() const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+
+        virtual bool operator==(const BasisNode& rhs) const = 0;
+        virtual bool operator==(const EmptyBasisNode& rhs) const = 0;
+        virtual bool operator==(const MonomialBasisNode& rhs) const = 0;
+        virtual bool operator==(const BSplineBasisNode& rhs) const = 0;
 
         template< class T >
             void assert_vector_lenght_correct( const std::vector< T >& x) const;
@@ -91,6 +101,8 @@ namespace spline {
         Basis operator*(const BSplineBasis& rhs) const;
 
         virtual AnyTensor operator()(const AnyVector& x) const;
+
+        bool operator==(const Basis& rhs) const;
 
         std::string type() const ;
         std::string to_string() const ;

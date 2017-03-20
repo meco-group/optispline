@@ -9,8 +9,6 @@
 
 namespace spline{
 
-    class BSplineBasis;
-
 #ifndef SWIG
 
     class MonomialBasisNode : public UnivariateBasisNode {
@@ -31,9 +29,13 @@ namespace spline{
         virtual Basis operator*(const Basis& other) const override;
         virtual Basis operator*(const EmptyBasis& other) const override;
 
-
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
+
+        virtual bool operator==(const MonomialBasisNode& other) const override;
+        virtual bool operator==(const BSplineBasisNode& other) const override;
+        virtual bool operator==(const BasisNode& other) const override;
+        virtual bool operator==(const EmptyBasisNode& other) const override;
 
         virtual int dimension() const override;
 

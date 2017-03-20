@@ -56,6 +56,22 @@ namespace spline {
         return times_basis (shared_from_this<MonomialBasis>(), other);
     }
 
+    bool MonomialBasisNode::operator== (const BasisNode& other) const {
+        spline_assert_message(false, type() << " == ");
+    }
+
+    bool MonomialBasisNode::operator== (const EmptyBasisNode& other) const {
+        spline_assert_message(false, type() << " == ");
+    }
+
+    bool MonomialBasisNode::operator== (const BSplineBasisNode& other) const {
+        spline_assert_message(false, type() << " == ");
+    }
+
+    bool MonomialBasisNode::operator== (const MonomialBasisNode& other) const {
+        spline_assert_message(false, type() << " == ");
+    }
+
     AnyTensor MonomialBasisNode::const_coeff_tensor(const AnyTensor& t) const {
         std::vector< int > coeff_size = t.dims();
         coeff_size.insert(coeff_size.begin(), 1);

@@ -281,6 +281,18 @@ namespace spline {
         return ret;
     }
 
+    bool TensorBasis::operator==(const TensorBasis& rhs) const {
+        if(this->get() == rhs.get()) return true;
+        return (*this)->operator==(rhs);
+    }
+    bool TensorBasisNode::operator==(const TensorBasis& rhs) const {
+        if( this->n_basis() != rhs.n_basis()) return false;
+        for( int i = 0; i < n_basis(); i++){
+            if( !( this->bases()[i] == rhs.bases()[i])) return false;
+        }
+        return true;
+    }
+
     int TensorBasis::totalNumberBasisFunctions() const {
         return (*this)->totalNumberBasisFunctions();
     }

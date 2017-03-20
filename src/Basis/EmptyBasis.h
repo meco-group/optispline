@@ -24,6 +24,11 @@ namespace spline {
         virtual Basis operator*(const MonomialBasis& other) const override;
         virtual Basis operator*(const BSplineBasis& other) const override;
 
+        virtual bool operator==(const MonomialBasisNode& other) const override;
+        virtual bool operator==(const BSplineBasisNode& other) const override;
+        virtual bool operator==(const BasisNode& other) const override;
+        virtual bool operator==(const EmptyBasisNode& other) const override;
+
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
     };
 #endif // SWIG

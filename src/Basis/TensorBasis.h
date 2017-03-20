@@ -65,6 +65,8 @@ class TensorBasisNode : public SharedObjectNode {
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< Argument >& arg_ind) const;
 
+        virtual bool operator==(const TensorBasis& rhs) const;
+
         int totalNumberBasisFunctions() const;
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
@@ -159,6 +161,8 @@ public:
         TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< Argument >& arg_ind = {}) const;
+
+        virtual bool operator==(const TensorBasis& rhs) const;
 
         int totalNumberBasisFunctions() const;
 

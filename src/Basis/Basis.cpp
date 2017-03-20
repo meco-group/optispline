@@ -40,7 +40,6 @@ namespace spline {
 
     Basis Basis::operator* (const MonomialBasis& other) const { return (*this)->operator*(other); }
     Basis Basis::operator* (const BSplineBasis& other) const {return (*this)->operator*(other);}
-
     AnyTensor Basis::operator() (const AnyVector & x) const {
       std::vector<AnyScalar> a = x.to_scalar_vector();
       (*this)->assert_vector_lenght_correct(a);
@@ -49,6 +48,11 @@ namespace spline {
     AnyTensor BasisNode::operator() (const std::vector< AnyScalar > & x) const {
         assert(false); //Abstract
         return AnyTensor();
+    }
+
+    bool Basis::operator==(const Basis& rhs) const {
+        if(this->get() == rhs.get()) return true;
+        return (*this)->operator==(*rhs.get());
     }
 
     std::vector< std::vector < AnyScalar > > Basis::getEvaluationGrid() const {
