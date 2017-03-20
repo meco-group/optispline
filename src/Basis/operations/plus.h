@@ -6,13 +6,12 @@
 #include "BSplineBasis.h"
 
 namespace spline{
-// #ifndef SWIG
+#ifndef SWIG
     Basis plus_basis(const BSplineBasisNode& b1 , const BSplineBasisNode& b2);
     Basis plus_basis(const MonomialBasisNode& b1 , const MonomialBasisNode& b2);
     Basis plus_basis(const MonomialBasisNode& b1 , const BSplineBasisNode& b2);
     Basis plus_basis(const BSplineBasisNode& b1 , const MonomialBasisNode& b2);
-
-// #endif // SWIG
+#endif // SWIG
 } // namespace spline
 
 #endif /* PLUSUNIVARIATE_H */
