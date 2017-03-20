@@ -63,7 +63,7 @@ class TensorBasisNode : public SharedObjectNode {
         virtual TensorBasis operator*(const TensorBasis& rhs) const;
         virtual TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< Argument >& arg_ind) const;
 
         int totalNumberBasisFunctions() const;
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
@@ -96,6 +96,7 @@ class TensorBasisNode : public SharedObjectNode {
         spline::Function basis_functions() const ;
 
         virtual std::vector< int > get_permutation(const TensorBasis& grid) const;
+        std::vector< int > get_permutation(const std::vector< Argument >& arg_ind) const;
     // protected:
         std::vector< Basis > bases_;
         std::vector< std::string > allArguments;
@@ -157,7 +158,7 @@ public:
         TensorBasis operator*(const TensorBasis& rhs) const;
         TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
-        AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< Argument >& arg_ind = {}) const;
 
         int totalNumberBasisFunctions() const;
 
@@ -212,6 +213,7 @@ public:
         spline::Function basis_functions() const ;
 
         std::vector< int > get_permutation(const TensorBasis& grid) const;
+        std::vector< int > get_permutation(const std::vector< Argument >& arg_ind) const;
 };
 
 }   // namespace spline

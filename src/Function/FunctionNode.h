@@ -24,6 +24,8 @@ namespace spline {
 
         virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
 
+        virtual Function partial_eval(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
+
         virtual Function operator-() const override;
 
         virtual Function operator+(const FunNode& f) const override;

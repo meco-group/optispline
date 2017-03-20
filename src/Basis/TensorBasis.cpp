@@ -262,10 +262,10 @@ namespace spline {
         return shared_from_this<TensorBasis>();
     }
 
-    AnyTensor TensorBasis::operator() (const std::vector< AnyScalar > &  x) const {
-        return (*this)->operator()(x);
+    AnyTensor TensorBasis::operator() (const std::vector< AnyScalar > &  x, const std::vector< Argument >& arg_ind) const {
+        return (*this)->operator()(x, arg_ind);
     }
-    AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x) const {
+    AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x, const std::vector< Argument >& arg_ind) const {
         spline_assert(x.size() == n_inputs());
         AnyTensor ret = AnyTensor::unity();
         std::vector< AnyScalar > remaining_inputs = x;
@@ -679,6 +679,20 @@ namespace spline {
             }
         }
         return index;
+    }
+
+    std::vector< int > TensorBasis::get_permutation(const std::vector< Argument >& arg_ind) const{
+        return (*this)->get_permutation(arg_ind);
+    }
+
+    std::vector< int > TensorBasisNode::get_permutation(const std::vector< Argument >& arg_ind) const{
+        std::vector< int > index;
+        /* for(auto & a : arg_ind){ */
+        /*     int ind = indexArgument(a); */
+        /*     spline_assert_message(ind >= 0, a.to_string() + " not in tensorBasis: " + to_string()); */
+        /*     index.push_back(ind); */
+        /* } */
+            return index;
     }
 
 } // namespace spline

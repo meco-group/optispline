@@ -35,6 +35,10 @@ namespace spline {
         return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze();
     }
 
+    Function FunctionNode::partial_eval(const AnyTensor& x, const std::vector< std::string >& args) const{
+        spline_assert_message(false, "not implemented partial_eval");
+    }
+
     std::string FunctionNode::type() const{
         return "Function";
     }

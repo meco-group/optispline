@@ -48,7 +48,7 @@ class TensorBasisConstantNode : public TensorBasisNode {
         virtual TensorBasis operator*(const TensorBasis& rhs) const override;
         virtual TensorBasis operator*(const TensorBasisConstant& rhs) const override;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const override;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< Argument >& arg_ind) const override;
 
         /* int totalNumberBasisFunctions() const; */
 

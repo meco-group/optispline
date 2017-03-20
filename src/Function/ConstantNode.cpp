@@ -12,8 +12,10 @@ namespace spline {
 
     AnyTensor ConstantNode::operator()(const AnyTensor& x, const std::vector< std::string >& args) const{
         return coeff_tensor();
-        /* spline_assert_message(false, "not implemented: evaluation constant"); */
-        /* return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze(); */
+    }
+
+    Function ConstantNode::partial_eval(const AnyTensor& x, const std::vector< std::string >& args) const{
+        return coeff_tensor();
     }
 
     std::string ConstantNode::type() const{
