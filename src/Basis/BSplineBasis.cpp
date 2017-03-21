@@ -453,7 +453,7 @@ namespace spline {
         }
         BSplineBasis new_basis = BSplineBasis(new_knots, degree());
         // project into new basis
-        // T = project_to(new_basis);
+        T = project_to(new_basis);
         return new_basis;
     }
 
