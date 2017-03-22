@@ -21,10 +21,10 @@ namespace spline {
           const BasisComposition& bc) {
         TensorBasis returnBasis = TensorBasis();
         if (b1.hasArguments() && b2.hasArguments()) {
-            std::vector< std::string > allArguments = b1.arguments();
-            for (auto &a : b2.arguments()) {
+            std::vector< std::string > allArguments = b2.arguments();
+            for (auto &a : b1.arguments()) {
                 if (std::find(allArguments.begin(), allArguments.end(), a) == allArguments.end()) {
-                    /* v does not contain x */
+                    /* v does not contain argument a */
                     allArguments.push_back(a);
                 }
             }
