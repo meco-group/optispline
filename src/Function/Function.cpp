@@ -48,9 +48,11 @@ namespace spline{
         return coeff_tensor().as_MT().data()>=x;
     }
 
-    AnyTensor Function::operator()(const AnyTensor& x, const std::vector< std::string >& args ) const { return (*this)->operator()(x, args);}
+    AnyTensor Function::operator()(const AnyTensor& x, const std::vector< Argument >& args ) const {
+        return (*this)->operator()(x, Argument::concrete(args, tensor_basis()));
+    }
 
-    Function Function::partial_eval(const AnyTensor& x, const std::vector< std::string >& args ) const { return (*this)->partial_eval(x, args);}
+    Function Function::partial_eval(const AnyTensor& x, const std::vector< Argument >& args ) const { return (*this)->partial_eval(x, Argument::concrete(args, tensor_basis()));}
 
     Function Function::operator+(const Function& f) const { return (*this)->operator+(f) ;}
     Function Function::operator+(const AnyTensor& t) const {

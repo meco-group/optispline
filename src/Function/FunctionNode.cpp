@@ -11,11 +11,11 @@ namespace spline {
     AnyTensor FunctionNode::operator()(const AnyTensor& x, const std::vector< int >& args) const{
         if(x.dims()[0] == n_inputs() && x.dims()[1] == 1){
             std::vector< AnyScalar > x_ = x.unpack_1();
-            return basis_(x_).inner(coeff().data());
+            return basis_(x_, Argument::from_vector(args)).inner(coeff().data());
         }
         if(x.dims()[0] == 1 && x.dims()[1] == n_inputs()){
             std::vector< AnyScalar > x_ = x.unpack_1();
-            return basis_(x_).inner(coeff().data());
+            return basis_(x_, Argument::from_vector(args)).inner(coeff().data());
         }
 
         spline_assert_message(x.dims()[1] == n_inputs(), "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " + std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
@@ -23,7 +23,7 @@ namespace spline {
 
         std::vector< std::vector< AnyScalar > > X_ = x.unpack_2();
         for(int i = 0; i < X_.size(); i++){
-            tensor.push_back(basis_(X_[i]));
+            tensor.push_back(basis_(X_[i], Argument::from_vector(args)));
         }
         AnyTensor packed_tensor = AnyTensor::pack(tensor, 0);
         int shared_dim = packed_tensor.n_dims();
@@ -35,7 +35,7 @@ namespace spline {
         return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze();
     }
 
-    Function FunctionNode::partial_eval(const AnyTensor& x, const std::vector< std::string >& args) const{
+    Function FunctionNode::partial_eval(const AnyTensor& x, const std::vector< int >& args) const{
         spline_assert_message(false, "not implemented partial_eval");
     }
 
