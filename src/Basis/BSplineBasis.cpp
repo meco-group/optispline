@@ -208,6 +208,9 @@ namespace spline {
         for (auto const& point : AnyVector(greville()).uniquify().to_scalar_vector()) {
           ret.push_back(std::vector<AnyScalar> {point});
         }
+        ret[0][0] = (ret[0][0] + ret[1][0]) * 0.5;
+        int si_ = ret.size() - 1;
+        ret[si_][0] = (ret[si_][0] + ret[si_ - 1][0]) * 0.5;
         return ret;
     }
 
