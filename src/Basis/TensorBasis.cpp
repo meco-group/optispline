@@ -693,8 +693,6 @@ namespace spline {
         return index;
     }
 
-    std::vector< int > TensorBasis::get_permutation(const std::vector< Argument >& arg_ind) const{
-        return (*this)->get_permutation(arg_ind);
     }
 
 
