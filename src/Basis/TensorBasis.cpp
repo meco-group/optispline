@@ -266,15 +266,19 @@ namespace spline {
         return (*this)->operator()(x, Argument::concrete(arg_ind, *this));
     }
     AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x, const std::vector< int >& arg_ind) const {
+
         spline_assert(x.size() == n_inputs());
         AnyTensor ret = AnyTensor::unity();
-        std::vector< AnyScalar > remaining_inputs = x;
 
-        for (auto& b : bases_) {
+        std::vector< int > input_border_ = input_border();
+
+        for (int i = 0; i < n_basis(); i++) {
+            Basis b = basis(i);
+            int index_arg = arg_ind[i];
             std::vector< AnyScalar > input = {};
-            for (int i = 0; i < b.n_inputs(); ++i) {
-                input.push_back(remaining_inputs.front());
-                remaining_inputs.erase(remaining_inputs.begin());
+
+            for (int i = input_border_[index_arg]; i < input_border_[index_arg + 1]; ++i) {
+                input.push_back(x[i]);
             }
             ret = ret.outer_product(b(input));
         }
