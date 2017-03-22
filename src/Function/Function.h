@@ -33,9 +33,9 @@ namespace spline {
         casadi::MX operator<=(const casadi::MX& x) const;
         casadi::MX operator>=(const casadi::MX& x) const;
 
-        AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const;
+        AnyTensor operator()(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
 
-        Function partial_eval(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const;
+        Function partial_eval(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
 
         Function operator+(const Function& f) const;
         Function operator+(const AnyTensor& t) const;

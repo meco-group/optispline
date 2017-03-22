@@ -10,11 +10,11 @@ namespace spline {
         coeff_ = coeff;
     }
 
-    AnyTensor ConstantNode::operator()(const AnyTensor& x, const std::vector< std::string >& args) const{
+    AnyTensor ConstantNode::operator()(const AnyTensor& x, const std::vector< int >& args) const{
         return coeff_tensor();
     }
 
-    Function ConstantNode::partial_eval(const AnyTensor& x, const std::vector< std::string >& args) const{
+    Function ConstantNode::partial_eval(const AnyTensor& x, const std::vector< int >& args) const{
         return coeff_tensor();
     }
 

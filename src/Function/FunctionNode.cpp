@@ -8,7 +8,7 @@
 namespace spline {
     FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : FunNode(coeff), basis_(basis) {}
 
-    AnyTensor FunctionNode::operator()(const AnyTensor& x, const std::vector< std::string >& args) const{
+    AnyTensor FunctionNode::operator()(const AnyTensor& x, const std::vector< int >& args) const{
         if(x.dims()[0] == n_inputs() && x.dims()[1] == 1){
             std::vector< AnyScalar > x_ = x.unpack_1();
             return basis_(x_).inner(coeff().data());

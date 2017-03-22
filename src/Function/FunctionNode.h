@@ -22,9 +22,9 @@ namespace spline {
         virtual std::string type() const override;
         virtual std::string to_string() const override;
 
-        virtual AnyTensor operator()(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
+        virtual AnyTensor operator()(const AnyTensor& x, const std::vector< int >& args ) const override;
 
-        virtual Function partial_eval(const AnyTensor& x, const std::vector< std::string >& args = std::vector< std::string > () ) const override;
+        virtual Function partial_eval(const AnyTensor& x, const std::vector< int >& args) const override;
 
         virtual Function operator-() const override;
 

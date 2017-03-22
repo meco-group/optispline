@@ -263,9 +263,9 @@ namespace spline {
     }
 
     AnyTensor TensorBasis::operator() (const std::vector< AnyScalar > &  x, const std::vector< Argument >& arg_ind) const {
-        return (*this)->operator()(x, arg_ind);
+        return (*this)->operator()(x, Argument::concrete(arg_ind, *this));
     }
-    AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x, const std::vector< Argument >& arg_ind) const {
+    AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x, const std::vector< int >& arg_ind) const {
         spline_assert(x.size() == n_inputs());
         AnyTensor ret = AnyTensor::unity();
         std::vector< AnyScalar > remaining_inputs = x;
