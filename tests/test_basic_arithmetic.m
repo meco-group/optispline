@@ -10,9 +10,9 @@ b1 = BSplineBasis([0,0,1/2,1,1],1);
 c1 = Coefficient(rand(3,1,1));
 s1 = splines.Function(b1, c1);
 s2 = s1 + 5; % spline + double % does not work yet
-assert(abs(s2.eval(0.6) - s1.eval(0.6) - 5) <= eps);
+assert(abs(s2.eval(0.6) - s1.eval(0.6) - 5) <= 1e-8);
 s2 = 5 + s1; % double + spline % does not work yet
-assert(abs(s2.eval(0.6) - s1.eval(0.6) - 5) <= eps);
+assert(abs(s2.eval(0.6) - s1.eval(0.6) - 5) <= 1e-8);
 
 % sum two scalar splines given coeffs
 b1 = splines.BSplineBasis([0,0,1/2,1,1],1);
@@ -22,9 +22,12 @@ b2 = splines.BSplineBasis([0,0,1,1],1);
 c2 = splines.Coefficient(2*ones(2,1,1));
 s2 = splines.Function(b2, c2);
 s3 = s1 + s2;
-assert(isequal(s3.coeff.data,3*ones(3,1,1)));
+s1.coeff_tensor()
+s2.coeff_tensor()
+s3.coeff_tensor()
+assert(norm(s3.coeff.data-3*ones(3,1,1)) < 1e-8);
 s3 = s2 + s1;
-assert(isequal(s3.coeff.data,3*ones(3,1,1)));
+assert(norm(s3.coeff.data-3*ones(3,1,1)) < 1e-8);
 
 % sum two scalar splines random coeffs
 b1 = BSplineBasis([0,0,1/2,1,1],1);
@@ -34,9 +37,9 @@ b2 = BSplineBasis([0,0,1,1],1);
 c2 = Coefficient(rand(2,1,1));
 s2 = splines.Function(b2, c2);
 s3 = s1 + s2;
-assert(abs(s3.eval(0.6) - s1.eval(0.6) - s2.eval(0.6)) <= eps);
+assert(abs(s3.eval(0.6) - s1.eval(0.6) - s2.eval(0.6)) <= 1e-8);
 s3 = s2 + s1;
-assert(abs(s3.eval(0.6) - s1.eval(0.6) - s2.eval(0.6)) <= eps);
+assert(abs(s3.eval(0.6) - s1.eval(0.6) - s2.eval(0.6)) <= 1e-8);
 
 % % bivariate matrix-valued spline + double
 m = 4; n = 5;
@@ -107,9 +110,9 @@ b1 = BSplineBasis([0,0,1/2,1,1],1);
 c1 = Coefficient(rand(3,1,1));
 s1 = splines.Function(b1, c1);
 s2 = s1 - 5; % spline + double % does not work yet
-assert(abs(s2.eval(0.6) - s1.eval(0.6) + 5) <= eps);
+assert(abs(s2.eval(0.6) - s1.eval(0.6) + 5) <= 1e-8);
 s2 = 5 - s1; % double + spline % does not work yet
-assert(abs(s2.eval(0.6) + s1.eval(0.6) - 5) <= eps);
+assert(abs(s2.eval(0.6) + s1.eval(0.6) - 5) <= 1e-8);
 
 % difference two scalar splines given coeffs
 b1 = BSplineBasis([0,0,1/2,1,1],1);
@@ -119,9 +122,9 @@ b2 = BSplineBasis([0,0,1,1],1);
 c2 = Coefficient(2*ones(2,1,1));
 s2 = splines.Function(b2, c2);
 s3 = s1 - s2;
-assert(isequal(s3.coeff.data,-ones(3,1,1)));
+assert(norm(s3.coeff.data+ones(3,1,1)) < 1e-8);
 s3 = s2 - s1;
-assert(isequal(s3.coeff.data,ones(3,1,1)));
+assert(norm(s3.coeff.data-ones(3,1,1)) < 1e-8);
 
 % difference two scalar splines random coeffs
 b1 = BSplineBasis([0,0,1/2,1,1],1);
@@ -131,9 +134,9 @@ b2 = BSplineBasis([0,0,1,1],1);
 c2 = Coefficient(rand(2,1,1));
 s2 = splines.Function(b2, c2);
 s3 = s1 - s2;
-assert(abs(s3.eval(0.6) - s1.eval(0.6) + s2.eval(0.6)) <= eps);
+assert(abs(s3.eval(0.6) - s1.eval(0.6) + s2.eval(0.6)) <= 1e-8);
 s3 = s2 - s1;
-assert(abs(s3.eval(0.6) + s1.eval(0.6) - s2.eval(0.6)) <= eps);
+assert(abs(s3.eval(0.6) + s1.eval(0.6) - s2.eval(0.6)) <= 1e-8);
 
 % difference bivariate matrix-valued spline and double
 m = 4; n = 5;
