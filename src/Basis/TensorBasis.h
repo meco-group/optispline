@@ -98,7 +98,6 @@ class TensorBasisNode : public SharedObjectNode {
         spline::Function basis_functions() const ;
 
         virtual std::vector< int > get_permutation(const TensorBasis& grid) const;
-        std::vector< int > get_permutation(const std::vector< Argument >& arg_ind) const;
     // protected:
         std::vector< Basis > bases_;
         std::vector< std::string > allArguments;
@@ -217,7 +216,6 @@ public:
         spline::Function basis_functions() const ;
 
         std::vector< int > get_permutation(const TensorBasis& grid) const;
-        std::vector< int > get_permutation(const std::vector< Argument >& arg_ind) const;
 };
 
 }   // namespace spline

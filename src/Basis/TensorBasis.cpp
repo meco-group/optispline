@@ -697,14 +697,5 @@ namespace spline {
         return (*this)->get_permutation(arg_ind);
     }
 
-    std::vector< int > TensorBasisNode::get_permutation(const std::vector< Argument >& arg_ind) const{
-        std::vector< int > index;
-        /* for(auto & a : arg_ind){ */
-        /*     int ind = indexArgument(a); */
-        /*     spline_assert_message(ind >= 0, a.to_string() + " not in tensorBasis: " + to_string()); */
-        /*     index.push_back(ind); */
-        /* } */
-            return index;
-    }
 
 } // namespace spline
