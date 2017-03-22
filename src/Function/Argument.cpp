@@ -1,7 +1,9 @@
 #include "Argument.h"
+#include "../Basis/TensorBasis.h"
 #include "../common.h"
 #include <map>
 #include <algorithm>
+#include <casadi/casadi.hpp>
 namespace spline {
 
     std::string Argument::type() const{
@@ -89,9 +91,22 @@ namespace spline {
     }
 
     std::vector< int > Argument::concrete(const std::vector< Argument >& args, const std::vector< std::string >& strings){
+        if (args.empty()) return casadi::range(strings.size());
+
         std::vector< int > ard_ind = {};
         for(auto& a : args){
             ard_ind.push_back( a.concrete(strings));
+        }
+        return ard_ind;
+    }
+
+    std::vector< int > Argument::concrete(const std::vector< Argument >& args, const TensorBasis& tb){
+        if (tb.arguments().empty()) return casadi::range(tb.n_basis());
+        if (args.empty()) return casadi::range(tb.n_basis());
+
+        std::vector< int > ard_ind = {};
+        for(auto& a : args){
+            ard_ind.push_back( a.concrete(tb.arguments()));
         }
         return ard_ind;
     }

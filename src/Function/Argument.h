@@ -9,6 +9,7 @@
 
 namespace spline {
 #ifndef SWIG
+    class TensorBasis;
     class Argument;
     class ArgumentNode : public SharedObjectNode {
     public:
@@ -69,6 +70,7 @@ namespace spline {
         std::string to_string() const ;
 
         static std::vector< int > concrete(const std::vector< Argument >& args, const std::vector< std::string >& strings);
+        static std::vector< int > concrete(const std::vector< Argument >& args, const TensorBasis& tb);
     };
 } // namespace spline
 #endif //CPP_SPLINES_INDEX_H
