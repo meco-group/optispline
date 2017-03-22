@@ -242,9 +242,9 @@ class Test_Basis_Basis(BasisTestCase):
         c2 = c1.transform(T)
         s2 = Function(b2, c2)
         g2 = b2.greville()
-        # for i in g2:
-        #     if (i>=knots1[0] and i<knots1[-1]):
-        #         self.assertEqualT(s1(i), s2(i), 1e-6) # not ok??
+        for i in g2:
+            if (i>=knots1[0] and i<knots1[-1]):
+                self.assertEqualT(s1(i), s2(i), 1e-6) # not ok??
 
         knots2 = [0,0,0,0,0.2,0.5,0.8,0.92,0.92,0.92,0.92]
         b2 = BSplineBasis(knots2, degree)
