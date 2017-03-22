@@ -693,6 +693,12 @@ namespace spline {
         return index;
     }
 
+    std::vector< int > TensorBasisNode::input_border() const {
+        std::vector< int > s = { 0 };
+        for(int i = 0; i < n_basis() ; i++){
+            s.push_back(s[i] + basis(i).n_inputs());
+        }
+    return  s;
     }
 
 
