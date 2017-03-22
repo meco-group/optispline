@@ -106,8 +106,10 @@ namespace spline {
         Function b21  = b2.mtimes(b1.transpose());
         Function b22  = b2.mtimes(b2.transpose());
 
-        AnyTensor B21 = b21.integral();
-        AnyTensor B22 = b22.integral();
+        Domain d_int = domain().intersection(b.domain());
+
+        AnyTensor B21 = b21.integral(d_int);
+        AnyTensor B22 = b22.integral(d_int);
 
         AnyTensor T = B22.solve(B21);
         return T;

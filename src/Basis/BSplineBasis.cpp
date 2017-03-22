@@ -327,7 +327,8 @@ namespace spline {
     }
 
     AnyTensor BSplineBasisNode::integral(const Interval& dom) const {
-        if (dom == domain()){
+        Interval dom_int = domain().intersection(dom);
+        if (dom_int == domain()){
             int n_dim = dimension();
             int deg = degree();
             std::vector<AnyScalar> kn = knots();
@@ -339,7 +340,7 @@ namespace spline {
         } else {
             AnyTensor T;
             Basis basis_int = antiderivative(1, T);
-            return (basis_int({dom.max()}) - basis_int({dom.min()})).shape({1, dimension()+1}).mtimes(T);
+            return (basis_int({dom_int.max()}) - basis_int({dom_int.min()})).shape({1, dimension()+1}).mtimes(T);
         }
     }
 
@@ -452,7 +453,7 @@ namespace spline {
         }
         BSplineBasis new_basis = BSplineBasis(new_knots, degree());
         // project into new basis
-        // T = project_to(new_basis);
+        T = project_to(new_basis);
         return new_basis;
     }
 
