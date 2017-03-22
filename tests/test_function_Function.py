@@ -248,7 +248,6 @@ class Test_Function_Function(BasisTestCase):
         f.degree_elevation([3], [1])
 
     def test_kick_boundary(self):
-        return
         np.random.seed(0)
         d1 = 3
         nki1 = 8
@@ -273,17 +272,20 @@ class Test_Function_Function(BasisTestCase):
         self.assertEqualT(be_1.degree(), d1)
         self.assertEqualT(be_2.degree(), d2)
         self.assertEqualT(be_3.degree(), d3)
-        self.assertEqualT(be_1.knots(), np.r_[dom1[0]*np.ones(d1), np.linspace(dom1[0], dom1[1], nki1), dom1[1]*np.ones(d1)])
-        self.assertEqualT(be_2.knots(), np.r_[dom2[0]*np.ones(d2), np.linspace(dom2[0], dom1[1], nki2), dom2[1]*np.ones(d2)])
+        self.assertEqualT(be_1.knots(), np.r_[dom1[0]*np.ones(d1+1), k1[d1+1:-d1-1], dom1[1]*np.ones(d1+1)])
+        self.assertEqualT(be_2.knots(), np.r_[dom2[0]*np.ones(d2+1), k2[d2+1:-d2-1], dom2[1]*np.ones(d2+1)])
         g1 = be_1.greville()
         g2 = be_2.greville()
         for i in g1:
             for j in g2:
                 for k in range(d3+1):
-                    self.assertEqualT(f(i,j,k), f_e123(i,j,k), 1e-6)
+                    if (i>=k1[0] and i<=k1[-1] and j>=k2[0] and j<=k2[-1]):
+                        self.assertEqualT(f(i,j,k), f_e123(i,j,k), 1e-6)
         f.kick_boundary(dom1, [1])
         with self.assertRaises(Exception):
-            f.insert_knots(dom1)
+            f.kick_boundary([0.5,1.], [1])
+        with self.assertRaises(Exception):
+            f.kick_boundary([0.,0.5], [1])
 
     def test_derivative_multivariate(self):
         if valgrind: return
