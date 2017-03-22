@@ -475,9 +475,10 @@ class Test_Function_Function(BasisTestCase):
         f13_antider = f13.antiderivative()
 
         self.assertEqualT(f2.integral(), f2_antider(1.) - f2_antider(0.), 1e-6)
-        self.assertEqualT(f3.integral(), inf, 1e-6)
+        
+        self.assertTrue(np.isinf(f3.integral()))
         self.assertEqualT(f12.integral(), f12_antider(1., 1.) - f12_antider(0., 0.), 1e-6)
-        self.assertEqualT(f13.integral(), inf, 1e-6)
+        self.assertTrue(np.isinf(f13.integral()))
 
         self.assertEqualT(f1.integral([0.1, 0.9]), f1_antider(0.9) - f1_antider(0.1), 1e-6)
         self.assertEqualT(f2.integral([0.1, 0.8]), f2_antider(0.8) - f2_antider(0.1), 1e-6)

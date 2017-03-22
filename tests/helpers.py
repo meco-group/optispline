@@ -29,7 +29,8 @@ class BasisTestCase(unittest.TestCase):
         if(len(a.shape) == 2):
             if(a.shape[1] == 1):
                 a = a[:,0]
-
+        self.assertTrue(C.DM(np.array(a).ravel()).is_regular())
+        self.assertTrue(C.DM(np.array(b).ravel()).is_regular())
         self.assertTrue(np.linalg.norm(np.array(a)-np.array(b))<=tol,msg="%e > %e" % (np.linalg.norm(np.array(a)-np.array(b)),tol))
 
     def assertEqualT(self, a, b,tol=1e-9):
@@ -59,6 +60,8 @@ class BasisTestCase(unittest.TestCase):
             b = b.data()
           except:
             b = b.ravel('F')
+        self.assertTrue(C.DM(a).is_regular())
+        self.assertTrue(C.DM(b).is_regular())
         self.assertTrue(float(C.norm_inf(a-b)) < tol)
 
     def assertNotEqualTensor(self, a, b):

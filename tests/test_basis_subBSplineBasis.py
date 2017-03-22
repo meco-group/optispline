@@ -53,7 +53,8 @@ class Test_Basis_SubBSpline(BasisTestCase):
 
         S = BSplineBasis([0,0,0.2,0.5,0.7,1,1], 2)
 
-        for s in [S, wrap(S,SX), wrap(S,MX)]:
+        # Not possible to do with SX: requires conditional division
+        for s in [S, wrap(S,MX)]:
             for arg, check in [
                 ([0.0], [0,0,0,0]),
                 ([0.5], [0,0.4,0.6,0]),
