@@ -1240,6 +1240,7 @@ namespace spline {
     static Function times(const AnyTensor& lhs, const Function& rhs) { return rhs*lhs; }
     static Function mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.rmtimes(lhs); }
     static Function rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
+    Function ctranspose() const { return $self->transpose();}
   }
 } // namespace spline
   %extend Tensor<DM> {
