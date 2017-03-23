@@ -1222,6 +1222,16 @@ namespace spline {
 // Wrap (static) member functions
 %feature("nonstatic");
 namespace spline {
+  %extend Basis {
+    %matlabcode %{
+      function [varargout] = horzcat(self,varargin)
+        error('Cannot concatenate Basis objects; perhaps you meant to group them with {}?');
+      end
+      function [varargout] = vertcat(self,varargin)
+        error('Cannot concatenate Basis objects; perhaps you meant to group them with {}?');
+      end
+   %}
+  }
   %extend Function {
     static Function plus(const Function& lhs, const Function& rhs) { return lhs+rhs; }
     static Function minus(const Function& lhs, const Function& rhs) { return lhs-rhs; }
