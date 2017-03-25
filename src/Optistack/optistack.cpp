@@ -4,16 +4,54 @@
 
 using namespace casadi;
 
-Optistack::Optistack() {
+Optistack::Optistack() : count_(0) {
 
 }
 
-MX Optistack::var(int n, int m) {
-  return flag(MX::sym("x", n, m), OPTISTACK_VAR);
+MX Optistack::var(const Sparsity& sp) {
+  return flag(MX::sym("x", sp), OPTISTACK_VAR);
+}
+
+MX Optistack::var(int n, int m, const std::string& variable_type) {
+  Dict meta_data;
+  meta_data["variable_type"] = variable_type;
+  meta_data["n"] = n;
+  meta_data["m"] = m;
+  meta_data["type"] = OPTISTACK_VAR;
+  meta_data["count"] = count_;
+  count_+=1;
+  if (variable_type=="symmetric") {
+    spline_assert(n==m);
+    MX ret = MX(Sparsity::lower(n), meta(flag(MX::sym("x", n*(n+1)/2), OPTISTACK_VAR), meta_data));
+
+    return tril2symm(ret);
+  } else {
+    return meta(flag(MX::sym("x", n, m), OPTISTACK_VAR), meta_data);
+  }
 }
 
 MX Optistack::par(int n, int m) {
-  return flag(MX::sym("p", n, m), OPTISTACK_PAR);
+  Dict meta_data;
+  meta_data["type"] = OPTISTACK_PAR;
+  return meta(flag(MX::sym("p", n, m), OPTISTACK_PAR), meta_data);
+}
+
+MX Optistack::meta(const MX& m, const Dict& dict) {
+  assert_has(m);
+  auto find = meta_.find(m.get());
+  if (find==meta_.end()) meta_[m.get()] = Dict();
+
+  Dict& prev_meta = meta_[m.get()];
+  for (auto& kv : dict) {
+    prev_meta[kv.first] = kv.second;
+  }
+  return m;
+}
+Dict Optistack::meta(const MX& m) const {
+  assert_has(m);
+  auto find = meta_.find(m.get());
+  if (find==meta_.end()) return Dict();
+  return find->second;
 }
 
 void Optistack::assert_has(const MX& m) const {
@@ -21,7 +59,7 @@ void Optistack::assert_has(const MX& m) const {
   spline_assert_message(found, "Symbol not found in Optistack.");
 }
 
-MX Optistack::flag(const MX& m, OptistackType type) {
+MX Optistack::flag(const MX& m, VariableType type) {
   auto find = data_.find(m.get());
   spline_assert(find==data_.end());
   data_[m.get()] = type;
@@ -33,14 +71,101 @@ OptistackSolver Optistack::solver(const MX& f, const std::vector<MX> & g,
   return OptistackSolver(*this, f, g, solver, options);
 }
 
-std::map< OptistackType, std::vector<MX> > Optistack::categorize(const MX& expr) {
+std::vector<MX> Optistack::sort(const std::vector<MX>& v) const {
+  std::map<int, MX> unordered;
+  for (const auto& d : v) {
+    Dict m = meta(d);
+    unordered[m["count"]] = d;
+  }
+  std::vector<MX> ret;
+  for (auto const &e : unordered)
+    ret.push_back(e.second);
+  return ret;
+}
+
+std::vector<MX> Optistack::symvar() const {
+  std::vector<MX> ret;
+  for (auto& it : data_)
+    ret.push_back(MX::create(it.first));
+  return sort(ret);
+}
+
+std::vector<MX> Optistack::symvar(const MX& m) const {
+  return sort(MX::symvar(m));
+}
+
+MX Optistack::canon_expr(const MX& expr, ConstraintType& type) {
+  MX c = expr;
+
+  type = OPTISTACK_UNKNOWN;
+  if (c.is_op(OP_LE) || c.is_op(OP_LT)) {
+    std::vector<MX> ret;
+    std::vector<MX> args;
+    while (c.is_op(OP_LE) || c.is_op(OP_LT)) {
+      args.push_back(c.dep(1));
+      c = c.dep(0);
+    }
+    args.push_back(c);
+    for (int j=0;j<args.size()-1;++j) {
+      MX e = args[j+1]-args[j];
+      if (e.is_vector()) {
+        ret.push_back(e);
+        spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_INEQUALITY);
+        type = OPTISTACK_INEQUALITY;
+      } else {
+        if (args[j].is_scalar()) {
+          e = DM::eye(args[j].size1())*args[j]-args[j+1];
+        } else if (args[j+1].is_scalar()) {
+          e = args[j]-DM::eye(args[j].size1())*args[j+1];
+        } else {
+          e = args[j]-args[j+1];
+        }
+
+        ret.push_back(e);
+        spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_PSD);
+        type = OPTISTACK_PSD;
+      }
+    }
+
+    if (type==OPTISTACK_INEQUALITY) {
+      return veccat(ret);
+    } else {
+      return diagcat(ret);
+    }
+  } else if (c.is_op(OP_EQ)) {
+    spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_EQUALITY);
+    type = OPTISTACK_EQUALITY;
+    return c.dep(0)-c.dep(1);
+  } else {
+    spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_EXPR);
+    type = OPTISTACK_EXPR;
+    return c;
+  }
+
+}
+
+std::vector<MX> Optistack::symvar(const MX& expr, VariableType type) const {
+  std::vector<MX> deps = symvar(expr);
+
+  std::vector<MX> ret;
+  for (const auto& d : deps) {
+    auto search = data_.find(d.get());
+    if (search!=data_.end()) {
+      if (search->second==type) ret.push_back(d);
+    }
+  }
+
+  return ret;
+}
+
+std::map< Optistack::VariableType, std::vector<MX> > Optistack::categorize(const MX& expr) {
   std::vector<MX> deps = symvar(expr);
 
   std::set< MXNode* > dep_nodes;
   for (const auto& i : deps)
     dep_nodes.insert(i.get());
 
-  std::map< OptistackType, std::vector<MX> > ret;
+  std::map< VariableType, std::vector<MX> > ret;
 
   ret[OPTISTACK_VAR] = std::vector<MX>();
   ret[OPTISTACK_PAR] = std::vector<MX>();
@@ -56,29 +181,18 @@ std::map< OptistackType, std::vector<MX> > Optistack::categorize(const MX& expr)
 
 // Solve the problem
 void OptistackSolver::solve() {
+  solve_prepare();
+  res(solve_actual(arg_));
+}
 
-  const std::vector<MX>& x = variables_[OPTISTACK_VAR];
-  const std::vector<MX>& p = variables_[OPTISTACK_PAR];
-  std::vector<DM> x0_;
-  x0_.reserve(x.size());
+// Solve the problem
+void OptistackSolver::solve_prepare() {
+  arg_["x0"] = veccat(values(Optistack::OPTISTACK_VAR));
+  arg_["p"]  = veccat(values(Optistack::OPTISTACK_PAR));
+}
 
-  std::vector<DM> p_;
-  p_.reserve(p.size());
-
-  // Initialize decision variables with zero
-  for (auto& v : x)
-    x0_.push_back(data_[v.get()][0]);
-
-  // Initialize decision variables with nan
-  for (auto& v : p)
-    p_.push_back(data_[v.get()][0]);
-
-  arg_["x0"] = veccat(x0_);
-  arg_["p"]  = veccat(p_);
-
-  res_ = solver_(arg_);
-
-  solved_ = true;
+DMDict OptistackSolver::solve_actual(const DMDict& arg) const {
+  return solver_(arg);
 }
 
 DM OptistackSolver::value(const MX& x) const {
@@ -88,30 +202,26 @@ DM OptistackSolver::value(const MX& x) const {
   return arg[0];
 }
 
-OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g,
-    const std::string& solver, const Dict& options) : sc_(sc) {
+OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g) : sc_(sc) {
   solved_ = false;
 
   MX total_expr = vertcat(f, veccat(g));
   variables_ = sc_.categorize(total_expr);
 
-  const std::vector<MX>& x = variables_[OPTISTACK_VAR];
-  const std::vector<MX>& p = variables_[OPTISTACK_PAR];
+  std::vector<MX> x = symvar(Optistack::OPTISTACK_VAR);
+  std::vector<MX> p = symvar(Optistack::OPTISTACK_PAR);
 
   nlp_["x"] = veccat(x);
   nlp_["p"] = veccat(p);
 
   nlp_["f"] = f;
-  constraints_ = categorize_constraints(g);
+  constraints_ = Optistack::categorize_constraints(g);
   std::vector<MX> g_all;
   for (const auto& cm : constraints_) {
-    g_all.insert(g_all.end(), cm.flattened.begin(), cm.flattened.end());
+    g_all.push_back(cm.flattened);
   }
 
   nlp_["g"] = veccat(g_all);
-  int ng = nlp_["g"].is_null()? 0 : nlp_["g"].size1();
-  solver_ = nlpsol("solver", solver, nlp_, options);
-  // Allocate numeric matrics
 
   // Initialize decision variables with zero
   for (auto& v : x)
@@ -120,17 +230,35 @@ OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::ve
   // Initialize decision variables with nan
   for (auto& v : p)
     data_[v.get()] = std::vector<DM>(1, DM::nan(v.sparsity()));
+}
+
+OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g,
+    const std::string& solver, const Dict& options) : OptistackSolver(sc, f, g) {
+
+  int ng = nlp_["g"].is_null()? 0 : nlp_["g"].size1();
+  solver_ = nlpsol("solver", solver, nlp_, options);
 
   // Set constraints
   std::vector<DM> lbg;lbg.reserve(ng);
   std::vector<DM> ubg;lbg.reserve(ng);
   for (const auto& cm : constraints_) {
-    if (cm.is_equality) {
-      lbg.push_back(DM::zeros(veccat(cm.flattened).sparsity()));
-      ubg.push_back(DM::zeros(veccat(cm.flattened).sparsity()));
-    } else {
-      lbg.push_back(-inf*DM::ones(veccat(cm.flattened).sparsity()));
-      ubg.push_back(DM::zeros(veccat(cm.flattened).sparsity()));
+    switch (cm.type) {
+      case Optistack::OPTISTACK_EQUALITY:
+        lbg.push_back(DM::zeros(cm.flattened.sparsity()));
+        ubg.push_back(DM::zeros(cm.flattened.sparsity()));
+        break;
+      case Optistack::OPTISTACK_INEQUALITY:
+        lbg.push_back(-inf*DM::ones(cm.flattened.sparsity()));
+        ubg.push_back(DM::zeros(cm.flattened.sparsity()));
+        break;
+      case Optistack::OPTISTACK_PSD:
+        spline_error("Psd constraints not implemented yet. "
+          "Perhaps you intended an element-wise inequality? "
+          "In that case, make sure that the matrix is flattened (e.g. mat(:)).");
+      case Optistack::OPTISTACK_EXPR:
+        spline_error("Constraint type unknown. Use ==, >= or <= .");
+      case Optistack::OPTISTACK_UNKNOWN:
+        spline_error("Bug in toolbox. Please notify authors.");
     }
   }
 
@@ -138,33 +266,15 @@ OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::ve
   arg_["ubg"] = veccat(ubg);
 }
 
-std::vector<MetaCon> OptistackSolver::categorize_constraints(const std::vector<MX>& g) {
+std::vector<Optistack::MetaCon> Optistack::categorize_constraints(const std::vector<MX>& g) {
 
-  std::vector<MX> pure;
-  std::vector<bool> equalities;
-  std::vector<MetaCon> ret(g.size());
+  std::vector<Optistack::MetaCon> ret(g.size());
 
   for (int i=0;i<g.size();++i) {
     MX c = g[i];
     MetaCon& r = ret[i];
     r.original = c;
-    if (c.is_op(OP_LE) || c.is_op(OP_LT)) {
-      std::vector<MX> args;
-      while (c.is_op(OP_LE) || c.is_op(OP_LT)) {
-        args.push_back(c.dep(1));
-        c = c.dep(0);
-      }
-      args.push_back(c);
-      for (int j=0;j<args.size()-1;++j) {
-        r.flattened.push_back(args[j+1]-args[j]);
-        r.is_equality = false;
-      }
-    } else if (c.is_op(OP_EQ)) {
-        r.flattened.push_back(c.dep(0)-c.dep(1));
-        r.is_equality = true;
-    } else {
-      spline_assert_message(false, "Constraint type unkown. Use ==, >= or <= .");
-    }
+    r.flattened = canon_expr(c, r.type);
   }
 
   return ret;
@@ -216,18 +326,61 @@ void OptiSplineSolver::value(const Tensor<MX>& t, const Tensor<DM>& d) {
   OptistackSolver::value(t.data(), d.data());
 }
 
-spline::Function OptiSpline::Function(const spline::TensorBasis& b) {
-  std::vector<int> shape = b.dimension();
-  shape.push_back(1);
-  shape.push_back(1);
+spline::Function OptiSpline::Function(const spline::TensorBasis& b,
+    const std::vector<int>& var_shape, const std::string& variable_type) {
 
-  return spline::Function(b, spline::Coefficient(var(shape)));
+  casadi_assert(var_shape.size()<=2);
+  int n = var_shape.size()>=1 ? var_shape[0] : 1;
+  int m = var_shape.size()==2 ? var_shape[1] : 1;
+
+  return spline::Function(b, spline::Coefficient(coeff_var(b.dimension(), n, m, variable_type)));
 }
 
-MT OptiSpline::var(const std::vector<int> & shape) {
-  return MT(var(spline::product(shape)), shape);
+MT OptiSpline::coeff_var(const std::vector<int> & shape, int n, int m, const std::string& variable_type) {
+  int cs = spline::product(shape);
+
+  if (variable_type=="full") {
+    std::vector<int> ret_shape = shape;
+    ret_shape.push_back(n);
+    ret_shape.push_back(m);
+    return MT(var(cs), ret_shape);
+  }
+
+  std::vector<MX> args;
+  for (int i=0;i<cs;++i)
+    args.push_back(var(n, m, variable_type));
+
+  std::vector<int> t_shape = {n, m};
+  t_shape.insert(t_shape.end(), shape.begin(), shape.end());
+  MT t = MT(horzcat(args), t_shape);
+
+  std::vector<int> reorder = casadi::range(2, shape.size()+2);
+  reorder.push_back(0);
+  reorder.push_back(1);
+
+  return t.reorder_dims(reorder);
 }
 
+std::vector<MX> OptistackSolver::symvar(Optistack::VariableType type) const {
+  auto it = variables_.find(type);
+  spline_assert(it!=variables_.end());
+  return sc_.sort(it->second);
+}
+
+std::vector<DM> OptistackSolver::values(Optistack::VariableType type) const {
+  std::vector<MX> v = symvar(type);
+  std::vector<DM> ret;
+  ret.reserve(ret.size());
+
+  // Initialize decision variables with zero
+  for (auto& e : v) {
+    auto it = data_.find(e.get());
+    spline_assert(it!=data_.end());
+    ret.push_back(it->second[0]);
+  }
+
+  return ret;
+}
 
 OptiSplineSolver OptiSpline::solver(const MX& f, const std::vector<MX> & g,
     const std::string& solver, const Dict& options) const {
@@ -236,5 +389,9 @@ OptiSplineSolver OptiSpline::solver(const MX& f, const std::vector<MX> & g,
 
 OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g,
     const std::string& solver, const Dict& options) : OptistackSolver(sc, f, g, solver, options) {
+
+}
+
+OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g) : OptistackSolver(sc, f, g) {
 
 }

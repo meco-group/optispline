@@ -48,7 +48,7 @@ foreach(file ${files})
     get_filename_component(fileshort ${file} NAME_WE)
     
     add_test(matlab_${BASE}
-    matlab -nojvm -nodesktop -r "try,cd '${folder}',${fileshort},catch e,e.getReport,exit(1),end,exit force")
+    matlab -nosplash -nodesktop -r "try,cd '${folder}',${fileshort},catch e,e.getReport,exit(1),end,exit force")
 
     set_tests_properties(matlab_${BASE} PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_BINARY_DIR}/swig")
 

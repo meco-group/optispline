@@ -11,36 +11,53 @@
 
 using namespace casadi;
 
-#ifndef SWIG
-enum OptistackType {OPTISTACK_VAR, OPTISTACK_PAR};
-
-struct MetaCon {
-  MX original;
-  std::vector<MX> flattened;
-  bool is_equality;
-};
-
-#endif
-
 class OptistackSolver;
 
 class Optistack {
   friend class OptistackSolver;
 public:
+  enum ConstraintType {OPTISTACK_UNKNOWN, OPTISTACK_EQUALITY, OPTISTACK_INEQUALITY, OPTISTACK_PSD, OPTISTACK_EXPR};
+  enum VariableType {OPTISTACK_VAR, OPTISTACK_PAR};
+
+  #ifndef SWIG
+  struct MetaCon {
+    MX original;
+    MX flattened;
+    ConstraintType type;
+  };
+  #endif
+
   Optistack();
-  MX var(int n=1, int m=1);
+  MX var(int n=1, int m=1, const std::string& variable_type="full");
+  MX var(const Sparsity& sp);
   MX par(int n=1, int m=1);
 
   OptistackSolver solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options=Dict()) const;
 
   void assert_has(const MX& m) const;
 
+  MX meta(const MX& m, const Dict& dict);
+  Dict meta(const MX& m) const;
+
+  std::vector<MX> symvar() const;
+  std::vector<MX> symvar(const MX& m) const;
+  std::vector<MX> symvar(const MX& expr, VariableType type) const;
+
+  std::vector<MX> sort(const std::vector<MX>& v) const;
+
+  static MX canon_expr(const MX& expr, Optistack::ConstraintType& SWIG_OUTPUT(type));
+
+
 protected:
-  std::map< OptistackType, std::vector<MX> > categorize(const MX& expr);
+  static std::vector< MetaCon > categorize_constraints(const std::vector<MX>& g);
+  std::map< VariableType, std::vector<MX> > categorize(const MX& expr);
 
 private:
-  MX flag(const MX& m, OptistackType type);
-  std::map<MXNode*, OptistackType> data_;
+  MX flag(const MX& m, VariableType type);
+  std::map<MXNode*, VariableType> data_;
+  std::map<MXNode*, Dict> meta_;
+
+  int count_;
 
 };
 
@@ -51,26 +68,39 @@ public:
   // Set value
   void value(const MX& x, const DM& v);
 
+  #ifndef SWIG
   // Get value
   DM value(const MX& x) const;
   // Get value
   DM value(const DM& x) const { return x; };
   DM value(const SX& x) const { return DM::nan(x.sparsity()); };
+  #endif
 
   void assert_has(const MX& m) const;
 
+  std::vector<MX> symvar(Optistack::VariableType type) const;
+  std::vector<DM> values(Optistack::VariableType type) const;
+
   // Solve the problem
   void solve();
+
+  void solve_prepare();
+  DMDict solve_actual(const DMDict& args) const;
+
+  DMDict arg() const { return arg_; }
+  void res(const DMDict& res) { res_ = res; solved_ = true; }
 protected:
+  OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g);
+
   OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g,
       const std::string& solver, const Dict& options);
 private:
 
 
-  static std::vector< MetaCon > categorize_constraints(const std::vector<MX>& g);
+
   Optistack sc_;
   std::map<MXNode*, std::vector<DM> > data_;
-  std::map< OptistackType, std::vector<MX> > variables_;
+  std::map< Optistack::VariableType, std::vector<MX> > variables_;
 
   Function solver_;
   Function forder_;
@@ -78,7 +108,7 @@ private:
   DMDict arg_;
   MXDict nlp_;
   DM pvalue_;
-  std::vector< MetaCon > constraints_;
+  std::vector< Optistack::MetaCon > constraints_;
 
   bool solved_;
 
@@ -96,6 +126,9 @@ public:
   void value(const Tensor<MX>& c, const Tensor<DM>& d);
   Tensor<DM> value(const Tensor<MX>& c) const;
 
+// Ought to be protected, but we are overloading this in Matlab
+  OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g);
+
 protected:
   OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g,
       const std::string& solver, const Dict& options);
@@ -105,8 +138,11 @@ class OptiSpline : public Optistack {
   friend class OptiSplineSolver;
 public:
   using Optistack::var;
-  MT var(const std::vector<int>& shape);
-  spline::Function Function(const spline::TensorBasis& b);
+
+#ifndef SWIG
+  MT coeff_var(const std::vector<int>& shape, int n=1, int m=1, const std::string& variable_type="full");
+#endif
+  spline::Function Function(const spline::TensorBasis& b, const std::vector<int>& shape=std::vector<int>(), const std::string& variable_type="full");
   OptiSplineSolver solver(const MX& f, const std::vector<MX> & g,
       const std::string& solver, const Dict& options=Dict()) const;
 };

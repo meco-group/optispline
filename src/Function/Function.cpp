@@ -42,10 +42,22 @@ namespace spline{
     std::string Function::to_string() const { return (*this)-> to_string();}
 
     casadi::MX Function::operator<=(const casadi::MX& x) const {
-        return coeff_tensor().as_MT().data()<=x;
+        return operator-().operator>=(-x);
     }
     casadi::MX Function::operator>=(const casadi::MX& x) const {
-        return coeff_tensor().as_MT().data()>=x;
+        if (shape()[0]>1 && shape()[1]>1) {
+          spline_assert(shape()[0]==shape()[1]);
+          MT a = coeff_tensor().as_MT();
+          int n = coeff().dimension().size();
+          std::vector<int> reorder = casadi::range(n);
+          reorder.insert(reorder.begin(), n);
+          reorder.insert(reorder.begin(), n+1);
+          casadi::MX b = a.reorder_dims(reorder).shape({shape()[0], casadi::product(coeff().dimension())*shape()[1]}).matrix();
+          std::vector<casadi::MX> components = horzsplit(b, shape()[1]);
+          return diagcat(components)>x;
+        } else {
+          return coeff_tensor().as_MT().data()>=x;
+        }
     }
 
     AnyTensor Function::operator()(const AnyTensor& x, const std::vector< Argument >& args ) const {

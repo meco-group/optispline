@@ -963,7 +963,7 @@ using namespace spline;
 %casadi_template("[Domain]", PREC_MXVector, std::vector< spline::Domain >)
 %casadi_template("[interval]", PREC_MXVector, std::vector< spline::Interval >)
 
-%casadi_typemaps("Coefficient", PREC_MX, spline::Coefficient)
+%casadi_typemaps("Coefficient", PREC_FUNCTION, spline::Coefficient)
 %casadi_typemaps("TensorBasis", PREC_MX, spline::TensorBasis)
 %casadi_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %casadi_template("[DTensor]", PREC_MXVector, std::vector< Tensor<casadi::DM> >)
@@ -972,7 +972,7 @@ using namespace spline;
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 %casadi_template("[Function]", PREC_FUNCTION, std::vector< spline::Function >)
 %casadi_typemaps("Function", PREC_FUNCTION, spline::Function)
-%casadi_typemaps("[Coefficient]", PREC_MX, std::vector<spline::Coefficient>)
+%casadi_typemaps("[Coefficient]", PREC_FUNCTION, std::vector<spline::Coefficient>)
 
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
@@ -995,6 +995,17 @@ using namespace spline;
   if (!casadi::to_ptr($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' [index] '.");
   interpret_NumericIndex(m);
  }
+ 
+ 
+%apply int &OUTPUT { Optistack::ConstraintType &OUTPUT };
+
+%typemap(argout, noblock=1,fragment="casadi_all") Optistack::ConstraintType &OUTPUT {
+  %append_output(casadi::from_ptr((int *) $1));
+}
+
+%typemap(in, doc="Optistack.ConstraintType", noblock=1, numinputs=0) Optistack::ConstraintType &OUTPUT (Optistack::ConstraintType m) {
+ $1 = &m;
+}
 
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
