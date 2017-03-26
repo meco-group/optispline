@@ -1100,8 +1100,11 @@ namespace spline {
    function self = subsasgn(self,varargin)
         error('Not supported: subsasgn');
     end
-  function r = size(self)
+  function r = size(self, varargin)
     r = shape(self);
+    if length(varargin)==1
+      r = r(varargin{1});
+    end
   end
   %}
 }
