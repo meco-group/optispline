@@ -6,39 +6,82 @@ from numpy.polynomial.polynomial import polyval
 
 class Test_Function_Operations(BasisTestCase):
 
-    def test_eval(self):
 
-      x = Polynomial([0,1],'x')
-      r = [i**2*0.01 for i in range(11)]
-      r2 = [[i*0.1,0.1*i] for i in range(11)]
-      print r
-      # print x(0.5)
-      # print x(r)
-      print "print x.call([0.5])"
-      print x.call([0.5])
-      print x(0.5)
-      print x(0.5, ['x'])
-      print "print x.call(r)"
-      print x.call(r)
-      print x(r)
-      print x(r, ['x'])
-      # self.assertEqualT(r, x(r), 1e-6)
+    def test_ones_base(self):
+      a = 0.1
+      x = Polynomial([0,1, 2],'x')
+      
 
-      y = Polynomial([0,1],'y')
-      f = x * y
-      print "print r2"
-      print r2
+      self.assertEqualTensor(x(a), a+2*a**2)
+      self.assertEqualTensor(x([a]), a+2*a**2)
+      self.assertEqualTensor(x([a],["x"]), a+2*a**2)
+      
+      with self.assertRaises(Exception):
+        x([a],["y"])
+      
+      a = [0.1, 0.2, 0.3]
+      self.assertEqualTensor(x(a), np.array(a)+2*np.array(a)**2)      
+        
+      a = np.array([[0.1, 0.2, 0.3]]).T
 
-      # print f(0.5, 0.5)
-      # print f(r2)
-      print "print f.call([0.5, 0.5])"
-      print f.call([0.5, 0.5])
-      print f([0.5, 0.5])
-      print f([0.5, 0.5], ['x'])
-      print "print f.call(r2)"
-      print f.call(r2)
-      print f(r2)
-      print f(r2, ['x'])
+      self.assertEqualTensor(x(a), a+2*a**2)
+      
+      #a = np.array([[0.1, 0.2, 0.3]])
+
+      #self.assertEqualTensor(x(a), a+2*a**2)
+      
+      #a = np.array([0.1, 0.2, 0.3])
+
+      #self.assertEqualTensor(x(a), a+2*a**2)
+
+      
+    def test_two_bases(self):
+      print "here"
+      a = 0.1
+      b = 0.13
+      x = Polynomial([0,1, 2],'x')
+      y = Polynomial([0,0.1, -3],'y')
+      
+      f = x*y
+      
+      with self.assertRaises(Exception):
+        self.assertEqualTensor(f(a,b), f(b,a))
+          
+      self.assertEqualTensor(f(a,b), x(a)*y(b))
+      self.assertEqualTensor(f(b,a), x(b)*y(a))
+      
+      
+
+      self.assertEqualTensor(f([a,b]), x(a)*y(b))
+      self.assertEqualTensor(f([b,a]), x(b)*y(a))
+
+
+      self.assertEqualTensor(f([a,b],["x","y"]), x(a)*y(b))
+      self.assertEqualTensor(f([a,b],["y","x"]), x(b)*y(a))
+      
+      self.assertEqualTensor(f([b,a],["x","y"]), x(b)*y(a))
+      self.assertEqualTensor(f([b,a],["y","x"]), x(a)*y(b))
+
+      with self.assertRaises(Exception):
+        f([b,a],["y","z"])
+      a = [0.1, 0.2, 0.3]
+      b = [0.13, 0.17, 0.19]
+      
+
+      self.assertEqualTensor(f(a,b), x(a)*y(b))
+      self.assertEqualTensor(f(b,a), x(b)*y(a))      
+      
+      ab = np.array([a,b]).T
+      ba = np.array([b,a]).T
+      
+      self.assertEqualTensor(f(ab), x(a)*y(b))
+      self.assertEqualTensor(f(ba), x(b)*y(a))
+
+      self.assertEqualTensor(f(ab,["x","y"]), x(a)*y(b))
+      self.assertEqualTensor(f(ab,["y","x"]), x(b)*y(a))
+      
+      self.assertEqualTensor(f(ba,["x","y"]), x(b)*y(a))
+      self.assertEqualTensor(f(ba,["y","x"]), x(a)*y(b))
 
     def test_partial_eval(self):
         return
