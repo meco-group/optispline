@@ -28,6 +28,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
           helper = helper.expand();
 
           name = 'yalmip_helper';
+          clear(name);
 
           main = fopen([name '.m'],'w');
 
@@ -142,7 +143,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
         if strcmp(solver,'yalmip')
           [sol] = OptiSplineSolverYalmip(self, f, g, solver, options);
         else
-          [sol] = opti.solver@splines.OptiSpline(self, f, g, solver, options);
+          [sol] = self.solver@splines.OptiSpline(self, f, g, solver, options);
         end
       end
    end
