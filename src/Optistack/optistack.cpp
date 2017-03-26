@@ -22,11 +22,11 @@ MX Optistack::var(int n, int m, const std::string& variable_type) {
   count_+=1;
   if (variable_type=="symmetric") {
     spline_assert(n==m);
-    MX ret = MX(Sparsity::lower(n), meta(flag(MX::sym("x", n*(n+1)/2), OPTISTACK_VAR), meta_data));
+    MX ret = MX(Sparsity::lower(n), meta(flag(MX::sym("x_" + std::to_string(count_), n*(n+1)/2), OPTISTACK_VAR), meta_data));
 
     return tril2symm(ret);
   } else {
-    return meta(flag(MX::sym("x", n, m), OPTISTACK_VAR), meta_data);
+    return meta(flag(MX::sym("x_" + std::to_string(count_), n, m), OPTISTACK_VAR), meta_data);
   }
 }
 
