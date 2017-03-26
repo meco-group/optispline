@@ -40,6 +40,36 @@ class Test_Optistack(BasisTestCase):
         
         self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
         self.assertEqualTensor(sol.value(y), 0,tol=1e-7)
+
+        sol = opti.solver((x-1)**2+(y-2)**2,[(3<= y) <=4],"ipopt")
+        sol.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 3,tol=1e-7)
+        
+        sol = opti.solver((x-1)**2+(y-2)**2,[3<= (y <=4)],"ipopt")
+        sol.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 3,tol=1e-7)
+
+        sol = opti.solver((x-1)**2+(y-2)**2,[(0<= y) <=1],"ipopt")
+        sol.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 1,tol=1e-7)
+
+        sol = opti.solver((x-1)**2+(y-2)**2,[(4>= y) >=3],"ipopt")
+        sol.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 3,tol=1e-7)
+        
+        sol = opti.solver((x-1)**2+(y-2)**2,[(1>= y) >=0],"ipopt")
+        sol.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 1,tol=1e-7)
         
         x = opti.var(3,3)
         f = trace(x)

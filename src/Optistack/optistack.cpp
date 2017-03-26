@@ -94,32 +94,38 @@ std::vector<MX> Optistack::symvar(const MX& m) const {
   return sort(MX::symvar(m));
 }
 
+std::vector<MX> ineq_unpack(const MX& a) {
+  if (a.is_op(OP_LE) || a.is_op(OP_LT)) {
+    std::vector<MX> lhs = ineq_unpack(a.dep(0));
+    std::vector<MX> rhs = ineq_unpack(a.dep(1));
+    lhs.insert(lhs.end(), rhs.begin(), rhs.end());
+    return lhs;
+  } else {
+    return {a};
+  }
+}
+
 MX Optistack::canon_expr(const MX& expr, ConstraintType& type) {
   MX c = expr;
 
   type = OPTISTACK_UNKNOWN;
   if (c.is_op(OP_LE) || c.is_op(OP_LT)) {
     std::vector<MX> ret;
-    std::vector<MX> args;
-    while (c.is_op(OP_LE) || c.is_op(OP_LT)) {
-      args.push_back(c.dep(1));
-      c = c.dep(0);
-    }
-    args.push_back(c);
+    std::vector<MX> args = ineq_unpack(c);
     for (int j=0;j<args.size()-1;++j) {
-      MX e = args[j+1]-args[j];
+      MX e = args[j]-args[j+1];
       if (e.is_vector()) {
         ret.push_back(e);
         spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_INEQUALITY);
         type = OPTISTACK_INEQUALITY;
       } else {
-        if (args[j].is_scalar()) {
-          e = DM::eye(args[j].size1())*args[j]-args[j+1];
-        } else if (args[j+1].is_scalar()) {
-          e = args[j]-DM::eye(args[j].size1())*args[j+1];
-        } else {
-          e = args[j]-args[j+1];
-        }
+        //if (args[j+1].is_scalar()) {
+        //  e = DM::eye(args[j+1].size1())*args[j+1]-args[j];
+        //} else if (args[j].is_scalar()) {
+        //  e = args[j+1]-DM::eye(args[j+1].size1())*args[j];
+        //} else {
+        e = args[j+1]-args[j];
+        //}
 
         ret.push_back(e);
         spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_PSD);
