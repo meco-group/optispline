@@ -50,7 +50,6 @@ namespace spline{
             postStep.clear();
         }
 
-
         int n = f.coeff_tensor().n_dims();
         std::vector<int> b_i = mrange(n);
         std::vector<int> a_i = std::vector<int>(b_i.begin(), b_i.begin()+b_i.size()-2);
@@ -60,14 +59,12 @@ namespace spline{
         AnyTensor P = AnyTensor::pack(preStep, 0);
 
         return P.einstein(f.coeff().data(), a_i, b_i, c_i);
-
-
     }
 
     std::string EvaluationGrid::type() const {
         return "EvaluationGrid";
     }
-    
+
     std::string EvaluationGrid::to_string() const {
         return type();
     }
