@@ -26,13 +26,13 @@ class Test_Function_Operations(BasisTestCase):
 
       self.assertEqualTensor(x(a), a+2*a**2)
       
-      #a = np.array([[0.1, 0.2, 0.3]])
+      a = np.array([[0.1, 0.2, 0.3]])
 
-      #self.assertEqualTensor(x(a), a+2*a**2)
+      self.assertEqualTensor(x(a), a+2*a**2)
       
-      #a = np.array([0.1, 0.2, 0.3])
+      a = np.array([0.1, 0.2, 0.3])
 
-      #self.assertEqualTensor(x(a), a+2*a**2)
+      self.assertEqualTensor(x(a), a+2*a**2)
 
       
     def test_two_bases(self):

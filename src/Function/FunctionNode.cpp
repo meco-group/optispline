@@ -8,21 +8,28 @@
 namespace spline {
     FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : FunNode(coeff), basis_(basis) {}
 
-    AnyTensor FunctionNode::operator()(const AnyTensor& x, const std::vector< int >& args) const{
-        if(x.dims()[0] == n_inputs() && x.dims()[1] == 1){
+    AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< int >& args) const{
+
+        AnyTensor x = arg.squeeze();
+        if (x.is_vector()) x = x.as_vector();
+        spline_assert(x.n_dims()<=2);
+
+        if (x.n_dims()==1) {
+          if (x.dims()[0] == n_inputs()) {
             std::vector< AnyScalar > x_ = x.unpack_1();
             return basis_(x_, Argument::from_vector(args)).inner(coeff().data());
-        }
-        if(x.dims()[0] == 1 && x.dims()[1] == n_inputs()){
-            std::vector< AnyScalar > x_ = x.unpack_1();
-            return basis_(x_, Argument::from_vector(args)).inner(coeff().data());
+          } else {
+            x = x.shape({x.numel(), 1});
+          }
         }
 
-        spline_assert_message(x.dims()[1] == n_inputs(), "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " + std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
+        spline_assert_message(x.dims()[1] == n_inputs(),
+          "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
+          std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
         std::vector< AnyTensor > tensor = {};
 
         std::vector< std::vector< AnyScalar > > X_ = x.unpack_2();
-        for(int i = 0; i < X_.size(); i++){
+        for (int i = 0; i < X_.size(); i++) {
             tensor.push_back(basis_(X_[i], Argument::from_vector(args)));
         }
         AnyTensor packed_tensor = AnyTensor::pack(tensor, 0);
