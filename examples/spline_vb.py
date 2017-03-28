@@ -8,41 +8,6 @@ import casadi as cas
 
 opti = OptiSpline()
 
-def derivative(coeffs, knots1, degree, o=1):
-    coeffs = coeffs.data()
-    try:
-      n = coeffs.shape[0]
-    except:
-      coeffs = coeffs.data()
-      n = coeffs.shape[0]
-    P = np.eye(n)
-    knots = knots1.copy()
-    knots_out = knots[o:-o]
-    for i in range(o):
-        knots = knots[1:-1]
-        delta_knots = knots[degree - i:] - knots[:- degree + i]
-        T = np.zeros((n - 1 - i, n - i))
-        j = np.arange(n - 1 - i)
-        T[(j, j)] = -1. / delta_knots
-        T[(j, j + 1)] = 1. / delta_knots
-        P = (degree - i) * np.dot(T, P)
-    m = BSplineBasis(knots_out, degree)
-    basis = TensorBasis([m])
-    if isinstance(coeffs, (cas.SX, cas.MX)):
-        coeffs_out = cas.mtimes(cas.DM(P), coeffs)
-    else:
-        coeffs_out = P.dot(coeffs.squeeze())
-    return coeffs_out, knots_out
-
-def FunDerivative(self):
-  vx_cfs_, knots2 = derivative(self.coeff(), knots, degree)
-  m2 = BSplineBasis(knots2, degree-1)
-  basis2 = TensorBasis([m2])
-  return Function(basis2, vx_cfs_)
-
-Function.derivative = FunDerivative
-
-
 vmax = 0.5
 start_pnt = [0., 0.]
 end_pnt = [1., 1.]
