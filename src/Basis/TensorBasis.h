@@ -169,20 +169,11 @@ public:
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
         TensorBasis insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<std::string>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-
+            const std::vector<Argument>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
         TensorBasis midpoint_refinement(const std::vector<int> & refinement,
-            const std::vector<std::string>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-        TensorBasis midpoint_refinement(const std::vector<int> & refinement,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-
+            const std::vector<Argument>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
         TensorBasis degree_elevation(const std::vector<int>& elevation,
-            const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
-        TensorBasis degree_elevation(const std::vector<int>& elevation,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
-
+            const std::vector<Argument>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis kick_boundary(const TensorDomain& boundary,
             const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis kick_boundary(const TensorDomain& boundary,

@@ -330,17 +330,8 @@ namespace spline {
     }
 
     TensorBasis TensorBasis::insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
-        NumericIndexVector arg_ind(args.size());
-        for (int i = 0; i < args.size(); i++) {
-            arg_ind[i] = indexArgument(args[i]);
-        }
-        return (*this)->insert_knots(new_knots, arg_ind, T);
-    }
-
-    TensorBasis TensorBasis::insert_knots(const std::vector<AnyVector> & new_knots,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
-        return (*this)->insert_knots(new_knots, arg_ind, T);
+            const std::vector<Argument>& args, std::vector<AnyTensor> & T) const {
+        return (*this)->insert_knots(new_knots, Argument::concrete(args, arguments()), T);
     }
 
     TensorBasis TensorBasisNode::insert_knots(const std::vector<AnyVector>& new_knots,
@@ -356,21 +347,12 @@ namespace spline {
     }
 
     TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
-            const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
-        NumericIndexVector arg_ind(args.size());
-        for (int i = 0; i < args.size(); i++) {
-            arg_ind[i] = indexArgument(args[i]);
-        }
-        return (*this)->midpoint_refinement(refinement, arg_ind, T);
-    }
-
-    TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
-        return (*this)->midpoint_refinement(refinement, arg_ind, T);
+            const std::vector<Argument>& args, std::vector<AnyTensor> & T) const {
+        return (*this)->midpoint_refinement(refinement, Argument::concrete(args, arguments()), T);
     }
 
     TensorBasis TensorBasisNode::midpoint_refinement(const std::vector<int>& refinement,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+            const std::vector<int>& arg_ind, std::vector<AnyTensor> & T) const {
         spline_assert(arg_ind.size() == refinement.size());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
@@ -382,21 +364,12 @@ namespace spline {
     }
 
     TensorBasis TensorBasis::degree_elevation(const std::vector<int>& elevation,
-            const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
-        NumericIndexVector arg_ind(args.size());
-        for (int i = 0; i < args.size(); i++) {
-            arg_ind[i] = indexArgument(args[i]);
-        }
-        return (*this)->degree_elevation(elevation, arg_ind, T);
-    }
-
-    TensorBasis TensorBasis::degree_elevation(const std::vector<int>& elevation,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
-        return (*this)->degree_elevation(elevation, arg_ind, T);
+            const std::vector<Argument>& args, std::vector<AnyTensor> & T) const {
+        return (*this)->degree_elevation(elevation, Argument::concrete(args, arguments()), T);
     }
 
     TensorBasis TensorBasisNode::degree_elevation(const std::vector<int>& elevation,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const {
+            const std::vector<int>& arg_ind, std::vector<AnyTensor> & T) const {
         spline_assert(arg_ind.size() == elevation.size());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
