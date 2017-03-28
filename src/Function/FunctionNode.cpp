@@ -333,7 +333,7 @@ namespace spline {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.derivative(orders, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.derivative(orders, Argument::from_vector(arg_ind), T);
         NumericIndexVector args(arg_ind.size());
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
@@ -345,7 +345,7 @@ namespace spline {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.antiderivative(orders, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.antiderivative(orders, Argument::from_vector(arg_ind), T);
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }

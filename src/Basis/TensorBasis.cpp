@@ -447,35 +447,24 @@ namespace spline {
         return (*this)->kick_boundary(boundary, args, T);
     }
 
-    TensorBasis TensorBasis::derivative(const std::vector<std::string>& args,
+    TensorBasis TensorBasis::derivative(const std::vector<Argument>& arg,
+          std::vector<AnyTensor>& T) const {
+        return (*this)->derivative(std::vector<int>(1, arg.size()), Argument::concrete(arg, arguments()), T);
+    }
+
+    TensorBasis TensorBasis::derivative(const std::vector<int>& order,
+      const std::vector<Argument>& arg, std::vector<AnyTensor>& T) const {
+        return (*this)->derivative(order, Argument::concrete(arg, arguments()), T);
+    }
+
+    TensorBasis TensorBasis::antiderivative(const std::vector<Argument>& arg,
         std::vector<AnyTensor>& T) const {
-        NumericIndexVector arg_ind(args.size());
-        std::vector<int> orders(args.size(), 1);
-        for (int i = 0; i < args.size(); i++) {
-            arg_ind[i] = indexArgument(args[i]);
-        }
-        return (*this)->derivative(orders, arg_ind, T);
+        return (*this)->antiderivative(std::vector<int>(1, arg.size()), Argument::concrete(arg, arguments()), T);
     }
 
-    TensorBasis TensorBasis::derivative(const NumericIndexVector& arg_ind,
-        std::vector<AnyTensor>& T) const {
-        // default derivative is with order = 1
-        std::vector<int> orders(arg_ind.size(), 1);
-        return (*this)->derivative(orders, arg_ind, T);
-    }
-
-    TensorBasis TensorBasis::derivative(const std::vector<int>& orders,
-        const std::vector<std::string>& args, std::vector<AnyTensor>& T) const {
-        NumericIndexVector arg_ind(args.size());
-        for (int i = 0; i < args.size(); i++) {
-            arg_ind[i] = indexArgument(args[i]);
-        }
-        return (*this)->derivative(orders, arg_ind, T);
-    }
-
-    TensorBasis TensorBasis::derivative(const std::vector<int>& orders,
-        const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
-        return (*this)->derivative(orders, arg_ind, T);
+    TensorBasis TensorBasis::antiderivative(const std::vector<int>& order,
+      const std::vector<Argument>& arg, std::vector<AnyTensor>& T) const {
+        return (*this)->antiderivative(order, Argument::concrete(arg, arguments()), T);
     }
 
     TensorBasis TensorBasisNode::derivative(const std::vector<int>& orders,
@@ -488,37 +477,6 @@ namespace spline {
         }
         T = T_;
         return substitute_bases(Argument::from_vector(arg_ind), new_bases);
-    }
-
-    TensorBasis TensorBasis::antiderivative(const std::vector<std::string>& args,
-        std::vector<AnyTensor>& T) const {
-        // default antiderivative is with order = 1
-        NumericIndexVector arg_ind(args.size());
-        std::vector<int> orders(args.size(), 1);
-        for (int i = 0; i < args.size(); i++) {
-            arg_ind[i] = indexArgument(args[i]);
-        }
-        return (*this)->antiderivative(orders, arg_ind, T);
-    }
-
-    TensorBasis TensorBasis::antiderivative(const NumericIndexVector& arg_ind,
-        std::vector<AnyTensor>& T) const {
-        std::vector<int> orders(arg_ind.size(), 1);
-        return (*this)->antiderivative(orders, arg_ind, T);
-    }
-
-    TensorBasis TensorBasis::antiderivative(const std::vector<int>& orders,
-        const std::vector<std::string>& args, std::vector<AnyTensor>& T) const {
-        NumericIndexVector arg_ind(args.size());
-        for (int i = 0; i < args.size(); i++) {
-            arg_ind[i] = indexArgument(args[i]);
-        }
-        return (*this)->antiderivative(orders, arg_ind, T);
-    }
-
-    TensorBasis TensorBasis::antiderivative(const std::vector<int>& orders,
-        const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
-        return (*this)->antiderivative(orders, arg_ind, T);
     }
 
     TensorBasis TensorBasisNode::antiderivative(const std::vector<int>& orders,
@@ -705,5 +663,12 @@ namespace spline {
     return  s;
     }
 
+    std::vector<int> TensorBasis::vectorize(const Argument& arg) const{
+        if(arg.is_all()){
+            return casadi::range(n_basis());
+        } else {
+            return {arg.concrete(arguments())};
+        }
+    }
 
 } // namespace spline

@@ -76,7 +76,7 @@ class TensorBasisNode : public SharedObjectNode {
             const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
 
         TensorBasis derivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const;
+            const std::vector<int>& arg_ind, std::vector<AnyTensor>& T) const;
         TensorBasis antiderivative(const std::vector<int>& orders,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const;
         std::vector<AnyTensor> integral(const TensorDomain& domain) const;
@@ -188,23 +188,16 @@ public:
         TensorBasis kick_boundary(const TensorDomain& boundary,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
-        TensorBasis derivative(const std::vector<std::string>& args,
-        std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
-        TensorBasis derivative(const NumericIndexVector& arg_ind,
-        std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
-        TensorBasis derivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
-        TensorBasis derivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
-        TensorBasis antiderivative(const std::vector<std::string>& args,
-        std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
-        TensorBasis antiderivative(const NumericIndexVector& arg_ind,
-        std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
-        TensorBasis antiderivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
-        TensorBasis antiderivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+        TensorBasis derivative(const std::vector<Argument>& arg,
+          std::vector<AnyTensor>& SWIG_OUTPUT(T)) const; // default order = 1
+        TensorBasis derivative(const std::vector<int>& order,
+          const std::vector<Argument>& arg, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+
+        TensorBasis antiderivative(const std::vector<Argument>& arg,
+          std::vector<AnyTensor>& SWIG_OUTPUT(T)) const; // default order = 1
+        TensorBasis antiderivative(const std::vector<int>& order,
+          const std::vector<Argument>& arg, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
         std::vector<AnyTensor> integral(const TensorDomain& domain) const;
         TensorBasis partial_integral(const TensorDomain& domain,
@@ -217,6 +210,20 @@ public:
         spline::Function basis_functions() const ;
 
         std::vector< int > get_permutation(const TensorBasis& grid) const;
+      private:
+          template<class T>
+          std::vector<T> vectorize(const Argument& arg, const T& e) const {
+              std::vector< T > ret;
+              if(arg.is_all()){
+                  ret = std::vector<T>(n_basis(), e);
+              } else {
+                  ret = { e };
+              }
+              return ret;
+          }
+
+          std::vector<int> vectorize(const Argument& arg) const;
+
 };
 
 }   // namespace spline
