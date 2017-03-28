@@ -166,7 +166,7 @@ class Test_Optistack(BasisTestCase):
         xsol = sol.value(x)
        
         print Pd(sol.value(x))
-        self.assertEqualTensor(Pd(xsol), 0)
+        self.assertEqualTensor(Pd(xsol), 0, tol=1e-8)
         kmx = opti.par(len(k))
         b = BSplineBasis(kmx,degree)
         
@@ -175,6 +175,7 @@ class Test_Optistack(BasisTestCase):
         x = opti.var()
         y = P(x)
         
+        print y
         self.assertTrue(jacobian(y,kmx).is_zero())
         
         sol = opti.solver(y,[],"ipopt")
