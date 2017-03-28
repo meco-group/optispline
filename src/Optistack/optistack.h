@@ -29,7 +29,6 @@ public:
 
   Optistack();
   MX var(int n=1, int m=1, const std::string& variable_type="full");
-  MX var(const Sparsity& sp);
   MX par(int n=1, int m=1);
 
   OptistackSolver solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options=Dict()) const;

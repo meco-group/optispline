@@ -8,10 +8,6 @@ Optistack::Optistack() : count_(0) {
 
 }
 
-MX Optistack::var(const Sparsity& sp) {
-  return flag(MX::sym("x", sp), OPTISTACK_VAR);
-}
-
 MX Optistack::var(int n, int m, const std::string& variable_type) {
   Dict meta_data;
   meta_data["variable_type"] = variable_type;
@@ -32,8 +28,12 @@ MX Optistack::var(int n, int m, const std::string& variable_type) {
 
 MX Optistack::par(int n, int m) {
   Dict meta_data;
+  meta_data["n"] = n;
+  meta_data["m"] = m;
   meta_data["type"] = OPTISTACK_PAR;
-  return meta(flag(MX::sym("p", n, m), OPTISTACK_PAR), meta_data);
+  meta_data["count"] = count_;
+  count_+=1;
+  return meta(flag(MX::sym("p_" + std::to_string(count_), n, m), OPTISTACK_PAR), meta_data);
 }
 
 MX Optistack::meta(const MX& m, const Dict& dict) {
@@ -60,8 +60,10 @@ void Optistack::assert_has(const MX& m) const {
 }
 
 MX Optistack::flag(const MX& m, VariableType type) {
-  auto find = data_.find(m.get());
-  spline_assert(find==data_.end());
+  //auto find = data_.find(m.get());
+  // NOTE: m.get() may in fact exist already;
+  //  memory may have been reclaimed
+  //spline_assert(find==data_.end());
   data_[m.get()] = type;
   return m;
 }
