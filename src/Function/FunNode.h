@@ -78,13 +78,8 @@ namespace spline {
 
             virtual int n_inputs() const;  // Number of inputs of the functio
 
-            virtual Function insert_knots(const AnyVector & new_knots) const;
-            virtual Function insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const;
-            virtual Function insert_knots(const AnyVector & new_knots, const std::string & arg) const;
             virtual Function insert_knots(const std::vector<AnyVector> & new_knots,
-                    const std::vector<std::string> & arg) const;
-            virtual Function insert_knots(const std::vector<AnyVector> & new_knots,
-                    const NumericIndexVector & arg_ind) const;
+                    const std::vector< int >& arg_ind) const;
 
         virtual Function midpoint_refinement(const std::vector<int>& refinement,
                 const std::vector< int >& arg_ind) const;
@@ -121,4 +116,3 @@ namespace spline {
 } // namespace spline
 
 #endif //       SRC_FUNCTION_FUNNODE_H_
-

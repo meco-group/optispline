@@ -141,11 +141,8 @@ namespace spline{
     Function Function::project_to(const TensorBasis& basis) const { return (*this)->project_to(basis) ;}
 
     int Function::n_inputs() const { return (*this)->n_inputs() ;}
-    Function Function::insert_knots(const AnyVector & new_knots) const { return (*this)->insert_knots( new_knots) ;}
-    Function Function::insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const { return (*this)->insert_knots( new_knots, arg_ind) ;}
-    Function Function::insert_knots(const AnyVector & new_knots, const std::string & arg) const { return (*this)->insert_knots(new_knots, arg);}
-    Function Function::insert_knots(const std::vector<AnyVector> & new_knots, const std::vector<std::string> & arg) const { return (*this)->insert_knots(new_knots, arg);}
-    Function Function::insert_knots(const std::vector<AnyVector> & new_knots, const NumericIndexVector & arg_ind) const { return (*this)->insert_knots(new_knots, arg_ind);}
+    Function Function::insert_knots(const AnyVector & new_knots, const Argument& arg) const { return (*this)->insert_knots(vectorize(arg, new_knots), vectorize(arg)) ;}
+    Function Function::insert_knots(const std::vector<AnyVector> & new_knots, const std::vector<Argument> & arg) const { return (*this)->insert_knots(new_knots, Argument::concrete(arg, tensor_basis().arguments()));}
 
     Function Function::midpoint_refinement(int refinement, const Argument& arg) const {
         return (*this)->midpoint_refinement(vectorize(arg, refinement), vectorize(arg));

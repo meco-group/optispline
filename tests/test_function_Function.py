@@ -154,7 +154,6 @@ class Test_Function_Function(BasisTestCase):
             self.assertEqualT(s1(i), float(s2_ev(knots_add, i)), 1e-6)
 
     def test_insert_knots_multivariate(self):
-        return
         if valgrind: return
         np.random.seed(0)
         d1 = 3

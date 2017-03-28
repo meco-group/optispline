@@ -265,32 +265,8 @@ namespace spline {
         return tensor_basis().basis(index);
     }
 
-    Function FunctionNode::insert_knots(const AnyVector & new_knots) const {
-        spline_assert_message(tensor_basis().n_basis() == 1,
-                "I don't know the direction for knot insertion. Please supply argument.")
-            return insert_knots(std::vector<AnyVector>{new_knots}, NumericIndexVector{0});
-    }
-
-    Function FunctionNode::insert_knots(const AnyVector & new_knots,
-            const NumericIndex& arg_ind) const {
-        return insert_knots(std::vector<AnyVector>{new_knots}, NumericIndexVector{arg_ind});
-    }
-
-    Function FunctionNode::insert_knots(const AnyVector & new_knots, const std::string & arg) const {
-        return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<std::string>{arg});
-    }
-
     Function FunctionNode::insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<std::string> & arg) const {
-        NumericIndexVector arg_ind(arg.size());
-        for (int i=0; i<arg.size(); i++) {
-            arg_ind[i] = tensor_basis().indexArgument(arg[i]);
-        }
-        return insert_knots(new_knots, arg_ind);
-    }
-
-    Function FunctionNode::insert_knots(const std::vector<AnyVector> & new_knots,
-            const NumericIndexVector & arg_ind) const {
+            const std::vector<int> & arg_ind) const {
         spline_assert(arg_ind.size() == new_knots.size())
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();

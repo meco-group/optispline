@@ -86,13 +86,9 @@ namespace spline {
 
         int n_inputs() const;  // Number of inputs of the function
 
-        Function insert_knots(const AnyVector & new_knots) const;
-        Function insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const;
-        Function insert_knots(const AnyVector & new_knots, const std::string & arg) const;
+        Function insert_knots(const AnyVector & new_knots, const Argument& arg = Argument()) const;
         Function insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<std::string> & arg) const;
-        Function insert_knots(const std::vector<AnyVector> & new_knots,
-            const NumericIndexVector & arg_ind) const;
+            const std::vector<Argument> & arg) const;
 
         Function midpoint_refinement(int refinement = 1, const Argument& arg = Argument()) const;
         Function midpoint_refinement(const std::vector<int>& refinement,

@@ -50,23 +50,7 @@ namespace spline {
         spline_assert_message(false, "invalided method n_inputs on " + to_string());
     }
 
-    Function FunNode::insert_knots(const AnyVector & new_knots) const {
-        spline_assert_message(false, "invalid method insert_knots on " + to_string());
-    }
-
-    Function FunNode::insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const {
-        spline_assert_message(false, "invalid method insert_knots on " + to_string());
-    }
-
-    Function FunNode::insert_knots(const AnyVector & new_knots, const std::string & arg) const {
-        spline_assert_message(false, "invalid method insert_knots on " + to_string());
-    }
-
-    Function FunNode::insert_knots(const std::vector<AnyVector> & new_knots, const std::vector<std::string> & arg) const {
-        spline_assert_message(false, "invalid method insert_knots on " + to_string());
-    }
-
-    Function FunNode::insert_knots(const std::vector<AnyVector> & new_knots, const NumericIndexVector & arg_ind) const {
+    Function FunNode::insert_knots(const std::vector<AnyVector> & new_knots, const std::vector<int> & arg_ind) const {
         spline_assert_message(false, "invalid method insert_knots on " + to_string());
     }
 
