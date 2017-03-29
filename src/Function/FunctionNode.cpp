@@ -43,7 +43,8 @@ namespace spline {
     }
 
     Function FunctionNode::partial_eval(const AnyTensor& x, const std::vector< int >& args) const{
-        spline_assert_message(false, "not implemented partial_eval");
+      spline_assert_message(false, "not implemented partial_eval");
+      return Function();
     }
 
     std::string FunctionNode::type() const{

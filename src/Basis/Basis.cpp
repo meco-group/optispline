@@ -25,24 +25,28 @@ namespace spline {
     Basis Basis::operator* (const Basis& other) const { return (*this)->operator*(*other.get());}
 
     bool Basis::operator==(const Basis& rhs) const {
-        if(this->get() == rhs.get()) return true;
+        if (this->get() == rhs.get()) return true;
         return (*this)->operator==(*rhs.get());
     }
 
     bool BasisNode::operator==(const BasisNode& rhs) const {
-        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      return false;
     }
 
     bool BasisNode::operator==(const EmptyBasisNode& rhs) const {
-        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      return false;
     }
 
     bool BasisNode::operator==(const MonomialBasisNode& rhs) const {
-        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      return false;
     }
 
     bool BasisNode::operator==(const BSplineBasisNode& rhs) const {
-        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      return false;
     }
 
 
