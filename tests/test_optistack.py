@@ -177,6 +177,8 @@ class Test_Optistack(BasisTestCase):
         
         print y
         self.assertTrue(jacobian(y,kmx).is_zero())
+        jtimes(y,kmx,1)
+        jtimes(y,kmx,1,True)
         
         sol = opti.solver(y,[],"ipopt")
         sol.value(kmx, k)

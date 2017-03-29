@@ -482,6 +482,18 @@ namespace casadi {
     virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
     virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
     /// @}
+    
+    ///@{
+    /** \brief Return Jacobian of all input elements with respect to all output elements */
+    virtual bool hasFullJacobian() const { return true; }
+    virtual casadi::Function getFullJacobian(const std::string& name,
+                                     const std::vector<std::string>& i_names,
+                                     const std::vector<std::string>& o_names,
+                                     const Dict& opts) {
+      std::vector<MX> arg = mx_in();
+      return casadi::Function(name, arg, {DM(size_, size_) }, opts);
+    }
+    ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
     virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
@@ -547,6 +559,18 @@ class Uniquifier : public FunctionInternal {
     virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
     virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
     /// @}
+    
+    ///@{
+    /** \brief Return Jacobian of all input elements with respect to all output elements */
+    virtual bool hasFullJacobian() const { return true; }
+    virtual casadi::Function getFullJacobian(const std::string& name,
+                                     const std::vector<std::string>& i_names,
+                                     const std::vector<std::string>& o_names,
+                                     const Dict& opts) {
+      std::vector<MX> arg = mx_in();
+      return casadi::Function(name, arg, {DM(size_, size_) }, opts);
+    }
+    ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
     virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
