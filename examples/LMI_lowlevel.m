@@ -36,4 +36,7 @@ constr = opti.yalmip_expr({Z<=0, P>=0});
 options = sdpsettings('solver','lmilab','verbose',true);
 sol = optimize([constr{:}], opti.yalmip_expr(gamma.integral), options);
 
-
+Pv = opti.yalmip_var(P.coeff_tensor());
+for i=1:4
+  double(Pv{i})
+end

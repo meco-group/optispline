@@ -2,6 +2,9 @@ clear all
 close all
 clc
 
+meco_binaries('cpp_splines','')
+import splines.*
+
 % Load plant - from example file satelite tracking
 load('plant.mat')
 gamma_check = gamma;
@@ -46,10 +49,13 @@ W = [W, zeros(rW,mw); zeros(mw,cW), eye(mw)];
 %%% IMPORTANT STUFF FOR JORIS STARTS HERE %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+opti = OptiSplineYalmip();
+
 %   2.1. Declaring the variables        
-X = sdpvar(n);      % nxn top-left subblock of P
-Y = sdpvar(n);      % nxn top-left subblock of inv(P)
-Gamma = sdpvar(mz); % Lyapunov shaping
+X = opti.var(n,n,'symmetric');      % nxn top-left subblock of P
+Y = opti.var(n,n,'symmetric');      % nxn top-left subblock of inv(P)
+Gamma = opti.var(mz, mz, 'symmetric'); % Lyapunov shaping
 
 c = zeros(mz,1);
 for i = 1:noc
@@ -57,7 +63,7 @@ for i = 1:noc
     if alpha(i) == 0
         Gamma(Iz1(i):Iz2(i),Iz1(i):Iz2(i)) = eye(Mz(i));
     else
-        Gamma(Iz1(i):Iz2(i),Iz1(i):Iz2(i)) = sdpvar(1) * eye(Mz(i));
+        Gamma(Iz1(i):Iz2(i),Iz1(i):Iz2(i)) = opti.var(1,1,'symmetric') * eye(Mz(i));
     end
 end
 
@@ -66,20 +72,25 @@ ABw = [A, Bw, zeros(n,mz); eye(n), zeros(n,mw+mz)];
 Zx = ABw'*kron(Phi,X)*ABw + [zeros(n,n+mw),Cz'; zeros(mw,n),-eye(mw),Dzw'; Cz,Dzw,-Gamma];
 ACz = [A', Cz', zeros(n,mw); eye(n), zeros(n,mz+mw)];
 Zy = ACz'*kron(Phi,Y)*ACz + [zeros(n,n+mz),Bw; zeros(mz,n),-Gamma,Dzw; Bw',Dzw',-eye(mw)];
-constr = ([X,eye(n);eye(n),Y] >= 0) + (V'*Zx*V <= 0) + (W'*Zy*W <= 0);
 
 %   2.3. Specifying the objective
 goal = trace(diag(c)*Gamma);
 
 %   2.4. Solving the SDP
-options = sdpsettings('solver','lmilab');
-sol = solvesdp(constr, goal, options);
+options = sdpsettings('solver','lmilab','verbose',2);
+sol = opti.solver(goal, {[X,eye(n);eye(n),Y]>=0, -V'*Zx*V>=0, -W'*Zy*W>=0},'yalmip', struct('yalmip_options', options));
+sol.solve()
 
-X = double(X);
-Y = double(Y);
-Gamma = double(Gamma);
+X = sol.value(X)
+Y = sol.value(Y)
+
+Gamma = sol.value(Gamma)
 gamma = diag(Gamma);
 gamma = sqrt(gamma(Iz1));
 
 %   3.0 Check if the solution checks out with what we computed before
-assert(gamma(1,1)==gamma_check(1,1))
+
+gamma_check
+gamma
+gamma(1,1)-gamma_check(1,1)
+assert(norm(gamma(1,1)-gamma_check(1,1))<=1e-3);

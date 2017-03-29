@@ -94,8 +94,10 @@ classdef OptiSplineYalmip < splines.OptiSpline
         persistent yalmip_variables
         
         if (~iscell(vars))
-           ret = yalmip_var( opti, {vars} );
-           ret = ret{1};
+           ret = opti.yalmip_var(opti.symvar(vars));
+           if length(ret)==1
+             ret = ret{1};
+           end
            return;
         end
         
@@ -111,6 +113,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
           c = m.count;
           counts(i) = c+1;
         end
+        
         
         all_vars = opti.symvar();
         
