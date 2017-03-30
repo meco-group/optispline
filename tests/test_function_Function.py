@@ -491,6 +491,18 @@ class Test_Function_Function(BasisTestCase):
         fv = vertcat(f12, f13)
         self.assertEqualT(fv.integral([[0.1, 0.8], [0.2, 0.9]]), np.vstack((f12_int2, f13_int2)), 1e-6)
 
+    def test_linear(self):
+        x = [-1, 2, 3]
+        y = [2, 0, 7]
+        F = Function.linear(x,y)
+        
+        for i in range(3):
+          self.assertEqualTensor(F(x[i]),y[i])
+          
+        self.assertEqualTensor(F(0),2-(1.0/3)*2)
+        self.assertEqualTensor(F(1),2-(2.0/3)*2)
+        self.assertEqualTensor(F(2.5),3.5)
+        
     def test_partial_integral(self):
         np.random.seed(0)
         d1 = 3

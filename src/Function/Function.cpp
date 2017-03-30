@@ -3,6 +3,8 @@
 #include "ConstantNode.h"
 #include "FunctionNode.h"
 
+#include "../Basis/BSplineBasis.h"
+
 namespace spline{
 
     Function::Function(){}
@@ -233,4 +235,7 @@ namespace spline{
         }
     }
 
+    Function Function::linear(const AnyVector & x, const AnyVector & y) {
+      return Function(BSplineBasis::from_single(x, 1), y);
+    }
     } // namespace spline

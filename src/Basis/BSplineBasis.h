@@ -171,6 +171,12 @@ namespace spline{
         BSplineBasis(const AnyVector& bounds, int degree, int numberOfIntervals) :
           BSplineBasis(bounds.to_scalar_vector(), degree, numberOfIntervals) {};
 
+        /** \brief Construct basis using knots with single multiplicity
+        *
+        * The repetition at the start and end of the knot list will be done by this method.
+        */
+        static BSplineBasis from_single(const AnyVector& knots, int degree);
+
         std::vector<AnyScalar> knots() const;
         std::vector<AnyScalar> greville() const;
 
