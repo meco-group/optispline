@@ -238,4 +238,26 @@ namespace spline{
     Function Function::linear(const AnyVector & x, const AnyVector & y) {
       return Function(BSplineBasis::from_single(x, 1), y);
     }
+
+    casadi::Function Function::to_casadi() const {
+      std::vector<Basis> bases = tensor_basis().bases();
+      std::vector< std::vector<double> > knots;
+      std::vector<int> degrees;
+      std::vector<double> coeff;
+      for (int i=0;i<bases.size();++i) {
+        Basis b = bases[i];
+        spline_assert(b.type()=="BSplineBasis");
+
+        BSplineBasis bb = b.get()->shared_from_this<BSplineBasis>();
+
+        spline_assert(AnyScalar::is_double(bb.knots()));
+        knots.push_back(AnyScalar::as_double(bb.knots()));
+        degrees.push_back(bb.degree());
+      }
+
+      spline_assert(coeff_tensor().is_DT());
+      return casadi::Function::bspline("bspline", knots,
+        coeff_tensor().as_DT().data().nonzeros(), degrees);
+    }
+
     } // namespace spline
