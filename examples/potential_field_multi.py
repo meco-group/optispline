@@ -75,8 +75,7 @@ _stop_integration = time.time()
 con = []
 
 # constraint (1)
-for i in range(0,x.size):
-    con.append(potential_field(x[i],y[i])>=0)
+con.append(potential_field(x,y)>=0)
 
 # constraint (2)
 con.append(potential_field>=-1)

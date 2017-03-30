@@ -28,6 +28,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
           helper = helper.expand();
 
           name = 'yalmip_helper';
+          clear(name);
 
           main = fopen([name '.m'],'w');
 
@@ -93,8 +94,10 @@ classdef OptiSplineYalmip < splines.OptiSpline
         persistent yalmip_variables
         
         if (~iscell(vars))
-           ret = yalmip_var( opti, {vars} );
-           ret = ret{1};
+           ret = opti.yalmip_var(opti.symvar(vars));
+           if length(ret)==1
+             ret = ret{1};
+           end
            return;
         end
         
@@ -110,6 +113,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
           c = m.count;
           counts(i) = c+1;
         end
+        
         
         all_vars = opti.symvar();
         
@@ -142,7 +146,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
         if strcmp(solver,'yalmip')
           [sol] = OptiSplineSolverYalmip(self, f, g, solver, options);
         else
-          [sol] = opti.solver@splines.OptiSpline(self, f, g, solver, options);
+          [sol] = self.solver@splines.OptiSpline(self, f, g, solver, options);
         end
       end
    end

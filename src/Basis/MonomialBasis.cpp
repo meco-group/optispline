@@ -57,19 +57,23 @@ namespace spline {
     }
 
     bool MonomialBasisNode::operator== (const BasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool MonomialBasisNode::operator== (const EmptyBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool MonomialBasisNode::operator== (const BSplineBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool MonomialBasisNode::operator== (const MonomialBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     AnyTensor MonomialBasisNode::const_coeff_tensor(const AnyTensor& t) const {

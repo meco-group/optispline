@@ -8,21 +8,28 @@
 namespace spline {
     FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : FunNode(coeff), basis_(basis) {}
 
-    AnyTensor FunctionNode::operator()(const AnyTensor& x, const std::vector< int >& args) const{
-        if(x.dims()[0] == n_inputs() && x.dims()[1] == 1){
+    AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< int >& args) const{
+
+        AnyTensor x = arg.squeeze();
+        if (x.is_vector()) x = x.as_vector();
+        spline_assert(x.n_dims()<=2);
+
+        if (x.n_dims()==1) {
+          if (x.dims()[0] == n_inputs()) {
             std::vector< AnyScalar > x_ = x.unpack_1();
             return basis_(x_, Argument::from_vector(args)).inner(coeff().data());
-        }
-        if(x.dims()[0] == 1 && x.dims()[1] == n_inputs()){
-            std::vector< AnyScalar > x_ = x.unpack_1();
-            return basis_(x_, Argument::from_vector(args)).inner(coeff().data());
+          } else {
+            x = x.shape({x.numel(), 1});
+          }
         }
 
-        spline_assert_message(x.dims()[1] == n_inputs(), "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " + std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
+        spline_assert_message(x.dims()[1] == n_inputs(),
+          "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
+          std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
         std::vector< AnyTensor > tensor = {};
 
         std::vector< std::vector< AnyScalar > > X_ = x.unpack_2();
-        for(int i = 0; i < X_.size(); i++){
+        for (int i = 0; i < X_.size(); i++) {
             tensor.push_back(basis_(X_[i], Argument::from_vector(args)));
         }
         AnyTensor packed_tensor = AnyTensor::pack(tensor, 0);
@@ -36,7 +43,8 @@ namespace spline {
     }
 
     Function FunctionNode::partial_eval(const AnyTensor& x, const std::vector< int >& args) const{
-        spline_assert_message(false, "not implemented partial_eval");
+      spline_assert_message(false, "not implemented partial_eval");
+      return Function();
     }
 
     std::string FunctionNode::type() const{
@@ -258,36 +266,12 @@ namespace spline {
         return tensor_basis().basis(index);
     }
 
-    Function FunctionNode::insert_knots(const AnyVector & new_knots) const {
-        spline_assert_message(tensor_basis().n_basis() == 1,
-                "I don't know the direction for knot insertion. Please supply argument.")
-            return insert_knots(std::vector<AnyVector>{new_knots}, NumericIndexVector{0});
-    }
-
-    Function FunctionNode::insert_knots(const AnyVector & new_knots,
-            const NumericIndex& arg_ind) const {
-        return insert_knots(std::vector<AnyVector>{new_knots}, NumericIndexVector{arg_ind});
-    }
-
-    Function FunctionNode::insert_knots(const AnyVector & new_knots, const std::string & arg) const {
-        return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<std::string>{arg});
-    }
-
     Function FunctionNode::insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<std::string> & arg) const {
-        NumericIndexVector arg_ind(arg.size());
-        for (int i=0; i<arg.size(); i++) {
-            arg_ind[i] = tensor_basis().indexArgument(arg[i]);
-        }
-        return insert_knots(new_knots, arg_ind);
-    }
-
-    Function FunctionNode::insert_knots(const std::vector<AnyVector> & new_knots,
-            const NumericIndexVector & arg_ind) const {
+            const std::vector<int> & arg_ind) const {
         spline_assert(arg_ind.size() == new_knots.size())
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.insert_knots(new_knots, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.insert_knots(new_knots, Argument::from_vector(arg_ind), T);
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
@@ -297,7 +281,8 @@ namespace spline {
         spline_assert(arg_ind.size() == refinement.size())
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement,
+          Argument::from_vector(arg_ind), T);
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
@@ -307,7 +292,8 @@ namespace spline {
         spline_assert(arg_ind.size() == elevation.size());
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.degree_elevation(elevation, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.degree_elevation(elevation,
+          Argument::from_vector(arg_ind), T);
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
@@ -350,7 +336,7 @@ namespace spline {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.derivative(orders, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.derivative(orders, Argument::from_vector(arg_ind), T);
         NumericIndexVector args(arg_ind.size());
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
@@ -362,7 +348,7 @@ namespace spline {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.antiderivative(orders, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.antiderivative(orders, Argument::from_vector(arg_ind), T);
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }

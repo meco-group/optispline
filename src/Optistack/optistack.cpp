@@ -8,10 +8,6 @@ Optistack::Optistack() : count_(0) {
 
 }
 
-MX Optistack::var(const Sparsity& sp) {
-  return flag(MX::sym("x", sp), OPTISTACK_VAR);
-}
-
 MX Optistack::var(int n, int m, const std::string& variable_type) {
   Dict meta_data;
   meta_data["variable_type"] = variable_type;
@@ -22,18 +18,22 @@ MX Optistack::var(int n, int m, const std::string& variable_type) {
   count_+=1;
   if (variable_type=="symmetric") {
     spline_assert(n==m);
-    MX ret = MX(Sparsity::lower(n), meta(flag(MX::sym("x", n*(n+1)/2), OPTISTACK_VAR), meta_data));
+    MX ret = MX(Sparsity::lower(n), meta(flag(MX::sym("x_" + std::to_string(count_), n*(n+1)/2), OPTISTACK_VAR), meta_data));
 
     return tril2symm(ret);
   } else {
-    return meta(flag(MX::sym("x", n, m), OPTISTACK_VAR), meta_data);
+    return meta(flag(MX::sym("x_" + std::to_string(count_), n, m), OPTISTACK_VAR), meta_data);
   }
 }
 
 MX Optistack::par(int n, int m) {
   Dict meta_data;
+  meta_data["n"] = n;
+  meta_data["m"] = m;
   meta_data["type"] = OPTISTACK_PAR;
-  return meta(flag(MX::sym("p", n, m), OPTISTACK_PAR), meta_data);
+  meta_data["count"] = count_;
+  count_+=1;
+  return meta(flag(MX::sym("p_" + std::to_string(count_), n, m), OPTISTACK_PAR), meta_data);
 }
 
 MX Optistack::meta(const MX& m, const Dict& dict) {
@@ -60,8 +60,10 @@ void Optistack::assert_has(const MX& m) const {
 }
 
 MX Optistack::flag(const MX& m, VariableType type) {
-  auto find = data_.find(m.get());
-  spline_assert(find==data_.end());
+  //auto find = data_.find(m.get());
+  // NOTE: m.get() may in fact exist already;
+  //  memory may have been reclaimed
+  //spline_assert(find==data_.end());
   data_[m.get()] = type;
   return m;
 }
@@ -94,32 +96,38 @@ std::vector<MX> Optistack::symvar(const MX& m) const {
   return sort(MX::symvar(m));
 }
 
+std::vector<MX> ineq_unpack(const MX& a) {
+  if (a.is_op(OP_LE) || a.is_op(OP_LT)) {
+    std::vector<MX> lhs = ineq_unpack(a.dep(0));
+    std::vector<MX> rhs = ineq_unpack(a.dep(1));
+    lhs.insert(lhs.end(), rhs.begin(), rhs.end());
+    return lhs;
+  } else {
+    return {a};
+  }
+}
+
 MX Optistack::canon_expr(const MX& expr, ConstraintType& type) {
   MX c = expr;
 
   type = OPTISTACK_UNKNOWN;
   if (c.is_op(OP_LE) || c.is_op(OP_LT)) {
     std::vector<MX> ret;
-    std::vector<MX> args;
-    while (c.is_op(OP_LE) || c.is_op(OP_LT)) {
-      args.push_back(c.dep(1));
-      c = c.dep(0);
-    }
-    args.push_back(c);
+    std::vector<MX> args = ineq_unpack(c);
     for (int j=0;j<args.size()-1;++j) {
-      MX e = args[j+1]-args[j];
+      MX e = args[j]-args[j+1];
       if (e.is_vector()) {
         ret.push_back(e);
         spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_INEQUALITY);
         type = OPTISTACK_INEQUALITY;
       } else {
-        if (args[j].is_scalar()) {
-          e = DM::eye(args[j].size1())*args[j]-args[j+1];
-        } else if (args[j+1].is_scalar()) {
-          e = args[j]-DM::eye(args[j].size1())*args[j+1];
-        } else {
-          e = args[j]-args[j+1];
-        }
+        //if (args[j+1].is_scalar()) {
+        //  e = DM::eye(args[j+1].size1())*args[j+1]-args[j];
+        //} else if (args[j].is_scalar()) {
+        //  e = args[j+1]-DM::eye(args[j+1].size1())*args[j];
+        //} else {
+        e = args[j+1]-args[j];
+        //}
 
         ret.push_back(e);
         spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_PSD);

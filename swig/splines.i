@@ -449,15 +449,6 @@ using namespace spline;
         }
       }
 
-      // Try first converting to a temporary DM
-      {
-        std::vector< std::vector<double> > tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) **m = DM(*mt);
-          return true;
-        }
-      }
-
       return false;
     }
     bool to_ptr(GUESTOBJECT *p, ST** m) {
@@ -1100,8 +1091,11 @@ namespace spline {
    function self = subsasgn(self,varargin)
         error('Not supported: subsasgn');
     end
-  function r = size(self)
+  function r = size(self, varargin)
     r = shape(self);
+    if length(varargin)==1
+      r = r(varargin{1});
+    end
   end
   %}
 }

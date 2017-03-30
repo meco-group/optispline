@@ -32,3 +32,48 @@ sol.solve()
 assert(norm(sol.value(x)-1)<1e-4)
 assert(norm(sol.value(y)-2)<1e-4)
 assert(norm(sol.value(z)-3)<1e-4)
+
+opti = OptiSplineYalmip();
+P = opti.var(2,2,'symmetric');
+
+T = 2*eye(2);
+
+sol = opti.solver(trace(P),{P>=T},'yalmip')
+sol.solve()
+
+assert(norm(sol.value(P)-T)<1e-2)
+
+sol = opti.solver(-trace(P),{P<=T},'yalmip')
+sol.solve()
+
+assert(norm(sol.value(P)-T)<1e-2)
+
+
+sol = opti.solver(trace(P),{3*eye(2)>=P>=T},'yalmip')
+sol.solve()
+
+assert(norm(sol.value(P)-T)<1e-2)
+
+
+sol = opti.solver(-trace(P),{3*eye(2)>=P>=T},'yalmip')
+sol.solve()
+
+assert(norm(sol.value(P)-3*eye(2))<1e-2)
+
+sol = opti.solver(trace(P),{T<=P<=3*eye(2)},'yalmip')
+sol.solve()
+
+assert(norm(sol.value(P)-T)<1e-2)
+
+
+sol = opti.solver(-trace(P),{T<=P<=3*eye(2)},'yalmip')
+sol.solve()
+
+assert(norm(sol.value(P)-3*eye(2))<1e-2)
+
+
+sol = opti.solver(trace(P),{-P<=-T},'yalmip')
+sol.solve()
+
+assert(norm(sol.value(P)-T)<1e-2)
+

@@ -127,20 +127,23 @@ namespace spline {
     }
 
     bool BSplineBasisNode::operator== (const BasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
-        return false;
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool BSplineBasisNode::operator== (const EmptyBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool BSplineBasisNode::operator== (const BSplineBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool BSplineBasisNode::operator== (const MonomialBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     std::vector<AnyScalar> BSplineBasis::greville() const { return (*this)->greville(); }

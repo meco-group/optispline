@@ -227,6 +227,10 @@ class AnyTensor {
       ANYTENSOR_METHOD(operator-());
       return DT();
     }
+    bool is_vector() const {
+      ANYTENSOR_METHOD(is_vector());
+      return false;
+    }
     AnyTensor as_vector() const {
       ANYTENSOR_METHOD(as_vector());
       return DT();

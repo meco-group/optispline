@@ -29,7 +29,6 @@ public:
 
   Optistack();
   MX var(int n=1, int m=1, const std::string& variable_type="full");
-  MX var(const Sparsity& sp);
   MX par(int n=1, int m=1);
 
   OptistackSolver solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options=Dict()) const;
@@ -138,6 +137,10 @@ class OptiSpline : public Optistack {
   friend class OptiSplineSolver;
 public:
   using Optistack::var;
+  using Optistack::symvar;
+
+  std::vector<MX> symvar(const MT& m) const { return symvar(m.data()); }
+  std::vector<MX> symvar(const MT& expr, VariableType type) const { return symvar(expr.data(), type); }
 
 #ifndef SWIG
   MT coeff_var(const std::vector<int>& shape, int n=1, int m=1, const std::string& variable_type="full");

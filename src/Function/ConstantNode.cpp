@@ -60,7 +60,8 @@ namespace spline {
     }
 
     Function ConstantNode::operator+(const ConstantNode& f) const {
-        spline_assert_message(false, "not implemented: operator+(ConstantNode)");
+      spline_assert_message(false, "not implemented: operator+(ConstantNode)");
+      return Function();
     }
 
 
@@ -95,7 +96,8 @@ namespace spline {
     }
 
     Function ConstantNode::operator*(const ConstantNode& f) const {
-        spline_assert_message(false, "not implemented: operator*(ConstantNode)");
+      spline_assert_message(false, "not implemented: operator*(ConstantNode)");
+      return Function();
     }
 
 
