@@ -137,21 +137,7 @@ namespace spline {
                 << T[k].dims()[1] << " while transformed direction has dimension "
                 << ret_data.dims()[directions[k]] << ".");
             // construct index vectors
-            int n_dims = ret_data.n_dims();
-            std::vector<int> ind1(n_dims);
-            std::vector<int> ind2(n_dims);
-            int cnt = -3;
-            for (int i=0; i<ret_data.n_dims(); i++) {
-                if (i == directions[k]) {
-                    ind1[i] = -2;
-                    ind2[i] = -1;
-                } else {
-                    ind1[i] = cnt;
-                    ind2[i] = cnt;
-                    cnt--;
-                }
-            }
-            ret_data = ret_data.einstein(T[k], ind1, {-1, -2}, ind2);
+            ret_data = ret_data.transform(T[k], directions[k]);
         }
         return ret_data;
     }
