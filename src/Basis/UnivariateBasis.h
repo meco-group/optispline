@@ -28,6 +28,7 @@ namespace spline {
         virtual std::string type() const override {return "UnivariateBasis";}
 
         virtual AnyTensor integral(const Domain& domain) const override;
+        virtual AnyTensor integral(const Interval& domain) const = 0;
         virtual Basis kick_boundary(const Domain& domain, AnyTensor& T) const override;
         virtual Basis kick_boundary(const Interval& domain, AnyTensor& T) const;
 
