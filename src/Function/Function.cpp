@@ -260,4 +260,63 @@ namespace spline{
         coeff_tensor().as_DT().data().nonzeros(), degrees);
     }
 
+    AnyTensor Function::fast_eval(const AnyTensor& xy) const {
+      std::vector<Basis> bases = tensor_basis().bases();
+      std::vector< std::vector<double> > knots;
+      std::vector<int> degrees;
+
+      for (int i=0;i<bases.size();++i) {
+        Basis b = bases[i];
+        spline_assert(b.type()=="BSplineBasis");
+        BSplineBasis bb = b.get()->shared_from_this<BSplineBasis>();
+        spline_assert(AnyScalar::is_double(bb.knots()));
+        knots.push_back(AnyScalar::as_double(bb.knots()));
+        degrees.push_back(bb.degree());
+
+      }
+
+      spline_assert(xy.n_dims()==2);
+      spline_assert(xy.dims()[0]==n_inputs());
+
+      if (xy.is_DT()) {
+        std::vector<double> points = xy.as_DT().data().nonzeros();
+        casadi::Function dual = casadi::Function::bspline_dual("dual", knots, points, degrees);
+        casadi::Function J = dual.jacobian();
+        casadi::DM jac = J(std::vector<casadi::DM>{0})[0];
+        AnyTensor c = coeff_tensor();
+        if (c.is_DT()) {
+          casadi::DM r = casadi::DM::mtimes(jac, c.as_DT().data());
+          return DT(r, {r.size1(), r.size2()});
+        } else {
+          casadi::MX r = casadi::MX::mtimes(jac, c.as_MT().data());
+          return MT(r, {r.size1(), r.size2()});
+        }
+      }
+      if (coeff_tensor().is_DT()) {
+        std::vector<double> coeffs = coeff_tensor().as_DT().data().nonzeros();
+        casadi::Function nominal = casadi::Function::bspline("nominal", knots, coeffs, degrees);
+        nominal = nominal.map(xy.dims()[1]);
+
+        if (xy.is_DT()) {
+          casadi::DM r = nominal(std::vector<casadi::DM>{xy.as_DT().matrix()})[0];
+          return DT(r, {r.size1(), r.size2()});
+        } else {
+          casadi::MX r = nominal(std::vector<casadi::MX>{xy.as_MT().matrix()})[0];
+          return MT(r, {r.size1(), r.size2()});
+        }
+
+      }
+      spline_assert(false);
+      return DT();
+
+    }
+
+    casadi::DM Function::fast_jac(const AnyTensor& xy) const {
+      casadi::MX c = coeff_tensor().as_MT().data();
+      AnyTensor yt = fast_eval(xy);
+      casadi::MX y = yt.as_MT().data();
+      casadi::MX J = casadi::MX::jacobian(y, c);
+      casadi::Function f = casadi::Function("f", {c}, {J});
+      return f(std::vector<casadi::DM>{0})[0];
+    }
     } // namespace spline

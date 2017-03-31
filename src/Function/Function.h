@@ -127,6 +127,9 @@ namespace spline {
 
         casadi::Function to_casadi() const;
 
+        AnyTensor fast_eval(const AnyTensor& xy) const;
+        casadi::DM fast_jac(const AnyTensor& xy) const;
+
 #ifndef SWIG
             inline friend
                 std::ostream& operator<<(std::ostream &stream, const Function& obj) {
