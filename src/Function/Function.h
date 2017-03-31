@@ -122,7 +122,10 @@ namespace spline {
         Function partial_integral(const TensorDomain& domain,
          const NumericIndexVector& arg_ind) const;
 
+        /** \brief Construct a piece-wise linear function from x/y data */
+        static Function linear(const AnyVector & x, const AnyVector & y);
 
+        casadi::Function to_casadi() const;
 
 #ifndef SWIG
             inline friend

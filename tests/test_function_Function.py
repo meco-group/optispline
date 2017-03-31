@@ -491,6 +491,40 @@ class Test_Function_Function(BasisTestCase):
         fv = vertcat(f12, f13)
         self.assertEqualT(fv.integral([[0.1, 0.8], [0.2, 0.9]]), np.vstack((f12_int2, f13_int2)), 1e-6)
 
+    def test_linear(self):
+        x = [-1, 2, 3]
+        y = [2, 0, 7]
+        F = Function.linear(x,y)
+        
+        for i in range(3):
+          self.assertEqualTensor(F(x[i]),y[i])
+          
+        self.assertEqualTensor(F(0),2-(1.0/3)*2)
+        self.assertEqualTensor(F(1),2-(2.0/3)*2)
+        self.assertEqualTensor(F(2.5),3.5)
+        
+    def test_to_casadi(self):
+        np.random.seed(0)
+        d1 = 3
+        nki1 = 8
+        k1 = np.r_[np.zeros(d1), np.linspace(0., 1., nki1), np.ones(d1)]
+        b1 = BSplineBasis(k1, d1)
+        ka1 = np.random.rand(2)
+        k1a = np.sort(np.r_[k1, ka1])
+        d2 = 2
+        nki2 = 5
+        k2 = np.r_[np.zeros(d2), np.linspace(0., 1., nki2), np.ones(d2)]
+        b2 = BSplineBasis(k2, d2)
+        B = TensorBasis([b1, b2], ['x', 'y'])
+        dims = B.dimension()
+        C = np.random.rand(dims[0], dims[1])
+        f = Function(B,C)
+        
+        f2 = f.to_casadi()
+        print f2
+        
+        self.assertEqualTensor(f(0.2,0.3), f2([0.2, 0.3]))
+         
     def test_partial_integral(self):
         np.random.seed(0)
         d1 = 3
