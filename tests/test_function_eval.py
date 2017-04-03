@@ -91,10 +91,10 @@ class Test_Function_Operations(BasisTestCase):
         x_ = 0.4
         y_ = 0.2
 
-        f_part1 = func1.partial_eval([x_], ['x'])
+        f_part1 = func1.partial_eval(x_, 'x')
         f_part2 = f_part1(y_)
 
-        f_part3 = func1.partial_eval([ y_ ], [ 'y' ])
+        f_part3 = func1.partial_eval(y_, 'y')
         f_party_ = f_part3(x_)
 
         self.assertEqualT(f_part2, f_party_)
@@ -118,10 +118,10 @@ class Test_Function_Operations(BasisTestCase):
         x_ = 0.4
         y_ = 0.2
 
-        f_part_x = func1.partial_eval([x_], ['x'])
+        f_part_x = func1.partial_eval(x_, 'x')
         f_part_x_ = f_part_x(y_)
 
-        f_part_y = func1.partial_eval([ y_ ], [ 'y' ])
+        f_part_y = func1.partial_eval(y_, 'y')
         f_part_y_ = f_part_y(x_)
 
         self.assertEqualT(f_part_x_, f_part_y_)
