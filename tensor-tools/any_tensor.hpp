@@ -267,6 +267,21 @@ class AnyTensor {
     AnyTensor inner(const AnyTensor&b) const {
       ANYTENSOR_BINARY((*this), b, inner);
     }
+    AnyTensor transform(const AnyTensor &b, int axis) const {
+      switch (AnyScalar::merge(t, b.t)) {
+        case TENSOR_DOUBLE:
+          return data_double.transform(b.data_double, axis);
+          break;
+        case TENSOR_SX:
+          return as_ST().transform(b.as_ST(), axis);
+          break;
+        case TENSOR_MX:
+          return as_MT().transform(b.as_MT(), axis);
+          break;
+        default:
+          assert(false); return DT();
+      }
+    }
     AnyTensor solve(const AnyTensor&b) const {
       if (is_DT() && !b.is_DT()) {
          casadi::DM A = as_DT().matrix();

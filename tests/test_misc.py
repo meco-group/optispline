@@ -15,6 +15,29 @@ class Test_Misc(BasisTestCase):
         
     f **2
 
+  def test_jac_test(self):
+    degree = 1
+    knots = np.r_[np.zeros(degree), np.linspace(0, 1,2), np.ones(degree)]
+    basis = BSplineBasis(knots, degree)
+
+    X = MX.sym('X', basis.dimension())
+    x = Function(basis, X)
+
+    expr = x.derivative()
+    expr = expr.data()
+
+    jac = jacobian(expr, X)
+
+    self.assertTrue(len(symvar(jac))==0)
+
+    x = Function(basis, X**2)
+
+    expr = x.derivative()
+    expr = expr.data()
+
+    jac = jacobian(expr, X)
+
+    self.assertFalse(len(symvar(jac))==0)
      
 if __name__ == '__main__':        
     unittest.main()

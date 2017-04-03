@@ -277,6 +277,8 @@ class Tensor {
 
 
   }
+  
+  
 
   static T get(const T& data, const std::vector<int> dims, const std::vector<int>& ind) {
     return data.nz(ind2sub(dims, ind));
@@ -332,6 +334,22 @@ class Tensor {
     return index(ind);
   }
 
+  Tensor transform(const Tensor& tr, int axis) const {
+    std::vector<int> ind1(n_dims());
+    std::vector<int> ind2(n_dims());
+    int cnt = -3;
+    for (int i=0; i<n_dims(); i++) {
+        if (i == axis) {
+            ind1[i] = -2;
+            ind2[i] = -1;
+        } else {
+            ind1[i] = cnt;
+            ind2[i] = cnt;
+            cnt--;
+        }
+    }
+    return einstein(tr, ind1, {-1, -2}, ind2);
+  }
 
   Tensor index(const std::vector<int>& ind) const {
     // Check that input is a permutation of range(n_dims())
