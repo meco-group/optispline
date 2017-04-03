@@ -26,8 +26,9 @@ MX Optistack::var(int n, int m, const std::string& variable_type) {
   }
 }
 
-MX Optistack::par(int n, int m) {
+MX Optistack::par(int n, int m, const std::string& variable_type) {
   Dict meta_data;
+  meta_data["variable_type"] = variable_type;
   meta_data["n"] = n;
   meta_data["m"] = m;
   meta_data["type"] = OPTISTACK_PAR;
@@ -60,11 +61,13 @@ void Optistack::assert_has(const MX& m) const {
 }
 
 MX Optistack::flag(const MX& m, VariableType type) {
-  //auto find = data_.find(m.get());
+  auto find = data_.find(m.get());
   // NOTE: m.get() may in fact exist already;
   //  memory may have been reclaimed
+  if (find!=data_.end()) casadi::userOut() << "possible mem issue" << std::endl;
   //spline_assert(find==data_.end());
   data_[m.get()] = type;
+  store_.push_back(m);
   return m;
 }
 

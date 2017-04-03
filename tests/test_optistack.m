@@ -77,3 +77,37 @@ sol.solve()
 
 assert(norm(sol.value(P)-T)<1e-2)
 
+x = opti.var();
+sol = opti.solver((1-x)^2,{},'yalmip');
+sol.solve();
+assert(norm(sol.value(x)-1)<1e-5)
+
+yalmip_options = sdpsettings('solver','quadprog','verbose',2);
+
+x = opti.var();
+p = opti.par();
+sol = opti.solver((p-x)^2,{},'yalmip',struct('yalmip_options',yalmip_options));
+sol.value(p,3)
+sol.solve();
+
+sol.value(x)
+
+assert(norm(sol.value(x)-3)<1e-5)
+sol.value(p,2)
+sol.solve();
+
+assert(norm(sol.value(x)-2)<1e-5)
+
+
+sol = opti.solver((p-x)^2,{x<=0},'yalmip',struct('yalmip_options',yalmip_options));
+sol.value(p,3)
+sol.solve();
+
+sol.value(x)
+
+assert(norm(sol.value(x))<1e-5)
+sol.value(p,-2)
+sol.solve();
+
+assert(norm(sol.value(x)+2)<1e-5)
+

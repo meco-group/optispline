@@ -29,7 +29,7 @@ public:
 
   Optistack();
   MX var(int n=1, int m=1, const std::string& variable_type="full");
-  MX par(int n=1, int m=1);
+  MX par(int n=1, int m=1, const std::string& variable_type="full");
 
   OptistackSolver solver(const MX& f, const std::vector<MX> & g, const std::string& solver, const Dict& options=Dict()) const;
 
@@ -55,6 +55,7 @@ private:
   MX flag(const MX& m, VariableType type);
   std::map<MXNode*, VariableType> data_;
   std::map<MXNode*, Dict> meta_;
+  std::vector<MX> store_;
 
   int count_;
 
