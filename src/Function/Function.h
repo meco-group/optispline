@@ -35,6 +35,7 @@ namespace spline {
 
         AnyTensor operator()(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
 
+        Function partial_eval(const AnyTensor& x, const Argument& args) const;
         Function partial_eval(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
 
         Function operator+(const Function& f) const;
