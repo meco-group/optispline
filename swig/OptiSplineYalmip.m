@@ -1,8 +1,8 @@
 classdef OptiSplineYalmip < splines.OptiSpline
 
   properties
-  
-  
+
+
   end
   methods
       function [ out ] = yalmip_expr( opti, expr )
@@ -13,9 +13,13 @@ classdef OptiSplineYalmip < splines.OptiSpline
              return;
           end
 
+          if length(expr)==0
+            out = {};
+            return
+          end
           vars = opti.symvar(veccat(expr{:}));
           args = yalmip_var(opti, vars);
-          
+
           expr_canon = {};
           expr_types = {};
           for i=1:length(expr)
@@ -32,12 +36,12 @@ classdef OptiSplineYalmip < splines.OptiSpline
 
           main = fopen([name '.m'],'w');
 
-          fprintf(main,['function [varargout] = ' name '(args)\n']);      
+          fprintf(main,['function [varargout] = ' name '(args)\n']);
 
           algorithm = strsplit(helper.getDescription(),'\n');
 
           for i=1:helper.n_in()
-           fprintf(main,'argin_%d = args{%d};\n',i-1,i);      
+           fprintf(main,'argin_%d = args{%d};\n',i-1,i);
           end
           for i=1:helper.n_out()
            fprintf(main,'argout_%d = cell(%d,1);\n',i-1,helper.nnz_out(i-1));
@@ -76,7 +80,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
                   [m,n] = size(sp);
                   out{i} = sparse(sp_i+1,sp_j+1,out{i},m,n);
               end
-             
+
               if (expr_types{i}==opti.OPTISTACK_INEQUALITY)
                   out{i} = out{i}<=0;
               elseif (expr_types{i}==opti.OPTISTACK_EQUALITY)
@@ -85,14 +89,14 @@ classdef OptiSplineYalmip < splines.OptiSpline
                   out{i} = 0.5*(out{i}+out{i}')>=0;
               end
           end
-          
+
           delete([name '.m'])
-          
+
       end
-      
+
       function [ ret ] = yalmip_var( opti, vars )
         persistent yalmip_variables
-        
+
         if (~iscell(vars))
            ret = opti.yalmip_var(opti.symvar(vars));
            if length(ret)==1
@@ -100,11 +104,11 @@ classdef OptiSplineYalmip < splines.OptiSpline
            end
            return;
         end
-        
+
         if isempty(yalmip_variables)
-           yalmip_variables = {}; 
+           yalmip_variables = {};
         end
-        
+
         N = length(vars);
 
         counts = zeros(1,N);
@@ -113,10 +117,10 @@ classdef OptiSplineYalmip < splines.OptiSpline
           c = m.count;
           counts(i) = c+1;
         end
-        
-        
+
+
         all_vars = opti.symvar();
-        
+
         for i=length(yalmip_variables)+1:max(counts)
           m = opti.meta(all_vars{i});
           if strcmp(m.variable_type,'symmetric')
@@ -129,11 +133,11 @@ classdef OptiSplineYalmip < splines.OptiSpline
 
           yalmip_variables{i} = arg;
         end
-        
+
         ret = yalmip_variables(counts);
-        
+
       end
-      
+
       function [ sol ] = solver(self, f, g, solver, varargin)
         if length(varargin)==0
           options = struct();
@@ -142,13 +146,12 @@ classdef OptiSplineYalmip < splines.OptiSpline
         else
           error('Invalid arguments');
         end
-        
+
         if strcmp(solver,'yalmip')
           [sol] = OptiSplineSolverYalmip(self, f, g, solver, options);
         else
-          [sol] = self.solver@splines.OptiSpline(self, f, g, solver, options);
+          [sol] = self.solver@splines.OptiSpline(f, g, solver, options);
         end
       end
    end
 end
-
