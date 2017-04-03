@@ -43,9 +43,26 @@ namespace spline {
     }
 
     Function FunctionNode::partial_eval(const AnyTensor& x, const std::vector< int >& args) const{
-      spline_assert_message(false, "not implemented partial_eval");
-      return Function();
-    }
+        int index = args[0];
+        int n_basis = tensor_basis().n_basis();
+
+        std::vector< Basis > partial_basis = tensor_basis().bases();
+        partial_basis.erase(partial_basis.begin() + index);
+        std::vector< std::string > partial_arguments = tensor_basis().arguments();
+        partial_arguments.erase(partial_arguments.begin() + index);
+
+        std::vector< int > a = mrange(n_basis + 2);
+        std::vector< int > b = std::vector< int > {-1-index};
+        std::vector< int > c = mrange(n_basis + 2);
+        std::cout << a << std::endl;
+        std::cout << b << std::endl;
+        c.erase(c.begin() + index);
+        std::cout << c << std::endl;
+        std::cout << "---" << x << std::endl;
+        AnyTensor partial_coeff = coeff_tensor().einstein(basis(index)(x),a,b,c);
+
+        return Function(TensorBasis( partial_basis, partial_arguments ), partial_coeff);
+     }
 
     std::string FunctionNode::type() const{
         return "Function";
