@@ -14,7 +14,7 @@ namespace spline {
         return coeff_tensor();
     }
 
-    Function ConstantNode::partial_eval(const AnyTensor& x, const std::vector< int >& args) const{
+    Function ConstantNode::partial_eval(const AnyTensor& x, int args) const{
         return coeff_tensor();
     }
 
