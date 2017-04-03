@@ -281,6 +281,9 @@ namespace spline {
         *     the coefficients of the function (T)
         */
         int deg = degree();
+        if (order > deg) {
+            order = deg;
+        }
 
         std::vector<AnyScalar> kn = knots();
         std::vector<AnyScalar> new_knots(kn.begin() + order, kn.end() - order);
