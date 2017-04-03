@@ -53,11 +53,7 @@ namespace spline {
         std::vector< int > a = mrange(n_basis + 2);
         std::vector< int > b = std::vector< int > {-1-index};
         std::vector< int > c = mrange(n_basis + 2);
-        std::cout << a << std::endl;
-        std::cout << b << std::endl;
         c.erase(c.begin() + index);
-        std::cout << c << std::endl;
-        std::cout << "---" << x << std::endl;
         AnyTensor partial_coeff = coeff_tensor().einstein(basis(index)(x),a,b,c);
 
         return Function(TensorBasis( partial_basis, partial_arguments ), partial_coeff);
