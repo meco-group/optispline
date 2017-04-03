@@ -42,7 +42,6 @@ namespace spline {
         return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze();
     }
 
-        int index = args[0];
     Function FunctionNode::partial_eval(const AnyTensor& x, int index) const{
         int n_basis = tensor_basis().n_basis();
 
