@@ -51,13 +51,21 @@ namespace spline {
 
 
     AnyTensor Basis::operator() (const AnyVector & x) const {
-      std::vector<AnyScalar> a = x.to_scalar_vector();
-      (*this)->assert_vector_lenght_correct(a);
-      return (*this)->operator()(a);
+        std::vector<AnyScalar> a = x.to_scalar_vector();
+        (*this)->assert_vector_lenght_correct(x);
+        return (*this)->operator()(a);
     }
     AnyTensor BasisNode::operator() (const std::vector< AnyScalar > & x) const {
         assert(false); //Abstract
         return AnyTensor();
+    }
+
+    void BasisNode::assert_vector_lenght_correct(const AnyVector& x) const {
+        spline_assert_message(x.size() == n_inputs(), "Input vector has wrong dimension.");
+    }
+
+    void BasisNode::assert_vector_lenght_correct(const AnyTensor& x) const {
+        spline_assert_message(x.dims()[1] == n_inputs(), "Input vector has wrong dimension.");
     }
 
     std::vector< std::vector < AnyScalar > > Basis::getEvaluationGrid() const {
@@ -193,13 +201,12 @@ namespace spline {
         return (*this)->integral(domain);
     }
 
+    AnyTensor Basis::const_coeff_tensor(const AnyTensor& t) const {
+        return (*this)->const_coeff_tensor(t);
+    }
     AnyTensor BasisNode::const_coeff_tensor(const AnyTensor& t) const {
         spline_assert(false);
         return AnyTensor();
-    }
-
-    AnyTensor Basis::const_coeff_tensor(const AnyTensor& t) const {
-        return (*this)->const_coeff_tensor(t);
     }
 
 } // namespace spline

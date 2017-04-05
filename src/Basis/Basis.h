@@ -53,8 +53,8 @@ namespace spline {
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        template< class T >
-            void assert_vector_lenght_correct( const std::vector< T >& x) const;
+        virtual void assert_vector_lenght_correct( const AnyVector& x) const;
+        virtual void assert_vector_lenght_correct( const AnyTensor& x) const;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
@@ -134,10 +134,6 @@ namespace spline {
 #endif // SWIG
     };
 
-    template< class T >
-        void BasisNode::assert_vector_lenght_correct(const std::vector< T >& x) const {
-            spline_assert_message(x.size() == n_inputs(), "Input vector has wrong dimension.");
-        }
 
 }  // namespace spline
 #endif  // BASIS_H_
