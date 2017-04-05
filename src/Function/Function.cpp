@@ -67,6 +67,11 @@ namespace spline{
     }
 
     Function Function::partial_eval(const AnyTensor& x, const Argument& args ) const { return (*this)->partial_eval(x, args.concrete(tensor_basis().arguments()));}
+
+    AnyTensor Function::grid_eval(const AnyTensor& x, const std::vector< Argument >& args ) const {
+        return (*this)->grid_eval(x, Argument::concrete(args, tensor_basis()));
+    }
+
     Function Function::operator+(const Function& f) const { return (*this)->operator+(f) ;}
     Function Function::operator+(const AnyTensor& t) const {
         if (t.is_scalar() && t.dims()!=shape())

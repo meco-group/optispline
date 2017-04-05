@@ -30,6 +30,8 @@ namespace spline {
 
             virtual Function partial_eval(const AnyTensor& x, int args)  const = 0;
 
+            virtual AnyTensor grid_eval(const AnyTensor& x, const std::vector< int >& args)  const = 0;
+
             Function operator+(const Function& f) const;
             Function operator*(const Function& f) const;
             Function mtimes(const Function& f) const;
