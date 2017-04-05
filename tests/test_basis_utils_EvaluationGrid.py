@@ -10,6 +10,11 @@ class Test_Basis_utils(BasisTestCase):
       b1 = TensorBasis(b1)
       eg1 = EvaluationGrid(b1)
 
+    def test_grid_monomial(self):
+        m = MonomialBasis(3)
+        print m(1)
+        # print m([0,1])
+
 if __name__ == '__main__':
 
     unittest.main()
