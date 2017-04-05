@@ -181,19 +181,7 @@ namespace spline {
     }
 
     Function FunctionNode::trace() const {
-        std::vector< int > shape_ = shape();
-        spline_assert_message(shape_[0] == shape_[1],
-                "Trace only defined for square matrices. Dimensions are " << shape_ << ".");
-
-        AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(shape_[0])));
-        Function fdiag = operator*(ConstantNode(t)); //keep diagonal entries only
-
-        Coefficient cdiag = fdiag.coeff();
-        AnyTensor ones = AnyTensor::repeat(AnyScalar(1), std::vector< int >{1, shape_[0]});
-        cdiag = cdiag.transform(ones, cdiag.dimension().size()); //sum over all columns
-        cdiag = cdiag.transform(ones, cdiag.dimension().size()+1); //sum over all rows
-
-        return Function(tensor_basis(), cdiag);
+        return Function(tensor_basis(), coeff().trace());
     }
 
     Function FunctionNode::transform_to(const TensorBasis& basis) const {

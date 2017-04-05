@@ -146,14 +146,7 @@ namespace spline {
     }
 
     Function ConstantNode::trace() const {
-        spline_assert_message(false, "not implemented trace");
-        std::vector< int > shape_ = shape();
-        spline_assert_message(shape_[0] == shape_[1],
-                "Trace only defined for square matrices. Dimensions are " << shape_ << ".");
-
-        AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(shape_[0])));
-
-        return Function( t*coeff_tensor() );
+        return Function(coeff().trace().data());
     }
 
     Function ConstantNode::transform_to(const TensorBasis& basis) const {

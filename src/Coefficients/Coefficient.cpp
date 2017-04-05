@@ -1,8 +1,8 @@
+#include <casadi/casadi.hpp>
 #include "Coefficient.h"
 #include "../common.h"
 
 namespace spline {
-
 
     CoefficientNode* Coefficient::get() const {
         return static_cast<CoefficientNode*>(SharedObject::get());
@@ -213,6 +213,21 @@ namespace spline {
         shape_.insert(shape_.end(), shape.begin(), shape.end());
 
         return Coefficient(data().shape(shape_));
+    }
+
+    Coefficient Coefficient::trace() const {
+        return (*this)->trace();
+    }
+
+    Coefficient CoefficientNode::trace() const {
+        spline_assert_message(shape()[0] == shape()[1],
+                "Trace only defined for square matrices. Dimensions are " << shape() << ".");
+        AnyTensor ones = Tensor<casadi::DM>(casadi::DM::eye(shape()[0]), shape());
+        int d = dimension().size();
+        std::vector< int > a = mrange(d + 2);
+        std::vector< int > b = {a[d], a[d+1]};
+        std::vector< int > c = mrange(d);
+        return data().einstein(ones,a,b,c);
     }
 
 }  // namespace spline

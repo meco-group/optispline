@@ -37,13 +37,13 @@ namespace spline {
         Coefficient transpose() const;
         Coefficient rm_direction(const std::vector<NumericIndex>& indices) const;
         Coefficient reshape(const std::vector< int >& shape) const;
+        Coefficient trace() const;
 
     private:
         AnyTensor data_;
 
     };
 #endif
-
 
     class Coefficient : public SharedObject {
     public:
@@ -76,6 +76,8 @@ namespace spline {
         Coefficient transpose() const;
         Coefficient rm_direction(const std::vector<NumericIndex>& indices) const;
         Coefficient reshape(const std::vector< int >& shape) const;
+        Coefficient trace() const;
+
         static Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs);
     };
 } // namespace spline
