@@ -58,7 +58,7 @@ namespace spline {
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
 
-        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
+        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
         virtual int dimension() const {return 0;};  // Number of basis functions in the basis
         virtual int n_inputs() const {return 0;};  // Number of inputs of the basis
@@ -98,8 +98,8 @@ namespace spline {
 
         bool operator==(const Basis& rhs) const;
 
-        std::string type() const ;
-        std::string to_string() const ;
+        std::string type() const;
+        std::string to_string() const;
 
         Domain domain() const;
         std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;

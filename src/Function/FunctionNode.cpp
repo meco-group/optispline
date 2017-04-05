@@ -59,6 +59,10 @@ namespace spline {
         return Function(TensorBasis( partial_basis, partial_arguments ), partial_coeff);
      }
 
+     AnyTensor FunctionNode::grid_eval(const AnyTensor& x, const std::vector< int >& args)  const {
+         return AnyTensor();
+     }
+
     std::string FunctionNode::type() const{
         return "Function";
     }
