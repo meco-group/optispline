@@ -52,6 +52,7 @@ namespace spline {
         Domain domain() const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
+        /* virtual AnyTensor operator()(const AnyTensor& x) const; */
 
         virtual void assert_vector_lenght_correct( const AnyVector& x) const;
         virtual void assert_vector_lenght_correct( const AnyTensor& x) const;
@@ -95,6 +96,7 @@ namespace spline {
         Basis operator*(const Basis& rhs) const;
 
         virtual AnyTensor operator()(const AnyVector& x) const;
+        virtual AnyTensor operator()(const AnyTensor& x) const;
 
         bool operator==(const Basis& rhs) const;
 

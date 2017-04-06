@@ -60,6 +60,16 @@ namespace spline {
         return AnyTensor();
     }
 
+    AnyTensor Basis::operator() (const AnyTensor& x) const {
+        std::vector< AnyTensor > ret ;
+        std::vector< std::vector< AnyScalar > > unpacked_x = x.unpack_2();
+
+        for(int i = 0; i < ret.size(); i++){
+            ret.push_back((*this)->operator()(unpacked_x[i]));
+        }
+        return AnyVector::pack(ret,0);
+    }
+
     void BasisNode::assert_vector_lenght_correct(const AnyVector& x) const {
         spline_assert_message(x.size() == n_inputs(), "Input vector has wrong dimension.");
     }
