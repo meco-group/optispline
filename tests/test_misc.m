@@ -37,3 +37,7 @@ s1 = splines.Function(b1, c1);
 assert(norm(size(s1)-[4,2])==0)
 assert(norm(size(s1,1)-[4])==0)
 assert(norm(size(s1,2)-[2])==0)
+
+
+a = DTensor(rand(4,4,2));
+a(:)
