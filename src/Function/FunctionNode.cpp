@@ -60,6 +60,15 @@ namespace spline {
      }
 
      AnyTensor FunctionNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args)  const {
+        int n_basis = tensor_basis().n_basis();
+        std::vector< int > a = mrange(n_basis);
+        std::vector< int > b = std::vector< int > {-n_basis, -n_basis -1};
+        std::vector< int > c = mrange(n_basis + 2);
+
+        AnyTensor tensor = tensor_basis().grid_eval(x, Argument::from_vector(args));
+
+        return tensor.einstein(coeff().data(), a, b, c).squeeze();
+    }
 
     std::string FunctionNode::type() const{
         return "Function";

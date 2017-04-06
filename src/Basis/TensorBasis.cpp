@@ -285,6 +285,19 @@ namespace spline {
         return ret;
     }
 
+    AnyTensor TensorBasis::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< Argument >& arg_ind) const {
+        return (*this)->grid_eval(x, Argument::concrete(arg_ind, *this));
+    }
+    AnyTensor TensorBasisNode::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< int >& arg_ind) const {
+        spline_assert(x.size() == n_inputs());
+        AnyTensor ret = AnyTensor::unity();
+
+        for (int i = 0; i < n_basis(); i++) {
+            ret = ret.outer_product(basis(i)(x[arg_ind[i]]));
+        }
+        return ret;
+    }
+
     bool TensorBasis::operator==(const TensorBasis& rhs) const {
         if(this->get() == rhs.get()) return true;
         return (*this)->operator==(rhs);
