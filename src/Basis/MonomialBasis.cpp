@@ -182,8 +182,8 @@ namespace spline {
         } else {
             AnyTensor T;
             Basis basis_int = antiderivative(1, T);
-            return (basis_int({dom.max()}) -
-                basis_int({dom.min()})).shape({1, dimension()+1}).mtimes(T);
+            return (basis_int(AnyVector( dom.max() )) -
+                basis_int(AnyVector( dom.min() ))).shape({1, dimension()+1}).mtimes(T);
         }
     }
 
