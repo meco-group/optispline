@@ -75,7 +75,7 @@ namespace spline {
         std::vector< AnyTensor > ret ;
         std::vector< std::vector< AnyScalar > > unpacked_x = x.unpack_2();
 
-        for (int i = 0; i < ret.size(); i++) {
+        for (int i = 0; i < unpacked_x.size(); i++) {
             ret.push_back((*this)->operator()(unpacked_x[i]));
         }
         return AnyVector::pack(ret, 0);
