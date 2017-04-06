@@ -62,6 +62,10 @@ namespace spline{
         }
     }
 
+    casadi::MX Function::operator==(const casadi::MX& x) const {
+      return coeff_tensor().as_MT().data()==x;
+    }
+
     AnyTensor Function::operator()(const AnyTensor& x, const std::vector< Argument >& args ) const {
         return (*this)->operator()(x, Argument::concrete(args, tensor_basis()));
     }
