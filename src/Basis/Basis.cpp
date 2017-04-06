@@ -49,25 +49,36 @@ namespace spline {
       return false;
     }
 
-
-    AnyTensor Basis::operator() (const AnyVector & x) const {
-        std::vector<AnyScalar> a = x.to_scalar_vector();
-        (*this)->assert_vector_lenght_correct(x);
-        return (*this)->operator()(a);
-    }
     AnyTensor BasisNode::operator() (const std::vector< AnyScalar > & x) const {
         assert(false); //Abstract
         return AnyTensor();
     }
 
-    AnyTensor Basis::operator() (const AnyTensor& x) const {
+    AnyTensor Basis::operator() (const AnyTensor& arg) const {
+        AnyTensor x = arg.squeeze();
+        if (x.is_vector()) x = x.as_vector();
+        spline_assert(x.n_dims()<=2);
+
+        if (x.n_dims()==1) {
+          if (x.dims()[0] == n_inputs()) {
+            std::vector<AnyScalar> a = x.unpack_1();
+            return (*this)->operator()(a);
+          } else {
+            x = x.shape({x.numel(), 1});
+          }
+        }
+
+        spline_assert_message(x.dims()[1] == n_inputs(),
+          "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
+          std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
+
         std::vector< AnyTensor > ret ;
         std::vector< std::vector< AnyScalar > > unpacked_x = x.unpack_2();
 
-        for(int i = 0; i < ret.size(); i++){
+        for (int i = 0; i < ret.size(); i++) {
             ret.push_back((*this)->operator()(unpacked_x[i]));
         }
-        return AnyVector::pack(ret,0);
+        return AnyVector::pack(ret, 0);
     }
 
     void BasisNode::assert_vector_lenght_correct(const AnyVector& x) const {
@@ -150,8 +161,9 @@ namespace spline {
         std::vector< AnyTensor > union_basis_eval;
         std::vector< AnyTensor > basis_eval;
         for(auto const & point : eval_grid){
-            union_basis_eval.push_back(union_basis(point));
-            basis_eval.push_back(basis(point));
+            AnyTensor points = AnyVector(point);
+            union_basis_eval.push_back(union_basis(points));
+            basis_eval.push_back(basis(points));
         }
         AnyTensor A = AnyTensor::pack(union_basis_eval, 0);
         AnyTensor B = AnyTensor::pack(basis_eval, 0);

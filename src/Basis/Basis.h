@@ -95,7 +95,6 @@ namespace spline {
         Basis operator+(const Basis& rhs) const;
         Basis operator*(const Basis& rhs) const;
 
-        virtual AnyTensor operator()(const AnyVector& x) const;
         virtual AnyTensor operator()(const AnyTensor& x) const;
 
         bool operator==(const Basis& rhs) const;

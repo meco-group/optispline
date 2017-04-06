@@ -293,7 +293,7 @@ class Test_Function_Function(BasisTestCase):
         db0,T0 = b0.derivative(n_der0)
         g0 = db0.greville()
         x0 = casadi.SX.sym('x0')
-        db0_c = b0([x0])
+        db0_c = b0(x0)
         for i in range(0,n_der0):
             db0_c = casadi.jacobian(db0_c, x0)
         db0_c = casadi.Function('db0_c', [x0], [db0_c])
@@ -304,7 +304,7 @@ class Test_Function_Function(BasisTestCase):
         db1 = b1.derivative(n_der1)
         g1 = db0.greville()
         x1 = casadi.SX.sym('x1')
-        db1_c = b1([x1])
+        db1_c = b1(x1)
         for i in range(0,n_der1):
             db1_c = casadi.jacobian(db1_c, x1)
         db1_c = casadi.Function('db1_c', [x1], [db1_c])

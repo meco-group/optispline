@@ -43,7 +43,7 @@ namespace spline {
 
         EmptyBasis() ;
 
-        virtual AnyTensor operator()(const AnyVector& x) const override;
+        virtual AnyTensor operator()(const AnyTensor& x) const override;
     };
 } // namespace spline
 

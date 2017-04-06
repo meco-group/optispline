@@ -12,7 +12,7 @@ namespace spline{
         for(Basis b : griddedBasis.bases()){
             std::vector< std::vector< AnyScalar > > evaluationGrid = b.getEvaluationGrid();
             for(auto const & subPoint : evaluationGrid){
-                AnyTensor subEvaluation = b(subPoint);
+                AnyTensor subEvaluation = b(AnyVector(subPoint));
                 for( AnyTensor pre : preStep){
                     postStep.push_back(pre.outer_product( subEvaluation ));
                 }
@@ -40,7 +40,7 @@ namespace spline{
                     }
                 }else{
                     Basis correspondingSubBasis = basis.basis(indexPermutation[i]);
-                    AnyTensor subEvaluation = correspondingSubBasis(subPoint);
+                    AnyTensor subEvaluation = correspondingSubBasis(AnyVector(subPoint));
                     for( AnyTensor pre : preStep){
                         postStep.push_back(pre.outer_product( subEvaluation ));
                     }

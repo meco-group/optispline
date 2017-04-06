@@ -132,7 +132,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         b = BSplineBasis(np.r_[np.zeros(degree),np.linspace(0.,1.,knotsint),np.ones(degree)],degree)
         db,T = b.derivative(n_der)
         x = casadi.SX.sym('x')
-        db_c = b([x])
+        db_c = b(x)
         for i in range(0,n_der):
             db_c = casadi.jacobian(db_c, x)
         db_c = casadi.Function('db_c', [x], [db_c] )
@@ -146,7 +146,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         n_der = 2
         db,T = b.derivative(n_der)
         x = casadi.SX.sym('x')
-        db_c = b([x])
+        db_c = b(x)
         for i in range(0,n_der):
             db_c = casadi.jacobian(db_c, x)
         db_c = casadi.Function('db_c', [x], [db_c] )
@@ -158,7 +158,7 @@ class Test_Basis_BSplineBasis(BasisTestCase):
         n_der = degree
         db,T = b.derivative(n_der)
         x = casadi.SX.sym('x')
-        db_c = b([x])
+        db_c = b(x)
         for i in range(0,n_der):
             db_c = casadi.jacobian(db_c, x)
         db_c = casadi.Function('db_c', [x], [db_c] )

@@ -14,7 +14,7 @@ class Test_Basis_MonomialBasis(BasisTestCase):
         b = MonomialBasis(degree)
         db,T = b.derivative(n_der)
         x = casadi.SX.sym('x')
-        db_c = b([x])
+        db_c = b(x)
         for i in range(0,n_der):
             db_c = casadi.jacobian(db_c, x)
         db_c = casadi.Function('db_c', [x], [db_c] )
@@ -28,7 +28,7 @@ class Test_Basis_MonomialBasis(BasisTestCase):
         # test degree'th derivative
         n_der = 2
         db,T = b.derivative(n_der)
-        db_c = b([x])
+        db_c = b(x)
         for i in range(0,n_der):
             db_c = casadi.jacobian(db_c, x)
         db_c = casadi.Function('db_c', [x], [db_c] )

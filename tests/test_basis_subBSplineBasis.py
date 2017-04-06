@@ -6,7 +6,7 @@ import pdb
 def wrap(s, casadiType):
     def eval(a):
         x = [casadiType.sym('x') for i in a]
-        temp = C.Function('temp',x,[s(x)])
+        temp = C.Function('temp',x,[s(*x)])
         return DTensor(temp(a),[s.dimension()])
     return eval
 

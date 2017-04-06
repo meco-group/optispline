@@ -280,7 +280,7 @@ namespace spline {
             for (int i = input_border_[index_arg]; i < input_border_[index_arg + 1]; ++i) {
                 input.push_back(x[i]);
             }
-            ret = ret.outer_product(b(input));
+            ret = ret.outer_product(b(AnyVector(input)));
         }
         return ret;
     }
