@@ -318,26 +318,26 @@ AnyTensor AnyTensor::pack(const std::vector<AnyTensor>& v, int axis) {
 }
 
 AnyTensor AnyTensor::repeat(const AnyTensor&e, const std::vector<int>& factors) {
-  if (e.is_DT()) return DT::repeat(e.as_DT(), factors);
-  if (e.is_ST()) return ST::repeat(e.as_ST(), factors);
-  if (e.is_MT()) return MT::repeat(e.as_MT(), factors);
-  return {DT()};
+    if (e.is_DT()) return DT::repeat(e.as_DT(), factors);
+    if (e.is_ST()) return ST::repeat(e.as_ST(), factors);
+    if (e.is_MT()) return MT::repeat(e.as_MT(), factors);
+    return {DT()};
 }
 
 std::vector<AnyTensor> AnyTensor::unpack(const AnyTensor& v, int axis) {
-  spline_assert(axis<v.n_dims());
-  int n = v.dims()[axis];
-  int N = v.n_dims();
-  std::vector<AnyTensor> ret;
-  std::vector<int> a_e = mrange(N);
-  std::vector<int> c_e = a_e;
-  c_e.erase(c_e.begin()+axis);
+    spline_assert(axis<v.n_dims());
+    int n = v.dims()[axis];
+    int N = v.n_dims();
+    std::vector<AnyTensor> ret;
+    std::vector<int> a_e = mrange(N);
+    std::vector<int> c_e = a_e;
+    c_e.erase(c_e.begin()+axis);
 
-  for (int i=0;i<n;++i) {
-    casadi::DM ind = casadi::DM::zeros(n, 1);
-    ind.nz(i) = 1;
-    ret.push_back(v.einstein(DT(ind, {n}), a_e, {-axis-1}, c_e));
-  }
+    for (int i=0;i<n;++i) {
+        casadi::DM ind = casadi::DM::zeros(n, 1);
+        ind.nz(i) = 1;
+        ret.push_back(v.einstein(DT(ind, {n}), a_e, {-axis-1}, c_e));
+    }
 
   return ret;
 }
@@ -462,7 +462,7 @@ namespace casadi {
       ret->construct(opts);
       return ret;
     }
-    
+
     virtual std::string type_name() const { return "Sorter"; }
 
     Sorter(const std::string &name, int size, int ascending) : casadi::FunctionInternal(name),
@@ -482,7 +482,7 @@ namespace casadi {
     virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
     virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
     /// @}
-    
+
     ///@{
     /** \brief Return Jacobian of all input elements with respect to all output elements */
     virtual bool hasFullJacobian() const { return true; }
@@ -542,7 +542,7 @@ class Uniquifier : public FunctionInternal {
 
     Uniquifier(const std::string &name, int size) : casadi::FunctionInternal(name),
       size_(size) {};
-      
+
     virtual std::string type_name() const { return "Uniquifier";}
 
     /** \brief  Destructor */
@@ -559,7 +559,7 @@ class Uniquifier : public FunctionInternal {
     virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
     virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
     /// @}
-    
+
     ///@{
     /** \brief Return Jacobian of all input elements with respect to all output elements */
     virtual bool hasFullJacobian() const { return true; }
