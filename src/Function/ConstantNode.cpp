@@ -18,7 +18,7 @@ namespace spline {
         return coeff_tensor();
     }
 
-     AnyTensor ConstantNode::grid_eval(const AnyTensor& x, const std::vector< int >& args)  const {
+     AnyTensor ConstantNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args)  const {
          return AnyTensor();
      }
 
