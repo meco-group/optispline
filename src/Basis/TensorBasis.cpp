@@ -91,7 +91,7 @@ namespace spline {
 
     bool TensorBasis::hasArguments() const { return (*this)->hasArguments();}
     bool TensorBasisNode::hasArguments() const {
-        return allArguments.size() > 0;
+        return ( allArguments.size() > 0 );
     }
 
     std::vector< Basis > TensorBasis::bases() const { return (*this)->bases (); }
