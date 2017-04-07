@@ -296,7 +296,7 @@ namespace spline {
         std::vector<int> order_half2;
 
         for (int i = 0; i < n_basis(); i++) {
-            ret = ret.outer_product(basis(i)(x[arg_ind[i]]));
+            ret = ret.outer_product(basis(arg_ind[i])(x[i]));
             order_half1.push_back(i);
             order_half1.push_back(i+n_basis());
         }
