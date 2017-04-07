@@ -292,10 +292,18 @@ namespace spline {
         spline_assert(x.size() == n_inputs());
         AnyTensor ret = AnyTensor::unity();
 
+        std::vector<int> order_half1;
+        std::vector<int> order_half2;
+
         for (int i = 0; i < n_basis(); i++) {
             ret = ret.outer_product(basis(i)(x[arg_ind[i]]));
+            order_half1.push_back(i);
+            order_half1.push_back(i+n_basis());
         }
-        return ret;
+
+        order_half1.insert( order_half1.end(), order_half2.begin(), order_half2.end() );
+
+        return ret.reorder_dims(order_half1);
     }
 
     bool TensorBasis::operator==(const TensorBasis& rhs) const {
