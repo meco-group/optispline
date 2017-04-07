@@ -282,7 +282,7 @@ namespace spline {
             }
             ret = ret.outer_product(b(AnyVector(input)));
         }
-        return ret;
+        return ret.reorder_dims(arg_ind);
     }
 
     AnyTensor TensorBasis::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< Argument >& arg_ind) const {
