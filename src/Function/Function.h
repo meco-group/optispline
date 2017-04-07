@@ -32,6 +32,7 @@ namespace spline {
 
         casadi::MX operator<=(const casadi::MX& x) const;
         casadi::MX operator>=(const casadi::MX& x) const;
+        casadi::MX operator==(const casadi::MX& x) const;
 
         AnyTensor operator()(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
 

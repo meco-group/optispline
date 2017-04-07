@@ -326,6 +326,9 @@ class Tensor {
   Tensor operator>=(const Tensor& rhs) const {
     return Tensor(data_<=rhs.data_, dims_);
   }
+  Tensor operator==(const Tensor& rhs) const {
+    return Tensor(data_==rhs.data_, dims_);
+  }
   /** \brief Make a slice
   *
   *   -1  indicates a slice
@@ -352,6 +355,9 @@ class Tensor {
   }
 
   Tensor index(const std::vector<int>& ind) const {
+    if (ind.size()==1 && ind[0]==-1) {
+      return shape({numel()});
+    }
     // Check that input is a permutation of range(n_dims())
     tensor_assert(ind.size()==n_dims());
 

@@ -354,7 +354,7 @@ MT OptiSpline::coeff_var(const std::vector<int> & shape, int n, int m, const std
     std::vector<int> ret_shape = shape;
     ret_shape.push_back(n);
     ret_shape.push_back(m);
-    return MT(var(cs), ret_shape);
+    return MT(var(spline::product(ret_shape)), ret_shape);
   }
 
   std::vector<MX> args;

@@ -111,3 +111,8 @@ sol.solve();
 
 assert(norm(sol.value(x)+2)<1e-5)
 
+
+b = MonomialBasis(4);
+F = opti.Function(b,[4,4]);
+F = opti.Function(b,[4,4],'full');
+F = opti.Function(b,[4,4],'symmetric');

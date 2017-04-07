@@ -90,7 +90,7 @@ namespace spline {
 
     std::string BSplineBasisNode::to_string() const {
         return "BSplineBasis of degree " + std::to_string(degree()) +
-               ", with " + std::to_string(knots().size()-2*degree()) + " internal knots, on "
+               ", with " + std::to_string(knots().size()) + " knots, on "
                + domain().to_string();
     }
 
