@@ -60,15 +60,34 @@ namespace spline {
      }
 
      AnyTensor FunctionNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args)  const {
+
+        AnyTensor tensor = tensor_basis().grid_eval(x, Argument::from_vector(args));
+// reorder tensor to order of basis
         int n_basis = tensor_basis().n_basis();
+        std::vector< int > order_tensor (2*n_basis);
+        for (int i = 0; i < n_basis; i++) {
+            order_tensor[i] = i;
+            order_tensor[args[i] + n_basis] = i + n_basis;
+        }
+        tensor = tensor.reorder_dims(order_tensor);
+
+        // multiply with coeffs
         std::vector< int > a = mrange(2 * n_basis);
         std::vector< int > b = mrange(n_basis, 2 * n_basis + 2);
         std::vector< int > c = mrange(n_basis);
         c.insert(c.end(), b.end() - 2, b.end());
+        tensor = tensor.einstein( coeff_tensor(), a, b, c);
 
-        AnyTensor tensor = tensor_basis().grid_eval(x, Argument::from_vector(args));
-;
-        return tensor.einstein(coeff().data(), a, b, c).squeeze();
+        std::vector< int > args_order = args;
+        args_order.push_back(args_order.size());
+        args_order.push_back(args_order.size());
+        /* tensor = tensor.reorder_dims(args_order); */
+/*         std::vector< AnyTensor > reorder_x = {}; */
+/*         for(auto i : args) reorder_x.push_back(x[i]); */
+
+/*         AnyTensor tensor = tensor_basis().grid_eval(reorder_x, Argument::from_vector(args)); */
+
+        return tensor.squeeze();
     }
 
     std::string FunctionNode::type() const{
