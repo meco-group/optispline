@@ -49,3 +49,22 @@ sol.solve();
 F = sol.value(F);
 
 norm(F.fast_eval(data(:,1:2)') - data(:,3),'inf')
+
+
+% Option 2: use optistack (using fast_jac)
+
+
+F = opti.Function(b);
+
+diff = F.fast_jac(data(:,1:2)')*F.coeff_tensor.data - data(:,3);
+
+obj = diff'*diff;
+
+sol = opti.solver(obj,{},'ipopt');
+sol.solve();
+
+F = sol.value(F);
+
+norm(F.fast_eval(data(:,1:2)') - data(:,3),'inf')
+
+
