@@ -68,9 +68,9 @@ namespace spline {
       for (auto &a : args) args_str.push_back(a);
       auto it = std::find(args_str.begin(), args_str.end(), name_);
       if (it == args_str.end()) {
-        std::stringstream ss;
-        for (auto &s : args_str) ss << "'" << s << "' ";
-        spline_error("Argument '" << name_ << "' unknown. Choose one of " << ss.str() << ".");
+        /* std::stringstream ss; */
+        /* for (auto &s : args_str) ss << "'" << s << "' "; */
+        /* spline_error("Argument '" << name_ << "' unknown. Choose one of " << ss.str() << "."); */
         return -1;
       } else {
         return  std::distance(args_str.begin(), it);
