@@ -217,6 +217,10 @@ namespace spline {
         return ret;
     }
 
+    AnyTensor BSplineBasisNode::evaluation_grid() const {
+        return AnyVector(greville()).uniquify();
+    }
+
     AnyTensor BSplineBasisNode::const_coeff_tensor(const AnyTensor& t) const {
         std::vector< int > coeff_size = t.dims();
         coeff_size.insert(coeff_size.begin(), 1);

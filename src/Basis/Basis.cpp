@@ -98,6 +98,14 @@ namespace spline {
       return std::vector< std::vector < AnyScalar > >();
     }
 
+    AnyTensor Basis::evaluation_grid() const {
+      return (*this)->evaluation_grid();
+    }
+    AnyTensor BasisNode::evaluation_grid() const {
+        /* return AnyTensor::pack(getEvaluationGrid(), 0); */
+      return AnyTensor();
+    }
+
     Basis BasisNode::insert_knots(const AnyVector & new_knots, AnyTensor & T) const {
         spline_assert_message(false, type() << " can not insert knots.");
         return Basis();

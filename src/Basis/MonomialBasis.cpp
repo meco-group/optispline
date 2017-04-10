@@ -110,6 +110,15 @@ namespace spline {
         return ret;
     }
 
+    AnyTensor MonomialBasisNode::evaluation_grid() const {
+        std::vector< double > ret = {};
+        for (int i = 0; i < dimension(); i++) {
+            ret.push_back( static_cast<double>(i));
+        }
+        return Tensor<casadi::DM>(casadi::DM(ret) ,std::vector< int >{dimension(),1} );
+    }
+
+
     Basis MonomialBasisNode::derivative(int order, AnyTensor& T) const {
         if (order > degree()) {
             // User tries to take a derivative which is of higher order than the basis,

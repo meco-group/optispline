@@ -58,6 +58,7 @@ namespace spline {
         virtual void assert_vector_lenght_correct( const AnyTensor& x) const;
 
         virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        virtual AnyTensor evaluation_grid() const;
 
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
@@ -104,6 +105,7 @@ namespace spline {
 
         Domain domain() const;
         std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        AnyTensor evaluation_grid() const;
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;
         Basis midpoint_refinement(int refinement, AnyTensor& SWIG_OUTPUT(T)) const;
