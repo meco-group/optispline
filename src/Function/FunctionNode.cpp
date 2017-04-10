@@ -63,24 +63,29 @@ namespace spline {
 
         AnyTensor tensor = tensor_basis().grid_eval(x, Argument::from_vector(args), false);
 // reorder tensor to order of basis
-        int n_basis = tensor_basis().n_basis();
-        std::vector< int > order_tensor (2*n_basis);
-        for (int i = 0; i < n_basis; i++) {
-            order_tensor[i] = i;
-            order_tensor[args[i] + n_basis] = i + n_basis;
-        }
-        tensor = tensor.reorder_dims(order_tensor);
+        /* int n_basis = tensor_basis().n_basis(); */
+        int n_dims_tensor = tensor.dims().size();
+        int n_dims_grid = args.size();
+        /* std::vector< int > order_tensor (2*n_basis); */
+        /* for (int i = 0; i < n_basis; i++) { */
+        /*     order_tensor[i] = i; */
+        /*     order_tensor[args[i] + n_basis] = i + n_basis; */
+        /* } */
+        /* tensor = tensor.reorder_dims(order_tensor); */
 
         // multiply with coeffs
-        std::vector< int > a = mrange(2 * n_basis);
-        std::vector< int > b = mrange(n_basis, 2 * n_basis + 2);
-        std::vector< int > c = mrange(n_basis);
+        std::vector< int > a = mrange(n_dims_tensor);
+        std::vector< int > b = mrange(n_dims_grid, n_dims_tensor + 2);
+        std::vector< int > c = mrange(n_dims_grid);
         c.insert(c.end(), b.end() - 2, b.end());
+        /* std::cout << a << std::endl; */
+        /* std::cout << b << std::endl; */
+        /* std::cout << c << std::endl; */
         tensor = tensor.einstein( coeff_tensor(), a, b, c);
 
-        std::vector< int > args_order = args;
-        args_order.push_back(args_order.size());
-        args_order.push_back(args_order.size());
+        /* std::vector< int > args_order = args; */
+        /* args_order.push_back(args_order.size()); */
+        /* args_order.push_back(args_order.size()); */
         /* tensor = tensor.reorder_dims(args_order); */
 /*         std::vector< AnyTensor > reorder_x = {}; */
 /*         for(auto i : args) reorder_x.push_back(x[i]); */
@@ -102,6 +107,11 @@ namespace spline {
             const BasisComposition & bc, const TensorComposition & tc) const  {
 
         TensorBasis sumBasis = bc(tensor_basis(), f.tensor_basis());
+
+        /* std::cout << std::endl << "---------------------" << std::endl; */
+        /* std::cout << sumBasis << std::endl; */
+        /* std::cout << "=====================" << std::endl; */
+
         EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
         std::vector< AnyTensor > basisEvaluated;
         AnyTensor thisFunctionEvaluated;
@@ -110,6 +120,12 @@ namespace spline {
         basisEvaluated = evaluationGrid.eval();
         thisFunctionEvaluated = evaluationGrid.eval(shared_from_this<Function>());
         otherFunctionEvaluated = evaluationGrid.eval(f);
+
+
+        std::vector< int >  args = Argument::concrete(sumBasis.arguments(), sumBasis );
+        basisEvaluated =  sumBasis.grid_eval(sumBasis.evaluation_grid());
+        thisFunctionEvaluated = shared_from_this<Function>().grid_eval(sumBasis.evaluation_grid());
+        otherFunctionEvaluated = f.grid_eval(sumBasis.evaluation_grid());
 
         AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
         AnyTensor B = tc(thisFunctionEvaluated, otherFunctionEvaluated);
@@ -141,6 +157,8 @@ namespace spline {
     }
 
     Function FunctionNode::operator+(const FunctionNode& f) const {
+        std::cout << std::endl << ( *this ).shared_from_this<Function>()<< std::endl;
+        std::cout << f.shared_from_this<Function>() << std::endl;
         return generic_operation(f.shared_from_this<Function>(),
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
