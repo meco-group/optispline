@@ -86,8 +86,26 @@ class Test_grid_eval(BasisTestCase):
         print eg
         print eg.eval()
 
-        print t.arguments()
-        print m.getEvaluationGrid()
+#         print t.arguments()
+#         print m.getEvaluationGrid()
+#         print m.evaluation_grid()
+        grid = t.evaluation_grid()
+
+        xy = ['x','y']
+        print t.grid_eval(grid, xy)
+        print x.grid_eval(grid, xy)
+        print y.grid_eval(grid, xy)
+
+        fx = Function(x, np.random.rand(*x.dimension()))
+        fy = Function(y, np.random.rand(*y.dimension()))
+        print fx
+        print fy
+
+        print fx.grid_eval(grid, xy)
+        print fy.grid_eval(grid, xy)
+        print fx
+        print fy
+
         # f= z*x*x*y +x
         # f = x + y*z + z*y*x
         # f = x + z*y + z*y*x
@@ -104,8 +122,8 @@ class Test_grid_eval(BasisTestCase):
 
         # print "f = x*z + z*x*x"
         # f = x*z + z*x*x
-        f = x + z*x*x
-        f = x + y*z + z*x*x
+        # f = x + z*x*x
+        # f = x + y*z + z*x*x
 
         def f_(x_, y_, z_):
             return x(x_) + y(y_)*z(z_) + z(z_) * x(x_)**2
