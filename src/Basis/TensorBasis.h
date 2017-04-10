@@ -66,6 +66,7 @@ class TensorBasisNode : public SharedObjectNode {
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< int >& arg_ind, bool reorder_output) const;
 
         virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& arg_ind, bool reorder_output) const;
+        virtual std::vector< AnyTensor >  evaluation_grid() const;
 
         virtual bool operator==(const TensorBasis& rhs) const;
 
@@ -164,6 +165,7 @@ public:
 
         AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< Argument >& arg_ind = {}, bool reorder_output = true) const;
         AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& arg_ind = {}, bool reorder_output = true) const;
+        std::vector< AnyTensor >  evaluation_grid() const;
 
         virtual bool operator==(const TensorBasis& rhs) const;
 

@@ -286,28 +286,65 @@ namespace spline {
             }
             ret = ret.outer_product(b(AnyVector(input)));
         }
-        return ret.reorder_dims(arg_ind);
+        if(reorder_output) return ret.reorder_dims(arg_ind);
+        return ret;
     }
 
-    AnyTensor TensorBasis::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< Argument >& arg_ind, bool reorder_output) const {
+    std::vector< AnyTensor >  TensorBasis::evaluation_grid () const {
+        return (*this)->evaluation_grid();
+    }
+
+    std::vector< AnyTensor >  TensorBasisNode::evaluation_grid () const {
+        std::vector< AnyTensor > ret;
+        for(auto& b : bases()){
+            ret.push_back(b.evaluation_grid());
+        }
+        return ret;
+    }
+
+    AnyTensor TensorBasis::grid_eval (const std::vector< AnyTensor > &  x,
+            const std::vector< Argument >& arg_ind, bool reorder_output) const {
         return (*this)->grid_eval(x, Argument::concrete(arg_ind, *this), reorder_output);
     }
+
     AnyTensor TensorBasisNode::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< int >& arg_ind, bool reorder_output) const {
         int l = arg_ind.size();
+        spline_assert(x.size() == l);
         AnyTensor ret = AnyTensor::unity();
 
-        std::vector<int> order_half1;
-        std::vector<int> order_half2;
+        std::vector< int > reorder(2*l ,0);
 
-        for (int i = 0; i < n_basis(); i++) {
+        for (int i = 0; i < l; i++) {
             ret = ret.outer_product(basis(arg_ind[i])(x[i]));
-            order_half1.push_back(i);
-            order_half1.push_back(i+n_basis());
+            reorder[i] = 2*i;
+            reorder[i + l] = 2*i + 1;
         }
 
-        order_half1.insert( order_half1.end(), order_half2.begin(), order_half2.end() );
+        reorder_output = false;
+        if(reorder_output){
+            ret = ret.reorder_dims(reorder);
+            std::vector< int > dims = ret.dims();
+            for (int i = 0; i < l; i++) {
+                if(arg_ind[i] < 0){
+                    dims.erase(dims.begin() + l + i );
+                }
+            }
+            return ret.shape(dims);
+        }
 
-        return ret.reorder_dims(order_half1);
+        int dim_to_pop = 0;
+        for (int i = 0; i < l; i++) {
+            if(arg_ind[i] < 0){
+                dim_to_pop++;
+                reorder[2*l - dim_to_pop] = 2*i + 1;
+            } else {
+                reorder[l+arg_ind[i]] = 2*i + 1;
+            }
+        }
+        ret = ret.reorder_dims(reorder);
+        std::vector< int > dims = ret.dims();
+        dims.erase(dims.end() - dim_to_pop, dims.end());
+        return ret.shape(dims);
     }
 
     bool TensorBasis::operator==(const TensorBasis& rhs) const {
