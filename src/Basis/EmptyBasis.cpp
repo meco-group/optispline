@@ -69,11 +69,7 @@ namespace spline {
       return false;
     }
 
-    AnyTensor EmptyBasis::operator() (const AnyTensor & x) const {
-        // missing logic here
-        std::vector<AnyScalar> a = x.unpack_1();
-        return (*this)->operator()(a);
-    }
+
     AnyTensor EmptyBasisNode::operator() (const std::vector< AnyScalar > & x) const {
         return AnyScalar(1.0);
     }

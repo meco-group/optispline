@@ -68,9 +68,11 @@ namespace spline {
           }
         }
 
-        spline_assert_message(x.dims()[1] == n_inputs(),
-          "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
-          std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
+        if(type() != "EmptyBasis"){
+            spline_assert_message(x.dims()[1] == n_inputs(),
+                    "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
+                    std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
+        }
 
         std::vector< AnyTensor > ret ;
         std::vector< std::vector< AnyScalar > > unpacked_x = x.unpack_2();
