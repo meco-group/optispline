@@ -38,7 +38,7 @@ namespace spline {
         return stream << base.to_string();
     }
 
-    AnyTensor TensorBasisConstantNode::operator() (const std::vector< AnyScalar > &  x, const std::vector< int >& arg_ind) const {
+    AnyTensor TensorBasisConstantNode::operator() (const std::vector< AnyScalar > &  x, const std::vector< int >& arg_ind, bool reorder_output) const {
         return AnyScalar(1.0);
     }
 

@@ -262,10 +262,10 @@ namespace spline {
         return shared_from_this<TensorBasis>();
     }
 
-    AnyTensor TensorBasis::operator() (const std::vector< AnyScalar > &  x, const std::vector< Argument >& arg_ind) const {
-        return (*this)->operator()(x, Argument::concrete(arg_ind, *this));
+    AnyTensor TensorBasis::operator() (const std::vector< AnyScalar > &  x, const std::vector< Argument >& arg_ind, bool reorder_output) const {
+        return (*this)->operator()(x, Argument::concrete(arg_ind, *this), reorder_output);
     }
-    AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x, const std::vector< int >& arg_ind) const {
+    AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x, const std::vector< int >& arg_ind, bool reorder_output) const {
 
         spline_assert(x.size() == n_inputs());
         AnyTensor ret = AnyTensor::unity();
@@ -285,11 +285,11 @@ namespace spline {
         return ret.reorder_dims(arg_ind);
     }
 
-    AnyTensor TensorBasis::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< Argument >& arg_ind) const {
-        return (*this)->grid_eval(x, Argument::concrete(arg_ind, *this));
+    AnyTensor TensorBasis::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< Argument >& arg_ind, bool reorder_output) const {
+        return (*this)->grid_eval(x, Argument::concrete(arg_ind, *this), reorder_output);
     }
-    AnyTensor TensorBasisNode::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< int >& arg_ind) const {
-        spline_assert(x.size() == n_inputs());
+    AnyTensor TensorBasisNode::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< int >& arg_ind, bool reorder_output) const {
+        int l = arg_ind.size();
         AnyTensor ret = AnyTensor::unity();
 
         std::vector<int> order_half1;

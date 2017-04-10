@@ -61,7 +61,7 @@ namespace spline {
 
      AnyTensor FunctionNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args)  const {
 
-        AnyTensor tensor = tensor_basis().grid_eval(x, Argument::from_vector(args));
+        AnyTensor tensor = tensor_basis().grid_eval(x, Argument::from_vector(args), false);
 // reorder tensor to order of basis
         int n_basis = tensor_basis().n_basis();
         std::vector< int > order_tensor (2*n_basis);
