@@ -124,8 +124,19 @@ namespace spline {
 
     AnyTensor CoefficientNode::transform(const std::vector<AnyTensor>& T,
           const NumericIndexVector& directions) const {
-        spline_assert(T.size() == directions.size());
+
         AnyTensor ret_data = data();
+        spline_assert(T.size() == directions.size());
+
+        bool linear_expansion = ret_data.is_MT();
+        for (auto& t : T) linear_expansion&= t.is_DT();
+
+        casadi::MX s;
+        if (linear_expansion) {
+          s = casadi::MX::sym("temp", ret_data.numel());
+          ret_data = MT(s, ret_data.dims());
+        }
+
         for (int k=0; k<T.size(); k++) {
             // check dimension of transformation matrix
             spline_assert_message(T[k].n_dims()==2,
@@ -139,7 +150,11 @@ namespace spline {
             // construct index vectors
             ret_data = ret_data.transform(T[k], directions[k]);
         }
-        return ret_data;
+        if (!linear_expansion) return ret_data;
+        casadi::Function f = casadi::Function("f", {s}, {ret_data.as_MT().data()});
+        casadi::Function J = f.jacobian();
+        casadi::DM jac = sparsify(J(std::vector<casadi::DM>{0})[0]);
+        return MT(casadi::MX::mtimes(jac, data().as_MT().data()), ret_data.dims());
     }
 
     Coefficient Coefficient::add_trival_dimension(int extra_dims) const {

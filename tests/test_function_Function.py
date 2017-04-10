@@ -284,6 +284,31 @@ class Test_Function_Function(BasisTestCase):
         with self.assertRaises(Exception):
             f.kick_boundary([0.,0.5], [1])
 
+    def test_derivative_multivariate_MX(self):
+        d0 = 4
+        k0 = np.r_[np.zeros(d0),np.linspace(0.,1.,8),np.ones(d0)]
+        b0 = BSplineBasis(k0,d0)
+        
+        d1 = 3
+        b1 = MonomialBasis(d1)
+        
+        c = np.random.rand(b0.dimension(),b1.dimension())
+        cMX = casadi.MX.sym("c", b0.dimension(),b1.dimension())
+        f = Function(TensorBasis([b0,b1], ['x', 'y']), c)
+        df = f.derivative([2, 1], [0,1])
+        
+        fMX = Function(TensorBasis([b0,b1], ['x', 'y']), cMX)
+        dfMX = fMX.derivative([2, 1], [0,1])
+
+
+        F = casadi.Function('f',[cMX],[dfMX(0.5,0.3)])
+        print F(c)
+        print df(0.5,0.3)
+        
+        self.assertEqualTensor(F(c), df(0.5,0.3))      
+        
+
+        
     def test_derivative_multivariate(self):
         if valgrind: return
         d0 = 4
