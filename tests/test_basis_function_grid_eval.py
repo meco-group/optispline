@@ -109,59 +109,31 @@ class Test_grid_eval(BasisTestCase):
         y = Polynomial([0, 1], 'y')
         z = Polynomial([0, 1], 'z')
 
-        operations = [__add__, __mul__]
+        operations = [lambda x,y: x+y, lambda x,y: x*y]
         st_function = [x, y,z]
-        new_function = []
-        test_function = []
+        test_results = []
 
         import itertools as it
 
         n_fun = 3
-        funs = it.product(st_function, repeat = n_fun)
 
-        chains = it.product(operations, repeat = n_fun - 1)
-        for c in chains:
-            for f in funs:
+        np.random.seed(0)
+        r_data = list(np.random.rand(3))
+        print r_data
+        for c in it.product(operations, repeat = n_fun - 1):
+            for r in it.product(r_data, repeat = n_fun):
+                n_ = r[0]
+                for i in range(n_fun - 1):
+                    n_ = c[i](n_, r[i+1])
+                test_results.append(n_)
+            cnt = 0
+            for f in it.product(st_function, repeat = n_fun):
                 f_ = f[0]
                 for i in range(n_fun - 1):
                     f_ = c[i](f_, f[i+1])
-                # print f_
-                new_function.append(f_)
+                self.assertEqualTensor(f_(r_data,['x','y','z']), test_results[cnt])
+                cnt+=1
 
-        for f_ in new_function:
-            print f_.n_inputs()
-            print f_.tensor_basis().arguments()
-
-#             for _ in range(10):
-
-#                 r = np.random.rand(3)
-#                     f_(r)
-
-            # f = z*x*x*y +x
-            # f = x + y*z + z*y*x
-            # f = x + z*y + z*y*x
-            # f = x + y + z*y*x
-            # f = z*x + z*x*x
-            # f = x*z + z*x
-            # f = x + z*x
-            # print "f = x*z + z*x"
-            # f = x*z + z*x
-            # print "f = x + x*z*x"
-            # f = x + x*z*x
-            # print "f = x*z + x*z*x"
-            # f = x*z + x*z*x
-
-        # print "f = x*z + z*x*x"
-        # f = x*z + z*x*x
-        # f = x + z*x*x
-        # f = x + y*z + z*x*x
-
-        def f_(x_, y_, z_):
-            return x(x_) + y(y_)*z(z_) + z(z_) * x(x_)**2
-
-        e1 = [1 ,0 ,0]
-        e2 = [0 ,1 ,0]
-        e3 = [0 ,0 ,1]
 #         er = np.random.rand(3)
 
 #         print f_(*e1)
