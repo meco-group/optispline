@@ -116,7 +116,7 @@ class Test_grid_eval(BasisTestCase):
 
         import itertools as it
 
-        n_fun = 3
+        n_fun = 4
 
         order = ['x','y','z']
         st_function_names = order
@@ -138,11 +138,11 @@ class Test_grid_eval(BasisTestCase):
                 for i in range(n_fun - 1): f_ = c[i](f_, f[i+1])
                 args = f_.tensor_basis().arguments()
                 f_args = [r_data[order.index(k)] for k in args]
-                print "f_args", f_args, args, r_data
-                print f_(f_args,args), test_results[cnt]
-                print [st_function_names[i] for i in fi], [operation_names[operations.index(e)] for e in c]
-                f = (x+x)*x
-                print "test", f(r_data[0]), (r_data[0]+r_data[0])*r_data[0]
+                #print "f_args", f_args, args, r_data
+                #print f_(f_args,args), test_results[cnt]
+                #print [st_function_names[i] for i in fi], [operation_names[operations.index(e)] for e in c]
+                #f = (x+x)*x
+                #print "test", f(r_data[0]), (r_data[0]+r_data[0])*r_data[0]
 
                 self.assertEqualTensor(f_(f_args,args), test_results[cnt],tol=1e-6)
                 cnt+=1
