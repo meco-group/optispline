@@ -83,8 +83,8 @@ class Test_grid_eval(BasisTestCase):
         t = TensorBasis([m,m2], [ 'x','y' ])
 
         eg = EvaluationGrid(t)
-        print eg
-        print eg.eval()
+        # print eg
+        # print eg.eval()
 
 #         print t.arguments()
 #         print m.getEvaluationGrid()
@@ -92,33 +92,64 @@ class Test_grid_eval(BasisTestCase):
         grid = t.evaluation_grid()
 
         xy = ['x','y']
-        print t.grid_eval(grid, xy)
-        print x.grid_eval(grid, xy)
-        print y.grid_eval(grid, xy)
+        # print t.grid_eval(grid, xy)
+        # print x.grid_eval(grid, xy)
+        # print y.grid_eval(grid, xy)
 
         fx = Function(x, np.random.rand(*x.dimension()))
         fy = Function(y, np.random.rand(*y.dimension()))
-        print fx
-        print fy
+        # print fx
+        # print fy
 
-        print fx.grid_eval(grid, xy)
-        print fy.grid_eval(grid, xy)
-        print fx
-        print fy
+        # print fx.grid_eval(grid, xy)
+        # print fy.grid_eval(grid, xy)
+        # print fx
+        # print fy
+        x = Polynomial([0, 1], 'x')
+        y = Polynomial([0, 1], 'y')
+        z = Polynomial([0, 1], 'z')
 
-        # f= z*x*x*y +x
-        # f = x + y*z + z*y*x
-        # f = x + z*y + z*y*x
-        # f = x + y + z*y*x
-        # f = z*x + z*x*x
-        # f = x*z + z*x
-        # f = x + z*x
-        # print "f = x*z + z*x"
-        # f = x*z + z*x
-        # print "f = x + x*z*x"
-        # f = x + x*z*x
-        # print "f = x*z + x*z*x"
-        # f = x*z + x*z*x
+        operations = [__add__, __mul__]
+        st_function = [x, y,z]
+        new_function = []
+        test_function = []
+
+        import itertools as it
+
+        n_fun = 3
+        funs = it.product(st_function, repeat = n_fun)
+
+        chains = it.product(operations, repeat = n_fun - 1)
+        for c in chains:
+            for f in funs:
+                f_ = f[0]
+                for i in range(n_fun - 1):
+                    f_ = c[i](f_, f[i+1])
+                # print f_
+                new_function.append(f_)
+
+        for f_ in new_function:
+            print f_.n_inputs()
+            print f_.tensor_basis().arguments()
+
+#             for _ in range(10):
+
+#                 r = np.random.rand(3)
+#                     f_(r)
+
+            # f = z*x*x*y +x
+            # f = x + y*z + z*y*x
+            # f = x + z*y + z*y*x
+            # f = x + y + z*y*x
+            # f = z*x + z*x*x
+            # f = x*z + z*x
+            # f = x + z*x
+            # print "f = x*z + z*x"
+            # f = x*z + z*x
+            # print "f = x + x*z*x"
+            # f = x + x*z*x
+            # print "f = x*z + x*z*x"
+            # f = x*z + x*z*x
 
         # print "f = x*z + z*x*x"
         # f = x*z + z*x*x
