@@ -421,6 +421,16 @@ AnyVector::AnyVector(const MT & s) : AnyTensor(s.as_vector()) {
   tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension.")
 }
 
+AnyVector AnyVector::perturbation() const {
+  tensor_assert(numel()>=3);
+  std::vector<AnyScalar> r = to_scalar_vector();
+  std::vector<AnyScalar> ret;
+  ret.push_back((r[0]+r[1])/2);
+  ret.insert(ret.end(),r.begin()+1,r.begin()+r.size()-1);
+  ret.push_back((r[r.size()-1]+r[r.size()-2])/2);
+  return ret;
+}
+
 /**AnyVector& AnyVector::operator=(const AnyTensor& s)  {
   AnyTensor::operator=(s);
   return *this;

@@ -388,6 +388,7 @@ class AnyVector : public AnyTensor {
     AnyVector sort(bool ascending=true) const;
     AnyVector uniquify() const;
     bool is_equal(const AnyVector& rhs) const;
+    AnyVector perturbation() const;
 };
 
 namespace casadi {
