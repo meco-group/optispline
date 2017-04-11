@@ -218,7 +218,7 @@ namespace spline {
     }
 
     AnyTensor BSplineBasisNode::evaluation_grid() const {
-        return AnyVector(greville()).uniquify().perturbation();
+        return AnyVector(greville()).uniquify().perturbation().shape(std::vector< int > {dimension(), 1}) ;
     }
 
     AnyTensor BSplineBasisNode::const_coeff_tensor(const AnyTensor& t) const {
