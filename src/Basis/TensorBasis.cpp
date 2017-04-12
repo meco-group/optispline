@@ -299,6 +299,7 @@ namespace spline {
         for(auto& b : bases()){
             ret.push_back(b.evaluation_grid());
         }
+        std::cout << "ret : " << ret << std::endl;
         return ret;
     }
 
@@ -643,9 +644,13 @@ namespace spline {
         Function b1 = basis_functions();
         Function b2 = b.basis_functions();
 
+        std::cout << b1 << std::endl;
+        std::cout << b2 << std::endl;
         Function b21  = b2.mtimes(b1.transpose());
         Function b22  = b2.mtimes(b2.transpose());
 
+        std::cout << b21 << std::endl;
+        std::cout << b22 << std::endl;
         AnyTensor B21 = b21.integral();
         AnyTensor B22 = b22.integral();
 
@@ -664,11 +669,14 @@ namespace spline {
     }
 
     TensorBasis TensorBasisNode::transform_to(const TensorBasis& tb, std::vector<AnyTensor>& T) const {
+        std::cout << "n_bais: " << n_basis() << std::endl;
         spline_assert(n_basis() == tb.n_basis());
         std::vector<Basis> new_bases(n_basis());
         std::vector<AnyTensor> T_(n_basis());
+        std::vector< int > args_other = Argument::concrete(Argument::from_vector(tb.arguments()), shared_from_this<TensorBasis>());
+        std::cout << "args_other : " <<  args_other << std::endl;
         for (int i = 0; i <n_basis(); i++) {
-            new_bases[i] = basis(i).transform_to(tb.basis(i), T_[i]);
+            new_bases[i] = basis(i).transform_to(tb.basis(args_other[i]), T_[args_other[i]]);
         }
         T = T_;
         if (hasArguments()) {
