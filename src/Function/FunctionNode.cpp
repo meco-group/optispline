@@ -59,7 +59,7 @@ namespace spline {
         return Function(TensorBasis( partial_basis, partial_arguments ), partial_coeff);
      }
 
-     AnyTensor FunctionNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args)  const {
+     AnyTensor FunctionNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args, bool squeeze_return)  const {
 
         AnyTensor tensor = tensor_basis().grid_eval(x, Argument::from_vector(args), false);
 // reorder tensor to order of basis
@@ -92,7 +92,8 @@ namespace spline {
 
 /*         AnyTensor tensor = tensor_basis().grid_eval(reorder_x, Argument::from_vector(args)); */
 
-        return tensor.squeeze();
+        if (squeeze_return)  return tensor.squeeze();
+        return tensor;
     }
 
     std::string FunctionNode::type() const{

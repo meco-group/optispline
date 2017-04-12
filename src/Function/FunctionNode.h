@@ -26,7 +26,7 @@ namespace spline {
 
         virtual Function partial_eval(const AnyTensor& x, int args) const override;
 
-        virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args ) const override;
+        virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args,  bool squeeze_return) const override;
 
         virtual Function operator-() const override;
 
