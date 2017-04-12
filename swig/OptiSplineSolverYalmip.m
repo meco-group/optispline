@@ -30,6 +30,9 @@ classdef OptiSplineSolverYalmip < splines.OptiSplineSolver
         vars_x_yalmip = opti.yalmip_var(vars_x);
         vars_p_yalmip = opti.yalmip_var(vars_p);
 
+        vars_x_yalmip = cellfun(@(e) e(:), vars_x_yalmip, 'uni', false);
+        vars_p_yalmip = cellfun(@(e) e(:), vars_p_yalmip, 'uni', false);
+                
         constr = opti.yalmip_expr(g);
         c = [constr{:}];
         if isempty(c)
