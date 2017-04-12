@@ -223,6 +223,27 @@ class AnyTensor {
       if (is_MT()) return as_MT().as_scalar();
       return 0;
     }
+
+  AnyTensor flatten_first(int n) const {
+    tensor_assert(n<=n_dims());
+    std::vector<int> new_shape;
+    std::vector<int> old_dims = dims();
+    int prod = 1;
+    for (int i=0;i<n;++i) prod*=old_dims[i];
+    new_shape.push_back(prod);
+    new_shape.insert(new_shape.end(), old_dims.begin()+n, old_dims.end());
+    return shape(new_shape);
+  }
+  AnyTensor flatten_last(int n) const {
+    tensor_assert(n<=n_dims());
+    std::vector<int> new_shape;
+    std::vector<int> old_dims = dims();
+    int prod = 1;
+    for (int i=0;i<n;++i) prod*=old_dims[old_dims.size()-i-1];
+    new_shape.insert(new_shape.end(), old_dims.begin(), old_dims.begin()+old_dims.size()-n);
+    new_shape.push_back(prod);
+    return shape(new_shape);
+  }
     AnyTensor operator-() const {
       ANYTENSOR_METHOD(operator-());
       return DT();
