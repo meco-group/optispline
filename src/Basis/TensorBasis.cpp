@@ -307,8 +307,16 @@ namespace spline {
         return (*this)->grid_eval(x, Argument::concrete(arg_ind, *this), reorder_output);
     }
 
-    AnyTensor TensorBasisNode::grid_eval (const std::vector< AnyTensor > &  x, const std::vector< int >& arg_ind, bool reorder_output) const {
-        int l = arg_ind.size();
+    AnyTensor TensorBasisNode::grid_eval (const std::vector< AnyTensor > &  x,
+            const std::vector< int >& arg_ind_, bool reorder_output) const {
+        int l = arg_ind_.size();
+        std::vector< int > arg_ind;
+        if(l == 0){// no argument list is given
+            for(int i = 0; i < x.size(); i++) arg_ind.push_back(i);
+            l = x.size();
+        } else {
+            arg_ind = arg_ind_;
+        }
         spline_assert(x.size() == l);
         AnyTensor ret = AnyTensor::unity();
 
