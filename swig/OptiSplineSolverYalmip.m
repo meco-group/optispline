@@ -38,12 +38,8 @@ classdef OptiSplineSolverYalmip < splines.OptiSplineSolver
         if isempty(c)
           c = zeros(0,1);
         end
-        
-        p = vertcat(vars_p_yalmip{:});
-        if isempty(p)
-          p = zeros(0,1);
-        end
-        sol = optimizer(c, opti.yalmip_expr(f), yalmip_options, p, vertcat(vars_x_yalmip{:}));
+
+        sol = optimizer(c, opti.yalmip_expr(f), yalmip_options, vertcat(vars_p_yalmip{:}), vertcat(vars_x_yalmip{:}));
         self.sol = sol;
 
       end
