@@ -138,13 +138,23 @@ class Test_grid_eval(BasisTestCase):
                 for i in range(n_fun - 1): f_ = c[i](f_, f[i+1])
                 args = f_.tensor_basis().arguments()
                 f_args = [r_data[order.index(k)] for k in args]
+                
+                for perm in list(it.permutations(range(len(args))))[:2]:
+                  f_args_perm = [f_args[p] for p in perm]
+                  args_perm = [args[p] for p in perm]
+                  print f_args_perm, args_perm
+                  s = f_(f_args_perm,args_perm)
+                  self.assertEqualTensor(s, test_results[cnt],tol=1e-6)
+                #for zip(args,f_args)
+                
+                #import ipdb
+                #ipdb.set_trace()
+                
                 #print "f_args", f_args, args, r_data
                 #print f_(f_args,args), test_results[cnt]
                 #print [st_function_names[i] for i in fi], [operation_names[operations.index(e)] for e in c]
                 #f = (x+x)*x
                 #print "test", f(r_data[0]), (r_data[0]+r_data[0])*r_data[0]
-
-                self.assertEqualTensor(f_(f_args,args), test_results[cnt],tol=1e-6)
                 cnt+=1
 
 #         er = np.random.rand(3)
