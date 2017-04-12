@@ -17,7 +17,7 @@ namespace spline {
         if (x.n_dims()==1) {
           if (x.dims()[0] == n_inputs()) {
             std::vector< AnyScalar > x_ = x.unpack_1();
-            return tensor_basis()(x_, Argument::from_vector(args)).inner(coeff().data());
+            return tensor_basis()(x_, Argument::from_vector(args), false).inner(coeff().data());
           } else {
             x = x.shape({x.numel(), 1});
           }
@@ -30,7 +30,7 @@ namespace spline {
 
         std::vector< std::vector< AnyScalar > > X_ = x.unpack_2();
         for (int i = 0; i < X_.size(); i++) {
-            tensor.push_back(tensor_basis()(X_[i], Argument::from_vector(args)));
+            tensor.push_back(tensor_basis()(X_[i], Argument::from_vector(args), false));
         }
         AnyTensor packed_tensor = AnyTensor::pack(tensor, 0);
         int shared_dim = packed_tensor.n_dims();
