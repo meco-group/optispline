@@ -54,7 +54,9 @@ namespace spline {
         ArgumentNode* operator->() const ;
 
         inline friend
-            std::ostream& operator<<(std::ostream &stream, const Argument& argument);
+            std::ostream& operator<<(std::ostream &stream, const Argument& argument){
+                return stream << argument.to_string();
+    }
 #endif // SWIG
         Argument();
         Argument(const std::string &name);

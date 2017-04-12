@@ -26,9 +26,9 @@ namespace spline {
     std::string NullArgumentNode::to_string() const { return "NullArgument ";};
 
     std::string Argument::to_string() const { return (*this)->to_string() ;};
-    std::ostream& operator<<(std::ostream &stream, const Argument& argument) {
-        return stream << argument.to_string();
-    }
+    /* std::ostream& operator<<(std::ostream &stream, const Argument& argument) { */
+    /*     return stream << argument.to_string(); */
+    /* } */
 
     ArgumentNode* Argument::get() const { return static_cast<ArgumentNode*>(SharedObject::get()); };
     ArgumentNode* Argument::operator->() const { return get(); }
