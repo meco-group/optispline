@@ -5,6 +5,7 @@
 #include <exception>
 #include <sstream>
 #include <vector>
+#include <execinfo.h>
 
 namespace spline {
 
@@ -15,7 +16,29 @@ class SplineException : public std::exception {
   }
 
   //! \brief Form message string
-  explicit SplineException(const std::string& msg) : msg_(msg) {}
+  explicit SplineException(const std::string& msg) : msg_(msg) {
+  
+    void *trace[256];
+    char **messages = (char **)NULL;
+    int i, trace_size = 0;
+
+    trace_size = backtrace(trace, 256);
+    messages = backtrace_symbols(trace, trace_size);
+    /* skip first stack frame (points here) */
+    msg_+="Backtrace:\n";
+    for (i=1; i<trace_size; ++i)
+    {
+      if (std::string(messages[i]).find("python")==std::string::npos) {
+        msg_+=std::string(messages[i])+"\n";
+      }
+
+      //char syscom[256];
+      //sprintf(syscom,"addr2line %p -e /home/jgillis/meco-group/cpp_splines/build/src/libsplines.so", trace[i]); //last parameter is the name of this app
+      //system(syscom);
+    }
+  
+  
+  }
 
   //! \brief Destructor
   ~SplineException() throw() {}
