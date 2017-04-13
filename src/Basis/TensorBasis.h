@@ -127,6 +127,13 @@ public:
         TensorBasis(const std::vector< Basis >& bases_, const std::vector< std::string >& args);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
 
+#ifndef SWIG
+        inline friend
+    std::ostream& operator<<(std::ostream &stream, const TensorBasis& base) {
+        return stream << base.to_string();
+    }
+#endif // SWIG
+
         virtual std::string type() const;
         virtual std::string to_string() const;
 

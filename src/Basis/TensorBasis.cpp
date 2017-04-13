@@ -229,10 +229,6 @@ namespace spline {
         }
     }
 
-    std::ostream& operator<<(std::ostream &stream, const TensorBasis& base) {
-        return stream << base.to_string();
-    }
-
     TensorBasis TensorBasis::operator+ (const TensorBasis& other) const {
         if(other.type() == "TensorBasisConstant"){
             return (*this)->operator+((TensorBasisConstant) other);
