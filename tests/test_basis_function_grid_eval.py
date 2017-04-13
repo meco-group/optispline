@@ -82,7 +82,6 @@ class Test_grid_eval(BasisTestCase):
         y = TensorBasis([m2], [ 'y' ])
         t = TensorBasis([m,m2], [ 'x','y' ])
 
-        eg = EvaluationGrid(t)
         # print eg
         # print eg.eval()
 
