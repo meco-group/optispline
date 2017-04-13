@@ -117,7 +117,7 @@ class AnyScalar {
     static std::vector<AnyScalar> from_vector(const std::vector<double>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<casadi::SX>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<casadi::MX>& v);
-    
+
     bool is_equal(const AnyScalar & rhs) const;
 
     #ifndef SWIG
@@ -172,6 +172,13 @@ class AnyTensor {
     static bool is_ST(const std::vector<AnyTensor>& v) {return type(v)==TENSOR_SX;}
     static bool is_MT(const std::vector<AnyTensor>& v) {return type(v)==TENSOR_MX;}
 
+
+    static AnyTensor ones(const std::vector<int>& dims) {
+      return DT(casadi::DM::ones(spline::product(dims)), dims);
+    }
+    static AnyTensor zeros(const std::vector<int>& dims) {
+      return DT(casadi::DM::zeros(spline::product(dims)), dims);
+    }
     //bool equals(const AnyTensor&rhs) const;
 
     static TensorType type(const std::vector<AnyTensor>& v);
