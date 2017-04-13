@@ -20,6 +20,10 @@ namespace spline {
     TensorBasis generic_operation(const TensorBasis& b1, const TensorBasis& b2,
           const BasisComposition& bc) {
         TensorBasis returnBasis = TensorBasis();
+        // one of the basis is empty (working with a constant)
+        if (b1.n_basis() == 0) return b2;
+        if (b2.n_basis() == 0) return b1;
+
         if (b1.hasArguments() && b2.hasArguments()) {
             std::vector< std::string > allArguments = b2.arguments();
             for (auto &a : b1.arguments()) {
