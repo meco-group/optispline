@@ -4,6 +4,8 @@
 #include "../common.h"
 
 namespace spline {
+    FunctionNode::FunctionNode(const Coefficient& coeff) : FunNode(coeff), basis_(TensorBasis()) {}
+
     FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : FunNode(coeff), basis_(basis) {}
 
     AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< int >& args) const{

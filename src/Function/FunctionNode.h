@@ -17,6 +17,7 @@ namespace spline {
     class FunctionNode : public FunNode{
     public :
         FunctionNode() {};
+        FunctionNode(const Coefficient& coeff);
         FunctionNode(const TensorBasis& basis, const Coefficient& coeff);
 
         virtual std::string type() const override;

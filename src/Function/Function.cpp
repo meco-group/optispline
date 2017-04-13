@@ -29,11 +29,11 @@ namespace spline{
 
     Function::Function(const AnyTensor& tensor) {
         spline_assert_message(tensor.dims().size() <= 2, "Tensor constant not supported ");
-        assign_node(new ConstantNode(tensor));
+        assign_node(new FunctionNode(tensor));
     }
 
     Function::Function(const AnyScalar& value, const std::vector< int >& size) {
-        assign_node(new ConstantNode(AnyTensor::repeat(AnyTensor(value), size)));
+        assign_node(new FunctionNode(AnyTensor::repeat(AnyTensor(value), size)));
     }
 
     FunNode* Function::get() const { return static_cast<FunNode*>(SharedObject::get()); };
