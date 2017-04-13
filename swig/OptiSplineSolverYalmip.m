@@ -2,6 +2,9 @@ classdef OptiSplineSolverYalmip < splines.OptiSplineSolver
 
   properties
     sol
+    constraints
+    variables
+    parameters
 
   end
   methods
@@ -41,7 +44,9 @@ classdef OptiSplineSolverYalmip < splines.OptiSplineSolver
 
         sol = optimizer(c, opti.yalmip_expr(f), yalmip_options, vertcat(vars_p_yalmip{:}), vertcat(vars_x_yalmip{:}));
         self.sol = sol;
-
+        self.constraints = c;
+        self.variables = vertcat(vars_x_yalmip{:});
+        self.parameters = vertcat(vars_p_yalmip{:});
       end
 
 
@@ -49,6 +54,16 @@ classdef OptiSplineSolverYalmip < splines.OptiSplineSolver
           self.solve_prepare();
           a = self.arg();
           r = self.sol{full(a.p)};
+          %if ~isempty(self.constraints)
+          %  checkset(self.constraints);
+          %end
+          assign(self.variables,r);
+          if ~isempty(self.parameters)
+            assign(self.parameters,full(a.p));
+          end
+          %if ~isempty(self.constraints)
+          %  checkset(self.constraints)
+          %end
           self.res(struct('x',r));
      end
   end
