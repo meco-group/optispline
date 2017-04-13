@@ -299,7 +299,6 @@ namespace spline {
         for(auto& b : bases()){
             ret.push_back(b.evaluation_grid());
         }
-        std::cout << "ret : " << ret << std::endl;
         return ret;
     }
 
@@ -644,13 +643,9 @@ namespace spline {
         Function b1 = basis_functions();
         Function b2 = b.basis_functions();
 
-        std::cout << b1 << std::endl;
-        std::cout << b2 << std::endl;
         Function b21  = b2.mtimes(b1.transpose());
         Function b22  = b2.mtimes(b2.transpose());
 
-        std::cout << b21 << std::endl;
-        std::cout << b22 << std::endl;
         AnyTensor B21 = b21.integral();
         AnyTensor B22 = b22.integral();
 
