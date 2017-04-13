@@ -422,12 +422,12 @@ AnyVector::AnyVector(const MT & s) : AnyTensor(s.as_vector()) {
 }
 
 AnyVector AnyVector::perturbation() const {
-  tensor_assert(numel()>=3);
+  if(numel() < 2) return *this;
   std::vector<AnyScalar> r = to_scalar_vector();
   std::vector<AnyScalar> ret;
-  ret.push_back((r[0]+r[1])/2);
+  ret.push_back((3*r[0]+r[1])/4);
   ret.insert(ret.end(),r.begin()+1,r.begin()+r.size()-1);
-  ret.push_back((r[r.size()-1]+r[r.size()-2])/2);
+  ret.push_back((3*r[r.size()-1]+r[r.size()-2])/4);
   return ret;
 }
 
