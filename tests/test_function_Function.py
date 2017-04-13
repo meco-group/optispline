@@ -472,7 +472,7 @@ class Test_Function_Function(BasisTestCase):
         f13_antider = f13.antiderivative()
 
         self.assertEqualT(f2.integral(), f2_antider(1.) - f2_antider(0.), 1e-6)
-        
+
         self.assertTrue(np.isinf(f3.integral()))
         self.assertEqualT(f12.integral(), f12_antider(1., 1.) - f12_antider(0., 0.), 1e-6)
         self.assertTrue(np.isinf(f13.integral()))
@@ -495,14 +495,14 @@ class Test_Function_Function(BasisTestCase):
         x = [-1, 2, 3]
         y = [2, 0, 7]
         F = Function.linear(x,y)
-        
+
         for i in range(3):
           self.assertEqualTensor(F(x[i]),y[i])
-          
+
         self.assertEqualTensor(F(0),2-(1.0/3)*2)
         self.assertEqualTensor(F(1),2-(2.0/3)*2)
         self.assertEqualTensor(F(2.5),3.5)
-        
+
     def test_to_casadi(self):
         np.random.seed(0)
         d1 = 3
@@ -519,12 +519,12 @@ class Test_Function_Function(BasisTestCase):
         dims = B.dimension()
         C = np.random.rand(dims[0], dims[1])
         f = Function(B,C)
-        
+
         f2 = f.to_casadi()
         print f2
-        
+
         self.assertEqualTensor(f(0.2,0.3), f2([0.2, 0.3]))
-         
+
     def test_partial_integral(self):
         np.random.seed(0)
         d1 = 3
