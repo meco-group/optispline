@@ -1,6 +1,5 @@
 #include <vector>
 #include "FunNode.h"
-#include "../Basis/utils/EvaluationGrid.h"
 #include "../Basis/TensorBasisConstant.h"
 #include "../common.h"
 

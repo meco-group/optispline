@@ -126,8 +126,6 @@ def _swig_repr(self):
 #include <src/Function/NumericIndex.h>
 #include <src/Optistack/optistack.h>
 
-#include <src/Basis/utils/EvaluationGrid.h> // Debug
-
 using namespace spline;
 #include <casadi/casadi.hpp>
 %}
@@ -986,8 +984,8 @@ using namespace spline;
   if (!casadi::to_ptr($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' [index] '.");
   interpret_NumericIndex(m);
  }
- 
- 
+
+
 %apply int &OUTPUT { Optistack::ConstraintType &OUTPUT };
 
 %typemap(argout, noblock=1,fragment="casadi_all") Optistack::ConstraintType &OUTPUT {
@@ -1027,7 +1025,6 @@ using namespace spline;
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>
 %include <src/Basis/utils/vectorUtilities.h> // Debug
-%include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 %include <src/Coefficients/Coefficient.h>
 
@@ -1184,7 +1181,7 @@ namespace spline {
       end
 
   end
-  
+
   %}
 #endif
 

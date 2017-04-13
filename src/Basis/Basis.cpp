@@ -1,7 +1,6 @@
 #include "Basis.h"
 #include "operations/operationsBasis.h"
 #include "../Function/Function.h"
-#include "../Basis/utils/EvaluationGrid.h"
 #include "../common.h"
 
 namespace spline {

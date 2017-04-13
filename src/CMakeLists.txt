@@ -27,8 +27,6 @@ add_library(splines SHARED
     Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
     Basis/MonomialBasis.h Basis/MonomialBasis.cpp
 
-    Basis/utils/EvaluationGrid.h Basis/utils/EvaluationGrid.cpp
-
     Basis/operations/operationsBasis.h Basis/operations/operationsBasis.cpp
     Basis/operations/plus.h Basis/operations/plus.cpp
     Basis/operations/times.h Basis/operations/times.cpp
