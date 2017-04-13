@@ -286,6 +286,11 @@ namespace spline {
 
     AnyTensor TensorBasisNode::grid_eval (const std::vector< AnyTensor > &  x,
             const std::vector< int >& arg_ind_, bool reorder_output) const {
+        if(n_basis() == 0){// constant
+            std::vector< int > dims_grid(x.size());
+            for(int i = 0; i < x.size(); i++) dims_grid[i] = x[i].dims()[0];
+            return AnyTensor::ones(dims_grid);
+        }
         int l = arg_ind_.size();
         std::vector< int > arg_ind;
         if(l == 0){// no argument list is given
