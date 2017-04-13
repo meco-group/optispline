@@ -104,17 +104,19 @@ class Test_Project_To(BasisTestCase):
     def test_transform(self):
         x = Polynomial([0, 1],'x');
         y = Polynomial([0, 1],'y');
-        x = vertcat(x,y);
-        x_ = vertcat(x,y);
-        print x([1,1.2],[ 'y','x' ])
-        print x([1,1.2],[ 'x','y' ])
-        tb = TensorBasis([ BSplineBasis([-1.5,1.5],1,2),BSplineBasis([-1.5,1.5],1,2) ],[ 'x','y' ])
+        # x = vertcat(x,y);
+        # x_ = vertcat(x,y);
+        # print x([1,1.2],[ 'y','x' ])
+        # print x([1,1.2],[ 'x','y' ])
+        # tb = TensorBasis([ BSplineBasis([-1.5,1.5],1,2),BSplineBasis([-1.5,1.5],1,2) ],[ 'x','y' ])
+        tb =  BSplineBasis([-1.5,1.5],1,2)
         tx = x.tensor_basis().transform_to(tb);
         x = x.transform_to(tb);
         print x_
         print x
         print tx
-        print x([1,1.2],[ 'x','y' ])
+        print x([0.2],[ 'x' ])
+        # print x([1,1.2],[ 'x','y' ])
 
 
 if __name__ == '__main__':
