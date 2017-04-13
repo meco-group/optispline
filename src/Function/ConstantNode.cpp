@@ -1,4 +1,5 @@
 #include <vector>
+#include "Function.h"
 #include "ConstantNode.h"
 #include "FunctionNode.h"
 #include "../Basis/TensorBasisConstant.h"

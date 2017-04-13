@@ -1,4 +1,5 @@
 #include <vector>
+#include "Function.h"
 #include "FunctionNode.h"
 #include "ConstantNode.h"
 #include "../Basis/TensorBasisConstant.h"
@@ -11,9 +12,6 @@ namespace spline {
         AnyTensor x = arg.squeeze();
         if (x.is_vector()) x = x.as_vector();
         spline_assert(x.n_dims()<=2);
-
-        std::cout << arg << std::endl;
-        std::cout << args << std::endl;
 
         if (x.n_dims()==1) {
           if (x.dims()[0] == n_inputs()) {
@@ -109,42 +107,12 @@ namespace spline {
             const BasisComposition & bc, const TensorComposition & tc) const  {
 
         TensorBasis sumBasis = bc(tensor_basis(), f.tensor_basis());
-
-        /* std::cout << std::endl << "---------------------" << std::endl; */
-        /* std::cout << sumBasis << std::endl; */
-        /* std::cout << "=====================" << std::endl; */
-
-        /* EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis); */
-        /* std::vector< AnyTensor > basisEvaluated; */
-        /* AnyTensor basisEvaluated; */
-        /* AnyTensor thisFunctionEvaluated; */
-        /* AnyTensor otherFunctionEvaluated; */
-
-        /* basisEvaluated = evaluationGrid.eval(); */
-        /* thisFunctionEvaluated = evaluationGrid.eval(shared_from_this<Function>()); */
-        /* otherFunctionEvaluated = evaluationGrid.eval(f); */
-
-
-        /* std::vector< int >  args = Argument::concrete(sumBasis.arguments(), sumBasis ); */
-        /* std::vector< Argument > args = Argument::from_vector(Argument::concrete(Argument::from_vector(sumBasis.arguments()), sumBasis)); */
         std::vector< Argument > args = Argument::from_vector(sumBasis.arguments());
         std::vector< AnyTensor > eval_g = sumBasis.evaluation_grid();
-        /* std::cout <<  "sumBasis.arguments() : " << sumBasis.arguments() << std::endl; */
-        /* std::cout <<  "sumBasis.arguments() : " <<  args << std::endl; */
-        /* for (auto& a : args) std::cout << a << std::endl; */
-        /* for (auto& a : tensor_basis().arguments()) std::cout << a << std::endl; */
-        /* for (auto& a : f.tensor_basis().arguments()) std::cout << a << std::endl; */
 
         AnyTensor basisEvaluated =  sumBasis.grid_eval(eval_g, args, false);
         AnyTensor thisFunctionEvaluated = shared_from_this<Function>().grid_eval(eval_g, args, false);
         AnyTensor otherFunctionEvaluated = f.grid_eval(eval_g, args, false);
-
-        std::cout << "eval_g : " << eval_g.size() << " : " ;
-        for (auto& a : eval_g) std::cout << a.dims() << ", ";
-        std::cout << std::endl;
-        std::cout << basisEvaluated.dims() << std::endl;
-        std::cout << thisFunctionEvaluated.dims() << std::endl;
-        std::cout << otherFunctionEvaluated.dims() << std::endl;
 
         int n_dims_grid = eval_g.size();
         AnyTensor A = basisEvaluated;
@@ -153,30 +121,14 @@ namespace spline {
         otherFunctionEvaluated = otherFunctionEvaluated.flatten_first(n_dims_grid);
         AnyTensor B = tc(thisFunctionEvaluated, otherFunctionEvaluated);
 
-        std::cout << "A dims : " << A.dims() << std::endl;
-        std::cout << "B dims : " << B.dims() << std::endl;
-        // [n m p q] + [n m 1 1]   (*)
-
-
-        /* int numberEval = 1; */
-        /* for (int i=0;i<n_dims_grid;++i) numberEval*= eval_g[i].dims()[0]; */
-
-        /* int numberBasis = sumBasis.totalNumberBasisFunctions(); */
         std::vector< int > elemShape = B.dims();
         elemShape = std::vector<int>(elemShape.begin()+1, elemShape.end());
-        /* int numberCoef = (elemShape.size() == 0)? 1: spline::product(elemShape); */
 
-        std::cout << "n_dims_grid : "  << n_dims_grid << std::endl;
         A = A.flatten_first(n_dims_grid);
-
         A = A.flatten_last(n_dims_grid);
         B = B.flatten_last(2);
-        std::cout << "A " << A.dims() << std::endl;
-        std::cout << "B " << B.dims() << std::endl;
         AnyTensor C = A.solve(B);
 
-        std::cout << C.dims() << std::endl;
-        // find dimesion of new coeff
         std::vector< int > shapeCoef = elemShape;
         std::vector< int > shapeBasis = sumBasis.dimension();
         shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
@@ -190,8 +142,6 @@ namespace spline {
     }
 
     Function FunctionNode::operator+(const FunctionNode& f) const {
-        std::cout << std::endl << ( *this ).shared_from_this<Function>()<< std::endl;
-        std::cout << f.shared_from_this<Function>() << std::endl;
         return generic_operation(f.shared_from_this<Function>(),
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
@@ -267,35 +217,60 @@ namespace spline {
     }
 
     Function FunctionNode::transform_to(const TensorBasis& basis) const {
-        TensorBasis unionBasis = tensor_basis() + basis;
-        EvaluationGrid evaluationGrid = EvaluationGrid(unionBasis);
-        std::vector< AnyTensor > basisEvaluated;
-        AnyTensor thisFunctionEvaluated;
+        TensorBasis sumBasis = tensor_basis() + basis;
+        std::vector< Argument > args = Argument::from_vector(sumBasis.arguments());
+        std::vector< AnyTensor > eval_g = sumBasis.evaluation_grid();
+        int n_dims_grid = eval_g.size();
 
-        basisEvaluated = evaluationGrid.eval();
-        thisFunctionEvaluated = evaluationGrid.eval(shared_from_this<Function>());
+        AnyTensor A =  sumBasis.grid_eval(eval_g, args, false);
+        AnyTensor B = shared_from_this<Function>().grid_eval(eval_g, args, false);
 
-        AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
-        AnyTensor B = thisFunctionEvaluated;
-        int numberEval = basisEvaluated.size();
-        int numberBasis = unionBasis.totalNumberBasisFunctions();
+        A = A.flatten_first(n_dims_grid);
+
         std::vector< int > elemShape = B.dims();
         elemShape = std::vector<int>(elemShape.begin()+1, elemShape.end());
-        int numberCoef = spline::product(elemShape);
 
-        std::vector< int > shapeA = {numberEval, numberBasis};
-        std::vector< int > shapeB = {numberBasis, numberCoef};
-        A = A.shape(shapeA);
-        B = B.shape(shapeB);
+        A = A.flatten_last(n_dims_grid);
+        B = B.flatten_last(2);
         AnyTensor C = A.solve(B);
 
-        // find dimesion of new coeff
         std::vector< int > shapeCoef = elemShape;
-        std::vector< int > shapeBasis = unionBasis.dimension();
+        std::vector< int > shapeBasis = sumBasis.dimension();
         shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
 
         C = C.shape(shapeBasis);
-        return Function(unionBasis, C);
+        return Function(sumBasis, C);
+        /* /1* std::cout << tensor_basis() << std::endl; *1/ */
+        /* /1* std::cout << basis << std::endl; *1/ */
+        /* /1* std::cout << "fun transform " << unionBasis << std::endl; *1/ */
+        /* EvaluationGrid evaluationGrid = EvaluationGrid(unionBasis); */
+        /* std::vector< AnyTensor > basisEvaluated; */
+        /* AnyTensor thisFunctionEvaluated; */
+
+        /* basisEvaluated = evaluationGrid.eval(); */
+        /* thisFunctionEvaluated = evaluationGrid.eval(shared_from_this<Function>()); */
+
+        /* AnyTensor A = AnyTensor::pack(basisEvaluated, 0); */
+        /* AnyTensor B = thisFunctionEvaluated; */
+        /* int numberEval = basisEvaluated.size(); */
+        /* int numberBasis = unionBasis.totalNumberBasisFunctions(); */
+        /* std::vector< int > elemShape = B.dims(); */
+        /* elemShape = std::vector<int>(elemShape.begin()+1, elemShape.end()); */
+        /* int numberCoef = spline::product(elemShape); */
+
+        /* std::vector< int > shapeA = {numberEval, numberBasis}; */
+        /* std::vector< int > shapeB = {numberBasis, numberCoef}; */
+        /* A = A.shape(shapeA); */
+        /* B = B.shape(shapeB); */
+        /* AnyTensor C = A.solve(B); */
+
+        /* // find dimesion of new coeff */
+        /* std::vector< int > shapeCoef = elemShape; */
+        /* std::vector< int > shapeBasis = unionBasis.dimension(); */
+        /* shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end()); */
+
+        /* C = C.shape(shapeBasis); */
+        /* return Function(unionBasis, C); */
     }
 
     Function FunctionNode::project_to(const TensorBasis& b) const {
