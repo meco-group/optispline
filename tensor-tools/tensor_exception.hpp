@@ -4,6 +4,11 @@
 #include <string>
 #include <exception>
 #include <sstream>
+#include <iostream>
+#include <fstream>
+#ifdef __linux__
+#include <execinfo.h>
+#endif
 
 class TensorException : public std::exception {
   public:
@@ -12,7 +17,46 @@ class TensorException : public std::exception {
   }
 
   //! \brief Form message string
-  explicit TensorException(const std::string& msg) : msg_(msg) {}
+  explicit TensorException(const std::string& msg) : msg_(msg) {
+
+
+    #ifdef __linux__
+        void *trace[256];
+        char **messages = (char **)NULL;
+        int i, trace_size = 0;
+
+        trace_size = backtrace(trace, 256);
+        messages = backtrace_symbols(trace, trace_size);
+        /* skip first stack frame (points here) */
+        msg_+="Backtrace:\n";
+        for (i=1; i<trace_size; ++i)
+        {
+          std::string message = messages[i];
+          if (message.find("python")==std::string::npos) {
+
+            std::string symbol = message.substr(message.find("(")+1,message.find(")")-message.find("(")-1);
+            std::string symbol_name = symbol.substr(0,symbol.find("+"));
+            std::string libname = message.substr(0,message.find("("));
+
+            {
+              std::string command = "eu-addr2line -e " + libname + " " + symbol + "> .temp.txt"; //last parameter is the name of this app
+              int retcode = system(command.c_str());
+              if (retcode) { msg_+="  install 'elfutils' to get a stacktrace\n"; break; }
+              std::stringstream res; res << std::ifstream(".temp.txt").rdbuf();
+              msg_+= "  " + res.str();
+            }
+            if (!symbol_name.empty()) {
+              std::string command = "c++filt " + symbol_name + "> .temp.txt"; //last parameter is the name of this app
+              int retcode = system(command.c_str());
+              if (retcode) { msg_+="    install 'c++filt' to get a stacktrace\n"; break; }
+              std::stringstream res; res << std::ifstream(".temp.txt").rdbuf();
+              msg_+= "    " + res.str();
+            }
+          }
+        }
+    #endif
+
+  }
 
   //! \brief Destructor
   ~TensorException() throw() {}
@@ -46,7 +90,7 @@ class TensorException : public std::exception {
 // String denoting where the assertion is situated
 #define TENSOR_ASSERT_WHERE " on line " TENSOR_ASSERT_STR(__LINE__) \
     " of file " TENSOR_ASSERT_STR(__FILE__)
-    
+
 #define tensor_assert_message(x, msg) \
 { \
   bool is_ok; \
