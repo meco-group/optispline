@@ -238,25 +238,11 @@ namespace spline {
         return plus_tensor_basis(shared_from_this<TensorBasis>(), other);
     }
 
-    TensorBasis TensorBasis::operator+ (const TensorBasisConstant& other) const {
-        return (*this)->operator+(other);
-    }
-    TensorBasis TensorBasisNode::operator+ (const TensorBasisConstant& other) const {
-        return shared_from_this<TensorBasis>();
-    }
-
     TensorBasis TensorBasis::operator* (const TensorBasis& other) const {
         return (*this)->operator*(other);
     }
     TensorBasis TensorBasisNode::operator* (const TensorBasis& other) const {
         return times_tensor_basis(shared_from_this<TensorBasis>(), other);
-    }
-
-    TensorBasis TensorBasis::operator* (const TensorBasisConstant& other) const {
-        return (*this)->operator+(other);
-    }
-    TensorBasis TensorBasisNode::operator* (const TensorBasisConstant& other) const {
-        return shared_from_this<TensorBasis>();
     }
 
     AnyTensor TensorBasis::operator() (const std::vector< AnyScalar > &  x,

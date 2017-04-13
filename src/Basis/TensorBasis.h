@@ -17,7 +17,6 @@
 namespace spline {
 
 class TensorBasis;
-class TensorBasisConstant;
 class BSplineBasis;
 class MonomialBasis;
 class Function;
@@ -59,9 +58,7 @@ class TensorBasisNode : public SharedObjectNode {
             const std::vector<Basis>& bases) const;
 
         virtual TensorBasis operator+(const TensorBasis& rhs) const;
-        virtual TensorBasis operator+(const TensorBasisConstant& rhs) const;
         virtual TensorBasis operator*(const TensorBasis& rhs) const;
-        virtual TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< int >& arg_ind, bool reorder_output) const;
 
@@ -166,9 +163,7 @@ public:
             const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
-        TensorBasis operator+(const TensorBasisConstant& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
-        TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
         AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< Argument >& arg_ind = {}, bool reorder_output = true) const;
         AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& arg_ind = {}, bool reorder_output = true) const;

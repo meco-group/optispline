@@ -145,9 +145,6 @@ namespace spline {
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
-    Function FunctionNode::operator+(const ConstantNode& f) const {
-        return f + *this;
-    }
 
     Function FunctionNode::operator*(const FunNode& f) const {
         return f * *this;
@@ -174,9 +171,6 @@ namespace spline {
       });
     }
 
-    Function FunctionNode::operator*(const ConstantNode& f) const {
-        return f * *this;
-    }
 
     Function FunctionNode::mtimes(const FunNode& f) const {
         return f.rmtimes(*this);
@@ -188,9 +182,6 @@ namespace spline {
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.einstein(rhs, {-4, -1, -2}, {-4, -2, -3}, {-4, -1, -3});});
     }
 
-    Function FunctionNode::mtimes(const ConstantNode& f) const {
-        return f.rmtimes(*this);
-    }
 
     Function FunctionNode::rmtimes(const FunctionNode& f) const {
         return generic_operation(f.shared_from_this<Function>(),
@@ -198,9 +189,6 @@ namespace spline {
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.einstein(lhs, {-4, -1, -2}, {-4, -2, -3}, {-4, -1, -3});});
     }
 
-    Function FunctionNode::rmtimes(const ConstantNode& f) const {
-        return f.mtimes(*this);
-    }
 
     Function FunctionNode::operator-() const {
         return Function(tensor_basis(), -coeff_);
