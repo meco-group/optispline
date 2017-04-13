@@ -998,18 +998,27 @@ using namespace spline;
  $1 = &m;
 }
 
+%include <src/SharedObject/PrintableObject.h>
+%template(PrintSharedObject) spline::PrintableObject<spline::SharedObject>;
+%template(PrintMT) spline::PrintableObject< Tensor<casadi::MX> >;
+%template(PrintDT) spline::PrintableObject< Tensor<casadi::DM > >;
+%template(PrintST) spline::PrintableObject< Tensor<casadi::SX > >;
+
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
+
 
 %include <src/Function/Argument.h>
 %include <src/Function/NumericIndex.h>
 
 %include <tensor.hpp>
+
 %include <slice.hpp>
 
 %template(DTensor) Tensor<casadi::DM>;
 %template(STensor) Tensor<casadi::SX>;
 %template(MTensor) Tensor<casadi::MX>;
+
 
 %include <src/Domain/Domain.h>
 %include <src/Domain/Interval.h>
@@ -1064,6 +1073,27 @@ using namespace spline;
 %include <src/Optistack/optistack.h>
 
 #ifdef SWIGMATLAB
+%extend Tensor<casadi::SX> {
+  %matlabcode %{
+    function [] = disp(self)
+      disp(self.to_string())
+    end
+  %}
+ }
+%extend Tensor<casadi::DM> {
+  %matlabcode %{
+    function [] = disp(self)
+      disp(self.to_string())
+    end
+  %}
+ }
+%extend Tensor<casadi::MX> {
+  %matlabcode %{
+    function [] = disp(self)
+      disp(self.to_string())
+    end
+  %}
+ }
 namespace spline {
 %extend SharedObject {
   %matlabcode %{

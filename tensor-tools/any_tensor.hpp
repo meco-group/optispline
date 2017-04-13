@@ -146,7 +146,7 @@ class AnyScalar {
 
 AnyScalar pow(const AnyScalar&x, int i);
 
-class AnyTensor {
+class AnyTensor : public spline::PrintableObject<AnyTensor> {
   public:
 #ifndef SWIG
     AnyTensor& operator=(const AnyTensor&);
@@ -374,15 +374,7 @@ class AnyTensor {
       return a.mtimes(b);
     }
 
-    #ifndef SWIG
-    /// Print a representation of the object to a stream (shorthand)
-    inline friend
-        std::ostream& operator<<(std::ostream &stream, const AnyTensor& obj) {
-            return stream << obj.to_string();
-        }
-    #endif // SWIG
-
-    std::string to_string() const {
+    std::string to_string() const override {
       if (is_DT()) return "AnyTensor:" + as_DT().to_string();
       if (is_ST()) return "AnyTensor:" + as_ST().to_string();
       if (is_MT()) return "AnyTensor:" + as_MT().to_string();

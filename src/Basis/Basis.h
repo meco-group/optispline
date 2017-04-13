@@ -48,7 +48,7 @@ namespace spline {
         virtual bool operator==(const BSplineBasisNode& rhs) const;
 
         virtual std::string type() const;
-        virtual std::string to_string() const;
+        virtual std::string to_string() const override;
         Domain domain() const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
@@ -98,8 +98,7 @@ namespace spline {
 
         bool operator==(const Basis& rhs) const;
 
-        std::string type() const ;
-        std::string to_string() const ;
+        std::string type() const;
 
         Domain domain() const;
         std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
@@ -126,12 +125,6 @@ namespace spline {
 
         AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
 
-#ifndef SWIG
-        inline friend
-            std::ostream& operator<<(std::ostream &stream, const Basis& obj) {
-                return stream << obj.to_string();
-            }
-#endif // SWIG
     };
 
     template< class T >

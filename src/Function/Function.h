@@ -28,7 +28,6 @@ namespace spline {
 #endif // SWIG
 
         virtual std::string type() const;
-        virtual std::string to_string() const;
 
         casadi::MX operator<=(const casadi::MX& x) const;
         casadi::MX operator>=(const casadi::MX& x) const;
@@ -74,8 +73,6 @@ namespace spline {
         TensorDomain domain() const;
 
         bool is_scalar() const;
-
-        void repr() const { casadi::userOut() << to_string() << std::endl;}
 
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
         Function reshape(const std::vector< int >& shape) const;
@@ -131,12 +128,7 @@ namespace spline {
         AnyTensor fast_eval(const AnyTensor& xy) const;
         casadi::DM fast_jac(const AnyTensor& xy) const;
 
-#ifndef SWIG
-            inline friend
-                std::ostream& operator<<(std::ostream &stream, const Function& obj) {
-                    return stream << obj.to_string();
-                }
-#endif // SWIG
+
 
     private:
         template<class T>

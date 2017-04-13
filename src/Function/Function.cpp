@@ -41,7 +41,6 @@ namespace spline{
     FunNode* Function::operator->() const { return get(); }
 
     std::string Function::type() const { return (*this)->type() ;}
-    std::string Function::to_string() const { return (*this)-> to_string();}
 
     casadi::MX Function::operator<=(const casadi::MX& x) const {
         return operator-().operator>=(-x);

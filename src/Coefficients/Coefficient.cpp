@@ -29,7 +29,6 @@ namespace spline {
     std::string Coefficient::type() const {return (*this)->type();};
     std::string CoefficientNode::type() const {return "Coefficient";};
 
-    std::string Coefficient::to_string() const {return (*this)->to_string();};
     std::string CoefficientNode::to_string() const {
         const std::string coeff_str = (n_coeff()==1) ? "coefficient" : "coefficients";
 

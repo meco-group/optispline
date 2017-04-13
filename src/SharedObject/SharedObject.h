@@ -1,13 +1,25 @@
 #ifndef SHAREDOBJECT
 #define SHAREDOBJECT
 
+#include <string>
 #include "SharedObjectNode.h"
+#include "PrintableObject.h"
 
 namespace spline{
 
-class SharedObject {
+class SharedObject : public spline::PrintableObject<SharedObject> {
 public:
+
+    virtual std::string to_string() const override {
+      if (node_) {
+        return (*this)->to_string();
+      } else {
+        return "Null Node";
+      }
+    }
+
 #ifndef SWIG
+
     /// Default constructor
     SharedObject() : node_(0) {};
 

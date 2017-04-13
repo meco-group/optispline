@@ -119,7 +119,6 @@ namespace spline {
     std::string TensorDomain::type() const {return (*this)->type(); }
     std::string TensorDomainNode::type() const {return "TensorDomain"; }
 
-    std::string TensorDomain::to_string() const { return (*this)->to_string() ;}
     std::string TensorDomainNode::to_string() const {
         const std::string n_domain = (domains_.size()==1) ? "domain" : "domains";
 
@@ -130,7 +129,7 @@ namespace spline {
                 str_domain += argument(i) + ": ";
                 str_domain += domains_[i].to_string();
                 str_domain += "\n";
-            }      
+            }
             return "TensorDomain containing "  + std::to_string(domains_.size()) + " " + n_domain + " in " +
                 std::to_string(arguments_.size()) + " arguments: \n " + str_domain;
         }
@@ -139,15 +138,11 @@ namespace spline {
                 str_domain += "\t";
                 str_domain += domains_[i].to_string();
                 str_domain += "\n";
-            }            
-            return "TensorDomain containing "  + std::to_string(domains_.size()) + " " + 
+            }
+            return "TensorDomain containing "  + std::to_string(domains_.size()) + " " +
                     n_domain + ":\n" + str_domain;
         }
     }
-
-    std::ostream& operator<<(std::ostream &stream, const TensorDomain& base) {
-         return stream << base.to_string();
-    } 
 
     TensorDomain TensorDomain::intersection(const TensorDomain& other) const {
         return (*this)->intersection(other);

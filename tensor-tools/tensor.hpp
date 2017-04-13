@@ -10,6 +10,7 @@
 #include "slice.hpp"
 #include "../src/common.h"
 #include "../src/Function/NumericIndex.h"
+#include "../SharedObject/PrintableObject.h"
 
 template <class T>
 std::vector<T> reorder(const std::vector<T>& data, const std::vector<int>& order) {
@@ -33,7 +34,7 @@ std::vector<T> mrange(T start, T stop) {
 std::vector<int> invert_order(const std::vector<int>& order);
 
 template <class T>
-class Tensor {
+class Tensor : public spline::PrintableObject< Tensor<T> > {
   public:
 
   template<class S>
@@ -577,23 +578,11 @@ class Tensor {
     return einstein(b, a_r, b_r, c_r);
   }
 
-  #ifndef SWIG
-  /// Print a representation of the object to a stream (shorthand)
-  inline friend
-      std::ostream& operator<<(std::ostream &stream, const Tensor& obj) {
-          return stream << "Tensor(" << obj.data_.type_name() << ", "
-            << obj.dims() << "): " << obj.data();
-      }
-  #endif // SWIG
-
-  std::string to_string() const {
-    std::stringstream ss;
-    ss << (*this);
-    return ss.str();
-  }
-
-  void repr() const {
-    casadi::userOut() << to_string() << std::endl;
+  virtual std::string to_string() const override {
+      std::stringstream ss;
+      ss << "Tensor(" << data_.type_name() << ", "
+        << dims() << "): " << data();
+      return ss.str();
   }
 
   private:
