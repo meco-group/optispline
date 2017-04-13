@@ -157,6 +157,11 @@ namespace spline {
         return MT(casadi::MX::mtimes(jac, data().as_MT().data()), ret_data.dims());
     }
 
+    AnyTensor Coefficient::data(const NumericIndex& k) const {
+      AnyTensor flat = data().flatten_first(dimension().size());
+      return flat.index({k, -1, -1});
+    }
+
     Coefficient Coefficient::add_trival_dimension(int extra_dims) const {
         return (*this)->add_trival_dimension(extra_dims);
     }

@@ -68,6 +68,7 @@ namespace spline {
 
         Coefficient operator-() const ;
         AnyTensor data() const;
+        AnyTensor data(const NumericIndex& k) const;
         /// Transform a direction of the coeffient's data tensor using given transformation matrix
         AnyTensor transform(const AnyTensor& T) const;
         AnyTensor transform(const AnyTensor& T, const NumericIndexVector& direction) const;

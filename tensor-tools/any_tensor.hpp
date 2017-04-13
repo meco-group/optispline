@@ -117,7 +117,7 @@ class AnyScalar {
     static std::vector<AnyScalar> from_vector(const std::vector<double>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<casadi::SX>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<casadi::MX>& v);
-    
+
     bool is_equal(const AnyScalar & rhs) const;
 
     #ifndef SWIG
@@ -274,6 +274,11 @@ class AnyTensor {
     int n_dims() const {
       ANYTENSOR_METHOD(n_dims());
       return 0;
+    }
+
+    AnyTensor index(const std::vector<int>& ind) const {
+      ANYTENSOR_METHOD(index(ind));
+      return DT();
     }
 
     AnyTensor operator>=(const AnyTensor &b) const {

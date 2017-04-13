@@ -10,6 +10,14 @@ class Test_Function_SubBasis(BasisTestCase):
         a = Coefficient(a)
         self.assertEqualTensor(a.data(), a_)
 
+    def test_coefficients_data_k(self):
+        a = DTensor(list(range(4*2*3*5)), [4,2,3,5])
+        a = Coefficient(a)
+        cnt = 0
+        for j in range(2):
+          for i in range(4):
+             self.assertEqualTensor(a.data(cnt), a.data()[i,j,:,:])
+             cnt+=1
     def test_coefficients_construction_2(self):
         a_ = SX.sym('a',3 + 1,1)
         a = STensor(a_, [3 + 1,1,1])
