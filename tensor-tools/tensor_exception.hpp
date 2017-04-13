@@ -43,14 +43,30 @@ class TensorException : public std::exception {
               int retcode = system(command.c_str());
               if (retcode) { msg_+="  install 'elfutils' to get a stacktrace\n"; break; }
               std::stringstream res; res << std::ifstream(".temp.txt").rdbuf();
-              msg_+= "  " + res.str();
+
+              std::string line =  res.str();
+              std::size_t found_begin = line.find_last_of("/\\");
+              std::size_t found_end = line.find_first_of(':', found_begin);
+              if (found_end!=std::string::npos && found_begin!=std::string::npos){
+                  line.insert(found_end , "\x1b[0m");
+                  line.insert(found_begin + 1, "\x1b[33m");
+              }
+              msg_ += line;
             }
             if (!symbol_name.empty()) {
               std::string command = "c++filt " + symbol_name + "> .temp.txt"; //last parameter is the name of this app
               int retcode = system(command.c_str());
               if (retcode) { msg_+="    install 'c++filt' to get a stacktrace\n"; break; }
               std::stringstream res; res << std::ifstream(".temp.txt").rdbuf();
-              msg_+= "    " + res.str();
+
+              std::string line =  res.str();
+              std::size_t found_end = line.find("(");
+              std::size_t found_begin = line.rfind(':', found_end);
+              if (found_end!=std::string::npos && found_begin!=std::string::npos){
+                  line.insert(found_end , "\x1b[0m");
+                  line.insert(found_begin + 1, "\x1b[32m");
+              }
+              msg_ += line;
             }
           }
         }
