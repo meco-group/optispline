@@ -22,7 +22,7 @@ class SplineException : public std::exception {
   //! \brief Form message string
   explicit SplineException(const std::string& msg) : msg_(msg) {
 
-#ifdef __linux__  
+#ifdef __linux__
     void *trace[256];
     char **messages = (char **)NULL;
     int i, trace_size = 0;
@@ -30,12 +30,12 @@ class SplineException : public std::exception {
     trace_size = backtrace(trace, 256);
     messages = backtrace_symbols(trace, trace_size);
     /* skip first stack frame (points here) */
-    msg_+="Backtrace:\n";
+    msg_+="** start backtrace **\n";
     for (i=1; i<trace_size; ++i)
     {
       std::string message = messages[i];
       if (message.find("python")==std::string::npos) {
-        
+
         std::string symbol = message.substr(message.find("(")+1,message.find(")")-message.find("(")-1);
         std::string symbol_name = symbol.substr(0,symbol.find("+"));
         std::string libname = message.substr(0,message.find("("));
@@ -56,8 +56,9 @@ class SplineException : public std::exception {
         }
       }
     }
+    msg_+="** end backtrace **";
 #endif
-  
+
   }
 
   //! \brief Destructor
