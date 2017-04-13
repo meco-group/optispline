@@ -28,7 +28,7 @@ class TensorException : public std::exception {
         trace_size = backtrace(trace, 256);
         messages = backtrace_symbols(trace, trace_size);
         /* skip first stack frame (points here) */
-        msg_+="Backtrace:\n";
+        msg_+="** start backtrace **\n";
         for (i=1; i<trace_size; ++i)
         {
           std::string message = messages[i];
@@ -54,6 +54,7 @@ class TensorException : public std::exception {
             }
           }
         }
+        msg_+="** end backtrace **\n";
     #endif
 
   }
