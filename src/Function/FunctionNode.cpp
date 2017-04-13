@@ -1,8 +1,6 @@
 #include <vector>
 #include "Function.h"
 #include "FunctionNode.h"
-#include "ConstantNode.h"
-#include "../Basis/TensorBasisConstant.h"
 #include "../common.h"
 
 namespace spline {

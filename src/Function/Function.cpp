@@ -1,6 +1,5 @@
 #include "Function.h"
 #include "FunNode.h"
-#include "ConstantNode.h"
 #include "FunctionNode.h"
 
 #include "../Basis/BSplineBasis.h"

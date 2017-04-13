@@ -1,5 +1,4 @@
 #include "TensorBasis.h"
-#include "TensorBasisConstant.h"
 #include "EmptyBasis.h"
 #include "BSplineBasis.h"
 #include "../common.h"
