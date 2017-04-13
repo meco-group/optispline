@@ -22,7 +22,6 @@ add_library(splines SHARED
     Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
     Basis/MonomialBasis.h Basis/MonomialBasis.cpp
     Basis/TensorBasis.h Basis/TensorBasis.cpp
-    Basis/TensorBasisConstant.h Basis/TensorBasisConstant.cpp
     Basis/BSplineBasis.h Basis/BSplineBasis.cpp
     Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
     Basis/MonomialBasis.h Basis/MonomialBasis.cpp
@@ -33,7 +32,6 @@ add_library(splines SHARED
 
     Function/FunNode.h Function/FunNode.cpp
     Function/FunctionNode.h Function/FunctionNode.cpp
-    Function/ConstantNode.h Function/ConstantNode.cpp
     Function/Function.h Function/Function.cpp
     Function/Polynomial.h Function/Polynomial.cpp
     Function/Argument.h Function/Argument.cpp

@@ -105,7 +105,6 @@ def _swig_repr(self):
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/TensorBasis.h>
-#include <src/Basis/TensorBasisConstant.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
@@ -119,7 +118,6 @@ def _swig_repr(self):
 
 #include <src/Function/FunNode.h>
 #include <src/Function/FunctionNode.h>
-#include <src/Function/ConstantNode.h>
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
 #include <src/Function/Argument.h>
@@ -1020,7 +1018,6 @@ using namespace spline;
 %include <src/Basis/BSplineBasis.h>
 
 %include <src/Basis/TensorBasis.h>
-%include <src/Basis/TensorBasisConstant.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>
