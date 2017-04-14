@@ -248,7 +248,13 @@ namespace spline {
     AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x,
             const std::vector< int >& arg_ind, bool reorder_output) const {
 
-        spline_assert(x.size() == n_inputs());
+        /* if(n_basis() == 0){// constant */
+        /*     return AnyTensor::ones(std::vector< int > {} ); */
+        /* } */
+
+        spline_assert_message(x.size() == n_inputs() || n_basis() == 0,
+                "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
+                std::to_string(x.size()));
         AnyTensor ret = AnyTensor::unity();
 
         std::vector< int > input_border_ = input_border();
