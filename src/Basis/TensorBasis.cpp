@@ -297,44 +297,44 @@ namespace spline {
             for(int i = 0; i < x.size(); i++) dims_grid[i] = x[i].dims()[0];
             return AnyTensor::ones(dims_grid);
         }
-        int l = arg_ind_.size();
+        int length_argument = arg_ind_.size();
         std::vector< int > arg_ind;
-        if(l == 0){// no argument list is given
+        if(length_argument == 0){// no argument list is given
             for(int i = 0; i < x.size(); i++) arg_ind.push_back(i);
-            l = x.size();
+            length_argument = x.size();
         } else {
             arg_ind = arg_ind_;
         }
-        spline_assert(x.size() == l);
+        spline_assert(x.size() == length_argument);
         AnyTensor ret = AnyTensor::unity();
 
-        std::vector< int > reorder(2*l ,0);
+        std::vector< int > reorder(2*length_argument ,0);
 
-        for (int i = 0; i < l; i++) {
+        for (int i = 0; i < length_argument; i++) {
             ret = ret.outer_product(basis(arg_ind[i])(x[i]));
             reorder[i] = 2*i;
-            reorder[i + l] = 2*i + 1;
+            reorder[i + length_argument] = 2*i + 1;
         }
 
         reorder_output = false;
         if(reorder_output){
             ret = ret.reorder_dims(reorder);
             std::vector< int > dims = ret.dims();
-            for (int i = 0; i < l; i++) {
+            for (int i = 0; i < length_argument; i++) {
                 if(arg_ind[i] < 0){
-                    dims.erase(dims.begin() + l + i );
+                    dims.erase(dims.begin() + length_argument + i );
                 }
             }
             return ret.shape(dims);
         }
 
         int dim_to_pop = 0;
-        for (int i = 0; i < l; i++) {
+        for (int i = 0; i < length_argument; i++) {
             if(arg_ind[i] < 0){
                 dim_to_pop++;
-                reorder[2*l - dim_to_pop] = 2*i + 1;
+                reorder[2*length_argument - dim_to_pop] = 2*i + 1;
             } else {
-                reorder[l+arg_ind[i]] = 2*i + 1;
+                reorder[length_argument+arg_ind[i]] = 2*i + 1;
             }
         }
         ret = ret.reorder_dims(reorder);
