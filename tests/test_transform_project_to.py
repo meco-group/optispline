@@ -112,7 +112,6 @@ class Test_Project_To(BasisTestCase):
         tb =  BSplineBasis([-1.5,1.5],1,2)
         tx = x.tensor_basis().transform_to(tb);
         x = x.transform_to(tb);
-        print x_
         print x
         print tx
         print x([0.2],[ 'x' ])
