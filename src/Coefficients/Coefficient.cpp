@@ -9,8 +9,13 @@ namespace spline {
     };
     CoefficientNode* Coefficient::operator->() const { return get(); }
 
-    Coefficient::Coefficient() {
+    Coefficient::Coefficient() { }
 
+    Coefficient::Coefficient(const AnyTensor& t) {
+      assign_node(new CoefficientNode(t));
+    }
+    Coefficient::Coefficient(const std::vector< double >& v) {
+      assign_node(new CoefficientNode(v));
     }
 
     CoefficientNode::CoefficientNode(const std::vector< double >& v) :
@@ -65,14 +70,6 @@ namespace spline {
     int Coefficient::n_coeff() const { return (*this)->n_coeff(); }
     int CoefficientNode::n_coeff() const {
         return spline::product(dimension());
-    }
-
-
-    Coefficient::Coefficient(const AnyTensor& t) {
-      assign_node(new CoefficientNode(t));
-    }
-    Coefficient::Coefficient(const std::vector< double >& v) {
-      assign_node(new CoefficientNode(v));
     }
 
     Coefficient Coefficient::operator-() const {
