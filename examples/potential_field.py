@@ -25,11 +25,11 @@ s = opti.Function(b)
 # Objective
 dx = 0.02
 xs = np.r_[0:1:dx]
-obj = ca.sum1(s(xs))*dx
+obj = ca.sum1(s.list_eval(xs))*dx
 
 # Constraints
 con = []
-con.append(s(x)>=0)
+con.append(s.list_eval(x)>=0)
 con.append(s>=-1)
 
 sol = opti.solver(obj,con,"ipopt")
@@ -38,7 +38,7 @@ sol.solve()
 s = sol.value(s)
 interval = np.linspace(0.,1.,101)
 
-field = s(interval)
+field = s.list_eval(interval)
 
 plt.figure()
 plt.plot(x,y,'ko')

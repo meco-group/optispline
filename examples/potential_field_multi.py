@@ -41,7 +41,7 @@ m = BSplineBasis(knots,degree)
 b = TensorBasis([m,m])
 
 potential_field = opti.Function(b) # This is the spline in X and Y which we will be using as the potential field
- 
+
 # Now let's formulate the optimization problem using CasADi
 # The problem we want to solve is:
 #
@@ -54,7 +54,7 @@ potential_field = opti.Function(b) # This is the spline in X and Y which we will
 #
 # Basicly, we want to minimize the integral so that the potential is as low as possible. However, we need to consider 2 things:
 # 1. In order not to end up with an unbounded problem, we want the minimal value of the potential to be -1. This is achieved by relaxing the infinite set of constraints to a relaxed finite set on the coefficients.
-# 2. The potential should by larger than zero in order to prevent getting close to measured objects. So we add the constraints. 
+# 2. The potential should by larger than zero in order to prevent getting close to measured objects. So we add the constraints.
 
 # Since the integral of a BSpline has not yet been implemented, we use a standard integration scheme
 _start_optimization = time.time() # The construction of the integral will take the main part...
@@ -75,7 +75,7 @@ _stop_integration = time.time()
 con = []
 
 # constraint (1)
-con.append(potential_field(x,y)>=0)
+con.append(potential_field.list_eval(x,y)>=0)
 
 # constraint (2)
 con.append(potential_field>=-1)
@@ -92,14 +92,14 @@ _start_plotting = time.time()
 N = 50
 interval = np.linspace(-r,r,N)
 X,Y = np.meshgrid(interval,interval)
-potential_field_eval = X.copy() 
+potential_field_eval = X.copy()
 
 # evaluate the potential field on the proposed grid
 for i in range(0,N):
     for j in range(0,N):
         x_ = X[i,j]
         y_ = Y[i,j]
-        potential_field_eval[i,j] = potential_field(x_,y_)
+        potential_field_eval[i,j] = potential_field.list_eval(x_,y_)
 
 # Plot the solution
 fig = plt.figure()
