@@ -263,6 +263,15 @@ class AnyTensor {
       ANYTENSOR_METHOD(as_vector());
       return DT();
     }
+    AnyTensor squeeze_tailing() const {
+      std::vector<int> squeeze_dims {};
+      bool tailing_dims_trivial = true;
+      for (int i=n_dims() - 1; i >= 0 ;--i) {
+          tailing_dims_trivial &= ( dims()[i] == 1 );
+          if (!tailing_dims_trivial) squeeze_dims.insert(squeeze_dims.begin(), dims()[i]);
+      }
+      return shape(squeeze_dims);
+    }
     AnyTensor squeeze() const {
       std::vector<int> squeeze_dims;
       for (int i=0;i<n_dims();++i) {
