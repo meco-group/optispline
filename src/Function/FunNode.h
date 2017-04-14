@@ -26,10 +26,10 @@ namespace spline {
             virtual std::string to_string() const;
 
             virtual AnyTensor operator()(const AnyTensor& x, const std::vector< int >& args)  const = 0;
+            virtual AnyTensor list_eval(const AnyTensor& x, const std::vector< int >& args) const = 0;
+            virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args, bool squeeze_return) const = 0;
 
             virtual Function partial_eval(const AnyTensor& x, int args)  const = 0;
-
-            virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args, bool squeeze_return) const = 0;
 
             Function operator+(const Function& f) const;
             Function operator*(const Function& f) const;

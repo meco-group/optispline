@@ -69,11 +69,15 @@ namespace spline{
         return (*this)->operator()(x, Argument::concrete(args, tensor_basis()));
     }
 
-    Function Function::partial_eval(const AnyTensor& x, const Argument& args ) const { return (*this)->partial_eval(x, args.concrete(tensor_basis().arguments()));}
+    AnyTensor Function::list_eval(const AnyTensor& x, const std::vector< Argument >& args ) const {
+        return (*this)->list_eval(x, Argument::concrete(args, tensor_basis()));
+    }
 
     AnyTensor Function::grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args,  bool squeeze_return) const {
         return (*this)->grid_eval(x, Argument::concrete(args, tensor_basis()), squeeze_return);
     }
+
+    Function Function::partial_eval(const AnyTensor& x, const Argument& args ) const { return (*this)->partial_eval(x, args.concrete(tensor_basis().arguments()));}
 
     Function Function::operator+(const Function& f) const { return (*this)->operator+(f) ;}
     Function Function::operator+(const AnyTensor& t) const {

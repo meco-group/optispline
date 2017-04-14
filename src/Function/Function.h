@@ -35,9 +35,10 @@ namespace spline {
         casadi::MX operator==(const casadi::MX& x) const;
 
         AnyTensor operator()(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
+        AnyTensor list_eval(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
+        AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args = std::vector< Argument > (),  bool squeeze_return = true) const;
 
         Function partial_eval(const AnyTensor& x, const Argument& args) const;
-        AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args = std::vector< Argument > (),  bool squeeze_return = true) const;
 
         Function operator+(const Function& f) const;
         Function operator+(const AnyTensor& t) const;

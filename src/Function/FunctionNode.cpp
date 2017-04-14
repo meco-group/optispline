@@ -10,21 +10,53 @@ namespace spline {
 
     AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< int >& args) const{
         AnyTensor x = arg.squeeze();
-        if (x.is_vector()) x = x.as_vector();
+        spline_assert_message(x.is_vector(), "Function can not be evaluated on something with dimentions " << x.dims());
+        x = x.as_vector();
+
+        std::vector< AnyScalar > x_ = x.unpack_1();
+        return tensor_basis()(x_, Argument::from_vector(args), false).inner(coeff().data());
+
+/*         std::vector< AnyTensor > tensor = {}; */
+
+/*         std::vector< std::vector< AnyScalar > > X_ = x.unpack_2(); */
+/*         for (int i = 0; i < X_.size(); i++) { */
+/*             tensor.push_back(tensor_basis()(X_[i], Argument::from_vector(args), false)); */
+/*         } */
+/*         AnyTensor packed_tensor = AnyTensor::pack(tensor, 0); */
+/*         int shared_dim = packed_tensor.n_dims(); */
+/*         std::vector<int> a_r = mrange(0, shared_dim); */
+/*         std::vector<int> b_r = mrange(1, shared_dim + 2); */
+/*         std::vector<int> c_r = { a_r[0] }; */
+/*         c_r.push_back(b_r[b_r.size() - 2]); */
+/*         c_r.push_back(b_r[b_r.size() - 1]); */
+/*         /1* return packed_tensor.einstein(coeff_tensor(), a_r, b_r, c_r).squeeze(); *1/ */
+/*         std::cout << "\x1b[31m" << packed_tensor << "\x1b[0m" << std::endl; */
+/*         /1* std::cout << "\x1b[31m" << shared_dim << "\x1b[0m" << std::endl; *1/ */
+/*         /1* std::cout << "\x1b[32m" << a_r << "\x1b[0m" << std::endl; *1/ */
+/*         /1* std::cout << "\x1b[32m" << b_r << "\x1b[0m" << std::endl; *1/ */
+/*         /1* std::cout << "\x1b[32m" << c_r << "\x1b[0m" << std::endl; *1/ */
+/*         /1* std::cout << "\x1b[31m" << packed_tensor.einstein(coeff_tensor(), a_r, b_r, c_r) << "\x1b[0m" << std::endl; *1/ */
+/*         packed_tensor = packed_tensor.einstein(coeff_tensor(), a_r, b_r, c_r).squeeze_tailing(); */
+/*         if(X_.size() == 1){ */
+/*             std::vector< int > squeeze_dims; */
+/*             for(int i = 1; i < packed_tensor.dims().size(); i++) squeeze_dims.push_back(packed_tensor.dims()[i]); */
+/*             packed_tensor = packed_tensor.shape(squeeze_dims); */
+/*         } */
+/*         return packed_tensor; */
+    }
+
+    AnyTensor FunctionNode::list_eval(const AnyTensor& arg, const std::vector< int >& args) const{
+        AnyTensor x = arg;
         spline_assert(x.n_dims()<=2);
 
-        if (x.n_dims()==1) {
-            if (x.dims()[0] == n_inputs()) {
-                std::vector< AnyScalar > x_ = x.unpack_1();
-                return tensor_basis()(x_, Argument::from_vector(args), false).inner(coeff().data());
-            } else {
-                x = x.shape({x.numel(), 1});
-            }
+        if(n_inputs() == 1){
+           x = x.as_vector().shape({x.numel(), 1});
         }
 
-        std::vector< AnyTensor > tensor = {};
-
+        spline_assert(x.n_dims()==2);
         std::vector< std::vector< AnyScalar > > X_ = x.unpack_2();
+
+        std::vector< AnyTensor > tensor = {};
         for (int i = 0; i < X_.size(); i++) {
             tensor.push_back(tensor_basis()(X_[i], Argument::from_vector(args), false));
         }
@@ -35,7 +67,20 @@ namespace spline {
         std::vector<int> c_r = { a_r[0] };
         c_r.push_back(b_r[b_r.size() - 2]);
         c_r.push_back(b_r[b_r.size() - 1]);
-        return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze();
+        /* return packed_tensor.einstein(coeff_tensor(), a_r, b_r, c_r).squeeze(); */
+        std::cout << "\x1b[31m" << packed_tensor << "\x1b[0m" << std::endl;
+        /* std::cout << "\x1b[31m" << shared_dim << "\x1b[0m" << std::endl; */
+        /* std::cout << "\x1b[32m" << a_r << "\x1b[0m" << std::endl; */
+        /* std::cout << "\x1b[32m" << b_r << "\x1b[0m" << std::endl; */
+        /* std::cout << "\x1b[32m" << c_r << "\x1b[0m" << std::endl; */
+        /* std::cout << "\x1b[31m" << packed_tensor.einstein(coeff_tensor(), a_r, b_r, c_r) << "\x1b[0m" << std::endl; */
+        packed_tensor = packed_tensor.einstein(coeff_tensor(), a_r, b_r, c_r).squeeze_tailing();
+        if(X_.size() == 1){
+            std::vector< int > squeeze_dims;
+            for(int i = 1; i < packed_tensor.dims().size(); i++) squeeze_dims.push_back(packed_tensor.dims()[i]);
+            packed_tensor = packed_tensor.shape(squeeze_dims);
+        }
+        return packed_tensor;
     }
 
     Function FunctionNode::partial_eval(const AnyTensor& x, int index) const{
@@ -119,7 +164,21 @@ namespace spline {
     Function FunctionNode::operator+(const FunctionNode& f) const {
         return generic_operation(f.shared_from_this<Function>(),
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
-                [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
+                [](const AnyTensor& lhs, const AnyTensor& rhs) {
+                int n = lhs.n_dims();
+                std::vector<int> rep(n, 1);
+                if (lhs.dims()[n-2]==1 && lhs.dims()[n-1]==1) {
+                    rep[n-2] = rhs.dims()[n-2];
+                    rep[n-1] = rhs.dims()[n-1];
+                    return AnyTensor::repeat(lhs, rep) + rhs;
+                }
+                if (rhs.dims()[n-2]==1 && rhs.dims()[n-1]==1) {
+                    rep[n-2] = lhs.dims()[n-2];
+                    rep[n-1] = lhs.dims()[n-1];
+                    return lhs + AnyTensor::repeat(rhs, rep);
+                }
+                return lhs + rhs;
+            });
     }
 
 
