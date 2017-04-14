@@ -652,12 +652,10 @@ namespace spline {
     }
 
     TensorBasis TensorBasisNode::transform_to(const TensorBasis& tb, std::vector<AnyTensor>& T) const {
-        std::cout << "n_bais: " << n_basis() << std::endl;
         spline_assert(n_basis() == tb.n_basis());
         std::vector<Basis> new_bases(n_basis());
         std::vector<AnyTensor> T_(n_basis());
         std::vector< int > args_other = Argument::concrete(Argument::from_vector(tb.arguments()), shared_from_this<TensorBasis>());
-        std::cout << "args_other : " <<  args_other << std::endl;
         for (int i = 0; i <n_basis(); i++) {
             new_bases[i] = basis(i).transform_to(tb.basis(args_other[i]), T_[args_other[i]]);
         }
@@ -668,7 +666,6 @@ namespace spline {
             return TensorBasis(new_bases);
         }
     }
-
 
     std::vector< int > TensorBasis::get_permutation(const TensorBasis& grid) const{
         return (*this)->get_permutation(grid);
