@@ -19,34 +19,13 @@ class Test_grid_eval(BasisTestCase):
         f_yxz = y + x + z
         f_xzy = z + x + y
 
-#         print f_xyz
-#         print f_yxz
-#         print f_xzy
-
         tb_xyz = f_xyz.tensor_basis()
         tb_yxz = f_yxz.tensor_basis()
         tb_xzy = f_xzy.tensor_basis()
 
-#         print tb_xyz
-#         print tb_yxz
-#         print tb_xzy
-
         e1 = [1 ,0 ,0]
         e2 = [0 ,1 ,0]
         e3 = [0 ,0 ,1]
-
-#         print tb_xyz(e1)
-#         print tb_xyz(e2)
-#         print tb_xyz(e3)
-
-
-#         print tb_xyz(e1, xyz)
-
-#         print tb_xyz(e2, yxz)
-#         print tb_xyz(e2, yxz, False)
-
-#         print tb_xyz(e3, zxy)
-#         print tb_xyz(e3, zxy, False)
 
         self.assertEqualTensor(tb_xyz(e1, xyz), tb_xyz(e2, yxz, False))
         self.assertEqualTensor(tb_xyz(e1, xyz), tb_xyz(e3, zxy, False))
@@ -112,7 +91,6 @@ class Test_grid_eval(BasisTestCase):
         operation_names= ['+','*']
         st_function = [x, y,z]
 
-
         import itertools as it
 
         n_fun = 4
@@ -121,8 +99,6 @@ class Test_grid_eval(BasisTestCase):
         st_function_names = order
         np.random.seed(0)
         r_data = list(np.random.rand(3))
-
-
 
         for c in it.product(operations, repeat = n_fun - 1):
             test_results = []
