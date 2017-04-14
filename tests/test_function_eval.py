@@ -20,19 +20,19 @@ class Test_Function_Operations(BasisTestCase):
         x([a],["y"])
 
       a = [0.1, 0.2, 0.3]
-      self.assertEqualTensor(x(a), np.array(a)+2*np.array(a)**2)
+      self.assertEqualTensor(x.list_eval(a), np.array(a)+2*np.array(a)**2)
 
       a = np.array([[0.1, 0.2, 0.3]]).T
 
-      self.assertEqualTensor(x(a), a+2*a**2)
+      self.assertEqualTensor(x.list_eval(a), a+2*a**2)
 
       a = np.array([[0.1, 0.2, 0.3]])
 
-      self.assertEqualTensor(x(a), a+2*a**2)
+      self.assertEqualTensor(x.list_eval(a), a+2*a**2)
 
       a = np.array([0.1, 0.2, 0.3])
 
-      self.assertEqualTensor(x(a), a+2*a**2)
+      self.assertEqualTensor(x.list_eval(a), a+2*a**2)
 
 
     def test_two_bases(self):
@@ -75,16 +75,14 @@ class Test_Function_Operations(BasisTestCase):
       ab = np.array([a,b]).T
       ba = np.array([b,a]).T
 
-      self.assertEqualTensor(f(ab), x(a)*y(b))
-      self.assertEqualTensor(f(ba), x(b)*y(a))
+      self.assertEqualTensor(f.list_eval(ab), x.list_eval(a)*y.list_eval(b))
+      self.assertEqualTensor(f.list_eval(ba), x.list_eval(b)*y.list_eval(a))
 
-      print  x(a)*y(b)
-      print f(ab,["x","y"])
-      self.assertEqualTensor(f(ab,["x","y"]), x(a)*y(b))
-      self.assertEqualTensor(f(ab,["y","x"]), x(b)*y(a))
+      self.assertEqualTensor(f.list_eval(ab,["x","y"]), x.list_eval(a)*y.list_eval(b))
+      self.assertEqualTensor(f.list_eval(ab,["y","x"]), x.list_eval(b)*y.list_eval(a))
 
-      self.assertEqualTensor(f(ba,["x","y"]), x(b)*y(a))
-      self.assertEqualTensor(f(ba,["y","x"]), x(a)*y(b))
+      self.assertEqualTensor(f.list_eval(ba,["x","y"]), x.list_eval(b)*y.list_eval(a))
+      self.assertEqualTensor(f.list_eval(ba,["y","x"]), x.list_eval(a)*y.list_eval(b))
 
     def test_partial_eval(self):
         x = Polynomial([0,1],'x')
