@@ -72,6 +72,6 @@ gamma_dual = sol.value(obj);
 
 % Overview figure
 figure
-plot(a_, [gamma_grid, gamma_prim.eval(a_), gamma_dual.eval(a_)])
+plot(a_, [gamma_grid, gamma_prim.list_eval(a_), gamma_dual.list_eval(a_)])
 xlabel('a'), ylabel('gamma'),
 
