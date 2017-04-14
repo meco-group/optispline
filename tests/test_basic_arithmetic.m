@@ -9,7 +9,10 @@ import splines.*
 b1 = BSplineBasis([0,0,1/2,1,1],1);
 c1 = Coefficient(rand(3,1,1));
 s1 = splines.Function(b1, c1);
-s2 = s1 + 5; % spline + double % does not work yet
+s2 = s1 + 5;
+
+
+
 assert(abs(s2.eval(0.6) - s1.eval(0.6) - 5) <= 1e-8);
 s2 = 5 + s1; % double + spline % does not work yet
 assert(abs(s2.eval(0.6) - s1.eval(0.6) - 5) <= 1e-8);
@@ -230,10 +233,10 @@ C = Coefficient(rand(SB1.dimension,SB2.dimension,m,n));
 S = splines.Function(B,C);
 P = 8*S;
 delta = P.coeff.data - 8*S.coeff.data;
-assert(norm(delta(:)) < 1e-14);
+assert(norm(delta(:)) < 1e-13);
 P = S*8;
 delta = P.coeff.data - 8*S.coeff.data;
-assert(norm(delta(:)) < 1e-14);
+assert(norm(delta(:)) < 1e-13);
 
 % % product bivariate matrix-valued spline and constant matrix
 m = 4; n = 4;

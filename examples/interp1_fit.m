@@ -38,9 +38,9 @@ xs = linspace(m_low,m_high,1000);
 figure()
 hold on
 
-plot(F.basis.knots, F.eval(F.basis.knots),'x')
-plot(xs, e.eval(xs))
-plot(xs, F.eval(xs));
+plot(F.basis.knots, F.list_eval(F.basis.knots),'x')
+plot(xs, e.list_eval(xs))
+plot(xs, F.list_eval(xs));
 plot(x,y,'o-')
-plot(xs, H.eval(xs)/curve_bound)
+plot(xs, H.list_eval(xs)/curve_bound)
 

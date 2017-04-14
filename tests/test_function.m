@@ -131,8 +131,8 @@ fail= true;
 end
 assert(fail);
 
-assert(norm(x.eval(r')-r')<1e-12)
-assert(norm(x.eval(r',{'x'})-r')<1e-12)
+assert(norm(x.list_eval(r')-r')<1e-12)
+assert(norm(x.list_eval(r',{'x'})-r')<1e-12)
 
 y = Polynomial([0,0.5,2],'y');
 f = x * y;
@@ -152,10 +152,10 @@ assert(norm(f.eval([b a],{'y','x'})-x.eval(a)*y.eval(b))<1e-12)
 a = [0.1, 0.2, 0.3]';
 b = [0.13, 0.17, 0.19]';
 
-assert(norm(f.eval([a b])-x.eval(a).*y.eval(b))<1e-12)
-assert(norm(f.eval([b a])-x.eval(b).*y.eval(a))<1e-12)
+assert(norm(f.list_eval([a b])-x.list_eval(a).*y.list_eval(b))<1e-12)
+assert(norm(f.list_eval([b a])-x.list_eval(b).*y.list_eval(a))<1e-12)
 
-assert(norm(f.eval([a b],{'x','y'})-x.eval(a).*y.eval(b))<1e-12)
-assert(norm(f.eval([a b],{'y','x'})-x.eval(b).*y.eval(a))<1e-12)
-assert(norm(f.eval([b a],{'x','y'})-x.eval(b).*y.eval(a))<1e-12)
-assert(norm(f.eval([b a],{'y','x'})-x.eval(a).*y.eval(b))<1e-12)
+assert(norm(f.list_eval([a b],{'x','y'})-x.list_eval(a).*y.list_eval(b))<1e-12)
+assert(norm(f.list_eval([a b],{'y','x'})-x.list_eval(b).*y.list_eval(a))<1e-12)
+assert(norm(f.list_eval([b a],{'x','y'})-x.list_eval(b).*y.list_eval(a))<1e-12)
+assert(norm(f.list_eval([b a],{'y','x'})-x.list_eval(a).*y.list_eval(b))<1e-12)
