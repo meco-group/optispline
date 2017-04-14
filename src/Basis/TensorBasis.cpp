@@ -122,7 +122,7 @@ namespace spline {
 
     Basis TensorBasisNode::basis(const Argument& index) const {
         int ind = index.concrete(arguments());
-        if(ind >= n_basis()){
+        if (ind < 0 || ind >= n_basis()) {
             return EmptyBasis();
         }
         return bases()[ind];
