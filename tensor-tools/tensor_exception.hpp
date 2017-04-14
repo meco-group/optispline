@@ -63,6 +63,7 @@ class TensorException : public std::exception {
               std::size_t found_end = line.find("(");
               std::size_t found_begin = line.rfind(':', found_end);
               if (found_end!=std::string::npos && found_begin!=std::string::npos){
+                  if(line[found_end + 1] == ')') found_end += 2;
                   line.insert(found_end , "\x1b[0m");
                   line.insert(found_begin + 1, "\x1b[32m");
               }
