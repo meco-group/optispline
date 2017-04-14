@@ -80,6 +80,9 @@ def _swig_repr(self):
 %feature("varargin","1") spline::TensorBasis::operator();
 #endif //SWIGMATLAB
 
+#ifdef SWIGPYTHON
+%rename(list_eval_internal) spline::Function::list_eval;
+#endif // SWIGPYTHON
 
 %include "std_vector.i"
 
@@ -1146,6 +1149,23 @@ namespace spline {
             return self.call(*args)
         else:
             return self.call(casadi.hcat(args))
+
+    def list_eval(self, *args):
+      assert len(args)>0
+      if len(args)==1:
+        return self.list_eval_internal(args[0])
+      else:
+        arguments = False
+        try:
+            if isinstance(args[-1][0],str):
+                arguments = True
+        except:
+            pass
+
+        if arguments:
+            return self.list_eval_internal(*args)
+        else:
+            return self.list_eval_internal(casadi.hcat(args))
 
 
     @property
