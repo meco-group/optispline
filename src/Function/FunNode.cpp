@@ -4,6 +4,7 @@
 #include "../common.h"
 
 namespace spline {
+    FunNode::FunNode(const Coefficient& coeff) : coeff_(coeff.matrix_valued()) { }
 
     std::string FunNode::type() const{
         return "FunNode";

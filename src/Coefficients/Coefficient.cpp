@@ -227,4 +227,12 @@ namespace spline {
         return data().einstein(ones,a,b,c);
     }
 
+    Coefficient Coefficient::matrix_valued() const {
+        return (*this)->matrix_valued();
+    }
+
+    Coefficient CoefficientNode::matrix_valued() const {
+        return add_trival_dimension(2 - data().dims().size());
+    }
+
 }  // namespace spline
