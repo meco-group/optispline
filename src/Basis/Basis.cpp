@@ -13,7 +13,6 @@ namespace spline {
     std::string Basis::type() const { return (*this)->type() ;}
     std::string BasisNode::type() const { return "Basis";}
 
-    std::string Basis::to_string() const { return (*this)->to_string() ;};
     std::string BasisNode::to_string() const {return "A Basis object on " + domain().to_string();};
 
     Domain BasisNode::domain() const {return domain_;}

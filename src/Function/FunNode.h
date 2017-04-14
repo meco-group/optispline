@@ -23,7 +23,7 @@ namespace spline {
             FunNode(const Coefficient& coeff);
 
             virtual std::string type() const;
-            virtual std::string to_string() const;
+            virtual std::string to_string() const override;
 
             virtual AnyTensor operator()(const AnyTensor& x, const std::vector< int >& args)  const = 0;
             virtual AnyTensor list_eval(const AnyTensor& x, const std::vector< int >& args) const = 0;
@@ -64,8 +64,6 @@ namespace spline {
             virtual TensorDomain domain() const;
 
             bool is_scalar() const;
-
-            void repr() const { casadi::userOut() << to_string() << std::endl;}
 
             std::vector< int > shape() const;  // Shape result obtained after function evaluation
             virtual Function reshape(const std::vector< int >& shape) const = 0;

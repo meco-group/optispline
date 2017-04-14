@@ -24,13 +24,12 @@ namespace spline {
         std::vector< int > dimension() const;
 
         virtual std::string type() const;
-        virtual std::string to_string() const;
+        virtual std::string to_string() const override;
 
         Coefficient add_trival_dimension(int i) const;
         int n_coeff() const;
         // Coefficient operator+ (Coefficient & other) const;
         AnyTensor data() const {return data_;}
-        void repr() const { casadi::userOut() << to_string() << std::endl;}
 
         AnyTensor transform(const AnyTensor& T, const NumericIndexVector& direction) const;
         AnyTensor transform(const std::vector<AnyTensor>& T, const NumericIndexVector& direction) const;
@@ -65,10 +64,9 @@ namespace spline {
         std::vector< int > dimension() const;  // Related to the number of basis functions
 
         std::string type() const;
-        std::string to_string() const;
-
         Coefficient operator-() const ;
         AnyTensor data() const;
+        AnyTensor data(const NumericIndex& k) const;
         /// Transform a direction of the coeffient's data tensor using given transformation matrix
         AnyTensor transform(const AnyTensor& T) const;
         AnyTensor transform(const AnyTensor& T, const NumericIndexVector& direction) const;

@@ -200,6 +200,7 @@ void OptistackSolver::solve() {
 void OptistackSolver::solve_prepare() {
   arg_["x0"] = veccat(values(Optistack::OPTISTACK_VAR));
   arg_["p"]  = veccat(values(Optistack::OPTISTACK_PAR));
+  //if (arg_["p"].is_empty()) arg_["p"] = DM::zeros(0, 1);
 }
 
 DMDict OptistackSolver::solve_actual(const DMDict& arg) const {

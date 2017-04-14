@@ -53,8 +53,7 @@ class SplineException : public std::exception {
                   line.insert(found_end , "\x1b[0m");
                   line.insert(found_begin + 1, "\x1b[35m");
               }
-              msg_ += line;
-
+              msg_ += "  " + line;
         }
         if (!symbol_name.empty()) {
           std::string command = "c++filt " + symbol_name + "> .temp.txt"; //last parameter is the name of this app
@@ -70,7 +69,7 @@ class SplineException : public std::exception {
                   line.insert(found_end , "\x1b[0m");
                   line.insert(found_begin + 1, "\x1b[34m");
               }
-              msg_ += line;
+              msg_ += "  " + line;
         }
       }
     }

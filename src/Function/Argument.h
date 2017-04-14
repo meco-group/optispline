@@ -14,7 +14,6 @@ namespace spline {
     class ArgumentNode : public SharedObjectNode {
     public:
         virtual std::string type() const;
-        virtual std::string to_string() const = 0;
         virtual int concrete(const std::vector<std::string> & args) const = 0;
         virtual bool is_all() const ;
     };
@@ -22,7 +21,7 @@ namespace spline {
     class StringArgumentNode : public ArgumentNode {
     public:
         StringArgumentNode(const std::string &name);
-        virtual std::string to_string() const ;
+        virtual std::string to_string() const override;
         virtual int concrete(const std::vector<std::string> & args) const;
     private:
         std::string name_;
@@ -31,7 +30,7 @@ namespace spline {
     class IntArgumentNode : public ArgumentNode {
     public:
         IntArgumentNode(int index);
-        virtual std::string to_string() const ;
+        virtual std::string to_string() const override;
         virtual int concrete(const std::vector<std::string> & args) const;
     private:
         int index_;
@@ -40,7 +39,7 @@ namespace spline {
     class NullArgumentNode : public ArgumentNode {
     public:
         NullArgumentNode();
-        virtual std::string to_string() const ;
+        virtual std::string to_string() const override;
         virtual int concrete(const std::vector<std::string> & args) const;
         virtual bool is_all() const override;
     };
@@ -52,11 +51,6 @@ namespace spline {
 #ifndef SWIG
         ArgumentNode* get() const ;
         ArgumentNode* operator->() const ;
-
-        inline friend
-            std::ostream& operator<<(std::ostream &stream, const Argument& argument){
-                return stream << argument.to_string();
-    }
 #endif // SWIG
         Argument();
         Argument(const std::string &name);
@@ -69,7 +63,6 @@ namespace spline {
 
         std::string type() const;
         bool is_all() const;
-        std::string to_string() const ;
 
         static std::vector< int > concrete(const std::vector< Argument >& args, const std::vector< std::string >& strings);
         static std::vector< int > concrete(const std::vector< Argument >& args, const TensorBasis& tb);

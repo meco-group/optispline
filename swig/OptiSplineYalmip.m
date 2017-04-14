@@ -1,10 +1,14 @@
 classdef OptiSplineYalmip < splines.OptiSpline
 
   properties
-
-
+      yalmip_variables
   end
   methods
+      
+      function [ self ] = OptiSplineYalmip()
+        self@splines.OptiSpline();
+        self.yalmip_variables = {};
+      end
       function [ out ] = yalmip_expr( opti, expr )
 
           if (~iscell(expr))
@@ -95,7 +99,6 @@ classdef OptiSplineYalmip < splines.OptiSpline
       end
 
       function [ ret ] = yalmip_var( opti, vars )
-        persistent yalmip_variables
 
         if (~iscell(vars))
            ret = opti.yalmip_var(opti.symvar(vars));
@@ -103,10 +106,6 @@ classdef OptiSplineYalmip < splines.OptiSpline
              ret = ret{1};
            end
            return;
-        end
-
-        if isempty(yalmip_variables)
-           yalmip_variables = {};
         end
 
         N = length(vars);
@@ -121,7 +120,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
 
         all_vars = opti.symvar();
 
-        for i=length(yalmip_variables)+1:max(counts)
+        for i=length(opti.yalmip_variables)+1:max(counts)
           m = opti.meta(all_vars{i});
           if strcmp(m.variable_type,'symmetric')
               ind = find(tril(ones(m.m, m.n)));
@@ -131,10 +130,10 @@ classdef OptiSplineYalmip < splines.OptiSpline
               arg = sdpvar(m.m, m.n, 'full');
           end
 
-          yalmip_variables{i} = arg;
+          opti.yalmip_variables{i} = arg;
         end
 
-        ret = yalmip_variables(counts);
+        ret = opti.yalmip_variables(counts);
 
       end
 
@@ -155,3 +154,4 @@ classdef OptiSplineYalmip < splines.OptiSpline
       end
    end
 end
+

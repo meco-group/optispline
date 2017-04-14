@@ -196,7 +196,6 @@ namespace spline {
     std::string TensorBasis::type() const { return (*this)->type() ;}
     std::string TensorBasisNode::type() const { return "TensorBasis";}
 
-    std::string TensorBasis::to_string() const { return (*this)->to_string() ;}
     std::string TensorBasisNode::to_string() const {
         const std::string n_basis = (bases_.size()==1) ? "basis" : "bases";
 

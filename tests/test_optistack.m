@@ -116,3 +116,17 @@ b = MonomialBasis(4);
 F = opti.Function(b,[4,4]);
 F = opti.Function(b,[4,4],'full');
 F = opti.Function(b,[4,4],'symmetric');
+
+opti = OptiSplineYalmip();
+
+
+
+x = opti.var();
+y = opti.var(4,4);
+z = opti.var(1,3);
+
+123
+sol = opti.solver(x+trace(y)+z(1),{y>=3},'yalmip')
+sol.solve()
+
+

@@ -9,6 +9,8 @@
 #include "tensor_exception.hpp"
 #include "slice.hpp"
 #include "../src/common.h"
+#include "../src/Function/NumericIndex.h"
+#include "../SharedObject/PrintableObject.h"
 
 template <class T>
 std::vector<T> reorder(const std::vector<T>& data, const std::vector<int>& order) {
@@ -32,7 +34,7 @@ std::vector<T> mrange(T start, T stop) {
 std::vector<int> invert_order(const std::vector<int>& order);
 
 template <class T>
-class Tensor {
+class Tensor : public spline::PrintableObject< Tensor<T> > {
   public:
 
   template<class S>
@@ -40,7 +42,7 @@ class Tensor {
 
   }
 
-  static Tensor<T> concat(const std::vector< Tensor<T> >& v, int axis) {
+  static Tensor<T> concat(const std::vector< Tensor<T> >& v, const spline::NumericIndex& axis) {
     tensor_assert(v.size()>0);
 
     // Establish reference dimensions
@@ -131,7 +133,7 @@ class Tensor {
     return r.shape(dims);
   }
 
-  static Tensor<T> pack(const std::vector< Tensor<T> >& v, int axis) {
+  static Tensor<T> pack(const std::vector< Tensor<T> >& v, const spline::NumericIndex& axis) {
     tensor_assert(v.size()>0);
     auto dims = v[0].dims();
 
@@ -222,6 +224,7 @@ class Tensor {
     return b.dims();
   }
 
+#ifndef SWIG
   static std::vector<int> sub2ind(const std::vector<int>& dims, int sub) {
     std::vector<int> ret(dims.size());
     for (int i=0;i<dims.size();i++) {
@@ -240,6 +243,7 @@ class Tensor {
     }
     return ret;
   }
+#endif //SWIG
 
   Tensor get_slice(const AnySlice& i) {
     int n = dims()[n_dims()-2];
@@ -258,7 +262,7 @@ class Tensor {
 
     std::vector<int> i_e = i.indices(n);
     std::vector<int> j_e = j.indices(m);
-    
+
     if (n_dims()==2) {
       return T::reshape(data_, n, m)(i_e, j_e);
     }
@@ -277,8 +281,8 @@ class Tensor {
 
 
   }
-  
-  
+
+
 
   static T get(const T& data, const std::vector<int> dims, const std::vector<int>& ind) {
     return data.nz(ind2sub(dims, ind));
@@ -337,7 +341,7 @@ class Tensor {
     return index(ind);
   }
 
-  Tensor transform(const Tensor& tr, int axis) const {
+  Tensor transform(const Tensor& tr, const spline::NumericIndex& axis) const {
     std::vector<int> ind1(n_dims());
     std::vector<int> ind2(n_dims());
     int cnt = -3;
@@ -393,7 +397,7 @@ class Tensor {
 
   /** \brief Generalization of transpose
   */
-  Tensor reorder_dims(const std::vector<int>& order) const {
+  Tensor reorder_dims(const spline::NumericIndexVector& order) const {
     // Check that input is a permutaion of range(n_dims())
     tensor_assert(order.size()==n_dims());
 
@@ -574,23 +578,11 @@ class Tensor {
     return einstein(b, a_r, b_r, c_r);
   }
 
-  #ifndef SWIG
-  /// Print a representation of the object to a stream (shorthand)
-  inline friend
-      std::ostream& operator<<(std::ostream &stream, const Tensor& obj) {
-          return stream << "Tensor(" << obj.data_.type_name() << ", "
-            << obj.dims() << "): " << obj.data();
-      }
-  #endif // SWIG
-
-  std::string to_string() const {
-    std::stringstream ss;
-    ss << (*this);
-    return ss.str();
-  }
-
-  void repr() const {
-    casadi::userOut() << to_string() << std::endl;
+  virtual std::string to_string() const override {
+      std::stringstream ss;
+      ss << "Tensor(" << data_.type_name() << ", "
+        << dims() << "): " << data();
+      return ss.str();
   }
 
   private:

@@ -20,7 +20,7 @@ class DomainNode : public SharedObjectNode {
     public:
         DomainNode(const std::vector<AnyScalar> & data) : data_(data) {}
         std::vector<AnyScalar> data() const { return data_; }
-        virtual std::string to_string() const ;
+        virtual std::string to_string() const override;
         virtual std::string type() const;
         virtual Domain intersection(const Domain & dom) const = 0;
         virtual Domain intersection(const Interval & dom) const = 0;
@@ -42,19 +42,11 @@ public:
         DomainNode* operator->() const;
 #endif // SWIG
         std::vector<AnyScalar> data() const { return (*this)->data(); }
-        std::string to_string() const ;
         std::string type() const;
         Domain intersection(const Domain & dom) const;
         Domain intersection(const Interval & dom) const;
         bool operator==(const Domain& other) const;
         bool operator==(const Interval& other) const;
-
-#ifndef SWIG
-        inline friend
-            std::ostream& operator<<(std::ostream &stream, const Domain& obj) {
-                return stream << obj.to_string();
-            }
-#endif // SWIG
 };
 
 }   // namespace spline

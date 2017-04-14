@@ -29,7 +29,7 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasisNode(const std::vector< Basis >& bases_, const std::vector< std::string >& args);
 
         virtual std::string type() const;
-        virtual std::string to_string() const;
+        virtual std::string to_string() const override;
 
         virtual int n_basis() const;
         virtual std::vector<int> dimension() const;
@@ -132,7 +132,6 @@ public:
 #endif // SWIG
 
         virtual std::string type() const;
-        virtual std::string to_string() const;
 
         int n_basis() const;  // Number of bases, building up the TensorBasis
         int n_inputs() const; // Total number of inputs, over all bases
