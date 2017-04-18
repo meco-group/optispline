@@ -315,7 +315,6 @@ namespace spline {
             reorder[i + length_argument] = 2*i + 1;
         }
 
-        reorder_output = false;
         if(reorder_output){
             ret = ret.reorder_dims(reorder);
             std::vector< int > dims = ret.dims();
