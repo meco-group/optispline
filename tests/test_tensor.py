@@ -165,14 +165,9 @@ class Test_Tensor(BasisTestCase):
       c = F.coeff()
       r = c.data()
 
-      # a = DTensor(a ,  B.dimension() + [1, 1])
-      print "------"
       a = a.shape(a.dims()+[1,1])
-
-
-      print a[:,:,0,0,0]
-      print r[:,:,0,0,0]
-
+      print r
+      print a
       self.assertEqualT( r, a )
 
     def test_mtimes(self):
