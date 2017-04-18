@@ -8,6 +8,7 @@ namespace spline {
 
     FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : coeff_(coeff.to_matrix_valued()), basis_(basis) {}
 
+std::vector< int > FunctionNode::shape() const {         return coeff_.shape();     }
 
     AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< int >& args) const{
         AnyTensor x = arg.squeeze();
@@ -89,10 +90,22 @@ namespace spline {
         return "Function, consisting of a " + basis_.to_string() + "and:\n\t" + coeff_.to_string();
     }
 
+    Function FunctionNode::operator+(const Function& f) const {
+        return operator+(*f.get());
+    }
+
+    Function FunctionNode::operator*(const Function& f) const {
+        return operator*(*f.get());
+    }
+
+    Function FunctionNode::mtimes(const Function& f) const {
+        return mtimes(*f.get());
+    }
+
     Function FunctionNode::generic_operation(const Function& f,
             const BasisComposition & bc, const TensorComposition & tc) const  {
 
-        TensorBasis sumBasis = bc(tensor_basis(), f.tensor_basis());
+        TensorBasis sumBasis = bc(f.tensor_basis(), tensor_basis());
         std::vector< Argument > args = Argument::from_vector(sumBasis.arguments());
         std::vector< AnyTensor > eval_g = sumBasis.evaluation_grid();
 
@@ -123,10 +136,6 @@ namespace spline {
         return Function(sumBasis, C);
     }
 
-    Function FunctionNode::operator+(const FunNode& f) const {
-        return f + *this;
-    }
-
     Function FunctionNode::operator+(const FunctionNode& f) const {
         return generic_operation(f.shared_from_this<Function>(),
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
@@ -145,11 +154,6 @@ namespace spline {
                 }
                 return lhs + rhs;
             });
-    }
-
-
-    Function FunctionNode::operator*(const FunNode& f) const {
-        return f * *this;
     }
 
     Function FunctionNode::operator*(const FunctionNode& f) const {
@@ -173,24 +177,17 @@ namespace spline {
             });
     }
 
-
-    Function FunctionNode::mtimes(const FunNode& f) const {
-        return f.rmtimes(*this);
-    }
-
     Function FunctionNode::mtimes(const FunctionNode& f) const {
         return generic_operation(f.shared_from_this<Function>(),
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.einstein(rhs, {-4, -1, -2}, {-4, -2, -3}, {-4, -1, -3});});
     }
 
-
     Function FunctionNode::rmtimes(const FunctionNode& f) const {
         return generic_operation(f.shared_from_this<Function>(),
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.einstein(lhs, {-4, -1, -2}, {-4, -2, -3}, {-4, -1, -3});});
     }
-
 
     Function FunctionNode::operator-() const {
         return Function(tensor_basis(), -coeff_);
@@ -202,6 +199,10 @@ namespace spline {
 
     Function FunctionNode::trace() const {
         return Function(tensor_basis(), coeff().trace());
+    }
+
+    bool FunctionNode::is_scalar() const {
+        return shape()[0] == 1 && shape()[1] == 1;
     }
 
     Function FunctionNode::transform_to(const TensorBasis& basis) const {
@@ -358,7 +359,6 @@ namespace spline {
         return Function(new_tbasis, new_coefficient);
     }
 
-
     Function FunctionNode::antiderivative(const std::vector<int>& orders,
             const std::vector< int >& arg_ind) const {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
@@ -411,6 +411,11 @@ namespace spline {
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         new_coefficient = new_coefficient.rm_direction(arg_ind);
         return Function(new_tbasis, new_coefficient);
+    }
+
+    TensorDomain FunctionNode::domain() const {
+        spline_assert_message(false, "invalided method domain on " + to_string());
+        return TensorDomain();
     }
 
 }  // namespace spline
