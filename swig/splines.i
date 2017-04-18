@@ -119,7 +119,6 @@ def _swig_repr(self):
 #include <src/Domain/Domain.h>
 #include <src/Domain/TensorDomain.h>
 
-#include <src/Function/FunNode.h>
 #include <src/Function/FunctionNode.h>
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>

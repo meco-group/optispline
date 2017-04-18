@@ -13,7 +13,7 @@ add_library(splines SHARED
 
     SharedObject/SharedObject.cpp SharedObject/SharedObjectNode.cpp
     SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
-    SharedObject/PrintableObject.h 
+    SharedObject/PrintableObject.h
 
     Basis/utils/vectorUtilities.h Basis/utils/vectorUtilities.cpp
 
@@ -31,7 +31,6 @@ add_library(splines SHARED
     Basis/operations/plus.h Basis/operations/plus.cpp
     Basis/operations/times.h Basis/operations/times.cpp
 
-    Function/FunNode.h Function/FunNode.cpp
     Function/FunctionNode.h Function/FunctionNode.cpp
     Function/Function.h Function/Function.cpp
     Function/Polynomial.h Function/Polynomial.cpp

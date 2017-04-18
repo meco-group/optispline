@@ -4,9 +4,10 @@
 #include "../common.h"
 
 namespace spline {
-    FunctionNode::FunctionNode(const Coefficient& coeff) : FunNode(coeff), basis_(TensorBasis()) {}
+    FunctionNode::FunctionNode(const Coefficient& coeff) : coeff_(coeff.to_matrix_valued()), basis_(TensorBasis()) {}
 
-    FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : FunNode(coeff), basis_(basis) {}
+    FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : coeff_(coeff.to_matrix_valued()), basis_(basis) {}
+
 
     AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< int >& args) const{
         AnyTensor x = arg.squeeze();

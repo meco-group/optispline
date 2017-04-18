@@ -11,7 +11,7 @@
 #include "../Basis/TensorBasis.h"
 #include "../Coefficients/Coefficient.h"
 #include "Argument.h"
-#include "FunNode.h"
+#include "FunctionNode.h"
 
 namespace spline {
 
@@ -23,8 +23,8 @@ namespace spline {
         Function(const AnyScalar& value, const std::vector< int >& shape);
 
 #ifndef SWIG
-        FunNode* get() const ;
-        FunNode* operator->() const ;
+        FunctionNode* get() const ;
+        FunctionNode* operator->() const ;
 #endif // SWIG
 
         virtual std::string type() const;

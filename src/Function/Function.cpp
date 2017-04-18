@@ -1,5 +1,4 @@
 #include "Function.h"
-#include "FunNode.h"
 #include "FunctionNode.h"
 
 #include "../Basis/BSplineBasis.h"
@@ -36,8 +35,8 @@ namespace spline{
         assign_node(new FunctionNode(AnyTensor::repeat(AnyTensor(value), size)));
     }
 
-    FunNode* Function::get() const { return static_cast<FunNode*>(SharedObject::get()); };
-    FunNode* Function::operator->() const { return get(); }
+    FunctionNode* Function::get() const { return static_cast<FunctionNode*>(SharedObject::get()); };
+    FunctionNode* Function::operator->() const { return get(); }
 
     std::string Function::type() const { return (*this)->type() ;}
 
