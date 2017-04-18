@@ -414,8 +414,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
     }
 
     TensorDomain FunctionNode::domain() const {
-        spline_assert_message(false, "invalided method domain on " + to_string());
-        return TensorDomain();
+        return tensor_basis().domain();
     }
 
 }  // namespace spline
