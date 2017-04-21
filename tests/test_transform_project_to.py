@@ -53,6 +53,20 @@ class Test_Project_To(BasisTestCase):
 
     def test_univariate_function(self):
         #np.random.seed(0)
+        b1 = MonomialBasis(2)
+        c1 = Coefficient(5*np.random.random(b1.dimension()))
+        s1 = Function(b1,c1)
+
+        knots2 = [0,0,0,0,0,0.1,0.1,0.3,0.3,0.7,0.7,0.8,1,1,1,1,1]
+        b2 = BSplineBasis(knots2,4)
+
+        s2 = s1.project_to(b2)
+
+        g2 = numpy.random.random(10)
+        for i in g2:
+            print s1(i), s2(i)
+            self.assertEqualTensor(s1(i), s2(i), 1e-6)        #np.random.seed(0)
+
         degree = 3
         knots1 = [0,0,0,0,0.1,0.3,0.7,1,1,1,1]
         b1 = BSplineBasis(knots1,degree)
