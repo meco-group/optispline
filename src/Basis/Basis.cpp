@@ -155,12 +155,12 @@ namespace spline {
     Basis BasisNode::transform_to(const Basis& b, AnyTensor& T) const {
         Basis basis = shared_from_this<Basis>();
         Basis union_basis = basis + b;
-        std::vector<std::vector<AnyScalar>> eval_grid = union_basis.getEvaluationGrid();
+        AnyTensor eval_grid = union_basis.evaluation_grid();
 
         std::vector< AnyTensor > pre_step{ AnyTensor::unity()};
         std::vector< AnyTensor > union_basis_eval;
         std::vector< AnyTensor > basis_eval;
-        for(auto const & point : eval_grid){
+        for(auto const & point : eval_grid.unpack_2()){
             AnyTensor points = AnyVector(point);
             union_basis_eval.push_back(union_basis(points));
             basis_eval.push_back(basis(points));
