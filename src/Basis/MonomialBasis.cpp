@@ -102,14 +102,6 @@ namespace spline {
          return degree() + 1;
     }
 
-    std::vector< std::vector < AnyScalar > > MonomialBasisNode::getEvaluationGrid() const {
-      std::vector< std::vector < AnyScalar > > ret;
-        for (int i = 0; i < dimension(); i++) {
-            ret.push_back(std::vector<AnyScalar> {static_cast<double>(i)});
-        }
-        return ret;
-    }
-
     AnyTensor MonomialBasisNode::evaluation_grid() const {
         std::vector< double > ret = {};
         for (int i = 0; i < dimension(); i++) {

@@ -89,18 +89,10 @@ namespace spline {
         spline_assert_message(x.dims()[1] == n_inputs(), "Input vector has wrong dimension.");
     }
 
-    std::vector< std::vector < AnyScalar > > Basis::getEvaluationGrid() const {
-      return (*this)->getEvaluationGrid();
-    }
-    std::vector< std::vector < AnyScalar > > BasisNode::getEvaluationGrid() const {
-      return std::vector< std::vector < AnyScalar > >();
-    }
-
     AnyTensor Basis::evaluation_grid() const {
       return (*this)->evaluation_grid();
     }
     AnyTensor BasisNode::evaluation_grid() const {
-        /* return AnyTensor::pack(getEvaluationGrid(), 0); */
       return AnyTensor();
     }
 
