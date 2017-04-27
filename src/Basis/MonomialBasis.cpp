@@ -110,7 +110,6 @@ namespace spline {
         return Tensor<casadi::DM>(casadi::DM(ret) ,std::vector< int >{dimension(),1} );
     }
 
-
     Basis MonomialBasisNode::derivative(int order, AnyTensor& T) const {
         if (order > degree()) {
             // User tries to take a derivative which is of higher order than the basis,

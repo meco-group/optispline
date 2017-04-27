@@ -184,7 +184,6 @@ namespace spline {
         return (*this)->basis_functions();
     }
 
-
     int Basis::dimension() const { return (*this)->dimension();}
     int Basis::n_inputs() const { return (*this)->n_inputs();}
 

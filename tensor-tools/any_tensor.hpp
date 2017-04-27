@@ -172,7 +172,6 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
     static bool is_ST(const std::vector<AnyTensor>& v) {return type(v)==TENSOR_SX;}
     static bool is_MT(const std::vector<AnyTensor>& v) {return type(v)==TENSOR_MX;}
 
-
     static AnyTensor ones(const std::vector<int>& dims) {
       return DT(casadi::DM::ones(spline::product(dims)), dims);
     }
