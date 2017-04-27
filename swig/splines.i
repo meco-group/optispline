@@ -102,7 +102,6 @@ def _swig_repr(self):
 #include <src/SharedObject/SharedObject.h>
 #include <src/SharedObject/SharedObjectNode.h>
 
-#include <src/Basis/utils/CommonBasis.h>
 #include <src/Basis/Basis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
@@ -1022,7 +1021,6 @@ using namespace spline;
 %include <src/Domain/Interval.h>
 %include <src/Domain/TensorDomain.h>
 
-%include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
