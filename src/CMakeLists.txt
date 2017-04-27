@@ -15,7 +15,7 @@ add_library(splines SHARED
     SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
     SharedObject/PrintableObject.h
 
-    Basis/utils/vectorUtilities.h Basis/utils/vectorUtilities.cpp
+    Basis/utils/vectorUtilities.h
 
     Basis/Basis.h Basis/Basis.cpp
     Basis/EmptyBasis.h Basis/EmptyBasis.cpp
