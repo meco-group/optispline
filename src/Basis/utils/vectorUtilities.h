@@ -110,6 +110,33 @@ namespace spline{
       }
     }
 
+    template<class T>
+    const std::vector<T> increaseMultiplicityFirstLast(const std::vector<T>& knots_,  int increase) {
+      if (increase <= 0) { // noting happens
+          return knots_;
+      } else {
+          int newSize = 0;
+          std::vector<T> returnKnots(knots_.size() + (increase*2));
+
+          for (int j = 0; j < increase ; ++j) {
+              returnKnots[newSize] = knots_[0];
+              newSize++;
+          }
+
+          for (int i = 0; i < knots_.size(); ++i) {
+              returnKnots[newSize] = knots_[i];
+              newSize++;
+          }
+
+          for (int j = 0; j < increase ; ++j) {
+              returnKnots[newSize] = knots_[knots_.size()-1];
+              newSize++;
+          }
+          returnKnots.resize(newSize);
+          return returnKnots;
+      }
+    }
+
 
 
 }  // namespace spline
