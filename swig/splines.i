@@ -121,6 +121,7 @@ def _swig_repr(self):
 #include <src/Function/FunctionNode.h>
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
+#include <src/Function/Parameter.h>
 #include <src/Function/Argument.h>
 #include <src/Function/NumericIndex.h>
 #include <src/Optistack/optistack.h>
@@ -1064,6 +1065,7 @@ using namespace spline;
 
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
+%include <src/Function/Parameter.h>
 %include <src/Optistack/optistack.h>
 
 #ifdef SWIGMATLAB

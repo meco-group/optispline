@@ -34,6 +34,7 @@ add_library(splines SHARED
     Function/FunctionNode.h Function/FunctionNode.cpp
     Function/Function.h Function/Function.cpp
     Function/Polynomial.h Function/Polynomial.cpp
+    Function/Parameter.h Function/Parameter.cpp
     Function/Argument.h Function/Argument.cpp
     Function/NumericIndex.h
 
