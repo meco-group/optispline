@@ -14,8 +14,7 @@ namespace spline {
     Basis times_basis(const BSplineBasisNode& b1, const MonomialBasisNode& b2) {
         // TODO experimantal implementation
         int newDegree = b1.degree() + b2.degree();
-        std::vector<AnyScalar> v = unionKnots(b1.knots(), b1.knots(), newDegree,
-          b1.degree(), b2.degree());
+        std::vector<AnyScalar> v = increaseMultiplicityFirstLast(b1.knots(), b2.degree());
         return BSplineBasis(v, newDegree) ;
     }
 
