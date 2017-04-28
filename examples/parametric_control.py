@@ -1,6 +1,10 @@
 import meco_binaries;meco_binaries(cpp_splines='fill_in_the_branch_you_want')
 from splines import *
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 opti = OptiSpline()
 
@@ -9,24 +13,22 @@ D_min = 0.0       #[m] max value of the distance parameter
 D = 13       #[m] max value of the distance parameter
 
 v_max = 1  #[m/s]
-v_min = -1e-2    #[m/s]
+v_min = -1e-2    #[m/s]   zero gives probems
 a_max = 0.2    #[m/s^2]
 a_min = -0.2   #[m/s^2]
 
 # Define spline
-deg = 4             #degree
-n = 15              #number of knots
+deg = 3             #degree
+n = 8              #number of knots
 
 # You determine which variable the spline is a function of by choosing the basis. E.g. basis(t)
 basis_tau = BSplineBasis([0, 1], deg, n) #tau = [0 1], dimensionless
 basis_d = BSplineBasis([D_min, D], deg, n) #d = [0 D], [m]
-
 tensorBasis_d = TensorBasis([basis_d], [ 'd' ])
 tensorBasis_tua_d = TensorBasis([basis_tau, basis_d], ['tau', 'd'])
 
-d = Polynomial([0,1], 'd')
-tau = Polynomial([0,1], 'tau')
-# d = Patameter('d')
+d = Parameter('d')
+tau = Parameter('tau')
 
 x = opti.Function(tensorBasis_tua_d) #2D Bspline x(tau,d)
 v = x.derivative(1, 'tau')  # time derivative
@@ -50,22 +52,13 @@ con.append(v - T_to_reach_d*v_min >= 0)
 
 con.append(a - T_to_reach_d**2*a_max <= 0)
 con.append(a - T_to_reach_d**2*a_min >= 0)
-con.append(T_to_reach_d>=0)
+con.append(T_to_reach_d >= 0)
 
-# sol = opti.solver(obj, con, "ipopt",{"ipopt":{"tol":1e-5,"max_iter":1}})
 sol = opti.solver(obj, con, "ipopt",{"ipopt":{"tol":1e-5}})
 
 # warm starting solver
-# g = d.transform_to(tensorBasis_d).coeff_tensor()
-g = d.project_to(tensorBasis_d).coeff_tensor()
-g
-sol.value(T_to_reach_d.coeff_tensor().data(), g)
-
-# sol.value(T_to_reach_d, d)
-g = (d*tau).transform_to(tensorBasis_tua_d).coeff_tensor()
-g = np.reshape(g,(g.size , 1))
-sol.value(x.coeff_tensor().data(), g)
-# sol.value(x, d*tau)
+sol.value(T_to_reach_d, 2 * d)
+sol.value(x, d*tau)
 
 sol.solve()
 
@@ -73,12 +66,6 @@ x_ = sol.value(x)
 v_ = sol.value(v)
 a_ = sol.value(a)
 T_to_reach_d_ = sol.value(T_to_reach_d)
-
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
-import numpy as np
 
 fig = plt.figure()
 # Make data.
@@ -95,7 +82,8 @@ ax.plot(T_to_reach_d_.list_eval(D_), D_, zdir='z')
 ax = fig.add_subplot(1, 3, 2, projection='3d')
 for d_ in range(D + 1):
     time = T_to_reach_d_(d_) *T_
-    velo = v_.partial_eval(d_, 'd').list_eval(T_)/T_to_reach_d_(d_)
+    velo = v_.partial_eval(d_, 'd').list_eval(T_)/( T_to_reach_d_(d_))
+    # velo = v_.grid_eval([T_, [d_]], ['tau', 'd'])/T_to_reach_d_(d_)
     ax.plot(time , d_*np.ones(len(time)), velo, zdir='z')
 ax.plot(T_to_reach_d_.list_eval(D_), D_, zdir='z')
 
