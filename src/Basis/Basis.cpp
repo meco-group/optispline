@@ -156,7 +156,6 @@ namespace spline {
         Basis basis = shared_from_this<Basis>();
         Basis union_basis = basis + b;
         AnyTensor eval_grid = union_basis.evaluation_grid();
-        eval_grid = eval_grid.reorder_dims({1,0});
 
         std::vector< AnyTensor > pre_step{ AnyTensor::unity()};
         std::vector< AnyTensor > union_basis_eval;
