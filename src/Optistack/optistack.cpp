@@ -321,6 +321,11 @@ void OptiSplineSolver::value(const spline::Coefficient& c, const Tensor<DM>& d) 
   value(c.data().as_MT(), d);
 }
 
+void OptiSplineSolver::value(const spline::Function& f, const spline::Function& g) {
+  spline_assert_message(f.coeff().data().is_MT(), "Value only supported for MX");
+  value(f.coeff_tensor().as_MT(), g.project_to(f.tensor_basis()).coeff_tensor().as_DT());
+}
+
 AnyTensor OptiSplineSolver::value(const AnyTensor& t) const {
   if (t.is_DT()) return t.as_DT();
   if (t.is_MT()) return value(t.as_MT());

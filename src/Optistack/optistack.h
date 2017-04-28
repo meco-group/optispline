@@ -122,6 +122,7 @@ public:
   spline::Function value(const spline::Function& f) const;
   spline::Coefficient value(const spline::Coefficient& c) const;
   void value(const spline::Coefficient& c, const Tensor<DM>& d);
+  void value(const spline::Function& f, const spline::Function& g);
   AnyTensor value(const AnyTensor& c) const;
   void value(const Tensor<MX>& c, const Tensor<DM>& d);
   Tensor<DM> value(const Tensor<MX>& c) const;
