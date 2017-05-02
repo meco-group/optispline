@@ -63,6 +63,7 @@ namespace spline {
 
         static std::vector<Argument> from_vector(const std::vector<int>& ind);
         static std::vector<Argument> from_vector(const std::vector<std::string>& ind);
+        static std::vector<Argument> from_vector(const std::vector<Parameter>& ind);
 
         std::string type() const;
         bool is_all() const;
