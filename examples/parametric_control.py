@@ -31,8 +31,10 @@ d = Parameter('d')
 tau = Parameter('tau')
 
 x = opti.Function(tensorBasis_tua_d) #2D Bspline x(tau,d)
-v = x.derivative(1, 'tau')  # time derivative
-a = v.derivative(1, 'tau')  # second time derivative
+v = x.derivative(1, tau)  # time derivative
+# v = x.derivative(1, 'tau')  # alternative
+# v = x.derivative([ 1 ], [ tau ])  # alternative
+a = v.derivative(1, tau)  # second time derivative
 
 T_to_reach_d = opti.Function(tensorBasis_d) #motion time, function of d
 obj = T_to_reach_d.integral()  #minimize motion time for all d in [0,D]
