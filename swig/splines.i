@@ -171,6 +171,7 @@ using namespace spline;
 
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
     bool to_ptr(GUESTOBJECT *p, spline::Function** m);
+    bool to_ptr(GUESTOBJECT *p, spline::Parameter** m);
 
     GUESTOBJECT * from_ptr(const std::vector<AnyScalar>* a);
     GUESTOBJECT * from_ptr(const AnyScalar *a);
@@ -650,6 +651,13 @@ using namespace spline;
           return true;
         }
       }
+      {
+        std::vector<spline::Parameter> tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m = Argument::from_vector(tmp);
+          return true;
+        }
+      }
     }
 
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
@@ -680,9 +688,26 @@ using namespace spline;
           return true;
         }
       }
+      // Parameter
+      {
+        spline::Parameter tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m=tmp;
+          return true;
+        }
+      }
       return false;
     }
+    bool to_ptr(GUESTOBJECT *p, spline::Parameter** m) {
+      // Treat Null
+      if (is_null(p)) return false;
 
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::Parameter*), 0))) {
+        return true;
+      }
+      return false;
+    }
     bool to_ptr(GUESTOBJECT *p, spline::Function** m) {
       // Treat Null
       if (is_null(p)) return false;
@@ -815,6 +840,9 @@ using namespace spline;
     }
     GUESTOBJECT* from_ptr(const spline::Function *a) {
       return SWIG_NewPointerObj(new spline::Function(*a), $descriptor(spline::Function *), SWIG_POINTER_OWN);
+    }
+    GUESTOBJECT* from_ptr(const spline::Parameter *a) {
+      return SWIG_NewPointerObj(new spline::Parameter(*a), $descriptor(spline::Parameter *), SWIG_POINTER_OWN);
     }
 
     GUESTOBJECT* from_ptr(const spline::Basis *a) {
@@ -962,6 +990,8 @@ using namespace spline;
 %casadi_template("[Function]", PREC_FUNCTION, std::vector< spline::Function >)
 %casadi_typemaps("Function", PREC_FUNCTION, spline::Function)
 %casadi_typemaps("[Coefficient]", PREC_FUNCTION, std::vector<spline::Coefficient>)
+%casadi_template("[Parameter]", PREC_FUNCTION, std::vector< spline::Parameter >)
+%casadi_typemaps("Parameter", PREC_FUNCTION, spline::Parameter)
 
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
