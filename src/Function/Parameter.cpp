@@ -12,4 +12,7 @@ namespace spline {
     	return "Parameter " + tensor_basis().to_string();
     }
 
+    std::string Parameter::name() const{
+        return tensor_basis().arguments()[0];
+    }
 } // namespace spline

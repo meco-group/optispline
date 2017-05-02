@@ -13,6 +13,8 @@ public:
 
     virtual std::string type() const override;
     virtual std::string to_string() const override;
+
+    std::string name() const;
 };
 } // namespace spline
 #endif /* PARAMETER_H */
