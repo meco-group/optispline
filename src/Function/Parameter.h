@@ -9,6 +9,7 @@ namespace spline{
 
 class Parameter : public Polynomial {
 public:
+    Parameter(){};
     Parameter(const std::string& a);
 
     virtual std::string type() const override;
