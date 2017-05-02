@@ -3,7 +3,9 @@
 #include "../common.h"
 #include <map>
 #include <algorithm>
+#include "Parameter.h"
 #include <casadi/casadi.hpp>
+
 namespace spline {
 
     std::string Argument::type() const{
@@ -20,10 +22,9 @@ namespace spline {
         return false;
     }
 
-    std::string StringArgumentNode::to_string() const { return "Argument " + name_ ;};
-    std::string IntArgumentNode::to_string() const{
-      return "Argument " + std::to_string(index_) ;};
     std::string NullArgumentNode::to_string() const { return "NullArgument ";};
+    std::string StringArgumentNode::to_string() const { return "Argument " + name_ ;};
+    std::string IntArgumentNode::to_string() const{ return "Argument " + std::to_string(index_) ;};
 
     ArgumentNode* Argument::get() const { return static_cast<ArgumentNode*>(SharedObject::get()); };
     ArgumentNode* Argument::operator->() const { return get(); }
@@ -80,6 +81,7 @@ namespace spline {
     Argument::Argument() { assign_node(new NullArgumentNode()); };
     Argument::Argument(const std::string &name) { assign_node(new StringArgumentNode(name)); };
     Argument::Argument(int index) { assign_node(new IntArgumentNode(index)); };
+    Argument::Argument(const Parameter& para) { assign_node(new StringArgumentNode(para.name())); };
 
     bool NullArgumentNode::is_all() const{
         return true;

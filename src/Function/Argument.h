@@ -11,6 +11,8 @@ namespace spline {
 #ifndef SWIG
     class TensorBasis;
     class Argument;
+    class Parameter;
+
     class ArgumentNode : public SharedObjectNode {
     public:
         virtual std::string type() const;
@@ -55,6 +57,7 @@ namespace spline {
         Argument();
         Argument(const std::string &name);
         Argument(int index);
+        Argument(const Parameter& parameter);
 
         int concrete(const std::vector<std::string> & args) const;
 
