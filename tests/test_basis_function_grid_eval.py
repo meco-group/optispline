@@ -220,6 +220,10 @@ class Test_grid_eval(BasisTestCase):
             for j in range(len(r2)):
                 self.assertAlmostEqual(f([r1[i], r2[j]],['x','y']) ,grid_e[j,i])
 
+    def test_basis_one_element(self):
+        m = Polynomial([3],'x')
+        self.assertEqualTensor((m*m)(2), m(2)**2)
+
 if __name__ == '__main__':
     unittest.main()
 
