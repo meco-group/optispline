@@ -95,6 +95,7 @@ namespace spline {
         Basis operator*(const Basis& rhs) const;
 
         AnyTensor operator()(const AnyTensor& x) const;
+        AnyTensor list_eval(const AnyTensor& x) const;
 
         bool operator==(const Basis& rhs) const;
 

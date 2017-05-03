@@ -81,6 +81,26 @@ namespace spline {
         return AnyVector::pack(ret, 0);
     }
 
+    AnyTensor Basis::list_eval(const AnyTensor& arg) const {
+
+        AnyTensor x = arg;
+        spline_assert(x.n_dims()<=2);
+        if (x.is_vector()) x = x.shape({x.numel(), 1});
+        if(type() != "EmptyBasis"){
+            spline_assert_message(x.dims()[1] == n_inputs(),
+                    "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
+                    std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
+        }
+
+        std::vector< AnyTensor > ret ;
+        std::vector< std::vector< AnyScalar > > unpacked_x = x.unpack_2();
+
+        for (int i = 0; i < unpacked_x.size(); i++) {
+            ret.push_back((*this)->operator()(unpacked_x[i]));
+        }
+        return AnyVector::pack(ret, 0);
+    }
+
     void BasisNode::assert_vector_lenght_correct(const AnyVector& x) const {
         spline_assert_message(x.size() == n_inputs(), "Input vector has wrong dimension.");
     }
