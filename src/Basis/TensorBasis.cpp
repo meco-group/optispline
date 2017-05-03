@@ -310,7 +310,7 @@ namespace spline {
         std::vector< int > reorder(2*length_argument ,0);
 
         for (int i = 0; i < length_argument; i++) {
-            ret = ret.outer_product(basis(arg_ind[i])(x[i]));
+            ret = ret.outer_product(basis(arg_ind[i]).list_eval(x[i]));
             reorder[i] = 2*i;
             reorder[i + length_argument] = 2*i + 1;
         }
