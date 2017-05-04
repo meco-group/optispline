@@ -224,6 +224,19 @@ class Test_grid_eval(BasisTestCase):
         m = Polynomial([3],'x')
         self.assertEqualTensor((m*m)(2), m(2)**2)
 
+        m = Polynomial([3,1.1],'x')
+        self.assertEqualTensor((m*m)(2), m(2)**2)
+
+        m = Function(BSplineBasis([ 0,1.1 ], 0, 2), np.random.rand(1))
+        self.assertEqualTensor((m*m)(0.6), m(0.6)**2)
+
+        m = Function(BSplineBasis([ 0,1.1 ], 1, 2), np.random.rand(2))
+        self.assertEqualTensor((m*m)(0.6), m(0.6)**2)
+
+        m = Function(BSplineBasis([ 0,1.1 ], 0, 5), np.random.rand(4))
+        m2 = m*m
+        self.assertEqualTensor(m2(0.6), m(0.6)**2)
+
 if __name__ == '__main__':
     unittest.main()
 
