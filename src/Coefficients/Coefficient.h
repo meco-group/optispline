@@ -41,6 +41,7 @@ namespace spline {
 
         Coefficient to_matrix_valued() const;
 
+        bool is_true_scalar() const ;
     private:
         AnyTensor data_;
     };
@@ -81,6 +82,9 @@ namespace spline {
         Coefficient to_matrix_valued() const;
 
         static Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs);
+
+        bool is_true_scalar() const ;
+
     };
 } // namespace spline
 

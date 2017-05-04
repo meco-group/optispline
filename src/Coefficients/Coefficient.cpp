@@ -254,4 +254,12 @@ namespace spline {
         return add_trival_dimension(2 - data().dims().size());
     }
 
+    bool Coefficient::is_true_scalar() const {
+        return (*this)->is_true_scalar();
+    }
+
+    bool CoefficientNode::is_true_scalar() const {
+        return data().numel() == 1;
+    }
+
 }  // namespace spline
