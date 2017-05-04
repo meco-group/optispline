@@ -1,4 +1,6 @@
-image: pma-rob-dbs.mech.kuleuven.be/meco/meco
+image: jgillis/meco_build
+
+#pma-rob-dbs.mech.kuleuven.be/meco/meco
 
 stages:
   - tests
