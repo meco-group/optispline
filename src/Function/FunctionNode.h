@@ -103,6 +103,8 @@ namespace spline {
 
         typedef std::function<TensorBasis(const TensorBasis&, const TensorBasis&)> BasisComposition;
         typedef std::function<AnyTensor(const AnyTensor&, const AnyTensor&)> TensorComposition;
+        Function generic_preproces_operation(const Function& f,
+                const BasisComposition & bc, const TensorComposition & tc) const;
         Function generic_operation(const Function& f,
                 const BasisComposition & bc, const TensorComposition & tc) const;
 };

@@ -136,45 +136,42 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Function(sumBasis, C);
     }
 
-    Function FunctionNode::operator+(const FunctionNode& f) const {
-        return generic_operation(f.shared_from_this<Function>(),
-                [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
-                [](const AnyTensor& lhs, const AnyTensor& rhs) {
+    Function FunctionNode::generic_preproces_operation(const Function& f,
+            const BasisComposition & bc, const TensorComposition & tc) const  {
+        return generic_operation(f, bc,
+                [&](const AnyTensor& lhs, const AnyTensor& rhs) {
                 int n = lhs.n_dims();
                 std::vector<int> rep(n, 1);
                 if (lhs.dims()[n-2]==1 && lhs.dims()[n-1]==1) {
                     rep[n-2] = rhs.dims()[n-2];
                     rep[n-1] = rhs.dims()[n-1];
-                    return AnyTensor::repeat(lhs, rep) + rhs;
+                    return tc(AnyTensor::repeat(lhs, rep), rhs);
                 }
                 if (rhs.dims()[n-2]==1 && rhs.dims()[n-1]==1) {
                     rep[n-2] = lhs.dims()[n-2];
                     rep[n-1] = lhs.dims()[n-1];
-                    return lhs + AnyTensor::repeat(rhs, rep);
+                    return tc(lhs, AnyTensor::repeat(rhs, rep));
                 }
-                return lhs + rhs;
+                return tc(lhs, rhs);
             });
     }
 
-    Function FunctionNode::operator*(const FunctionNode& f) const {
-        return generic_operation(f.shared_from_this<Function>(),
-                [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
-                [](const AnyTensor& lhs, const AnyTensor& rhs) {
+    Function FunctionNode::operator+(const FunctionNode& f) const {
+        return generic_preproces_operation(f.shared_from_this<Function>(),
+                [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
+                [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
+    }
 
-                int n = lhs.n_dims();
-                std::vector<int> rep(n, 1);
-                if (lhs.dims()[n-2]==1 && lhs.dims()[n-1]==1) {
-                    rep[n-2] = rhs.dims()[n-2];
-                    rep[n-1] = rhs.dims()[n-1];
-                    return AnyTensor::repeat(lhs, rep) * rhs;
-                }
-                if (rhs.dims()[n-2]==1 && rhs.dims()[n-1]==1) {
-                    rep[n-2] = lhs.dims()[n-2];
-                    rep[n-1] = lhs.dims()[n-1];
-                    return lhs * AnyTensor::repeat(rhs, rep);
-                }
-                return lhs * rhs;
-            });
+    Function FunctionNode::operator*(const FunctionNode& f) const {
+        if(coeff().is_true_scalar()){
+            return Function(tensor_basis() * f.tensor_basis(), coeff_tensor().squeeze() * f.coeff_tensor());
+        }
+        if(f.coeff().is_true_scalar()){
+            return Function(tensor_basis() * f.tensor_basis(), coeff_tensor() * f.coeff_tensor().squeeze());
+        }
+        return generic_preproces_operation(f.shared_from_this<Function>(),
+                [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
+                [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
     Function FunctionNode::mtimes(const FunctionNode& f) const {
