@@ -149,9 +149,6 @@ namespace spline {
     std::vector<AnyScalar> BSplineBasis::greville() const { return (*this)->greville(); }
     std::vector<AnyScalar> BSplineBasisNode::greville() const {
         int deg = degree();
-        if (deg == 0) {
-            deg = 1;
-        }
         std::vector<AnyScalar> grevillePoints(dimension());
         for (int i = 0; i < dimension(); ++i) {
           grevillePoints[i] = AnyScalar(0.0);
@@ -207,6 +204,17 @@ namespace spline {
     }
 
     AnyTensor BSplineBasisNode::evaluation_grid() const {
+        if (degree() == 0) {
+            std::vector<AnyScalar> grevillePoints(dimension());
+            for (int i = 0; i < dimension(); ++i) {
+                grevillePoints[i] = AnyScalar(0.0);
+                for (int j = 0; j < 2; j++) {
+                    grevillePoints[i] += knots_[i+j];
+                }
+                grevillePoints[i] = grevillePoints[i] / 2;
+            }
+            return AnyVector(grevillePoints).shape(std::vector< int > {dimension(), 1}) ;
+        }
         return AnyVector(greville()).uniquify().perturbation().shape(std::vector< int > {dimension(), 1}) ;
     }
 
