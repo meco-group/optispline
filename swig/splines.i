@@ -1147,12 +1147,36 @@ namespace spline {
    function self = subsasgn(self,varargin)
         error('Not supported: subsasgn');
     end
-  function r = size(self, varargin)
-    r = shape(self);
-    if length(varargin)==1
-      r = r(varargin{1});
+    function varargout = size(self, varargin)
+      siz = shape(self);
+      if nargin > 1
+        if length(siz) < varargin{1}
+          siz = 1;
+        else
+          siz = siz(varargin{1});
+        end
+      end
+      varargout = cell(nargout);
+      switch nargout
+        case 0, disp(siz);
+        case 1, varargout{1} = siz;
+        case 2, varargout{1} = siz(1); varargout{2} = siz(2);
+      end
     end
-  end
+    function self = mrdivide(self,other)
+      if ~isnumeric(other)
+        [b,other] = isconst(other);
+        assert(b,'Cannot divide by a spline');
+      end
+      self = mtimes(self,inv(other));
+    end
+    function self = mldivide(self,other)
+      if ~isnumeric(self)
+        [b,self] = isconst(self);
+        assert(b,'Cannot divide by a spline');
+      end
+      self = mtimes(inv(self),other);
+    end
   %}
 }
 }
