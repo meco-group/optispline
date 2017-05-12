@@ -42,7 +42,7 @@ coverage:
     - set -e
     - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - pushd build
-    - cmake -DWITH_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
+    - cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
     - ctest -V -R python_test
     - gcovr -e  ".*wrap.cxx" -r ..
@@ -62,7 +62,7 @@ debian-matlab:
 
     - pushd build
 
-    - cmake -DWITH_PYTHON=OFF ..
+    - cmake -DWITH_COVERAGE=ON -DWITH_PYTHON=OFF ..
     - make VERBOSE=1
     - cp src/*.so swig
 
