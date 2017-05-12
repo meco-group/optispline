@@ -65,7 +65,7 @@ debian-matlab:
 
     - pushd build
 
-    - cmake -DWITH_PYTHON=OFF ..
+    - cmake -DWITH_STACKTRACE=ON -DWITH_PYTHON=OFF ..
     - make VERBOSE=1
     - cp src/*.so swig
 
