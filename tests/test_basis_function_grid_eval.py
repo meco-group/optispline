@@ -237,6 +237,18 @@ class Test_grid_eval(BasisTestCase):
         m2 = m*m
         self.assertEqualTensor(m2(0.6), m(0.6)**2)
 
+    def test_grid_eval(self):
+        b1 = BSplineBasis([0,1],2,3)
+        b2 = BSplineBasis([0,1.1],2,3)
+        b = TensorBasis([b1, b2],['x','y'])
+
+        c = np.random.rand(*b.dimension() + [1,2])
+        f = Function(b, c)
+        r1 = [0.1 *i for i in range(5)]
+        r2 = [0.1 *i for i in range(6)]
+        g =  f.grid_eval([r1,r2],['x','y'])
+        self.assertEqual(tuple([len(r1), len(r2), 1,2]), g.shape)
+
 if __name__ == '__main__':
     unittest.main()
 
