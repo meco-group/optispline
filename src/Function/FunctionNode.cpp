@@ -77,8 +77,6 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         std::vector< int > c = mrange(n_dims_grid);
         c.insert(c.end(), b.end() - 2, b.end());
         tensor = tensor.einstein( coeff_tensor(), a, b, c);
-
-        if (squeeze_return)  return tensor.squeeze();
         return tensor;
     }
 
