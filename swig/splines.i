@@ -1193,7 +1193,7 @@ namespace spline {
       else:
         arguments = False
         try:
-            if isinstance(args[1][0],str):
+            if isinstance(args[1][0],str) or isinstance(args[1][0],Parameter):
                 arguments = True
         except:
             pass
