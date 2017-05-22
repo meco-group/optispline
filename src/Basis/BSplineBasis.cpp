@@ -5,17 +5,8 @@
 
 namespace casadi {
 
-
-      casadi::Function  BSplineEvaluator::create(const std::string &name, int n_knots, int degree,
-          const Dict& opts) {
-        casadi::Function ret;
-        ret.assignNode(new BSplineEvaluator(name, n_knots, degree));
-        ret->construct(opts);
-        return ret;
-      }
-
-      size_t BSplineEvaluator::get_n_in() { return 2; }
-      size_t BSplineEvaluator::get_n_out() { return 1; }
+      int BSplineEvaluator::get_n_in() { return 2; }
+      int BSplineEvaluator::get_n_out() { return 1; }
 
       Sparsity BSplineEvaluator::get_sparsity_in(int i) {
         if (i == 0) {
@@ -34,21 +25,15 @@ namespace casadi {
       }
 
 
-      BSplineEvaluator::BSplineEvaluator(const std::string &name, int n_knots, int degree) :
-        casadi::FunctionInternal(name), n_knots_(n_knots), degree_(degree) {}
+      BSplineEvaluator::BSplineEvaluator(int n_knots, int degree) :
+        n_knots_(n_knots), degree_(degree) { }
 
-      void BSplineEvaluator::print(std::ostream &stream) const {
-        stream << "BSpline(" << n_knots_ << "," << degree_ << ")";
-      }
-
-      void BSplineEvaluator::init(const Dict& opts) {
-        casadi::FunctionInternal::init(opts);
+      void BSplineEvaluator::init() {
+        casadi::Callback::init();
         alloc_w((degree_+1)*(n_knots_-1), true);
       }
 
-      Function BSplineEvaluator::getFullJacobian(const std::string& name,
-                  const std::vector<std::string>& i_names,
-                  const std::vector<std::string>& o_names, const Dict& opts) {
+      Function BSplineEvaluator::get_jacobian(const std::string& name, const Dict& opts) {
         int n = n_knots_ - degree_ - 1;
         MX knots = MX::sym("knots", n_knots_);
         MX x = MX::sym("x");
@@ -74,8 +59,8 @@ namespace casadi {
         eval_generic<SXElem>(0, arg, res, iw, w);
       }
 
-      void BSplineEvaluator::eval(void* mem, const double** arg, double** res,
-          int* iw, double* w) const {
+      void BSplineEvaluator::eval(const double** arg, double** res,
+          int* iw, double* w, int mem) {
         eval_generic<double>(mem, arg, res, iw, w);
       }
 }

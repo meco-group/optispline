@@ -1,6 +1,6 @@
 #include "any_tensor.hpp"
 
-#include <casadi/core/function/function_internal.hpp>
+//#include <casadi/core/function/function_internal.hpp>
 
 std::vector<int> invert_order(const std::vector<int>& order) {
   std::vector<int> ret(order.size());
@@ -462,43 +462,36 @@ std::vector<AnyScalar> AnyVector::to_scalar_vector() const {
 }
 
 namespace casadi {
-  class Sorter : public FunctionInternal {
+  class Sorter : public casadi::Callback {
   public:
 
-    static casadi::Function create(const std::string &name, int size, bool ascending,
-        const Dict& opts=Dict()) {
-      casadi::Function ret;
-      ret.assignNode(new Sorter(name, size, ascending));
-      ret->construct(opts);
-      return ret;
+    // Creator function, creates an owning reference
+    static Function create(const std::string& name, int size, int ascending,
+                            const Dict& opts=Dict()) {
+       return Callback::create(name, new Sorter(size, ascending), opts);
     }
-
-    virtual std::string type_name() const { return "Sorter"; }
-
-    Sorter(const std::string &name, int size, int ascending) : casadi::FunctionInternal(name),
-      size_(size), ascending_(ascending) {};
+    
+    Sorter(int size, int ascending) : size_(size), ascending_(ascending) { };
 
     /** \brief  Destructor */
-    virtual ~Sorter() {};
+    ~Sorter() override {};
 
     ///@{
     /** \brief Number of function inputs and outputs */
-    virtual size_t get_n_in() override { return 1; };
-    virtual size_t get_n_out() override { return 1; };
+    int get_n_in() override { return 1; };
+    int get_n_out() override { return 1; };
     ///@}
 
     /// @{
     /** \brief Sparsities of function inputs and outputs */
-    virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
-    virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
+    Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
+    Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
     /// @}
 
     ///@{
     /** \brief Return Jacobian of all input elements with respect to all output elements */
-    virtual bool hasFullJacobian() const { return true; }
-    virtual casadi::Function getFullJacobian(const std::string& name,
-                                     const std::vector<std::string>& i_names,
-                                     const std::vector<std::string>& o_names,
+    bool has_jacobian() const { return true; }
+    casadi::Function get_jacobian(const std::string& name,
                                      const Dict& opts) {
       std::vector<MX> arg = mx_in();
       return casadi::Function(name, arg, {DM(size_, size_) }, opts);
@@ -506,7 +499,7 @@ namespace casadi {
     ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
-    virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
+    void eval(const double** arg, double** res, int* iw, double* w, int mem) override {
       if (!res[0]) return;
       std::copy(arg[0], arg[0]+size_, res[0]);
 
@@ -531,51 +524,40 @@ namespace casadi {
       }
     }
 
-    /** \brief  Print description */
-    virtual void print(std::ostream &stream) const override {
-      stream << "Sorter(" << size_ << ")";
-    }
-
     int size_;
     bool ascending_;
   };
 
-class Uniquifier : public FunctionInternal {
+class Uniquifier : public casadi::Callback {
   public:
 
-    static casadi::Function create(const std::string &name, int size, const Dict& opts=Dict()) {
-      casadi::Function ret;
-      ret.assignNode(new Uniquifier(name, size));
-      ret->construct(opts);
-      return ret;
+    // Creator function, creates an owning reference
+    static Function create(const std::string& name, int size,
+                            const Dict& opts=Dict()) {
+       return Callback::create(name, new Uniquifier(size), opts);
     }
-
-    Uniquifier(const std::string &name, int size) : casadi::FunctionInternal(name),
-      size_(size) {};
-
-    virtual std::string type_name() const { return "Uniquifier";}
+   
+    Uniquifier(int size) : size_(size) {};
 
     /** \brief  Destructor */
-    virtual ~Uniquifier() {};
+    ~Uniquifier() override {};
 
     ///@{
     /** \brief Number of function inputs and outputs */
-    virtual size_t get_n_in() override { return 1; };
-    virtual size_t get_n_out() override { return 1; };
+    int get_n_in() override { return 1; };
+    int get_n_out() override { return 1; };
     ///@}
 
     /// @{
     /** \brief Sparsities of function inputs and outputs */
-    virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
-    virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
+    Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
+    Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
     /// @}
 
     ///@{
     /** \brief Return Jacobian of all input elements with respect to all output elements */
-    virtual bool hasFullJacobian() const { return true; }
-    virtual casadi::Function getFullJacobian(const std::string& name,
-                                     const std::vector<std::string>& i_names,
-                                     const std::vector<std::string>& o_names,
+    bool has_jacobian() const { return true; }
+    casadi::Function get_jacobian(const std::string& name,
                                      const Dict& opts) {
       std::vector<MX> arg = mx_in();
       return casadi::Function(name, arg, {DM(size_, size_) }, opts);
@@ -583,7 +565,7 @@ class Uniquifier : public FunctionInternal {
     ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
-    virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
+    void eval(const double** arg, double** res, int* iw, double* w, int mem) override {
       if (!res[0]) return;
       std::copy(arg[0], arg[0]+size_, res[0]);
 
@@ -594,11 +576,6 @@ class Uniquifier : public FunctionInternal {
         }
       }
 
-    }
-
-    /** \brief  Print description */
-    virtual void print(std::ostream &stream) const override {
-      stream << "Uniqifier(" << size_ << ")";
     }
 
     int size_;

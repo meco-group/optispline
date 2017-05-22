@@ -1,6 +1,6 @@
 find_path(CASADI_INCLUDE_DIR
-  casadi/core/sx/sx_elem.hpp
-  HINTS $ENV{CASADI_PREFIX}/include
+  casadi/core/sx_elem.hpp
+  HINTS $ENV{CASADI_PREFIX}/include $ENV{CASADI_PREFIX}/casadi/include
 )
 
 if(CASADI_INCLUDE_DIR)

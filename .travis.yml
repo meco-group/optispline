@@ -1,6 +1,6 @@
 env:
   global:
-    - CASADIVERSION=3.0.0
+    - CASADIVERSION=3.2.1
     
 # works from matplotlib 1.5 onwards
 #    - MPLBACKEND=Agg # Matplotlib backend; must be headless to run on travis

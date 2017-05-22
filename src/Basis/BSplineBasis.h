@@ -4,7 +4,7 @@
 #include <any_tensor.hpp>
 #include <vector>
 
-#include <casadi/core/function/function_internal.hpp>
+#include <casadi/core/callback.hpp>
 
 #include "Basis.h"
 #include "UnivariateBasis.h"
@@ -13,37 +13,42 @@
 #ifndef SWIG
 namespace casadi {
 
-  class BSplineEvaluator : public casadi::FunctionInternal {
+  class BSplineEvaluator : public casadi::Callback {
   public:
-    static casadi::Function create(const std::string &name, int n_knots, int degree, const Dict& opts=Dict());
+  
+    // Creator function, creates an owning reference
+    static casadi::Function create(const std::string& name, int n_knots, int degree,
+                            const Dict& opts=Dict()) {
+       return Callback::create(name, new BSplineEvaluator(n_knots, degree), opts);
+    }
 
-    BSplineEvaluator(const std::string &name, int n_knots, int degree);
+    BSplineEvaluator(int n_knots, int degree);
 
     /** \brief  Destructor */
-    virtual ~BSplineEvaluator() {};
+    ~BSplineEvaluator() override {};
 
     ///@{
     /** \brief Number of function inputs and outputs */
-    virtual size_t get_n_in() override;
-    virtual size_t get_n_out() override;
+    int get_n_in() override;
+    int get_n_out() override;
     ///@}
 
     /// @{
     /** \brief Sparsities of function inputs and outputs */
-    virtual Sparsity get_sparsity_in(int i) override;
-    virtual Sparsity get_sparsity_out(int i) override;
+    Sparsity get_sparsity_in(int i) override;
+    Sparsity get_sparsity_out(int i) override;
     /// @}
 
     /** \brief  Initialize */
-    virtual void init(const Dict& opts) override;
+    void init() override;
 
     /** \brief  Evaluate numerically, work vectors given */
-    virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override;
+    void eval(const double** arg, double** res, int* iw, double* w, int mem) override;
 
-    virtual void eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, int mem) const override;
+    void eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, int mem) const override;
 
     template<class T>
-    void eval_generic(void* mem, const T** arg, T** res, int* iw, T* w) const {
+    void eval_generic(int mem, const T** arg, T** res, int* iw, T* w) const {
       T x = arg[1][0];
       const T* knots= arg[0];
 
@@ -79,15 +84,8 @@ namespace casadi {
 
       std::copy(temp+degree_*n1, temp+degree_*n1+length, res[0]);
     }
-    virtual bool hasFullJacobian() const override { return true;}
-    virtual casadi::Function getFullJacobian(const std::string& name,
-      const std::vector<std::string>& i_names,
-      const std::vector<std::string>& o_names, const Dict& opts) override;
-
-    /** \brief  Print description */
-    virtual void print(std::ostream &stream) const override;
-
-    virtual std::string type_name() const override { return "BSplineEvaluator"; }
+    bool has_jacobian() const override { return true;}
+    casadi::Function get_jacobian(const std::string& name, const Dict& opts) override;
 
     int n_knots_;
     int degree_;
