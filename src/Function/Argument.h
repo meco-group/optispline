@@ -39,6 +39,8 @@ namespace spline {
         bool operator ==(const StringArgumentNode & arg) const;
         bool operator ==(const IntArgumentNode & arg) const;
         bool operator ==(const NullArgumentNode & arg) const;
+
+        std::string name() const {return name_;}
     private:
         std::string name_;
     };
@@ -53,6 +55,8 @@ namespace spline {
         bool operator ==(const StringArgumentNode & arg) const;
         bool operator ==(const IntArgumentNode & arg) const;
         bool operator ==(const NullArgumentNode & arg) const;
+
+        int index() const {return index_;}
     private:
         int index_;
     };
