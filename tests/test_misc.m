@@ -40,7 +40,7 @@ assert(norm(size(s1,2)-[2])==0)
 assert(norm(numel(s1)-[8])==0)
 assert(norm(size(s1(1:end,1:end),1)-[4])==0)
 assert(norm(size(s1(1:end,1:end),2)-[2])==0)
-assert(norm(size(s1(2:end,2:end),1)-[1])==0)
+assert(norm(size(s1(2:end,2:end),3)-[1])==0)
 assert(norm(size(s1(2:end,2:end),2)-[1])==0)
 
 a = DTensor(rand(4,4,2));
