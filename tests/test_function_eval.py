@@ -55,13 +55,11 @@ class Test_Function_Operations(BasisTestCase):
       self.assertEqualTensor(f([b,a]), x(b)*y(a))
 
 
-      print f([a,b],["x","y"])
-      print  x(a)*y(b)
-      # self.assertEqualTensor(f([a,b],["x","y"]), x(a)*y(b))
-      # self.assertEqualTensor(f([a,b],["y","x"]), x(b)*y(a))
+      self.assertEqualTensor(f([a,b],["x","y"]), x(a)*y(b))
+      self.assertEqualTensor(f([a,b],["y","x"]), x(b)*y(a))
 
-      # self.assertEqualTensor(f([b,a],["x","y"]), x(b)*y(a))
-      # self.assertEqualTensor(f([b,a],["y","x"]), x(a)*y(b))
+      self.assertEqualTensor(f([b,a],["x","y"]), x(b)*y(a))
+      self.assertEqualTensor(f([b,a],["y","x"]), x(a)*y(b))
 
       with self.assertRaises(Exception):
         f([b,a],["y","z"])
@@ -69,8 +67,8 @@ class Test_Function_Operations(BasisTestCase):
       b = [0.13, 0.17, 0.19]
 
 
-      # self.assertEqualTensor(f(a,b), x(a)*y(b))
-      # self.assertEqualTensor(f(b,a), x(b)*y(a))
+      self.assertEqualTensor(f.list_eval(a,b), x.list_eval(a)*y.list_eval(b))
+      self.assertEqualTensor(f.list_eval(b,a), x.list_eval(b)*y.list_eval(a))
 
       ab = np.array([a,b]).T
       ba = np.array([b,a]).T
@@ -83,6 +81,9 @@ class Test_Function_Operations(BasisTestCase):
 
       self.assertEqualTensor(f.list_eval(ba,["x","y"]), x.list_eval(b)*y.list_eval(a))
       self.assertEqualTensor(f.list_eval(ba,["y","x"]), x.list_eval(a)*y.list_eval(b))
+
+      with self.assertRaises(Exception):
+        f.list_eval([b,a],["y","z"])
 
     def test_partial_eval(self):
         x = Polynomial([0,1],'x')
@@ -101,6 +102,10 @@ class Test_Function_Operations(BasisTestCase):
         self.assertEqualT(f_part2, f_party_)
         self.assertEqualT(f_party_, func1([x_, y_], ['x','y']))
 
+        f_part_z = func1.partial_eval(x_, 'z')
+        self.assertEqualT( func1([x_, y_], ['x','y']), f_part_z([x_, y_], ['x','y']))
+
+
     def test_partial_eval2(self):
 
         knots1 = [0,0,0,0,0.2,0.4,0.6,0.8,1,1,1,1]
@@ -113,7 +118,6 @@ class Test_Function_Operations(BasisTestCase):
 
         mbasis1 = TensorBasis([basis1,basis2], ['x','y']);
         coeff1 = DTensor(numpy.random.randn(*mbasis1.dimension()), mbasis1.dimension()+[1,1])
-        print mbasis1
         func1 = Function(mbasis1,coeff1)
 
         x_ = 0.4
