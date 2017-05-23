@@ -146,6 +146,7 @@ namespace spline {
 
         std::vector<int> vectorize(const Argument& arg) const;
 
+        void assert_unique_arguments(std::vector< Argument >& args ) const;
     };
 
 } // namespace spline

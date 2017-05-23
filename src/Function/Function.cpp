@@ -329,3 +329,12 @@ namespace spline{
       return f(std::vector<casadi::DM>{0})[0];
     }
     } // namespace spline
+    void Function::assert_unique_arguments(std::vector< Argument >& args ) const {
+        for (int i = 0; i < args.size(); ++i)
+        {
+           for (int j = i + 1; j < args.size(); ++j)
+           {
+              spline_assert_message(!(args[i] == args[j]), "Argument " + args[i].to_string() + " occurse multiple times");
+           }
+        }
+    }
