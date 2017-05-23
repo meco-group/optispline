@@ -1144,12 +1144,9 @@ namespace spline {
         [varargout{1:nargout}] = builtin('subsref',self,s);
       end
    end
-    function n = numel(self)
-        n = size(self,1)*size(self,2);
-    end
     function ind = end(self,i,n)
       if n==1
-        ind = numel(self);
+        ind = size(self,1)*size(self,2);
       else
         ind = size(self, i);
       end
