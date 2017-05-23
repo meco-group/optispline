@@ -1144,7 +1144,18 @@ namespace spline {
         [varargout{1:nargout}] = builtin('subsref',self,s);
       end
    end
-   function self = subsasgn(self,varargin)
+    function n = numel(self)
+        n = size(self,1)*size(self,2);
+    end
+    function ind = end(self,i,n)
+      if n==1
+        ind = numel(self);
+      else
+        ind = size(self, i);
+      end
+    end
+    
+    function self = subsasgn(self,varargin)
         error('Not supported: subsasgn');
     end
     function varargout = size(self, varargin)
