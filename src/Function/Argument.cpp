@@ -113,4 +113,27 @@ namespace spline {
         }
         return ard_ind;
     }
+
+    bool Argument::operator==(const Argument& arg) const{ return (*this)->operator==(*(arg.get()));}
+
+    bool ArgumentNode::operator ==(const ArgumentNode & arg) const{spline_error("Mismatch arguments"); return false;}
+    bool ArgumentNode::operator ==(const StringArgumentNode & arg) const{return arg == *this;}
+    bool ArgumentNode::operator ==(const IntArgumentNode & arg) const{return arg == *this;}
+    bool ArgumentNode::operator ==(const NullArgumentNode & arg) const{return arg == *this;}
+
+    bool StringArgumentNode::operator ==(const ArgumentNode & arg) const{spline_error("Mismatch arguments"); return false;}
+    bool StringArgumentNode::operator ==(const StringArgumentNode & arg) const{ return name() == arg.name();}
+    bool StringArgumentNode::operator ==(const IntArgumentNode & arg) const{return false;}
+    bool StringArgumentNode::operator ==(const NullArgumentNode & arg) const{return false;}
+
+    bool IntArgumentNode::operator ==(const ArgumentNode & arg) const{spline_error("Mismatch arguments"); return false;}
+    bool IntArgumentNode::operator ==(const StringArgumentNode & arg) const{return false;}
+    bool IntArgumentNode::operator ==(const IntArgumentNode & arg) const{return index() == arg.index() ;}
+    bool IntArgumentNode::operator ==(const NullArgumentNode & arg) const{return false;}
+
+    bool NullArgumentNode::operator ==(const ArgumentNode & arg) const{spline_error("Mismatch arguments"); return false;}
+    bool NullArgumentNode::operator ==(const StringArgumentNode & arg) const{return false;}
+    bool NullArgumentNode::operator ==(const IntArgumentNode & arg) const{return false;}
+    bool NullArgumentNode::operator ==(const NullArgumentNode & arg) const{return true;}
+
 } // namespace spline
