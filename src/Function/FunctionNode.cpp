@@ -51,6 +51,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
     }
 
     Function FunctionNode::partial_eval(const AnyTensor& x, int index) const{
+        if(index < 0) return shared_from_this<Function>();
         int n_basis = tensor_basis().n_basis();
 
         std::vector< Basis > partial_basis = tensor_basis().bases();
