@@ -89,6 +89,7 @@ public:
 
   DMDict arg() const { return arg_; }
   void res(const DMDict& res) { res_ = res; solved_ = true; }
+  Function solver() const { return solver_; }
 protected:
   OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g);
 
