@@ -328,7 +328,7 @@ namespace spline{
       casadi::Function f = casadi::Function("f", {c}, {J});
       return f(std::vector<casadi::DM>{0})[0];
     }
-    } // namespace spline
+
     void Function::assert_unique_arguments(std::vector< Argument >& args ) const {
         for (int i = 0; i < args.size(); ++i)
         {
@@ -338,3 +338,5 @@ namespace spline{
            }
         }
     }
+
+} // namespace spline
