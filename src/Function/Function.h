@@ -130,8 +130,6 @@ namespace spline {
         AnyTensor fast_eval(const AnyTensor& xy) const;
         casadi::DM fast_jac(const AnyTensor& xy) const;
 
-
-
     private:
         template<class T>
         std::vector<T> vectorize(const Argument& arg, const T& e) const {
