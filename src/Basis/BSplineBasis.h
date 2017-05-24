@@ -137,7 +137,7 @@ namespace spline{
 
         AnyTensor basis_evaluation(const std::vector<AnyScalar> & x ) const;
 
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const override;
+    virtual AnyTensor evaluation_grid() const override;
 
         virtual Basis derivative(int order, AnyTensor& T) const override;
         virtual Basis antiderivative(int order, AnyTensor& T) const override;
@@ -170,6 +170,12 @@ namespace spline{
           BSplineBasis(knots.to_scalar_vector(), degree) {};
         BSplineBasis(const AnyVector& bounds, int degree, int numberOfIntervals) :
           BSplineBasis(bounds.to_scalar_vector(), degree, numberOfIntervals) {};
+
+        /** \brief Construct basis using knots with single multiplicity
+        *
+        * The repetition at the start and end of the knot list will be done by this method.
+        */
+        static BSplineBasis from_single(const AnyVector& knots, int degree);
 
         std::vector<AnyScalar> knots() const;
         std::vector<AnyScalar> greville() const;

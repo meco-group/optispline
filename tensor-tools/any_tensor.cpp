@@ -318,26 +318,26 @@ AnyTensor AnyTensor::pack(const std::vector<AnyTensor>& v, int axis) {
 }
 
 AnyTensor AnyTensor::repeat(const AnyTensor&e, const std::vector<int>& factors) {
-  if (e.is_DT()) return DT::repeat(e.as_DT(), factors);
-  if (e.is_ST()) return ST::repeat(e.as_ST(), factors);
-  if (e.is_MT()) return MT::repeat(e.as_MT(), factors);
-  return {DT()};
+    if (e.is_DT()) return DT::repeat(e.as_DT(), factors);
+    if (e.is_ST()) return ST::repeat(e.as_ST(), factors);
+    if (e.is_MT()) return MT::repeat(e.as_MT(), factors);
+    return {DT()};
 }
 
 std::vector<AnyTensor> AnyTensor::unpack(const AnyTensor& v, int axis) {
-  spline_assert(axis<v.n_dims());
-  int n = v.dims()[axis];
-  int N = v.n_dims();
-  std::vector<AnyTensor> ret;
-  std::vector<int> a_e = mrange(N);
-  std::vector<int> c_e = a_e;
-  c_e.erase(c_e.begin()+axis);
+    spline_assert(axis<v.n_dims());
+    int n = v.dims()[axis];
+    int N = v.n_dims();
+    std::vector<AnyTensor> ret;
+    std::vector<int> a_e = mrange(N);
+    std::vector<int> c_e = a_e;
+    c_e.erase(c_e.begin()+axis);
 
-  for (int i=0;i<n;++i) {
-    casadi::DM ind = casadi::DM::zeros(n, 1);
-    ind.nz(i) = 1;
-    ret.push_back(v.einstein(DT(ind, {n}), a_e, {-axis-1}, c_e));
-  }
+    for (int i=0;i<n;++i) {
+        casadi::DM ind = casadi::DM::zeros(n, 1);
+        ind.nz(i) = 1;
+        ret.push_back(v.einstein(DT(ind, {n}), a_e, {-axis-1}, c_e));
+    }
 
   return ret;
 }
@@ -421,6 +421,16 @@ AnyVector::AnyVector(const MT & s) : AnyTensor(s.as_vector()) {
   tensor_assert_message(n_dims()<=1, "AnyVector can have only one dimension.")
 }
 
+AnyVector AnyVector::perturbation() const {
+  if(numel() < 2) return *this;
+  std::vector<AnyScalar> r = to_scalar_vector();
+  std::vector<AnyScalar> ret;
+  ret.push_back((3*r[0]+r[1])/4);
+  ret.insert(ret.end(),r.begin()+1,r.begin()+r.size()-1);
+  ret.push_back((3*r[r.size()-1]+r[r.size()-2])/4);
+  return ret;
+}
+
 /**AnyVector& AnyVector::operator=(const AnyTensor& s)  {
   AnyTensor::operator=(s);
   return *this;
@@ -462,7 +472,7 @@ namespace casadi {
       ret->construct(opts);
       return ret;
     }
-    
+
     virtual std::string type_name() const { return "Sorter"; }
 
     Sorter(const std::string &name, int size, int ascending) : casadi::FunctionInternal(name),
@@ -482,6 +492,18 @@ namespace casadi {
     virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
     virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
     /// @}
+
+    ///@{
+    /** \brief Return Jacobian of all input elements with respect to all output elements */
+    virtual bool hasFullJacobian() const { return true; }
+    virtual casadi::Function getFullJacobian(const std::string& name,
+                                     const std::vector<std::string>& i_names,
+                                     const std::vector<std::string>& o_names,
+                                     const Dict& opts) {
+      std::vector<MX> arg = mx_in();
+      return casadi::Function(name, arg, {DM(size_, size_) }, opts);
+    }
+    ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
     virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {
@@ -530,7 +552,7 @@ class Uniquifier : public FunctionInternal {
 
     Uniquifier(const std::string &name, int size) : casadi::FunctionInternal(name),
       size_(size) {};
-      
+
     virtual std::string type_name() const { return "Uniquifier";}
 
     /** \brief  Destructor */
@@ -547,6 +569,18 @@ class Uniquifier : public FunctionInternal {
     virtual Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
     virtual Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
     /// @}
+
+    ///@{
+    /** \brief Return Jacobian of all input elements with respect to all output elements */
+    virtual bool hasFullJacobian() const { return true; }
+    virtual casadi::Function getFullJacobian(const std::string& name,
+                                     const std::vector<std::string>& i_names,
+                                     const std::vector<std::string>& o_names,
+                                     const Dict& opts) {
+      std::vector<MX> arg = mx_in();
+      return casadi::Function(name, arg, {DM(size_, size_) }, opts);
+    }
+    ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
     virtual void eval(void* mem, const double** arg, double** res, int* iw, double* w) const override {

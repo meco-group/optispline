@@ -11,7 +11,7 @@
 #include "../Basis/TensorBasis.h"
 #include "../Coefficients/Coefficient.h"
 #include "Argument.h"
-#include "FunNode.h"
+#include "FunctionNode.h"
 
 namespace spline {
 
@@ -23,19 +23,21 @@ namespace spline {
         Function(const AnyScalar& value, const std::vector< int >& shape);
 
 #ifndef SWIG
-        FunNode* get() const ;
-        FunNode* operator->() const ;
+        FunctionNode* get() const ;
+        FunctionNode* operator->() const ;
 #endif // SWIG
 
         virtual std::string type() const;
-        virtual std::string to_string() const;
 
         casadi::MX operator<=(const casadi::MX& x) const;
         casadi::MX operator>=(const casadi::MX& x) const;
+        casadi::MX operator==(const casadi::MX& x) const;
 
         AnyTensor operator()(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
+        AnyTensor list_eval(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
+        AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args = std::vector< Argument > (),  bool squeeze_return = true) const;
 
-        Function partial_eval(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
+        Function partial_eval(const AnyTensor& x, const Argument& args) const;
 
         Function operator+(const Function& f) const;
         Function operator+(const AnyTensor& t) const;
@@ -74,8 +76,6 @@ namespace spline {
 
         bool is_scalar() const;
 
-        void repr() const { casadi::userOut() << to_string() << std::endl;}
-
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
         Function reshape(const std::vector< int >& shape) const;
 
@@ -86,13 +86,9 @@ namespace spline {
 
         int n_inputs() const;  // Number of inputs of the function
 
-        Function insert_knots(const AnyVector & new_knots) const;
-        Function insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const;
-        Function insert_knots(const AnyVector & new_knots, const std::string & arg) const;
+        Function insert_knots(const AnyVector & new_knots, const Argument& arg = Argument()) const;
         Function insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<std::string> & arg) const;
-        Function insert_knots(const std::vector<AnyVector> & new_knots,
-            const NumericIndexVector & arg_ind) const;
+            const std::vector<Argument> & arg) const;
 
         Function midpoint_refinement(int refinement = 1, const Argument& arg = Argument()) const;
         Function midpoint_refinement(const std::vector<int>& refinement,
@@ -126,14 +122,13 @@ namespace spline {
         Function partial_integral(const TensorDomain& domain,
          const NumericIndexVector& arg_ind) const;
 
+        /** \brief Construct a piece-wise linear function from x/y data */
+        static Function linear(const AnyVector & x, const AnyVector & y);
 
+        casadi::Function to_casadi() const;
 
-#ifndef SWIG
-            inline friend
-                std::ostream& operator<<(std::ostream &stream, const Function& obj) {
-                    return stream << obj.to_string();
-                }
-#endif // SWIG
+        AnyTensor fast_eval(const AnyTensor& xy) const;
+        casadi::DM fast_jac(const AnyTensor& xy) const;
 
     private:
         template<class T>
@@ -149,6 +144,7 @@ namespace spline {
 
         std::vector<int> vectorize(const Argument& arg) const;
 
+        void assert_unique_arguments(std::vector< Argument >& args ) const;
     };
 
 } // namespace spline

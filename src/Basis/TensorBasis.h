@@ -17,7 +17,6 @@
 namespace spline {
 
 class TensorBasis;
-class TensorBasisConstant;
 class BSplineBasis;
 class MonomialBasis;
 class Function;
@@ -30,7 +29,7 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasisNode(const std::vector< Basis >& bases_, const std::vector< std::string >& args);
 
         virtual std::string type() const;
-        virtual std::string to_string() const;
+        virtual std::string to_string() const override;
 
         virtual int n_basis() const;
         virtual std::vector<int> dimension() const;
@@ -59,11 +58,12 @@ class TensorBasisNode : public SharedObjectNode {
             const std::vector<Basis>& bases) const;
 
         virtual TensorBasis operator+(const TensorBasis& rhs) const;
-        virtual TensorBasis operator+(const TensorBasisConstant& rhs) const;
         virtual TensorBasis operator*(const TensorBasis& rhs) const;
-        virtual TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< int >& arg_ind) const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< int >& arg_ind, bool reorder_output) const;
+
+        virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& arg_ind, bool reorder_output) const;
+        virtual std::vector< AnyTensor >  evaluation_grid() const;
 
         virtual bool operator==(const TensorBasis& rhs) const;
 
@@ -76,7 +76,7 @@ class TensorBasisNode : public SharedObjectNode {
             const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
 
         TensorBasis derivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const;
+            const std::vector<int>& arg_ind, std::vector<AnyTensor>& T) const;
         TensorBasis antiderivative(const std::vector<int>& orders,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const;
         std::vector<AnyTensor> integral(const TensorDomain& domain) const;
@@ -124,8 +124,14 @@ public:
         TensorBasis(const std::vector< Basis >& bases_, const std::vector< std::string >& args);
         TensorBasis(const std::vector< TensorBasis >& allBasis);
 
+#ifndef SWIG
+        inline friend
+    std::ostream& operator<<(std::ostream &stream, const TensorBasis& base) {
+        return stream << base.to_string();
+    }
+#endif // SWIG
+
         virtual std::string type() const;
-        virtual std::string to_string() const;
 
         int n_basis() const;  // Number of bases, building up the TensorBasis
         int n_inputs() const; // Total number of inputs, over all bases
@@ -156,11 +162,11 @@ public:
             const std::vector<Basis>& bases) const;
 
         TensorBasis operator+(const TensorBasis& rhs) const;
-        TensorBasis operator+(const TensorBasisConstant& rhs) const;
         TensorBasis operator*(const TensorBasis& rhs) const;
-        TensorBasis operator*(const TensorBasisConstant& rhs) const;
 
-        AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< Argument >& arg_ind = {}) const;
+        AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< Argument >& arg_ind = {}, bool reorder_output = true) const;
+        AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& arg_ind = {}, bool reorder_output = true) const;
+        std::vector< AnyTensor >  evaluation_grid() const;
 
         virtual bool operator==(const TensorBasis& rhs) const;
 
@@ -169,42 +175,26 @@ public:
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
         TensorBasis insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<std::string>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-        TensorBasis insert_knots(const std::vector<AnyVector> & new_knots,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-
+            const std::vector<Argument>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
         TensorBasis midpoint_refinement(const std::vector<int> & refinement,
-            const std::vector<std::string>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-        TensorBasis midpoint_refinement(const std::vector<int> & refinement,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-
+            const std::vector<Argument>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
         TensorBasis degree_elevation(const std::vector<int>& elevation,
-            const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
-        TensorBasis degree_elevation(const std::vector<int>& elevation,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
-
+            const std::vector<Argument>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis kick_boundary(const TensorDomain& boundary,
             const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis kick_boundary(const TensorDomain& boundary,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
-        TensorBasis derivative(const std::vector<std::string>& args,
-        std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
-        TensorBasis derivative(const NumericIndexVector& arg_ind,
-        std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
-        TensorBasis derivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
-        TensorBasis derivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
-        TensorBasis antiderivative(const std::vector<std::string>& args,
-        std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
-        TensorBasis antiderivative(const NumericIndexVector& arg_ind,
-        std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;  // default order = 1
-        TensorBasis antiderivative(const std::vector<int>& orders,
-            const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
-        TensorBasis antiderivative(const std::vector<int>& orders,
-            const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+        TensorBasis derivative(const std::vector<Argument>& arg,
+          std::vector<AnyTensor>& SWIG_OUTPUT(T)) const; // default order = 1
+        TensorBasis derivative(const std::vector<int>& order,
+          const std::vector<Argument>& arg, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
+
+        TensorBasis antiderivative(const std::vector<Argument>& arg,
+          std::vector<AnyTensor>& SWIG_OUTPUT(T)) const; // default order = 1
+        TensorBasis antiderivative(const std::vector<int>& order,
+          const std::vector<Argument>& arg, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
         std::vector<AnyTensor> integral(const TensorDomain& domain) const;
         TensorBasis partial_integral(const TensorDomain& domain,
@@ -217,6 +207,20 @@ public:
         spline::Function basis_functions() const ;
 
         std::vector< int > get_permutation(const TensorBasis& grid) const;
+      private:
+          template<class T>
+          std::vector<T> vectorize(const Argument& arg, const T& e) const {
+              std::vector< T > ret;
+              if(arg.is_all()){
+                  ret = std::vector<T>(n_basis(), e);
+              } else {
+                  ret = { e };
+              }
+              return ret;
+          }
+
+          std::vector<int> vectorize(const Argument& arg) const;
+
 };
 
 }   // namespace spline

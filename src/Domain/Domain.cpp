@@ -9,7 +9,6 @@ namespace spline {
     std::string Domain::type() const { return (*this)->type() ;};
     std::string DomainNode::type() const {return "Domain";};
 
-    std::string Domain::to_string() const { return (*this)->to_string() ;};
     std::string DomainNode::to_string() const {return "Domain";};
 
     Domain Domain::intersection(const Domain & dom) const { return (*this)->intersection(dom);}

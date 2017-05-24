@@ -22,21 +22,15 @@ namespace spline {
     public:
         UnivariateBasisNode(int degree, const Domain& domain);
 
-        virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const = 0;
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const = 0;
-
         int degree() const;
         int n_inputs() const;
         virtual std::string to_string() const override;
         virtual std::string type() const override {return "UnivariateBasis";}
 
-        virtual Basis derivative(int order, AnyTensor& T) const = 0;
-        virtual Basis antiderivative(int order, AnyTensor& T) const = 0;
         virtual AnyTensor integral(const Domain& domain) const override;
         virtual AnyTensor integral(const Interval& domain) const = 0;
         virtual Basis kick_boundary(const Domain& domain, AnyTensor& T) const override;
         virtual Basis kick_boundary(const Interval& domain, AnyTensor& T) const;
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const = 0;
 
     protected:
         int degree_;

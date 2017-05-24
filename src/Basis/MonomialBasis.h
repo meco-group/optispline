@@ -42,7 +42,8 @@ namespace spline{
         template<class T>
         AnyTensor basis_evaluation(const std::vector< T >& x ) const ;
 
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const override;
+
+    virtual AnyTensor evaluation_grid() const override;
 
         virtual Basis derivative(int order, AnyTensor& T) const override;
         virtual Basis antiderivative(int order, AnyTensor& T) const override;

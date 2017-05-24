@@ -1,7 +1,6 @@
 #include "Basis.h"
 #include "operations/operationsBasis.h"
 #include "../Function/Function.h"
-#include "../Basis/utils/EvaluationGrid.h"
 #include "../common.h"
 
 namespace spline {
@@ -14,7 +13,6 @@ namespace spline {
     std::string Basis::type() const { return (*this)->type() ;}
     std::string BasisNode::type() const { return "Basis";}
 
-    std::string Basis::to_string() const { return (*this)->to_string() ;};
     std::string BasisNode::to_string() const {return "A Basis object on " + domain().to_string();};
 
     Domain BasisNode::domain() const {return domain_;}
@@ -25,42 +23,97 @@ namespace spline {
     Basis Basis::operator* (const Basis& other) const { return (*this)->operator*(*other.get());}
 
     bool Basis::operator==(const Basis& rhs) const {
-        if(this->get() == rhs.get()) return true;
+        if (this->get() == rhs.get()) return true;
         return (*this)->operator==(*rhs.get());
     }
 
     bool BasisNode::operator==(const BasisNode& rhs) const {
-        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      return false;
     }
 
     bool BasisNode::operator==(const EmptyBasisNode& rhs) const {
-        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      return false;
     }
 
     bool BasisNode::operator==(const MonomialBasisNode& rhs) const {
-        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      return false;
     }
 
     bool BasisNode::operator==(const BSplineBasisNode& rhs) const {
-        spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      spline_assert_message(false, "operator== not implemented on " << type() << " and " << type());
+      return false;
     }
 
-
-    AnyTensor Basis::operator() (const AnyVector & x) const {
-      std::vector<AnyScalar> a = x.to_scalar_vector();
-      (*this)->assert_vector_lenght_correct(a);
-      return (*this)->operator()(a);
-    }
     AnyTensor BasisNode::operator() (const std::vector< AnyScalar > & x) const {
         assert(false); //Abstract
         return AnyTensor();
     }
 
-    std::vector< std::vector < AnyScalar > > Basis::getEvaluationGrid() const {
-      return (*this)->getEvaluationGrid();
+    AnyTensor Basis::operator() (const AnyTensor& arg) const {
+        AnyTensor x = arg.squeeze();
+        if (x.is_vector()) x = x.as_vector();
+        spline_assert(x.n_dims()<=2);
+
+        if (x.n_dims()==1) {
+          if (x.dims()[0] == n_inputs()) {
+            std::vector<AnyScalar> a = x.unpack_1();
+            return (*this)->operator()(a);
+          } else {
+            x = x.shape({x.numel(), 1});
+          }
+        }
+
+        if(type() != "EmptyBasis"){
+            spline_assert_message(x.dims()[1] == n_inputs(),
+                    "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
+                    std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
+        }
+
+        std::vector< AnyTensor > ret ;
+        std::vector< std::vector< AnyScalar > > unpacked_x = x.unpack_2();
+
+        for (int i = 0; i < unpacked_x.size(); i++) {
+            ret.push_back((*this)->operator()(unpacked_x[i]));
+        }
+        return AnyVector::pack(ret, 0);
     }
-    std::vector< std::vector < AnyScalar > > BasisNode::getEvaluationGrid() const {
-      return std::vector< std::vector < AnyScalar > >();
+
+    AnyTensor Basis::list_eval(const AnyTensor& arg) const {
+
+        AnyTensor x = arg;
+        spline_assert(x.n_dims()<=2);
+        if (x.is_vector()) x = x.shape({x.numel(), 1});
+        if(type() != "EmptyBasis"){
+            spline_assert_message(x.dims()[1] == n_inputs(),
+                    "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
+                    std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
+        }
+
+        std::vector< AnyTensor > ret ;
+        std::vector< std::vector< AnyScalar > > unpacked_x = x.unpack_2();
+
+        for (int i = 0; i < unpacked_x.size(); i++) {
+            ret.push_back((*this)->operator()(unpacked_x[i]));
+        }
+        return AnyVector::pack(ret, 0);
+    }
+
+    void BasisNode::assert_vector_lenght_correct(const AnyVector& x) const {
+        spline_assert_message(x.size() == n_inputs(), "Input vector has wrong dimension.");
+    }
+
+    void BasisNode::assert_vector_lenght_correct(const AnyTensor& x) const {
+        spline_assert_message(x.dims()[1] == n_inputs(), "Input vector has wrong dimension.");
+    }
+
+    AnyTensor Basis::evaluation_grid() const {
+      return (*this)->evaluation_grid();
+    }
+    AnyTensor BasisNode::evaluation_grid() const {
+      return AnyTensor();
     }
 
     Basis BasisNode::insert_knots(const AnyVector & new_knots, AnyTensor & T) const {
@@ -122,14 +175,15 @@ namespace spline {
     Basis BasisNode::transform_to(const Basis& b, AnyTensor& T) const {
         Basis basis = shared_from_this<Basis>();
         Basis union_basis = basis + b;
-        std::vector<std::vector<AnyScalar>> eval_grid = union_basis.getEvaluationGrid();
+        AnyTensor eval_grid = union_basis.evaluation_grid();
 
         std::vector< AnyTensor > pre_step{ AnyTensor::unity()};
         std::vector< AnyTensor > union_basis_eval;
         std::vector< AnyTensor > basis_eval;
-        for(auto const & point : eval_grid){
-            union_basis_eval.push_back(union_basis(point));
-            basis_eval.push_back(basis(point));
+        for(auto const & point : eval_grid.unpack_2()){
+            AnyTensor points = AnyVector(point);
+            union_basis_eval.push_back(union_basis(points));
+            basis_eval.push_back(basis(points));
         }
         AnyTensor A = AnyTensor::pack(union_basis_eval, 0);
         AnyTensor B = AnyTensor::pack(basis_eval, 0);
@@ -149,7 +203,6 @@ namespace spline {
     Function Basis::basis_functions() const {
         return (*this)->basis_functions();
     }
-
 
     int Basis::dimension() const { return (*this)->dimension();}
     int Basis::n_inputs() const { return (*this)->n_inputs();}
@@ -189,13 +242,12 @@ namespace spline {
         return (*this)->integral(domain);
     }
 
+    AnyTensor Basis::const_coeff_tensor(const AnyTensor& t) const {
+        return (*this)->const_coeff_tensor(t);
+    }
     AnyTensor BasisNode::const_coeff_tensor(const AnyTensor& t) const {
         spline_assert(false);
         return AnyTensor();
-    }
-
-    AnyTensor Basis::const_coeff_tensor(const AnyTensor& t) const {
-        return (*this)->const_coeff_tensor(t);
     }
 
 } // namespace spline

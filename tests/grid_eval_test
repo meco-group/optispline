@@ -1,0 +1,16 @@
+clear all
+close all
+clc
+
+meco_binaries('cpp_splines','develop');
+import splines.*
+
+b = BSplineBasis([0,0,1,1],1);
+t = TensorBasis({b,b},{'a','b'});
+c = randn([2,2,1,2]);
+f = Function(t,c);
+
+grid = {linspace(0,1,3),linspace(0,1,4)};
+args = {'a','b'};
+gf = f.grid_eval(grid,args)
+assert(all(size(gf) == [3,4,1,2]),'Singleton dimension is missing')

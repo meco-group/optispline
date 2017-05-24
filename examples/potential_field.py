@@ -23,18 +23,13 @@ b = TensorBasis([m])
 s = opti.Function(b)
 
 # Objective
-obj = 0.
-x_ = 0.
 dx = 0.02
-while (x_ < 1.):
-    obj = obj + (s(x_))*dx
-    x_ = x_ + dx
+xs = np.r_[0:1:dx]
+obj = ca.sum1(s.list_eval(xs))*dx
 
 # Constraints
 con = []
-for x_ in x:
-    con.append(s(x_)>=0)
-
+con.append(s.list_eval(x)>=0)
 con.append(s>=-1)
 
 sol = opti.solver(obj,con,"ipopt")
@@ -43,10 +38,7 @@ sol.solve()
 s = sol.value(s)
 interval = np.linspace(0.,1.,101)
 
-field = []
-
-for i in interval:
-    field.append(s(i))
+field = s.list_eval(interval)
 
 plt.figure()
 plt.plot(x,y,'ko')

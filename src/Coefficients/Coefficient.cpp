@@ -1,16 +1,21 @@
+#include <casadi/casadi.hpp>
 #include "Coefficient.h"
 #include "../common.h"
 
 namespace spline {
-
 
     CoefficientNode* Coefficient::get() const {
         return static_cast<CoefficientNode*>(SharedObject::get());
     };
     CoefficientNode* Coefficient::operator->() const { return get(); }
 
-    Coefficient::Coefficient() {
+    Coefficient::Coefficient() { }
 
+    Coefficient::Coefficient(const AnyTensor& t) {
+      assign_node(new CoefficientNode(t));
+    }
+    Coefficient::Coefficient(const std::vector< double >& v) {
+      assign_node(new CoefficientNode(v));
     }
 
     CoefficientNode::CoefficientNode(const std::vector< double >& v) :
@@ -29,7 +34,6 @@ namespace spline {
     std::string Coefficient::type() const {return (*this)->type();};
     std::string CoefficientNode::type() const {return "Coefficient";};
 
-    std::string Coefficient::to_string() const {return (*this)->to_string();};
     std::string CoefficientNode::to_string() const {
         const std::string coeff_str = (n_coeff()==1) ? "coefficient" : "coefficients";
 
@@ -65,14 +69,6 @@ namespace spline {
     int Coefficient::n_coeff() const { return (*this)->n_coeff(); }
     int CoefficientNode::n_coeff() const {
         return spline::product(dimension());
-    }
-
-
-    Coefficient::Coefficient(const AnyTensor& t) {
-      assign_node(new CoefficientNode(t));
-    }
-    Coefficient::Coefficient(const std::vector< double >& v) {
-      assign_node(new CoefficientNode(v));
     }
 
     Coefficient Coefficient::operator-() const {
@@ -124,8 +120,19 @@ namespace spline {
 
     AnyTensor CoefficientNode::transform(const std::vector<AnyTensor>& T,
           const NumericIndexVector& directions) const {
-        spline_assert(T.size() == directions.size());
+
         AnyTensor ret_data = data();
+        spline_assert(T.size() == directions.size());
+
+        bool linear_expansion = ret_data.is_MT();
+        for (auto& t : T) linear_expansion&= t.is_DT();
+
+        casadi::MX s;
+        if (linear_expansion) {
+          s = casadi::MX::sym("temp", ret_data.numel());
+          ret_data = MT(s, ret_data.dims());
+        }
+
         for (int k=0; k<T.size(); k++) {
             // check dimension of transformation matrix
             spline_assert_message(T[k].n_dims()==2,
@@ -137,23 +144,18 @@ namespace spline {
                 << T[k].dims()[1] << " while transformed direction has dimension "
                 << ret_data.dims()[directions[k]] << ".");
             // construct index vectors
-            int n_dims = ret_data.n_dims();
-            std::vector<int> ind1(n_dims);
-            std::vector<int> ind2(n_dims);
-            int cnt = -3;
-            for (int i=0; i<ret_data.n_dims(); i++) {
-                if (i == directions[k]) {
-                    ind1[i] = -2;
-                    ind2[i] = -1;
-                } else {
-                    ind1[i] = cnt;
-                    ind2[i] = cnt;
-                    cnt--;
-                }
-            }
-            ret_data = ret_data.einstein(T[k], ind1, {-1, -2}, ind2);
+            ret_data = ret_data.transform(T[k], directions[k]);
         }
-        return ret_data;
+        if (!linear_expansion) return ret_data;
+        casadi::Function f = casadi::Function("f", {s}, {ret_data.as_MT().data()});
+        casadi::Function J = f.jacobian();
+        casadi::DM jac = sparsify(J(std::vector<casadi::DM>{0})[0]);
+        return MT(casadi::MX::mtimes(jac, data().as_MT().data()), ret_data.dims());
+    }
+
+    AnyTensor Coefficient::data(const NumericIndex& k) const {
+      AnyTensor flat = data().flatten_first(dimension().size());
+      return flat.index({k, -1, -1});
     }
 
     Coefficient Coefficient::add_trival_dimension(int extra_dims) const {
@@ -227,6 +229,37 @@ namespace spline {
         shape_.insert(shape_.end(), shape.begin(), shape.end());
 
         return Coefficient(data().shape(shape_));
+    }
+
+    Coefficient Coefficient::trace() const {
+        return (*this)->trace();
+    }
+
+    Coefficient CoefficientNode::trace() const {
+        spline_assert_message(shape()[0] == shape()[1],
+                "Trace only defined for square matrices. Dimensions are " << shape() << ".");
+        AnyTensor ones = Tensor<casadi::DM>(casadi::DM::eye(shape()[0]), shape());
+        int d = dimension().size();
+        std::vector< int > a = mrange(d + 2);
+        std::vector< int > b = {a[d], a[d+1]};
+        std::vector< int > c = mrange(d);
+        return data().einstein(ones,a,b,c);
+    }
+
+    Coefficient Coefficient::to_matrix_valued() const {
+        return (*this)->to_matrix_valued();
+    }
+
+    Coefficient CoefficientNode::to_matrix_valued() const {
+        return add_trival_dimension(2 - data().dims().size());
+    }
+
+    bool Coefficient::is_true_scalar() const {
+        return (*this)->is_true_scalar();
+    }
+
+    bool CoefficientNode::is_true_scalar() const {
+        return data().numel() == 1;
     }
 
 }  // namespace spline

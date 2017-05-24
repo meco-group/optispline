@@ -6,43 +6,107 @@ from numpy.polynomial.polynomial import polyval
 
 class Test_Function_Operations(BasisTestCase):
 
-    def test_eval(self):
 
-      x = Polynomial([0,1],'x')
-      r = [i**2*0.01 for i in range(11)]
-      r2 = [[i*0.1,0.1*i] for i in range(11)]
-      print r
-      # print x(0.5)
-      # print x(r)
-      print "print x.call([0.5])"
-      print x.call([0.5])
-      print x(0.5)
-      print x(0.5, ['x'])
-      print "print x.call(r)"
-      print x.call(r)
-      print x(r)
-      print x(r, ['x'])
-      # self.assertEqualT(r, x(r), 1e-6)
+    def test_ones_base(self):
+      a = 0.1
+      x = Polynomial([0,1, 2],'x')
 
-      y = Polynomial([0,1],'y')
-      f = x * y
-      print "print r2"
-      print r2
 
-      # print f(0.5, 0.5)
-      # print f(r2)
-      print "print f.call([0.5, 0.5])"
-      print f.call([0.5, 0.5])
-      print f([0.5, 0.5])
-      print f([0.5, 0.5], ['x'])
-      print "print f.call(r2)"
-      print f.call(r2)
-      print f(r2)
-      print f(r2, ['x'])
+      self.assertEqualTensor(x(a), a+2*a**2)
+      self.assertEqualTensor(x([a]), a+2*a**2)
+      self.assertEqualTensor(x([a],["x"]), a+2*a**2)
+
+      with self.assertRaises(Exception):
+        x([a],["y"])
+
+      a = [0.1, 0.2, 0.3]
+      self.assertEqualTensor(x.list_eval(a), np.array(a)+2*np.array(a)**2)
+
+      a = np.array([[0.1, 0.2, 0.3]]).T
+
+      self.assertEqualTensor(x.list_eval(a), a+2*a**2)
+
+      a = np.array([[0.1, 0.2, 0.3]])
+
+      self.assertEqualTensor(x.list_eval(a), a+2*a**2)
+
+      a = np.array([0.1, 0.2, 0.3])
+
+      self.assertEqualTensor(x.list_eval(a), a+2*a**2)
+
+
+    def test_two_bases(self):
+      a = 0.1
+      b = 0.13
+      x = Polynomial([0,1, 2],'x')
+      y = Polynomial([0,0.1, -3],'y')
+
+      f = x*y
+
+      with self.assertRaises(Exception):
+        self.assertEqualTensor(f(a,b), f(b,a))
+
+      self.assertEqualTensor(f(a,b), x(a)*y(b))
+      self.assertEqualTensor(f(b,a), x(b)*y(a))
+
+
+
+      self.assertEqualTensor(f([a,b]), x(a)*y(b))
+      self.assertEqualTensor(f([b,a]), x(b)*y(a))
+
+
+      self.assertEqualTensor(f([a,b],["x","y"]), x(a)*y(b))
+      self.assertEqualTensor(f([a,b],["y","x"]), x(b)*y(a))
+
+      self.assertEqualTensor(f([b,a],["x","y"]), x(b)*y(a))
+      self.assertEqualTensor(f([b,a],["y","x"]), x(a)*y(b))
+
+      with self.assertRaises(Exception):
+        f([b,a],["y","z"])
+      a = [0.1, 0.2, 0.3]
+      b = [0.13, 0.17, 0.19]
+
+
+      self.assertEqualTensor(f.list_eval(a,b), x.list_eval(a)*y.list_eval(b))
+      self.assertEqualTensor(f.list_eval(b,a), x.list_eval(b)*y.list_eval(a))
+
+      ab = np.array([a,b]).T
+      ba = np.array([b,a]).T
+
+      self.assertEqualTensor(f.list_eval(ab), x.list_eval(a)*y.list_eval(b))
+      self.assertEqualTensor(f.list_eval(ba), x.list_eval(b)*y.list_eval(a))
+
+      self.assertEqualTensor(f.list_eval(ab,["x","y"]), x.list_eval(a)*y.list_eval(b))
+      self.assertEqualTensor(f.list_eval(ab,["y","x"]), x.list_eval(b)*y.list_eval(a))
+
+      self.assertEqualTensor(f.list_eval(ba,["x","y"]), x.list_eval(b)*y.list_eval(a))
+      self.assertEqualTensor(f.list_eval(ba,["y","x"]), x.list_eval(a)*y.list_eval(b))
+
+      with self.assertRaises(Exception):
+        f.list_eval([b,a],["y","z"])
 
     def test_partial_eval(self):
-        return
-        numpy.random.seed(0)
+        x = Polynomial([0,1],'x')
+        y2 = Polynomial([0,0,1],'y')
+        func1 = x + y2
+
+        x_ = 0.4
+        y_ = 0.2
+
+        f_part1 = func1.partial_eval(x_, 'x')
+        f_part2 = f_part1(y_)
+
+        f_part3 = func1.partial_eval(y_, 'y')
+        f_party_ = f_part3(x_)
+
+        self.assertEqualT(f_part2, f_party_)
+        self.assertEqualT(f_party_, func1([x_, y_], ['x','y']))
+
+        f_part_z = func1.partial_eval(x_, 'z')
+        self.assertEqualT( func1([x_, y_], ['x','y']), f_part_z([x_, y_], ['x','y']))
+
+
+    def test_partial_eval2(self):
 
         knots1 = [0,0,0,0,0.2,0.4,0.6,0.8,1,1,1,1]
         degree = 3
@@ -53,17 +117,20 @@ class Test_Function_Operations(BasisTestCase):
         basis2 = splines.BSplineBasis(knots2,degree)
 
         mbasis1 = TensorBasis([basis1,basis2], ['x','y']);
-        coeff1 = DTensor(numpy.random.randn(18,1),[6,3,1,1])
+        coeff1 = DTensor(numpy.random.randn(*mbasis1.dimension()), mbasis1.dimension()+[1,1])
         func1 = Function(mbasis1,coeff1)
 
-        f_part1 = func1.f_partial(10, 'x')
-        f_part2 = f_part1(4)
+        x_ = 0.4
+        y_ = 0.2
 
-        f_part3 = func1.f_partial(4, 'y')
-        f_part4 = f_part1(10)
+        f_part_x = func1.partial_eval(x_, 'x')
+        f_part_x_ = f_part_x(y_)
 
-        self.assertEqualT(f_part2, f_part4)
-        self.assertEqualT(f_part4, func1([10, 4], ['x','y']))
+        f_part_y = func1.partial_eval(y_, 'y')
+        f_part_y_ = f_part_y(x_)
+
+        self.assertEqualT(f_part_x_, f_part_y_)
+        self.assertEqualT(f_part_y_, func1([x_, y_], ['x','y']))
 
 if __name__ == '__main__':
     unittest.main()

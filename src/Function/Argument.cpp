@@ -3,7 +3,9 @@
 #include "../common.h"
 #include <map>
 #include <algorithm>
+#include "Parameter.h"
 #include <casadi/casadi.hpp>
+
 namespace spline {
 
     std::string Argument::type() const{
@@ -20,15 +22,9 @@ namespace spline {
         return false;
     }
 
-    std::string StringArgumentNode::to_string() const { return "Argument " + name_ ;};
-    std::string IntArgumentNode::to_string() const{
-      return "Argument " + std::to_string(index_) ;};
     std::string NullArgumentNode::to_string() const { return "NullArgument ";};
-
-    std::string Argument::to_string() const { return (*this)->to_string() ;};
-    std::ostream& operator<<(std::ostream &stream, const Argument& argument) {
-        return stream << argument.to_string();
-    }
+    std::string StringArgumentNode::to_string() const { return "Argument " + name_ ;};
+    std::string IntArgumentNode::to_string() const{ return "Argument " + std::to_string(index_) ;};
 
     ArgumentNode* Argument::get() const { return static_cast<ArgumentNode*>(SharedObject::get()); };
     ArgumentNode* Argument::operator->() const { return get(); }
@@ -40,6 +36,12 @@ namespace spline {
     }
 
     std::vector<Argument> Argument::from_vector(const std::vector<std::string>& ind) {
+      std::vector<Argument> ret(ind.size());
+      for (int i=0;i<ind.size();++i) ret[i] = ind[i];
+      return ret;
+    }
+
+    std::vector<Argument> Argument::from_vector(const std::vector<Parameter>& ind) {
       std::vector<Argument> ret(ind.size());
       for (int i=0;i<ind.size();++i) ret[i] = ind[i];
       return ret;
@@ -68,9 +70,9 @@ namespace spline {
       for (auto &a : args) args_str.push_back(a);
       auto it = std::find(args_str.begin(), args_str.end(), name_);
       if (it == args_str.end()) {
-        std::stringstream ss;
-        for (auto &s : args_str) ss << "'" << s << "' ";
-        spline_error("Argument '" << name_ << "' unknown. Choose one of " << ss.str() << ".");
+        /* std::stringstream ss; */
+        /* for (auto &s : args_str) ss << "'" << s << "' "; */
+        /* spline_error("Argument '" << name_ << "' unknown. Choose one of " << ss.str() << "."); */
         return -1;
       } else {
         return  std::distance(args_str.begin(), it);
@@ -85,6 +87,7 @@ namespace spline {
     Argument::Argument() { assign_node(new NullArgumentNode()); };
     Argument::Argument(const std::string &name) { assign_node(new StringArgumentNode(name)); };
     Argument::Argument(int index) { assign_node(new IntArgumentNode(index)); };
+    Argument::Argument(const Parameter& para) { assign_node(new StringArgumentNode(para.name())); };
 
     bool NullArgumentNode::is_all() const{
         return true;
@@ -110,4 +113,27 @@ namespace spline {
         }
         return ard_ind;
     }
+
+    bool Argument::operator==(const Argument& arg) const{ return (*this)->operator==(*(arg.get()));}
+
+    bool ArgumentNode::operator ==(const ArgumentNode & arg) const{spline_error("Mismatch arguments"); return false;}
+    bool ArgumentNode::operator ==(const StringArgumentNode & arg) const{return arg == *this;}
+    bool ArgumentNode::operator ==(const IntArgumentNode & arg) const{return arg == *this;}
+    bool ArgumentNode::operator ==(const NullArgumentNode & arg) const{return arg == *this;}
+
+    bool StringArgumentNode::operator ==(const ArgumentNode & arg) const{spline_error("Mismatch arguments"); return false;}
+    bool StringArgumentNode::operator ==(const StringArgumentNode & arg) const{ return name() == arg.name();}
+    bool StringArgumentNode::operator ==(const IntArgumentNode & arg) const{return false;}
+    bool StringArgumentNode::operator ==(const NullArgumentNode & arg) const{return false;}
+
+    bool IntArgumentNode::operator ==(const ArgumentNode & arg) const{spline_error("Mismatch arguments"); return false;}
+    bool IntArgumentNode::operator ==(const StringArgumentNode & arg) const{return false;}
+    bool IntArgumentNode::operator ==(const IntArgumentNode & arg) const{return index() == arg.index() ;}
+    bool IntArgumentNode::operator ==(const NullArgumentNode & arg) const{return false;}
+
+    bool NullArgumentNode::operator ==(const ArgumentNode & arg) const{spline_error("Mismatch arguments"); return false;}
+    bool NullArgumentNode::operator ==(const StringArgumentNode & arg) const{return false;}
+    bool NullArgumentNode::operator ==(const IntArgumentNode & arg) const{return false;}
+    bool NullArgumentNode::operator ==(const NullArgumentNode & arg) const{return true;}
+
 } // namespace spline

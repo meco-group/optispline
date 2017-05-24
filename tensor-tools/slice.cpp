@@ -32,8 +32,6 @@ std::vector<int> AnySlice::indices(int len) const {
   }
   
   if ((stop>=start && step<0) || (stop<=start && step>0)) return std::vector<int>();
-  
-  std::cout << "start" << start << "stop" << stop << "step" << step << std::endl;
 
   return casadi::range(start, stop, step, len);
 }

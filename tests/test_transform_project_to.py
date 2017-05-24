@@ -53,6 +53,20 @@ class Test_Project_To(BasisTestCase):
 
     def test_univariate_function(self):
         #np.random.seed(0)
+        b1 = MonomialBasis(2)
+        c1 = Coefficient(5*np.random.random(b1.dimension()))
+        s1 = Function(b1,c1)
+
+        knots2 = [0,0,0,0,0,0.1,0.1,0.3,0.3,0.7,0.7,0.8,1,1,1,1,1]
+        b2 = BSplineBasis(knots2,4)
+
+        s2 = s1.project_to(b2)
+
+        g2 = numpy.random.random(10)
+        for i in g2:
+            print s1(i), s2(i)
+            self.assertEqualTensor(s1(i), s2(i), 1e-6)        #np.random.seed(0)
+
         degree = 3
         knots1 = [0,0,0,0,0.1,0.3,0.7,1,1,1,1]
         b1 = BSplineBasis(knots1,degree)
@@ -99,6 +113,21 @@ class Test_Project_To(BasisTestCase):
         for i in range(0,N):
             # print s1(x[i],y[i]) - s2(x[i],y[i])
             self.assertEqualT(s1(x[i],y[i]), s2(x[i],y[i]), 1e-6)
+
+
+    def test_transform(self):
+        x = Polynomial([0, 1],'x');
+        y = Polynomial([0, 1],'y');
+        x_ = vertcat(x,y);
+        tb = TensorBasis([ BSplineBasis([-1.5,1.5],1,2),BSplineBasis([-1.5,1.5],1,2) ],[ 'x','y' ])
+        x_tr = x_.transform_to(tb);
+        for r in np.random.rand(10,2):
+            self.assertEqualTensor(x_(r,['x','y']),x_tr(r,['x','y']))
+
+        tb = TensorBasis([ BSplineBasis([-1.5,1.5],2,2),BSplineBasis([-1.5,1.5],1,3) ],[ 'y','x' ])
+        x_tr = x_.transform_to(tb);
+        for r in np.random.rand(10,2):
+            self.assertEqualTensor(x_(r,['x','y']),x_tr(r,['x','y']))
 
 if __name__ == '__main__':
     unittest.main()

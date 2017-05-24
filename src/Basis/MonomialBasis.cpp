@@ -57,19 +57,23 @@ namespace spline {
     }
 
     bool MonomialBasisNode::operator== (const BasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool MonomialBasisNode::operator== (const EmptyBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool MonomialBasisNode::operator== (const BSplineBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool MonomialBasisNode::operator== (const MonomialBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     AnyTensor MonomialBasisNode::const_coeff_tensor(const AnyTensor& t) const {
@@ -98,12 +102,12 @@ namespace spline {
          return degree() + 1;
     }
 
-    std::vector< std::vector < AnyScalar > > MonomialBasisNode::getEvaluationGrid() const {
-      std::vector< std::vector < AnyScalar > > ret;
+    AnyTensor MonomialBasisNode::evaluation_grid() const {
+        std::vector< double > ret = {};
         for (int i = 0; i < dimension(); i++) {
-            ret.push_back(std::vector<AnyScalar> {static_cast<double>(i)});
+            ret.push_back( static_cast<double>(i));
         }
-        return ret;
+        return Tensor<casadi::DM>(casadi::DM(ret) ,std::vector< int >{dimension(),1} );
     }
 
     Basis MonomialBasisNode::derivative(int order, AnyTensor& T) const {
@@ -178,8 +182,8 @@ namespace spline {
         } else {
             AnyTensor T;
             Basis basis_int = antiderivative(1, T);
-            return (basis_int({dom.max()}) -
-                basis_int({dom.min()})).shape({1, dimension()+1}).mtimes(T);
+            return (basis_int(AnyVector( dom.max() )) -
+                basis_int(AnyVector( dom.min() ))).shape({1, dimension()+1}).mtimes(T);
         }
     }
 

@@ -1,4 +1,6 @@
-image: pma-rob-dbs.mech.kuleuven.be/meco/meco
+image: jgillis/meco_build
+
+#pma-rob-dbs.mech.kuleuven.be/meco/meco
 
 stages:
   - tests
@@ -11,6 +13,7 @@ variables:
     BINARIES: meco_binaries_${BUILD_OS}
     MATLABPATH: $DEBIAN_BINARIES
     PYTHONPATH: $PYTHONPATH:$DEBIAN_BINARIES
+    MOSEKLM_LICENSE_FILE: /repo/mosek/8/mosek.lic
 
 before_script:
     - source env.sh
@@ -29,7 +32,7 @@ after_script:
     - TZ=CET touch swig/build_`date -Iseconds`.log
     - rm -rf swig/*.pyc swig/CMakeFiles
     - echo $TARGET
-    
+
     - rclone delete dropbox:$TARGET
     - rclone --transfers 2 sync swig/ dropbox:$TARGET --exclude CMakeFiles || rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles || rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
 
@@ -81,10 +84,10 @@ debian-python:
     - cmake -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
     - cp src/*.so swig
-    
+
     - ctest -V -R python
     - ctest -V -R valgrind
-    
+
 windows-matlab:
   stage: binaries
   variables:
@@ -128,4 +131,3 @@ windows-python:
     - make VERBOSE=1
     - cp src/*.dll swig
     - sed -i -e "s/'SwigPyObject'/'SwigPyCasadiObject'/g" swig/splines.py
-    

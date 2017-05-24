@@ -30,6 +30,9 @@ namespace spline{
           count1 = std::count_if (kn1.begin(), kn1.end(), [&](const T& lhs) { return casadi::casadi_limits<T>::is_zero(lhs-k); });
           count2 = std::count_if (kn2.begin(), kn2.end(), [&](const T& lhs) { return casadi::casadi_limits<T>::is_zero(lhs-k); });
 
+          if(count1 == 0) count1 = -degree;
+          if(count2 == 0) count2 = -degree;
+
           count =  std::max(count1 + degree - degree1, count2 + degree - degree2);
 
           multiple.resize(count);
@@ -106,6 +109,32 @@ namespace spline{
               newSize++;
           }
           returnKnots.resize(newSize);
+          return returnKnots;
+      }
+    }
+
+    template<class T>
+    const std::vector<T> increaseMultiplicityFirstLast(const std::vector<T>& knots_,  int increase) {
+      if (increase <= 0) { // noting happens
+          return knots_;
+      } else {
+          int newSize = 0;
+          std::vector<T> returnKnots(knots_.size() + (increase*2));
+
+          for (int j = 0; j < increase ; ++j) {
+              returnKnots[newSize] = knots_[0];
+              newSize++;
+          }
+
+          for (int i = 0; i < knots_.size(); ++i) {
+              returnKnots[newSize] = knots_[i];
+              newSize++;
+          }
+
+          for (int j = 0; j < increase ; ++j) {
+              returnKnots[newSize] = knots_[knots_.size()-1];
+              newSize++;
+          }
           return returnKnots;
       }
     }

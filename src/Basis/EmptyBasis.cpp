@@ -50,26 +50,26 @@ namespace spline {
     }
 
     bool EmptyBasisNode::operator== (const BasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
-        return false;
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool EmptyBasisNode::operator== (const EmptyBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool EmptyBasisNode::operator== (const BSplineBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool EmptyBasisNode::operator== (const MonomialBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
-    AnyTensor EmptyBasis::operator() (const AnyVector & x) const {
-        std::vector<AnyScalar> a = x.to_scalar_vector();
-        return (*this)->operator()(a);
-    }
+
     AnyTensor EmptyBasisNode::operator() (const std::vector< AnyScalar > & x) const {
         return AnyScalar(1.0);
     }

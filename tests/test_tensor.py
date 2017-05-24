@@ -6,7 +6,7 @@ from helpers import *
 class Test_Tensor(BasisTestCase):
 
     def test_operations_cast(self):
-        
+
         scalars = [4, 4.0, np.ones((1,1))*4, DM(4), DTensor([4],[]), SX(4)]
         matrices = [np.ones((2,2))*4, DM.ones(2,2)*4, SX(DM.ones(2,2)*4), DTensor([4]*4,[2,2])]
 
@@ -16,13 +16,13 @@ class Test_Tensor(BasisTestCase):
               lhs+rhs
               lhs*rhs
               lhs-rhs
-                 
+
         for A in [Polynomial([0,1],'x')]:
           for s in scalars+matrices:
             for lhs, rhs in [(A,s),(s,A)]:
               lhs+rhs
               lhs*rhs
-              lhs-rhs      
+              lhs-rhs
 
         for A in [DTensor(range(4),[2,2]), STensor(range(4),[2,2])]:
           for s in matrices:
@@ -43,7 +43,7 @@ class Test_Tensor(BasisTestCase):
 
         mbasis1 = TensorBasis([basis1,basis2]);
         coeff1 = DTensor(numpy.random.randn(9*4,1),[3,3,2,2])
-        
+
         func1 = Function(mbasis1,coeff1)
 
         for A in [func1]:
@@ -52,7 +52,7 @@ class Test_Tensor(BasisTestCase):
               lhs+rhs
               lhs*rhs
               lhs-rhs
-                        
+
     def test_concat(self):
 
         A = DTensor(1,[])
@@ -112,14 +112,13 @@ class Test_Tensor(BasisTestCase):
           self.assertEqualT( B.index(myslice(0,k)), C.index(myslice(2,k)))
           self.assertEqualT( B.index(myslice(1,k)), C.index(myslice(3,k)))
 
-
         A = DTensor([],[2,0,4])
         B = DTensor([],[2,0,4])
         C = DTensor(range(2*2*4),[2,2,4])
 
         R = DTensor.concat([C,A],1)
         self.assertEqualT(C, R)
-        
+
         R = DTensor.concat([A,C],1)
         self.assertEqualT(C, R)
 
@@ -131,8 +130,8 @@ class Test_Tensor(BasisTestCase):
         self.assertEqual(R.dims(), [4, 0, 4])
 
         R = DTensor.concat([A,B],1)
-        self.assertEqual(R.dims(), [2, 0, 4])        
-        
+        self.assertEqual(R.dims(), [2, 0, 4])
+
         R = DTensor.concat([A,B],2)
         self.assertEqual(R.dims(), [2, 0, 8])
 
@@ -166,14 +165,9 @@ class Test_Tensor(BasisTestCase):
       c = F.coeff()
       r = c.data()
 
-      # a = DTensor(a ,  B.dimension() + [1, 1])
-      print "------"
       a = a.shape(a.dims()+[1,1])
-
-
-      print a[:,:,0,0,0]
-      print r[:,:,0,0,0]
-
+      print r
+      print a
       self.assertEqualT( r, a )
 
     def test_mtimes(self):

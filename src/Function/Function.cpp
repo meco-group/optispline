@@ -1,7 +1,7 @@
 #include "Function.h"
-#include "FunNode.h"
-#include "ConstantNode.h"
 #include "FunctionNode.h"
+
+#include "../Basis/BSplineBasis.h"
 
 namespace spline{
 
@@ -28,31 +28,54 @@ namespace spline{
 
     Function::Function(const AnyTensor& tensor) {
         spline_assert_message(tensor.dims().size() <= 2, "Tensor constant not supported ");
-        assign_node(new ConstantNode(tensor));
+        assign_node(new FunctionNode(tensor));
     }
 
     Function::Function(const AnyScalar& value, const std::vector< int >& size) {
-        assign_node(new ConstantNode(AnyTensor::repeat(AnyTensor(value), size)));
+        assign_node(new FunctionNode(AnyTensor::repeat(AnyTensor(value), size)));
     }
 
-    FunNode* Function::get() const { return static_cast<FunNode*>(SharedObject::get()); };
-    FunNode* Function::operator->() const { return get(); }
+    FunctionNode* Function::get() const { return static_cast<FunctionNode*>(SharedObject::get()); };
+    FunctionNode* Function::operator->() const { return get(); }
 
     std::string Function::type() const { return (*this)->type() ;}
-    std::string Function::to_string() const { return (*this)-> to_string();}
 
     casadi::MX Function::operator<=(const casadi::MX& x) const {
-        return coeff_tensor().as_MT().data()<=x;
+        return operator-().operator>=(-x);
     }
     casadi::MX Function::operator>=(const casadi::MX& x) const {
-        return coeff_tensor().as_MT().data()>=x;
+        if (shape()[0]>1 && shape()[1]>1) {
+          spline_assert(shape()[0]==shape()[1]);
+          MT a = coeff_tensor().as_MT();
+          int n = coeff().dimension().size();
+          std::vector<int> reorder = casadi::range(n);
+          reorder.insert(reorder.begin(), n);
+          reorder.insert(reorder.begin(), n+1);
+          casadi::MX b = a.reorder_dims(reorder).shape({shape()[0], casadi::product(coeff().dimension())*shape()[1]}).matrix();
+          std::vector<casadi::MX> components = horzsplit(b, shape()[1]);
+          return diagcat(components)>x;
+        } else {
+          return coeff_tensor().as_MT().data()>=x;
+        }
+    }
+
+    casadi::MX Function::operator==(const casadi::MX& x) const {
+      return coeff_tensor().as_MT().data()==x;
     }
 
     AnyTensor Function::operator()(const AnyTensor& x, const std::vector< Argument >& args ) const {
         return (*this)->operator()(x, Argument::concrete(args, tensor_basis()));
     }
 
-    Function Function::partial_eval(const AnyTensor& x, const std::vector< Argument >& args ) const { return (*this)->partial_eval(x, Argument::concrete(args, tensor_basis()));}
+    AnyTensor Function::list_eval(const AnyTensor& x, const std::vector< Argument >& args ) const {
+        return (*this)->list_eval(x, Argument::concrete(args, tensor_basis()));
+    }
+
+    AnyTensor Function::grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args,  bool squeeze_return) const {
+        return (*this)->grid_eval(x, Argument::concrete(args, tensor_basis()), squeeze_return);
+    }
+
+    Function Function::partial_eval(const AnyTensor& x, const Argument& args ) const { return (*this)->partial_eval(x, args.concrete(tensor_basis().arguments()));}
 
     Function Function::operator+(const Function& f) const { return (*this)->operator+(f) ;}
     Function Function::operator+(const AnyTensor& t) const {
@@ -129,11 +152,8 @@ namespace spline{
     Function Function::project_to(const TensorBasis& basis) const { return (*this)->project_to(basis) ;}
 
     int Function::n_inputs() const { return (*this)->n_inputs() ;}
-    Function Function::insert_knots(const AnyVector & new_knots) const { return (*this)->insert_knots( new_knots) ;}
-    Function Function::insert_knots(const AnyVector & new_knots, const NumericIndex & arg_ind) const { return (*this)->insert_knots( new_knots, arg_ind) ;}
-    Function Function::insert_knots(const AnyVector & new_knots, const std::string & arg) const { return (*this)->insert_knots(new_knots, arg);}
-    Function Function::insert_knots(const std::vector<AnyVector> & new_knots, const std::vector<std::string> & arg) const { return (*this)->insert_knots(new_knots, arg);}
-    Function Function::insert_knots(const std::vector<AnyVector> & new_knots, const NumericIndexVector & arg_ind) const { return (*this)->insert_knots(new_knots, arg_ind);}
+    Function Function::insert_knots(const AnyVector & new_knots, const Argument& arg) const { return (*this)->insert_knots(vectorize(arg, new_knots), vectorize(arg)) ;}
+    Function Function::insert_knots(const std::vector<AnyVector> & new_knots, const std::vector<Argument> & arg) const { return (*this)->insert_knots(new_knots, Argument::concrete(arg, tensor_basis().arguments()));}
 
     Function Function::midpoint_refinement(int refinement, const Argument& arg) const {
         return (*this)->midpoint_refinement(vectorize(arg, refinement), vectorize(arg));
@@ -224,4 +244,99 @@ namespace spline{
         }
     }
 
-    } // namespace spline
+    Function Function::linear(const AnyVector & x, const AnyVector & y) {
+      return Function(BSplineBasis::from_single(x, 1), y);
+    }
+
+    casadi::Function Function::to_casadi() const {
+      std::vector<Basis> bases = tensor_basis().bases();
+      std::vector< std::vector<double> > knots;
+      std::vector<int> degrees;
+      std::vector<double> coeff;
+      for (int i=0;i<bases.size();++i) {
+        Basis b = bases[i];
+        spline_assert(b.type()=="BSplineBasis");
+
+        BSplineBasis bb = b.get()->shared_from_this<BSplineBasis>();
+
+        spline_assert(AnyScalar::is_double(bb.knots()));
+        knots.push_back(AnyScalar::as_double(bb.knots()));
+        degrees.push_back(bb.degree());
+      }
+
+      spline_assert(coeff_tensor().is_DT());
+      return casadi::Function::bspline("bspline", knots,
+        coeff_tensor().as_DT().data().nonzeros(), degrees);
+    }
+
+    AnyTensor Function::fast_eval(const AnyTensor& xy) const {
+      std::vector<Basis> bases = tensor_basis().bases();
+      std::vector< std::vector<double> > knots;
+      std::vector<int> degrees;
+
+      for (int i=0;i<bases.size();++i) {
+        Basis b = bases[i];
+        spline_assert(b.type()=="BSplineBasis");
+        BSplineBasis bb = b.get()->shared_from_this<BSplineBasis>();
+        spline_assert(AnyScalar::is_double(bb.knots()));
+        knots.push_back(AnyScalar::as_double(bb.knots()));
+        degrees.push_back(bb.degree());
+
+      }
+
+      spline_assert(xy.n_dims()==2);
+      spline_assert(xy.dims()[0]==n_inputs());
+
+      if (xy.is_DT()) {
+        std::vector<double> points = xy.as_DT().data().nonzeros();
+        casadi::Function dual = casadi::Function::bspline_dual("dual", knots, points, degrees);
+        casadi::Function J = dual.jacobian();
+        casadi::DM jac = J(std::vector<casadi::DM>{0})[0];
+        AnyTensor c = coeff_tensor();
+        if (c.is_DT()) {
+          casadi::DM r = casadi::DM::mtimes(jac, c.as_DT().data());
+          return DT(r, {r.size1(), r.size2()});
+        } else {
+          casadi::MX r = casadi::MX::mtimes(jac, c.as_MT().data());
+          return MT(r, {r.size1(), r.size2()});
+        }
+      }
+      if (coeff_tensor().is_DT()) {
+        std::vector<double> coeffs = coeff_tensor().as_DT().data().nonzeros();
+        casadi::Function nominal = casadi::Function::bspline("nominal", knots, coeffs, degrees);
+        nominal = nominal.map(xy.dims()[1]);
+
+        if (xy.is_DT()) {
+          casadi::DM r = nominal(std::vector<casadi::DM>{xy.as_DT().matrix()})[0];
+          return DT(r, {r.size1(), r.size2()});
+        } else {
+          casadi::MX r = nominal(std::vector<casadi::MX>{xy.as_MT().matrix()})[0];
+          return MT(r, {r.size1(), r.size2()});
+        }
+
+      }
+      spline_assert(false);
+      return DT();
+
+    }
+
+    casadi::DM Function::fast_jac(const AnyTensor& xy) const {
+      casadi::MX c = coeff_tensor().as_MT().data();
+      AnyTensor yt = fast_eval(xy);
+      casadi::MX y = yt.as_MT().data();
+      casadi::MX J = casadi::MX::jacobian(y, c);
+      casadi::Function f = casadi::Function("f", {c}, {J});
+      return f(std::vector<casadi::DM>{0})[0];
+    }
+
+    void Function::assert_unique_arguments(std::vector< Argument >& args ) const {
+        for (int i = 0; i < args.size(); ++i)
+        {
+           for (int j = i + 1; j < args.size(); ++j)
+           {
+              spline_assert_message(!(args[i] == args[j]), "Argument " + args[i].to_string() + " occurse multiple times");
+           }
+        }
+    }
+
+} // namespace spline

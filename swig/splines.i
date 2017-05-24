@@ -80,6 +80,9 @@ def _swig_repr(self):
 %feature("varargin","1") spline::TensorBasis::operator();
 #endif //SWIGMATLAB
 
+#ifdef SWIGPYTHON
+%rename(list_eval_internal) spline::Function::list_eval;
+#endif // SWIGPYTHON
 
 %include "std_vector.i"
 
@@ -99,13 +102,11 @@ def _swig_repr(self):
 #include <src/SharedObject/SharedObject.h>
 #include <src/SharedObject/SharedObjectNode.h>
 
-#include <src/Basis/utils/CommonBasis.h>
 #include <src/Basis/Basis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
 #include <src/Basis/TensorBasis.h>
-#include <src/Basis/TensorBasisConstant.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
 #include <src/Basis/BSplineBasis.h>
@@ -117,16 +118,13 @@ def _swig_repr(self):
 #include <src/Domain/Domain.h>
 #include <src/Domain/TensorDomain.h>
 
-#include <src/Function/FunNode.h>
 #include <src/Function/FunctionNode.h>
-#include <src/Function/ConstantNode.h>
 #include <src/Function/Function.h>
 #include <src/Function/Polynomial.h>
+#include <src/Function/Parameter.h>
 #include <src/Function/Argument.h>
 #include <src/Function/NumericIndex.h>
 #include <src/Optistack/optistack.h>
-
-#include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 using namespace spline;
 #include <casadi/casadi.hpp>
@@ -173,6 +171,7 @@ using namespace spline;
 
     bool to_ptr(GUESTOBJECT *p, spline::Coefficient** m);
     bool to_ptr(GUESTOBJECT *p, spline::Function** m);
+    bool to_ptr(GUESTOBJECT *p, spline::Parameter** m);
 
     GUESTOBJECT * from_ptr(const std::vector<AnyScalar>* a);
     GUESTOBJECT * from_ptr(const AnyScalar *a);
@@ -449,15 +448,6 @@ using namespace spline;
         }
       }
 
-      // Try first converting to a temporary DM
-      {
-        std::vector< std::vector<double> > tmp, *mt=&tmp;
-        if(casadi::to_ptr(p, m ? &mt : 0)) {
-          if (m) **m = DM(*mt);
-          return true;
-        }
-      }
-
       return false;
     }
     bool to_ptr(GUESTOBJECT *p, ST** m) {
@@ -661,6 +651,13 @@ using namespace spline;
           return true;
         }
       }
+      {
+        std::vector<spline::Parameter> tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m = Argument::from_vector(tmp);
+          return true;
+        }
+      }
     }
 
     bool to_ptr(GUESTOBJECT *p, spline::Argument** m) {
@@ -691,9 +688,26 @@ using namespace spline;
           return true;
         }
       }
+      // Parameter
+      {
+        spline::Parameter tmp;
+        if (to_val(p, &tmp)) {
+          if (m) **m=tmp;
+          return true;
+        }
+      }
       return false;
     }
+    bool to_ptr(GUESTOBJECT *p, spline::Parameter** m) {
+      // Treat Null
+      if (is_null(p)) return false;
 
+      if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
+                                    $descriptor(spline::Parameter*), 0))) {
+        return true;
+      }
+      return false;
+    }
     bool to_ptr(GUESTOBJECT *p, spline::Function** m) {
       // Treat Null
       if (is_null(p)) return false;
@@ -826,6 +840,9 @@ using namespace spline;
     }
     GUESTOBJECT* from_ptr(const spline::Function *a) {
       return SWIG_NewPointerObj(new spline::Function(*a), $descriptor(spline::Function *), SWIG_POINTER_OWN);
+    }
+    GUESTOBJECT* from_ptr(const spline::Parameter *a) {
+      return SWIG_NewPointerObj(new spline::Parameter(*a), $descriptor(spline::Parameter *), SWIG_POINTER_OWN);
     }
 
     GUESTOBJECT* from_ptr(const spline::Basis *a) {
@@ -963,7 +980,7 @@ using namespace spline;
 %casadi_template("[Domain]", PREC_MXVector, std::vector< spline::Domain >)
 %casadi_template("[interval]", PREC_MXVector, std::vector< spline::Interval >)
 
-%casadi_typemaps("Coefficient", PREC_MX, spline::Coefficient)
+%casadi_typemaps("Coefficient", PREC_FUNCTION, spline::Coefficient)
 %casadi_typemaps("TensorBasis", PREC_MX, spline::TensorBasis)
 %casadi_template("[TensorBasis]", PREC_MXVector, std::vector< spline::TensorBasis >)
 %casadi_template("[DTensor]", PREC_MXVector, std::vector< Tensor<casadi::DM> >)
@@ -972,7 +989,9 @@ using namespace spline;
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 %casadi_template("[Function]", PREC_FUNCTION, std::vector< spline::Function >)
 %casadi_typemaps("Function", PREC_FUNCTION, spline::Function)
-%casadi_typemaps("[Coefficient]", PREC_MX, std::vector<spline::Coefficient>)
+%casadi_typemaps("[Coefficient]", PREC_FUNCTION, std::vector<spline::Coefficient>)
+%casadi_template("[Parameter]", PREC_FUNCTION, std::vector< spline::Parameter >)
+%casadi_typemaps("Parameter", PREC_FUNCTION, spline::Parameter)
 
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
@@ -996,36 +1015,53 @@ using namespace spline;
   interpret_NumericIndex(m);
  }
 
+
+%apply int &OUTPUT { Optistack::ConstraintType &OUTPUT };
+
+%typemap(argout, noblock=1,fragment="casadi_all") Optistack::ConstraintType &OUTPUT {
+  %append_output(casadi::from_ptr((int *) $1));
+}
+
+%typemap(in, doc="Optistack.ConstraintType", noblock=1, numinputs=0) Optistack::ConstraintType &OUTPUT (Optistack::ConstraintType m) {
+ $1 = &m;
+}
+
+%include <src/SharedObject/PrintableObject.h>
+%template(PrintSharedObject) spline::PrintableObject<spline::SharedObject>;
+%template(PrintMT) spline::PrintableObject< Tensor<casadi::MX> >;
+%template(PrintDT) spline::PrintableObject< Tensor<casadi::DM > >;
+%template(PrintST) spline::PrintableObject< Tensor<casadi::SX > >;
+
 %include <src/SharedObject/SharedObject.h>
 %include <src/SharedObject/SharedObjectNode.h>
+
 
 %include <src/Function/Argument.h>
 %include <src/Function/NumericIndex.h>
 
 %include <tensor.hpp>
+
 %include <slice.hpp>
 
 %template(DTensor) Tensor<casadi::DM>;
 %template(STensor) Tensor<casadi::SX>;
 %template(MTensor) Tensor<casadi::MX>;
 
+
 %include <src/Domain/Domain.h>
 %include <src/Domain/Interval.h>
 %include <src/Domain/TensorDomain.h>
 
-%include <src/Basis/utils/CommonBasis.h>
 %include <src/Basis/Basis.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>
 
 %include <src/Basis/TensorBasis.h>
-%include <src/Basis/TensorBasisConstant.h>
 %include <src/Basis/UnivariateBasis.h>
 %include <src/Basis/MonomialBasis.h>
 %include <src/Basis/BSplineBasis.h>
 %include <src/Basis/utils/vectorUtilities.h> // Debug
-%include <src/Basis/utils/EvaluationGrid.h> // Debug
 
 %include <src/Coefficients/Coefficient.h>
 
@@ -1059,9 +1095,31 @@ using namespace spline;
 
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
+%include <src/Function/Parameter.h>
 %include <src/Optistack/optistack.h>
 
 #ifdef SWIGMATLAB
+%extend Tensor<casadi::SX> {
+  %matlabcode %{
+    function [] = disp(self)
+      disp(self.to_string())
+    end
+  %}
+ }
+%extend Tensor<casadi::DM> {
+  %matlabcode %{
+    function [] = disp(self)
+      disp(self.to_string())
+    end
+  %}
+ }
+%extend Tensor<casadi::MX> {
+  %matlabcode %{
+    function [] = disp(self)
+      disp(self.to_string())
+    end
+  %}
+ }
 namespace spline {
 %extend SharedObject {
   %matlabcode %{
@@ -1086,12 +1144,47 @@ namespace spline {
         [varargout{1:nargout}] = builtin('subsref',self,s);
       end
    end
-   function self = subsasgn(self,varargin)
+    function ind = end(self,i,n)
+      if n==1
+        ind = size(self,1)*size(self,2);
+      else
+        ind = size(self, i);
+      end
+    end
+    
+    function self = subsasgn(self,varargin)
         error('Not supported: subsasgn');
     end
-  function r = size(self)
-    r = shape(self);
-  end
+    function varargout = size(self, varargin)
+      siz = shape(self);
+      if nargin > 1
+        if length(siz) < varargin{1}
+          siz = 1;
+        else
+          siz = siz(varargin{1});
+        end
+      end
+      varargout = cell(nargout);
+      switch nargout
+        case 0, disp(siz);
+        case 1, varargout{1} = siz;
+        case 2, varargout{1} = siz(1); varargout{2} = siz(2);
+      end
+    end
+    function self = mrdivide(self,other)
+      if ~isnumeric(other)
+        [b,other] = isconst(other);
+        assert(b,'Cannot divide by a spline');
+      end
+      self = mtimes(self,inv(other));
+    end
+    function self = mldivide(self,other)
+      if ~isnumeric(self)
+        [b,self] = isconst(self);
+        assert(b,'Cannot divide by a spline');
+      end
+      self = mtimes(inv(self),other);
+    end
   %}
 }
 }
@@ -1108,7 +1201,7 @@ namespace spline {
       else:
         arguments = False
         try:
-            if isinstance(args[1][0],str):
+            if isinstance(args[1][0],str) or isinstance(args[1][0],Parameter):
                 arguments = True
         except:
             pass
@@ -1117,6 +1210,23 @@ namespace spline {
             return self.call(*args)
         else:
             return self.call(casadi.hcat(args))
+
+    def list_eval(self, *args):
+      assert len(args)>0
+      if len(args)==1:
+        return self.list_eval_internal(args[0])
+      else:
+        arguments = False
+        try:
+            if isinstance(args[-1][0],str):
+                arguments = True
+        except:
+            pass
+
+        if arguments:
+            return self.list_eval_internal(*args)
+        else:
+            return self.list_eval_internal(casadi.hcat(args))
 
 
     @property
@@ -1179,7 +1289,7 @@ namespace spline {
       end
 
   end
-  
+
   %}
 #endif
 
@@ -1222,6 +1332,16 @@ namespace spline {
 // Wrap (static) member functions
 %feature("nonstatic");
 namespace spline {
+  %extend Basis {
+    %matlabcode %{
+      function [varargout] = horzcat(self,varargin)
+        error('Cannot concatenate Basis objects; perhaps you meant to group them with {}?');
+      end
+      function [varargout] = vertcat(self,varargin)
+        error('Cannot concatenate Basis objects; perhaps you meant to group them with {}?');
+      end
+   %}
+  }
   %extend Function {
     static Function plus(const Function& lhs, const Function& rhs) { return lhs+rhs; }
     static Function minus(const Function& lhs, const Function& rhs) { return lhs-rhs; }
@@ -1240,6 +1360,7 @@ namespace spline {
     static Function times(const AnyTensor& lhs, const Function& rhs) { return rhs*lhs; }
     static Function mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.rmtimes(lhs); }
     static Function rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
+    Function ctranspose() const { return $self->transpose();}
   }
 } // namespace spline
   %extend Tensor<DM> {

@@ -27,7 +27,7 @@ class TensorDomainNode : public SharedObjectNode {
         int indexArgument(std::string a) const;
         bool hasArguments() const;
 
-        virtual std::string to_string() const ;
+        virtual std::string to_string() const override;
         virtual std::string type() const;
 
         int n_domains() const;
@@ -63,7 +63,6 @@ public:
         int indexArgument(std::string a) const;
         bool hasArguments() const;
 
-        std::string to_string() const ;
         std::string type() const;
 
         int n_domains() const;

@@ -2,7 +2,7 @@
 #define SRC_DOMAIN_INTERVAL_H_
 
 #include <iostream>
-#include <sstream> 
+#include <sstream>
 #include <iomanip> // setprecision
 #include <string>
 #include <vector>
@@ -22,7 +22,7 @@ class IntervalNode : public DomainNode {
 
         AnyScalar min() const;
         AnyScalar max() const;
-        virtual std::string to_string() const ;
+        virtual std::string to_string() const override;
         virtual std::string type() const ;
         virtual Domain intersection(const Domain & dom) const;
         virtual Domain intersection(const Interval & dom) const override;
@@ -45,15 +45,6 @@ public:
         Interval(const std::vector<AnyScalar>& data);
         AnyScalar min() const;
         AnyScalar max() const;
-
-
-//RUBEN ik denk dat de volgende code niet nodig is voor een output te geven
-/* #ifndef SWIG */
-/*         inline friend */
-/*             std::ostream& operator<<(std::ostream &stream, const Interval& obj) { */
-/*                 return stream << obj.getRepresentation(); */
-/*             } */
-/* #endif // SWIG */
 };
 
 }   // namespace spline

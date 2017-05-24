@@ -117,7 +117,7 @@ class AnyScalar {
     static std::vector<AnyScalar> from_vector(const std::vector<double>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<casadi::SX>& v);
     static std::vector<AnyScalar> from_vector(const std::vector<casadi::MX>& v);
-    
+
     bool is_equal(const AnyScalar & rhs) const;
 
     #ifndef SWIG
@@ -146,7 +146,7 @@ class AnyScalar {
 
 AnyScalar pow(const AnyScalar&x, int i);
 
-class AnyTensor {
+class AnyTensor : public spline::PrintableObject<AnyTensor> {
   public:
 #ifndef SWIG
     AnyTensor& operator=(const AnyTensor&);
@@ -172,6 +172,12 @@ class AnyTensor {
     static bool is_ST(const std::vector<AnyTensor>& v) {return type(v)==TENSOR_SX;}
     static bool is_MT(const std::vector<AnyTensor>& v) {return type(v)==TENSOR_MX;}
 
+    static AnyTensor ones(const std::vector<int>& dims) {
+      return DT(casadi::DM::ones(spline::product(dims)), dims);
+    }
+    static AnyTensor zeros(const std::vector<int>& dims) {
+      return DT(casadi::DM::zeros(spline::product(dims)), dims);
+    }
     //bool equals(const AnyTensor&rhs) const;
 
     static TensorType type(const std::vector<AnyTensor>& v);
@@ -223,13 +229,47 @@ class AnyTensor {
       if (is_MT()) return as_MT().as_scalar();
       return 0;
     }
+
+  AnyTensor flatten_first(int n) const {
+    tensor_assert(n<=n_dims());
+    std::vector<int> new_shape;
+    std::vector<int> old_dims = dims();
+    int prod = 1;
+    for (int i=0;i<n;++i) prod*=old_dims[i];
+    new_shape.push_back(prod);
+    new_shape.insert(new_shape.end(), old_dims.begin()+n, old_dims.end());
+    return shape(new_shape);
+  }
+  AnyTensor flatten_last(int n) const {
+    tensor_assert(n<=n_dims());
+    std::vector<int> new_shape;
+    std::vector<int> old_dims = dims();
+    int prod = 1;
+    for (int i=0;i<n;++i) prod*=old_dims[old_dims.size()-i-1];
+    new_shape.insert(new_shape.end(), old_dims.begin(), old_dims.begin()+old_dims.size()-n);
+    new_shape.push_back(prod);
+    return shape(new_shape);
+  }
     AnyTensor operator-() const {
       ANYTENSOR_METHOD(operator-());
       return DT();
     }
+    bool is_vector() const {
+      ANYTENSOR_METHOD(is_vector());
+      return false;
+    }
     AnyTensor as_vector() const {
       ANYTENSOR_METHOD(as_vector());
       return DT();
+    }
+    AnyTensor squeeze_tailing() const {
+      std::vector<int> squeeze_dims {};
+      bool tailing_dims_trivial = true;
+      for (int i=n_dims() - 1; i >= 0 ;--i) {
+          tailing_dims_trivial &= ( dims()[i] == 1 );
+          if (!tailing_dims_trivial) squeeze_dims.insert(squeeze_dims.begin(), dims()[i]);
+      }
+      return shape(squeeze_dims);
     }
     AnyTensor squeeze() const {
       std::vector<int> squeeze_dims;
@@ -251,6 +291,11 @@ class AnyTensor {
       return 0;
     }
 
+    AnyTensor index(const std::vector<int>& ind) const {
+      ANYTENSOR_METHOD(index(ind));
+      return DT();
+    }
+
     AnyTensor operator>=(const AnyTensor &b) const {
       ANYTENSOR_BINARY((*this), b, operator>=);
     }
@@ -262,6 +307,21 @@ class AnyTensor {
     }
     AnyTensor inner(const AnyTensor&b) const {
       ANYTENSOR_BINARY((*this), b, inner);
+    }
+    AnyTensor transform(const AnyTensor &b, int axis) const {
+      switch (AnyScalar::merge(t, b.t)) {
+        case TENSOR_DOUBLE:
+          return data_double.transform(b.data_double, axis);
+          break;
+        case TENSOR_SX:
+          return as_ST().transform(b.as_ST(), axis);
+          break;
+        case TENSOR_MX:
+          return as_MT().transform(b.as_MT(), axis);
+          break;
+        default:
+          assert(false); return DT();
+      }
     }
     AnyTensor solve(const AnyTensor&b) const {
       if (is_DT() && !b.is_DT()) {
@@ -329,15 +389,7 @@ class AnyTensor {
       return a.mtimes(b);
     }
 
-    #ifndef SWIG
-    /// Print a representation of the object to a stream (shorthand)
-    inline friend
-        std::ostream& operator<<(std::ostream &stream, const AnyTensor& obj) {
-            return stream << obj.to_string();
-        }
-    #endif // SWIG
-
-    std::string to_string() const {
+    std::string to_string() const override {
       if (is_DT()) return "AnyTensor:" + as_DT().to_string();
       if (is_ST()) return "AnyTensor:" + as_ST().to_string();
       if (is_MT()) return "AnyTensor:" + as_MT().to_string();
@@ -369,6 +421,7 @@ class AnyVector : public AnyTensor {
     AnyVector sort(bool ascending=true) const;
     AnyVector uniquify() const;
     bool is_equal(const AnyVector& rhs) const;
+    AnyVector perturbation() const;
 };
 
 namespace casadi {

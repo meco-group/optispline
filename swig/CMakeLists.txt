@@ -47,7 +47,11 @@ if(WITH_MATLAB)
    add_custom_command(TARGET splinesMEX
                    POST_BUILD
                    COMMAND rm -f ${CMAKE_CURRENT_BINARY_DIR}/SwigMem.m)
+                   
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiSplineYalmip.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiSplineSolverYalmip.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()
+
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/meco_setup.m "meco_binaries('casadi','$ENV{CASADIVERSION}');casadi.SX.sym('x');" )
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/meco_setup.py "meco_binaries(casadi='$ENV{CASADIVERSION}');import casadi;casadi.SX.sym('x')")

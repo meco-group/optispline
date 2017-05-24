@@ -90,7 +90,7 @@ namespace spline {
 
     std::string BSplineBasisNode::to_string() const {
         return "BSplineBasis of degree " + std::to_string(degree()) +
-               ", with " + std::to_string(knots().size()-2*degree()) + " internal knots, on "
+               ", with " + std::to_string(knots().size()) + " knots, on "
                + domain().to_string();
     }
 
@@ -127,28 +127,28 @@ namespace spline {
     }
 
     bool BSplineBasisNode::operator== (const BasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
-        return false;
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool BSplineBasisNode::operator== (const EmptyBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool BSplineBasisNode::operator== (const BSplineBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     bool BSplineBasisNode::operator== (const MonomialBasisNode& other) const {
-        spline_assert_message(false, type() << " == ");
+      spline_assert_message(false, type() << " == ");
+      return false;
     }
 
     std::vector<AnyScalar> BSplineBasis::greville() const { return (*this)->greville(); }
     std::vector<AnyScalar> BSplineBasisNode::greville() const {
         int deg = degree();
-        if (deg == 0) {
-            deg = 1;
-        }
         std::vector<AnyScalar> grevillePoints(dimension());
         for (int i = 0; i < dimension(); ++i) {
           grevillePoints[i] = AnyScalar(0.0);
@@ -203,15 +203,19 @@ namespace spline {
         return basis_evaluation(x);
     }
 
-    std::vector< std::vector<AnyScalar> > BSplineBasisNode::getEvaluationGrid() const {
-        std::vector< std::vector<AnyScalar> > ret;
-        for (auto const& point : AnyVector(greville()).uniquify().to_scalar_vector()) {
-          ret.push_back(std::vector<AnyScalar> {point});
+    AnyTensor BSplineBasisNode::evaluation_grid() const {
+        if (degree() == 0) {
+            std::vector<AnyScalar> grevillePoints(dimension());
+            for (int i = 0; i < dimension(); ++i) {
+                grevillePoints[i] = AnyScalar(0.0);
+                for (int j = 0; j < 2; j++) {
+                    grevillePoints[i] += knots_[i+j];
+                }
+                grevillePoints[i] = grevillePoints[i] / 2;
+            }
+            return AnyVector(grevillePoints).shape(std::vector< int > {dimension(), 1}) ;
         }
-        ret[0][0] = (3*ret[0][0] + ret[1][0]) * 0.25;
-        int si_ = ret.size() - 1;
-        ret[si_][0] = (3*ret[si_][0] + ret[si_ - 1][0]) * 0.25;
-        return ret;
+        return AnyVector(greville()).uniquify().perturbation().shape(std::vector< int > {dimension(), 1}) ;
     }
 
     AnyTensor BSplineBasisNode::const_coeff_tensor(const AnyTensor& t) const {
@@ -278,6 +282,9 @@ namespace spline {
         *     the coefficients of the function (T)
         */
         int deg = degree();
+        if (order > deg) {
+            order = deg;
+        }
 
         std::vector<AnyScalar> kn = knots();
         std::vector<AnyScalar> new_knots(kn.begin() + order, kn.end() - order);
@@ -343,7 +350,7 @@ namespace spline {
         } else {
             AnyTensor T;
             Basis basis_int = antiderivative(1, T);
-            return (basis_int({dom_int.max()}) - basis_int({dom_int.min()})).shape({1, dimension()+1}).mtimes(T);
+            return (basis_int(AnyVector( dom_int.max() )) - basis_int(AnyVector( dom_int.min() ))).shape({1, dimension()+1}).mtimes(T);
         }
     }
 
@@ -458,6 +465,13 @@ namespace spline {
         // project into new basis
         T = project_to(new_basis);
         return new_basis;
+    }
+
+    BSplineBasis BSplineBasis::from_single(const AnyVector& knots, int degree) {
+      AnyTensor head = AnyTensor::repeat(knots[0], {degree});
+      AnyTensor tail = AnyTensor::repeat(knots[knots.size()-1], {degree});
+      AnyVector k = AnyTensor::concat({head, knots, tail}, 0);
+      return BSplineBasis(k, degree);
     }
 
 } // namespace spline

@@ -1,29 +1,38 @@
 #include <vector>
+#include "Function.h"
 #include "FunctionNode.h"
-#include "ConstantNode.h"
-#include "../Basis/utils/EvaluationGrid.h"
-#include "../Basis/TensorBasisConstant.h"
 #include "../common.h"
 
 namespace spline {
-    FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : FunNode(coeff), basis_(basis) {}
+    FunctionNode::FunctionNode(const Coefficient& coeff) : coeff_(coeff.to_matrix_valued()), basis_(TensorBasis()) {}
 
-    AnyTensor FunctionNode::operator()(const AnyTensor& x, const std::vector< int >& args) const{
-        if(x.dims()[0] == n_inputs() && x.dims()[1] == 1){
-            std::vector< AnyScalar > x_ = x.unpack_1();
-            return basis_(x_, Argument::from_vector(args)).inner(coeff().data());
+    FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : coeff_(coeff.to_matrix_valued()), basis_(basis) {}
+
+std::vector< int > FunctionNode::shape() const {         return coeff_.shape();     }
+
+    AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< int >& args) const{
+        AnyTensor x = arg.squeeze();
+        spline_assert_message(x.is_vector(), "Function can not be evaluated on something with dimentions " << x.dims());
+        x = x.as_vector();
+
+        std::vector< AnyScalar > x_ = x.unpack_1();
+        return tensor_basis()(x_, Argument::from_vector(args), false).inner(coeff().data());
+    }
+
+    AnyTensor FunctionNode::list_eval(const AnyTensor& arg, const std::vector< int >& args) const{
+        AnyTensor x = arg;
+        spline_assert(x.n_dims()<=2);
+
+        if(n_inputs() == 1){
+           x = x.as_vector().shape({x.numel(), 1});
         }
-        if(x.dims()[0] == 1 && x.dims()[1] == n_inputs()){
-            std::vector< AnyScalar > x_ = x.unpack_1();
-            return basis_(x_, Argument::from_vector(args)).inner(coeff().data());
-        }
 
-        spline_assert_message(x.dims()[1] == n_inputs(), "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " + std::to_string(x.dims()[0])+ " by " + std::to_string(x.dims()[1]));
-        std::vector< AnyTensor > tensor = {};
-
+        spline_assert(x.n_dims()==2);
         std::vector< std::vector< AnyScalar > > X_ = x.unpack_2();
-        for(int i = 0; i < X_.size(); i++){
-            tensor.push_back(basis_(X_[i], Argument::from_vector(args)));
+
+        std::vector< AnyTensor > tensor = {};
+        for (int i = 0; i < X_.size(); i++) {
+            tensor.push_back(tensor_basis()(X_[i], Argument::from_vector(args), false));
         }
         AnyTensor packed_tensor = AnyTensor::pack(tensor, 0);
         int shared_dim = packed_tensor.n_dims();
@@ -32,11 +41,44 @@ namespace spline {
         std::vector<int> c_r = { a_r[0] };
         c_r.push_back(b_r[b_r.size() - 2]);
         c_r.push_back(b_r[b_r.size() - 1]);
-        return packed_tensor.einstein(coeff().data(), a_r, b_r, c_r).squeeze();
+        packed_tensor = packed_tensor.einstein(coeff_tensor(), a_r, b_r, c_r).squeeze_tailing();
+        if(X_.size() == 1){
+            std::vector< int > squeeze_dims;
+            for(int i = 1; i < packed_tensor.dims().size(); i++) squeeze_dims.push_back(packed_tensor.dims()[i]);
+            packed_tensor = packed_tensor.shape(squeeze_dims);
+        }
+        return packed_tensor;
     }
 
-    Function FunctionNode::partial_eval(const AnyTensor& x, const std::vector< int >& args) const{
-        spline_assert_message(false, "not implemented partial_eval");
+    Function FunctionNode::partial_eval(const AnyTensor& x, int index) const{
+        if(index < 0) return shared_from_this<Function>();
+        int n_basis = tensor_basis().n_basis();
+
+        std::vector< Basis > partial_basis = tensor_basis().bases();
+        partial_basis.erase(partial_basis.begin() + index);
+        std::vector< std::string > partial_arguments = tensor_basis().arguments();
+        partial_arguments.erase(partial_arguments.begin() + index);
+
+        std::vector< int > a = mrange(n_basis + 2);
+        std::vector< int > b = std::vector< int > {-1-index};
+        std::vector< int > c = mrange(n_basis + 2);
+        c.erase(c.begin() + index);
+        AnyTensor partial_coeff = coeff_tensor().einstein(basis(index)(x),a,b,c);
+
+        return Function(TensorBasis( partial_basis, partial_arguments ), partial_coeff);
+    }
+
+    AnyTensor FunctionNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args, bool squeeze_return)  const {
+
+        AnyTensor tensor = tensor_basis().grid_eval(x, Argument::from_vector(args), false);
+        int n_dims_tensor = tensor.dims().size();
+        int n_dims_grid = x.size();
+        std::vector< int > a = mrange(n_dims_tensor);
+        std::vector< int > b = mrange(n_dims_grid, n_dims_tensor + 2);
+        std::vector< int > c = mrange(n_dims_grid);
+        c.insert(c.end(), b.end() - 2, b.end());
+        tensor = tensor.einstein( coeff_tensor(), a, b, c);
+        return tensor;
     }
 
     std::string FunctionNode::type() const{
@@ -47,34 +89,42 @@ namespace spline {
         return "Function, consisting of a " + basis_.to_string() + "and:\n\t" + coeff_.to_string();
     }
 
+    Function FunctionNode::operator+(const Function& f) const {
+        return operator+(*f.get());
+    }
+
+    Function FunctionNode::operator*(const Function& f) const {
+        return operator*(*f.get());
+    }
+
+    Function FunctionNode::mtimes(const Function& f) const {
+        return mtimes(*f.get());
+    }
+
     Function FunctionNode::generic_operation(const Function& f,
             const BasisComposition & bc, const TensorComposition & tc) const  {
 
-        TensorBasis sumBasis = bc(tensor_basis(), f.tensor_basis());
-        EvaluationGrid evaluationGrid = EvaluationGrid(sumBasis);
-        std::vector< AnyTensor > basisEvaluated;
-        AnyTensor thisFunctionEvaluated;
-        AnyTensor otherFunctionEvaluated;
+        TensorBasis sumBasis = bc(f.tensor_basis(), tensor_basis());
+        std::vector< Argument > args = Argument::from_vector(sumBasis.arguments());
+        std::vector< AnyTensor > eval_g = sumBasis.evaluation_grid();
 
-        basisEvaluated = evaluationGrid.eval();
-        thisFunctionEvaluated = evaluationGrid.eval(shared_from_this<Function>());
-        otherFunctionEvaluated = evaluationGrid.eval(f);
+        AnyTensor basisEvaluated =  sumBasis.grid_eval(eval_g, args, false);
+        AnyTensor thisFunctionEvaluated = shared_from_this<Function>().grid_eval(eval_g, args, false);
+        AnyTensor otherFunctionEvaluated = f.grid_eval(eval_g, args, false);
 
-        AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
+        int n_dims_grid = eval_g.size();
+        AnyTensor A = basisEvaluated;
+
+        thisFunctionEvaluated = thisFunctionEvaluated.flatten_first(n_dims_grid);
+        otherFunctionEvaluated = otherFunctionEvaluated.flatten_first(n_dims_grid);
         AnyTensor B = tc(thisFunctionEvaluated, otherFunctionEvaluated);
 
-        // [n m p q] + [n m 1 1]   (*)
-
-        int numberEval = basisEvaluated.size();
-        int numberBasis = sumBasis.totalNumberBasisFunctions();
         std::vector< int > elemShape = B.dims();
         elemShape = std::vector<int>(elemShape.begin()+1, elemShape.end());
-        int numberCoef = (elemShape.size() == 0)? 1: spline::product(elemShape);
 
-        std::vector< int > shapeA = {numberEval, numberBasis};
-        std::vector< int > shapeB = {numberBasis, numberCoef};
-        A = A.shape(shapeA);
-        B = B.shape(shapeB);
+        A = A.flatten_first(n_dims_grid);
+        A = A.flatten_last(n_dims_grid);
+        B = B.flatten_last(2);
         AnyTensor C = A.solve(B);
 
         std::vector< int > shapeCoef = elemShape;
@@ -85,51 +135,42 @@ namespace spline {
         return Function(sumBasis, C);
     }
 
-    Function FunctionNode::operator+(const FunNode& f) const {
-        return f + *this;
+    Function FunctionNode::generic_preproces_operation(const Function& f,
+            const BasisComposition & bc, const TensorComposition & tc) const  {
+        return generic_operation(f, bc,
+                [&](const AnyTensor& lhs, const AnyTensor& rhs) {
+                int n = lhs.n_dims();
+                std::vector<int> rep(n, 1);
+                if (lhs.dims()[n-2]==1 && lhs.dims()[n-1]==1) {
+                    rep[n-2] = rhs.dims()[n-2];
+                    rep[n-1] = rhs.dims()[n-1];
+                    return tc(AnyTensor::repeat(lhs, rep), rhs);
+                }
+                if (rhs.dims()[n-2]==1 && rhs.dims()[n-1]==1) {
+                    rep[n-2] = lhs.dims()[n-2];
+                    rep[n-1] = lhs.dims()[n-1];
+                    return tc(lhs, AnyTensor::repeat(rhs, rep));
+                }
+                return tc(lhs, rhs);
+            });
     }
 
     Function FunctionNode::operator+(const FunctionNode& f) const {
-        return generic_operation(f.shared_from_this<Function>(),
+        return generic_preproces_operation(f.shared_from_this<Function>(),
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs + rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs + rhs; });
     }
 
-    Function FunctionNode::operator+(const ConstantNode& f) const {
-        return f + *this;
-    }
-
-    Function FunctionNode::operator*(const FunNode& f) const {
-        return f * *this;
-    }
-
     Function FunctionNode::operator*(const FunctionNode& f) const {
-        return generic_operation(f.shared_from_this<Function>(),
+        if(coeff().is_true_scalar()){
+            return Function(tensor_basis() * f.tensor_basis(), coeff_tensor().squeeze() * f.coeff_tensor());
+        }
+        if(f.coeff().is_true_scalar()){
+            return Function(tensor_basis() * f.tensor_basis(), coeff_tensor() * f.coeff_tensor().squeeze());
+        }
+        return generic_preproces_operation(f.shared_from_this<Function>(),
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
-                [](const AnyTensor& lhs, const AnyTensor& rhs) {
-
-        int n = lhs.n_dims();
-        std::vector<int> rep(n, 1);
-        if (lhs.dims()[n-2]==1 && lhs.dims()[n-1]==1) {
-          rep[n-2] = rhs.dims()[n-2];
-          rep[n-1] = rhs.dims()[n-1];
-          return AnyTensor::repeat(lhs, rep) * rhs;
-        }
-        if (rhs.dims()[n-2]==1 && rhs.dims()[n-1]==1) {
-          rep[n-2] = lhs.dims()[n-2];
-          rep[n-1] = lhs.dims()[n-1];
-          return lhs * AnyTensor::repeat(rhs, rep);
-        }
-        return lhs * rhs;
-      });
-    }
-
-    Function FunctionNode::operator*(const ConstantNode& f) const {
-        return f * *this;
-    }
-
-    Function FunctionNode::mtimes(const FunNode& f) const {
-        return f.rmtimes(*this);
+                [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs * rhs; });
     }
 
     Function FunctionNode::mtimes(const FunctionNode& f) const {
@@ -138,18 +179,10 @@ namespace spline {
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.einstein(rhs, {-4, -1, -2}, {-4, -2, -3}, {-4, -1, -3});});
     }
 
-    Function FunctionNode::mtimes(const ConstantNode& f) const {
-        return f.rmtimes(*this);
-    }
-
     Function FunctionNode::rmtimes(const FunctionNode& f) const {
         return generic_operation(f.shared_from_this<Function>(),
                 [](const TensorBasis& lhs, const TensorBasis& rhs) { return lhs * rhs; },
                 [](const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.einstein(lhs, {-4, -1, -2}, {-4, -2, -3}, {-4, -1, -3});});
-    }
-
-    Function FunctionNode::rmtimes(const ConstantNode& f) const {
-        return f.mtimes(*this);
     }
 
     Function FunctionNode::operator-() const {
@@ -161,50 +194,38 @@ namespace spline {
     }
 
     Function FunctionNode::trace() const {
-        std::vector< int > shape_ = shape();
-        spline_assert_message(shape_[0] == shape_[1],
-                "Trace only defined for square matrices. Dimensions are " << shape_ << ".");
+        return Function(tensor_basis(), coeff().trace());
+    }
 
-        AnyTensor t = DT(casadi::DM::densify(casadi::DM::eye(shape_[0])));
-        Function fdiag = operator*(ConstantNode(t)); //keep diagonal entries only
-
-        Coefficient cdiag = fdiag.coeff();
-        AnyTensor ones = AnyTensor::repeat(AnyScalar(1), std::vector< int >{1, shape_[0]});
-        cdiag = cdiag.transform(ones, cdiag.dimension().size()); //sum over all columns
-        cdiag = cdiag.transform(ones, cdiag.dimension().size()+1); //sum over all rows
-
-        return Function(tensor_basis(), cdiag);
+    bool FunctionNode::is_scalar() const {
+        return shape()[0] == 1 && shape()[1] == 1;
     }
 
     Function FunctionNode::transform_to(const TensorBasis& basis) const {
-        TensorBasis unionBasis = tensor_basis() + basis;
-        EvaluationGrid evaluationGrid = EvaluationGrid(unionBasis);
-        std::vector< AnyTensor > basisEvaluated;
-        AnyTensor thisFunctionEvaluated;
+        TensorBasis sumBasis = tensor_basis() + basis;
+        std::vector< Argument > args = Argument::from_vector(sumBasis.arguments());
+        std::vector< AnyTensor > eval_g = sumBasis.evaluation_grid();
+        int n_dims_grid = eval_g.size();
 
-        basisEvaluated = evaluationGrid.eval();
-        thisFunctionEvaluated = evaluationGrid.eval(shared_from_this<Function>());
+        AnyTensor A =  sumBasis.grid_eval(eval_g, args, false);
+        AnyTensor B = shared_from_this<Function>().grid_eval(eval_g, args, false);
 
-        AnyTensor A = AnyTensor::pack(basisEvaluated, 0);
-        AnyTensor B = thisFunctionEvaluated;
-        int numberEval = basisEvaluated.size();
-        int numberBasis = unionBasis.totalNumberBasisFunctions();
+        A = A.flatten_first(n_dims_grid);
+        B = B.flatten_first(n_dims_grid);
+
         std::vector< int > elemShape = B.dims();
         elemShape = std::vector<int>(elemShape.begin()+1, elemShape.end());
-        int numberCoef = spline::product(elemShape);
 
-        std::vector< int > shapeA = {numberEval, numberBasis};
-        std::vector< int > shapeB = {numberBasis, numberCoef};
-        A = A.shape(shapeA);
-        B = B.shape(shapeB);
+        A = A.flatten_last(n_dims_grid);
+        B = B.flatten_last(2);
         AnyTensor C = A.solve(B);
 
         std::vector< int > shapeCoef = elemShape;
-        std::vector< int > shapeBasis = unionBasis.dimension();
+        std::vector< int > shapeBasis = sumBasis.dimension();
         shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
 
         C = C.shape(shapeBasis);
-        return Function(unionBasis, C);
+        return Function(sumBasis, C);
     }
 
     Function FunctionNode::project_to(const TensorBasis& b) const {
@@ -248,46 +269,22 @@ namespace spline {
         return basis_;
     }
 
-        Basis FunctionNode::basis() const {
+    Basis FunctionNode::basis() const {
         spline_assert_message(tensor_basis().n_basis()==1,
                 ".basis() syntax only works for a 1-D TensorBasis.");
         return tensor_basis().bases()[0];
     }
 
-        Basis FunctionNode::basis(const Argument& index) const {
+    Basis FunctionNode::basis(const Argument& index) const {
         return tensor_basis().basis(index);
     }
 
-    Function FunctionNode::insert_knots(const AnyVector & new_knots) const {
-        spline_assert_message(tensor_basis().n_basis() == 1,
-                "I don't know the direction for knot insertion. Please supply argument.")
-            return insert_knots(std::vector<AnyVector>{new_knots}, NumericIndexVector{0});
-    }
-
-    Function FunctionNode::insert_knots(const AnyVector & new_knots,
-            const NumericIndex& arg_ind) const {
-        return insert_knots(std::vector<AnyVector>{new_knots}, NumericIndexVector{arg_ind});
-    }
-
-    Function FunctionNode::insert_knots(const AnyVector & new_knots, const std::string & arg) const {
-        return insert_knots(std::vector<AnyVector>{new_knots}, std::vector<std::string>{arg});
-    }
-
     Function FunctionNode::insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<std::string> & arg) const {
-        NumericIndexVector arg_ind(arg.size());
-        for (int i=0; i<arg.size(); i++) {
-            arg_ind[i] = tensor_basis().indexArgument(arg[i]);
-        }
-        return insert_knots(new_knots, arg_ind);
-    }
-
-    Function FunctionNode::insert_knots(const std::vector<AnyVector> & new_knots,
-            const NumericIndexVector & arg_ind) const {
+            const std::vector<int> & arg_ind) const {
         spline_assert(arg_ind.size() == new_knots.size())
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.insert_knots(new_knots, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.insert_knots(new_knots, Argument::from_vector(arg_ind), T);
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
@@ -297,7 +294,8 @@ namespace spline {
         spline_assert(arg_ind.size() == refinement.size())
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.midpoint_refinement(refinement,
+                Argument::from_vector(arg_ind), T);
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
@@ -305,9 +303,10 @@ namespace spline {
     Function FunctionNode::degree_elevation(const std::vector<int>& elevation,
             const std::vector< int >& arg_ind) const {
         spline_assert(arg_ind.size() == elevation.size());
-            std::vector<AnyTensor> T;
+        std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.degree_elevation(elevation, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.degree_elevation(elevation,
+                Argument::from_vector(arg_ind), T);
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
@@ -350,19 +349,18 @@ namespace spline {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.derivative(orders, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.derivative(orders, Argument::from_vector(arg_ind), T);
         NumericIndexVector args(arg_ind.size());
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
-
 
     Function FunctionNode::antiderivative(const std::vector<int>& orders,
             const std::vector< int >& arg_ind) const {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
-        TensorBasis new_tbasis = tbasis.antiderivative(orders, arg_ind, T);
+        TensorBasis new_tbasis = tbasis.antiderivative(orders, Argument::from_vector(arg_ind), T);
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         return Function(new_tbasis, new_coefficient);
     }
@@ -409,6 +407,10 @@ namespace spline {
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
         new_coefficient = new_coefficient.rm_direction(arg_ind);
         return Function(new_tbasis, new_coefficient);
+    }
+
+    TensorDomain FunctionNode::domain() const {
+        return tensor_basis().domain();
     }
 
 }  // namespace spline

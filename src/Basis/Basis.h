@@ -48,15 +48,15 @@ namespace spline {
         virtual bool operator==(const BSplineBasisNode& rhs) const;
 
         virtual std::string type() const;
-        virtual std::string to_string() const;
+        virtual std::string to_string() const override;
         Domain domain() const;
 
         virtual AnyTensor operator()(const std::vector< AnyScalar >& x) const;
 
-        template< class T >
-            void assert_vector_lenght_correct( const std::vector< T >& x) const;
+        virtual void assert_vector_lenght_correct( const AnyVector& x) const;
+        virtual void assert_vector_lenght_correct( const AnyTensor& x) const;
 
-        virtual std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        virtual AnyTensor evaluation_grid() const;
 
         virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
 
@@ -94,15 +94,15 @@ namespace spline {
         Basis operator+(const Basis& rhs) const;
         Basis operator*(const Basis& rhs) const;
 
-        virtual AnyTensor operator()(const AnyVector& x) const;
+        AnyTensor operator()(const AnyTensor& x) const;
+        AnyTensor list_eval(const AnyTensor& x) const;
 
         bool operator==(const Basis& rhs) const;
 
-        std::string type() const ;
-        std::string to_string() const ;
+        std::string type() const;
 
         Domain domain() const;
-        std::vector< std::vector < AnyScalar > > getEvaluationGrid() const;
+        AnyTensor evaluation_grid() const;
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;
         Basis midpoint_refinement(int refinement, AnyTensor& SWIG_OUTPUT(T)) const;
@@ -126,18 +126,8 @@ namespace spline {
 
         AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
 
-#ifndef SWIG
-        inline friend
-            std::ostream& operator<<(std::ostream &stream, const Basis& obj) {
-                return stream << obj.to_string();
-            }
-#endif // SWIG
     };
 
-    template< class T >
-        void BasisNode::assert_vector_lenght_correct(const std::vector< T >& x) const {
-            spline_assert_message(x.size() == n_inputs(), "Input vector has wrong dimension.");
-        }
 
 }  // namespace spline
 #endif  // BASIS_H_

@@ -1,15 +1,20 @@
 #ifndef SHAREDOBJECTNODE
 #define SHAREDOBJECTNODE
 
+#include <string>
+#include "PrintableObject.h"
+
 namespace spline {
 
 class SharedObject;
 
 #ifndef SWIG
 
-class SharedObjectNode {
+class SharedObjectNode : public spline::PrintableObject<SharedObjectNode> {
     friend class SharedObject;
 public:
+
+    std::string to_string() const override { return "SharedObjectNode"; }
     SharedObjectNode() ;
 
     /// Copy constructor

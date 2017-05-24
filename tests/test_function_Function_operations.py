@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 
 from helpers import *
@@ -69,22 +70,22 @@ class Test_Function_Operations(BasisTestCase):
         basis = splines.BSplineBasis(knots,degree)
         basis2 = splines.MonomialBasis(3)
 
-        c = Function(1)
-        self.assertEqualT(c(0.5),DTensor(1))
+        constants = [3, DTensor([0.1],[1,1]), DTensor([0,0.1,3,2,1,4],[3,2]), DTensor([0,0.1,3,2,1,4],[2,3]), DTensor([3,2],[2]), DTensor([3,2],[1,2]), DTensor([3,2],[2,1])]
+        for c in constants:
+            c2 = Function(c)
+            self.assertEqualTensor(c2(0.5), c)
 
-        c2 = Function(DTensor([2,2],[1,2]))
-        self.assertEqualT(c2(0.5),DTensor([2,2],[1,2]))
 
         basis2 = splines.MonomialBasis(3)
         c3 = Function(1)
         self.assertEqualT(c3(0.5),DTensor(1))
 
         mbasis = TensorBasis([basis,basis2]);
-        f = Function(2);
+        f = Function(3);
         f2 = Function([2,2]);
 
-        self.assertEqualT(f(0.1,0.1), 2)
-        self.assertEqualT(f2(0.2,0.2), DTensor([2,2]))
+        self.assertEqualTensor(f(0.1,0.1), 3)
+        self.assertEqualTensor(f2(0.2,0.2), DTensor([2,2]))
 
     def test_bspline_operation(self):
         knots1 = [0,0,0.4,1,1]
@@ -379,7 +380,6 @@ class Test_Function_Operations(BasisTestCase):
 
         p = Polynomial([0,1])
 
-        print "de test ------------------"
         # c + d
         c + p
 

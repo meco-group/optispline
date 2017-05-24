@@ -3,14 +3,19 @@ include_directories(${CASADI_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-sign-compare")
 
+if(NOT WIN32)
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror" )
+endif()
+
 add_library(splines SHARED
     common.h
 	common.cpp
 
     SharedObject/SharedObject.cpp SharedObject/SharedObjectNode.cpp
     SharedObject/SharedObject.h SharedObject/SharedObjectNode.h
+    SharedObject/PrintableObject.h
 
-    Basis/utils/vectorUtilities.h Basis/utils/vectorUtilities.cpp
+    Basis/utils/vectorUtilities.h
 
     Basis/Basis.h Basis/Basis.cpp
     Basis/EmptyBasis.h Basis/EmptyBasis.cpp
@@ -18,22 +23,18 @@ add_library(splines SHARED
     Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
     Basis/MonomialBasis.h Basis/MonomialBasis.cpp
     Basis/TensorBasis.h Basis/TensorBasis.cpp
-    Basis/TensorBasisConstant.h Basis/TensorBasisConstant.cpp
     Basis/BSplineBasis.h Basis/BSplineBasis.cpp
     Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
     Basis/MonomialBasis.h Basis/MonomialBasis.cpp
-
-    Basis/utils/EvaluationGrid.h Basis/utils/EvaluationGrid.cpp
 
     Basis/operations/operationsBasis.h Basis/operations/operationsBasis.cpp
     Basis/operations/plus.h Basis/operations/plus.cpp
     Basis/operations/times.h Basis/operations/times.cpp
 
-    Function/FunNode.h Function/FunNode.cpp
     Function/FunctionNode.h Function/FunctionNode.cpp
-    Function/ConstantNode.h Function/ConstantNode.cpp
     Function/Function.h Function/Function.cpp
     Function/Polynomial.h Function/Polynomial.cpp
+    Function/Parameter.h Function/Parameter.cpp
     Function/Argument.h Function/Argument.cpp
     Function/NumericIndex.h
 
