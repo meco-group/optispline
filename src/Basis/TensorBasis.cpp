@@ -271,7 +271,6 @@ namespace spline {
         /* spline_assert_message(x.size() == arg_ind.size() || n_basis() == 0, */
         /*         "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " + */
         /*         std::to_string(x.size())); */
-        std::cout << "\x1b[32m" << arg_ind << "\x1b[0m" << std::endl;
         if(arg_ind.size() != 0){
             spline_assert_message(x.size() == arg_ind.size(),
                     "Can evaluate vector and argument list have different length.");
@@ -298,9 +297,6 @@ namespace spline {
                 arg_ind_.erase(arg_ind_.begin() + i);
             }
         }
-
-        std::cout << "\x1b[31m" << arg_ind_ << "\x1b[0m" << std::endl;
-        std::cout << "\x1b[31m" << x_ << "\x1b[0m" << std::endl;
 
         for (int i = 0; i < n_basis(); i++) {
             Basis b = basis(i);
