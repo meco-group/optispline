@@ -22,11 +22,6 @@ namespace spline {
         virtual std::string type() const;
         virtual int concrete(const std::vector<std::string> & args) const = 0;
         virtual bool is_all() const ;
-
-        bool operator ==(const ArgumentNode & arg) const;
-        bool operator ==(const StringArgumentNode & arg) const;
-        bool operator ==(const IntArgumentNode & arg) const;
-        bool operator ==(const NullArgumentNode & arg) const;
     };
 
     class StringArgumentNode : public ArgumentNode {
@@ -34,11 +29,6 @@ namespace spline {
         StringArgumentNode(const std::string &name);
         virtual std::string to_string() const override;
         virtual int concrete(const std::vector<std::string> & args) const;
-
-        bool operator ==(const ArgumentNode & arg) const;
-        bool operator ==(const StringArgumentNode & arg) const;
-        bool operator ==(const IntArgumentNode & arg) const;
-        bool operator ==(const NullArgumentNode & arg) const;
 
         std::string name() const {return name_;}
     private:
@@ -51,11 +41,6 @@ namespace spline {
         virtual std::string to_string() const override;
         virtual int concrete(const std::vector<std::string> & args) const;
 
-        bool operator ==(const ArgumentNode & arg) const;
-        bool operator ==(const StringArgumentNode & arg) const;
-        bool operator ==(const IntArgumentNode & arg) const;
-        bool operator ==(const NullArgumentNode & arg) const;
-
         int index() const {return index_;}
     private:
         int index_;
@@ -67,11 +52,6 @@ namespace spline {
         virtual std::string to_string() const override;
         virtual int concrete(const std::vector<std::string> & args) const;
         virtual bool is_all() const override;
-
-        bool operator ==(const ArgumentNode & arg) const;
-        bool operator ==(const StringArgumentNode & arg) const;
-        bool operator ==(const IntArgumentNode & arg) const;
-        bool operator ==(const NullArgumentNode & arg) const;
     };
 
 #endif // SWIG
@@ -96,10 +76,9 @@ namespace spline {
         std::string type() const;
         bool is_all() const;
 
-        bool operator==(const Argument & arg) const;
-
         static std::vector< int > concrete(const std::vector< Argument >& args, const std::vector< std::string >& strings);
         static std::vector< int > concrete(const std::vector< Argument >& args, const TensorBasis& tb);
+        static int concrete(const Argument& arg, const TensorBasis& tb);
     };
 } // namespace spline
 #endif //CPP_SPLINES_INDEX_H

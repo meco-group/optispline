@@ -35,7 +35,7 @@ namespace spline {
 
         AnyTensor operator()(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
         AnyTensor list_eval(const AnyTensor& x, const std::vector< Argument >& args = std::vector< Argument > () ) const;
-        AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args = std::vector< Argument > (),  bool squeeze_return = true) const;
+        AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args = std::vector< Argument > (),  bool squeeze_return = false) const;
 
         Function partial_eval(const AnyTensor& x, const Argument& args) const;
 
@@ -143,8 +143,6 @@ namespace spline {
         }
 
         std::vector<int> vectorize(const Argument& arg) const;
-
-        void assert_unique_arguments(std::vector< Argument >& args ) const;
     };
 
 } // namespace spline

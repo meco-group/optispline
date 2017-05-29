@@ -74,6 +74,39 @@ fig = plt.figure()
 D_ = np.arange(D_min, D, 0.02)
 T_ = np.arange(0, 1.01, 0.02)
 
+d1 = 4
+d2 = 14
+
+fig = plt.figure()
+d_ = d1
+ax = fig.add_subplot(2, 3, 1)
+time = T_to_reach_d_(d_) *T_
+position = x_.partial_eval(d_, 'd').list_eval(T_)
+ax.plot(time , position)
+ax = fig.add_subplot(2, 3, 2)
+time = T_to_reach_d_(d_) *T_
+velo = v_.partial_eval(d_, 'd').list_eval(T_)/( T_to_reach_d_(d_))
+ax.plot(time , velo)
+ax = fig.add_subplot(2, 3, 3)
+time = T_to_reach_d_(d_) *T_
+acu = a_.partial_eval(d_, 'd').list_eval(T_)/( T_to_reach_d_(d_) **2)
+ax.plot(time , acu)
+d_ = d2
+ax = fig.add_subplot(2, 3, 4)
+time = T_to_reach_d_(d_) *T_
+position = x_.partial_eval(d_, 'd').list_eval(T_)
+ax.plot(time , position)
+ax = fig.add_subplot(2, 3, 5)
+time = T_to_reach_d_(d_) *T_
+velo = v_.partial_eval(d_, 'd').list_eval(T_)/( T_to_reach_d_(d_))
+ax.plot(time , velo)
+ax = fig.add_subplot(2, 3, 6)
+time = T_to_reach_d_(d_) *T_
+acu = a_.partial_eval(d_, 'd').list_eval(T_)/( T_to_reach_d_(d_) **2)
+ax.plot(time , acu)
+plt.show()
+
+fig = plt.figure()
 ax = fig.add_subplot(1, 3, 1, projection='3d')
 for d_ in range(D + 1):
     time = T_to_reach_d_(d_) *T_

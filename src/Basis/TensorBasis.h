@@ -34,13 +34,18 @@ class TensorBasisNode : public SharedObjectNode {
         virtual int n_basis() const;
         virtual std::vector<int> dimension() const;
         virtual int n_inputs() const;
+        std::vector< int > n_inputs_list() const;
 
         std::vector< std::string > arguments() const;
+        std::vector<Argument> arguments_temp() const;
 
         std::string argument(int index) const;
-        int indexArgument(std::string a) const;
+        int index_argument(const Argument& a) const;
+        int indexArgument(const std::string& a) const;
 
         bool hasArguments() const;
+        bool valid_argument(const Argument& a) const;
+        bool valid_argument_list(const std::vector<Argument>& args) const;
 
         TensorDomain domain() const;
 
@@ -135,14 +140,19 @@ public:
 
         int n_basis() const;  // Number of bases, building up the TensorBasis
         int n_inputs() const; // Total number of inputs, over all bases
+        std::vector< int > n_inputs_list() const;
         std::vector<int> dimension() const; // Vector containing number of basis functions in each basis
 
         std::vector< std::string > arguments() const;
+        std::vector<Argument> arguments_temp() const;
 
         std::string argument(int index) const;
-        int indexArgument(std::string a) const;
+        int index_argument(const Argument& a) const;
+        int indexArgument(const std::string& a) const;
 
         bool hasArguments() const;
+        bool valid_argument(const Argument& a) const;
+        bool valid_argument_list(const std::vector<Argument>& args) const;
 
         TensorDomain domain() const;
 
@@ -185,7 +195,6 @@ public:
         TensorBasis kick_boundary(const TensorDomain& boundary,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
-
         TensorBasis derivative(const std::vector<Argument>& arg,
           std::vector<AnyTensor>& SWIG_OUTPUT(T)) const; // default order = 1
         TensorBasis derivative(const std::vector<int>& order,
@@ -207,6 +216,7 @@ public:
         spline::Function basis_functions() const ;
 
         std::vector< int > get_permutation(const TensorBasis& grid) const;
+
       private:
           template<class T>
           std::vector<T> vectorize(const Argument& arg, const T& e) const {

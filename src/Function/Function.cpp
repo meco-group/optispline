@@ -64,18 +64,20 @@ namespace spline{
     }
 
     AnyTensor Function::operator()(const AnyTensor& x, const std::vector< Argument >& args ) const {
-        return (*this)->operator()(x, Argument::concrete(args, tensor_basis()));
+        return (*this)->operator()(x, args);
     }
 
     AnyTensor Function::list_eval(const AnyTensor& x, const std::vector< Argument >& args ) const {
-        return (*this)->list_eval(x, Argument::concrete(args, tensor_basis()));
+        return (*this)->list_eval(x, args);
     }
 
     AnyTensor Function::grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args,  bool squeeze_return) const {
-        return (*this)->grid_eval(x, Argument::concrete(args, tensor_basis()), squeeze_return);
+        return (*this)->grid_eval(x, args, squeeze_return);
     }
 
-    Function Function::partial_eval(const AnyTensor& x, const Argument& args ) const { return (*this)->partial_eval(x, args.concrete(tensor_basis().arguments()));}
+    Function Function::partial_eval(const AnyTensor& x, const Argument& args ) const {
+        return (*this)->partial_eval(x, args);
+    }
 
     Function Function::operator+(const Function& f) const { return (*this)->operator+(f) ;}
     Function Function::operator+(const AnyTensor& t) const {
@@ -328,15 +330,4 @@ namespace spline{
       casadi::Function f = casadi::Function("f", {c}, {J});
       return f(std::vector<casadi::DM>{0})[0];
     }
-
-    void Function::assert_unique_arguments(std::vector< Argument >& args ) const {
-        for (int i = 0; i < args.size(); ++i)
-        {
-           for (int j = i + 1; j < args.size(); ++j)
-           {
-              spline_assert_message(!(args[i] == args[j]), "Argument " + args[i].to_string() + " occurse multiple times");
-           }
-        }
-    }
-
 } // namespace spline

@@ -69,6 +69,15 @@ namespace spline {
         return allArguments;
     }
 
+    std::vector<Argument> TensorBasis::arguments_temp() const {
+        return (*this)->arguments_temp();
+    }
+    std::vector<Argument> TensorBasisNode::arguments_temp() const {
+        std::vector< Argument > arg_temp;
+        for(auto& a : arguments()) arg_temp.push_back(Argument(a));
+        return arg_temp;
+    }
+
     std::string TensorBasis::argument(int index) const {
         return (*this)->argument(index);
     }
@@ -76,16 +85,33 @@ namespace spline {
         return allArguments[index];
     }
 
-    int TensorBasis::indexArgument(std::string a) const { return (*this)->indexArgument(a); }
-    int TensorBasisNode::indexArgument(std::string a) const {
-        auto it = std::find(allArguments.begin(), allArguments.end(), a);
-        int index;
-        if (it == allArguments.end()) {
-            index = -1;
-        } else {
-            index = std::distance(allArguments.begin(), it);
+    int TensorBasis::index_argument(const Argument& a) const { return (*this)->index_argument(a); }
+    int TensorBasisNode::index_argument(const Argument& a) const {
+        return Argument::concrete(a, shared_from_this<TensorBasis>());
+    }
+
+    int TensorBasis::indexArgument(const std::string& a) const { return (*this)->indexArgument(a); }
+    int TensorBasisNode::indexArgument(const std::string& a) const {
+        return Argument::concrete(a, shared_from_this<TensorBasis>());
+    }
+
+    bool TensorBasis::valid_argument_list(const std::vector<Argument>& args) const { return (*this)->valid_argument_list(args);}
+    bool TensorBasisNode::valid_argument_list(const std::vector<Argument>& args) const {
+        if(n_basis() == 0) return true;
+        std::vector< int > number_occurence = n_inputs_list();
+        std::vector< int > index = Argument::concrete(args, shared_from_this<TensorBasis>());
+        for ( auto &i : index){
+            if (i >= 0 && i < n_basis()) number_occurence[i]--;
         }
-        return  index;
+        return std::all_of(number_occurence.begin(), number_occurence.end(), [](int i){ return i == 0; });
+    }
+
+    bool TensorBasis::valid_argument(const Argument& a) const{ return (*this)->valid_argument(a);}
+    bool TensorBasisNode::valid_argument(const Argument& a) const{
+        int index = index_argument(a);
+        if (index < 0) return false;
+        if (index >= n_basis()) return false;
+        return true;
     }
 
     bool TensorBasis::hasArguments() const { return (*this)->hasArguments();}
@@ -242,33 +268,51 @@ namespace spline {
 
     AnyTensor TensorBasis::operator() (const std::vector< AnyScalar > &  x,
             const std::vector< Argument >& arg_ind, bool reorder_output) const {
+        /* spline_assert_message(x.size() == arg_ind.size() || n_basis() == 0, */
+        /*         "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " + */
+        /*         std::to_string(x.size())); */
+        std::cout << "\x1b[32m" << arg_ind << "\x1b[0m" << std::endl;
+        if(arg_ind.size() != 0){
+            spline_assert_message(x.size() == arg_ind.size(),
+                    "Can evaluate vector and argument list have different length.");
+            spline_assert_message(this->valid_argument_list(arg_ind),
+                    "List of argument does not cover all required arguments.");
+        }
+        spline_assert_message(x.size() >= n_inputs(),
+                "Can evaluate vector and argument list have different length.");
         return (*this)->operator()(x, Argument::concrete(arg_ind, *this), reorder_output);
     }
     AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x,
             const std::vector< int >& arg_ind, bool reorder_output) const {
 
-        /* if(n_basis() == 0){// constant */
-        /*     return AnyTensor::ones(std::vector< int > {} ); */
-        /* } */
-
-        spline_assert_message(x.size() == n_inputs() || n_basis() == 0,
-                "Can evaluate list of " + std::to_string(n_inputs()) + " inputs. Got " +
-                std::to_string(x.size()));
         AnyTensor ret = AnyTensor::unity();
 
+        if(n_basis() == 0) return ret;
         std::vector< int > input_border_ = input_border();
+        std::vector< AnyScalar > x_ = x;
+        std::vector< int > arg_ind_ = arg_ind;
+
+        for(int i = x.size() - 1; i >= 0; i--){
+            if(arg_ind_[i] < 0){
+                x_.erase(x_.begin() + i);
+                arg_ind_.erase(arg_ind_.begin() + i);
+            }
+        }
+
+        std::cout << "\x1b[31m" << arg_ind_ << "\x1b[0m" << std::endl;
+        std::cout << "\x1b[31m" << x_ << "\x1b[0m" << std::endl;
 
         for (int i = 0; i < n_basis(); i++) {
             Basis b = basis(i);
-            int index_arg = arg_ind[i];
+            int index_arg = arg_ind_[i];
             std::vector< AnyScalar > input = {};
 
-            for (int i = input_border_[index_arg]; i < input_border_[index_arg + 1]; ++i) {
-                input.push_back(x[i]);
+            for (int j = input_border_[index_arg]; j < input_border_[index_arg + 1]; ++j) {
+                input.push_back(x_[j]);
             }
             ret = ret.outer_product(b(AnyVector(input)));
         }
-        if(reorder_output) return ret.reorder_dims(arg_ind);
+        if(reorder_output) return ret.reorder_dims(arg_ind_);
         return ret;
     }
 
@@ -369,6 +413,17 @@ namespace spline {
             r += b.n_inputs();
         }
         return r;
+    }
+
+    std::vector< int > TensorBasis::n_inputs_list() const {
+        return (*this)->n_inputs_list();
+    }
+    std::vector< int > TensorBasisNode::n_inputs_list() const {
+        std::vector< int > ret {n_basis()};
+        for (int i =0 ; i < n_basis(); i++) {
+            ret[i] = basis(i).n_inputs();
+        }
+        return ret;
     }
 
     AnyTensor TensorBasis::const_coeff_tensor(const AnyTensor& t) const {

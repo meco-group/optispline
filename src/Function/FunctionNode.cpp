@@ -10,16 +10,16 @@ namespace spline {
 
 std::vector< int > FunctionNode::shape() const {         return coeff_.shape();     }
 
-    AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< int >& args) const{
+    AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< Argument >& args) const{
         AnyTensor x = arg.squeeze();
         spline_assert_message(x.is_vector(), "Function can not be evaluated on something with dimentions " << x.dims());
         x = x.as_vector();
 
         std::vector< AnyScalar > x_ = x.unpack_1();
-        return tensor_basis()(x_, Argument::from_vector(args), false).inner(coeff().data());
+        return tensor_basis()(x_, args, false).inner(coeff().data());
     }
 
-    AnyTensor FunctionNode::list_eval(const AnyTensor& arg, const std::vector< int >& args) const{
+    AnyTensor FunctionNode::list_eval(const AnyTensor& arg, const std::vector< Argument >& args) const{
         AnyTensor x = arg;
         spline_assert(x.n_dims()<=2);
 
@@ -32,7 +32,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
 
         std::vector< AnyTensor > tensor = {};
         for (int i = 0; i < X_.size(); i++) {
-            tensor.push_back(tensor_basis()(X_[i], Argument::from_vector(args), false));
+            tensor.push_back(tensor_basis()(X_[i], args, false));
         }
         AnyTensor packed_tensor = AnyTensor::pack(tensor, 0);
         int shared_dim = packed_tensor.n_dims();
@@ -50,8 +50,10 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return packed_tensor;
     }
 
-    Function FunctionNode::partial_eval(const AnyTensor& x, int index) const{
+    Function FunctionNode::partial_eval(const AnyTensor& x, const Argument& arg) const{
+        int index = tensor_basis().index_argument(arg);
         if(index < 0) return shared_from_this<Function>();
+
         int n_basis = tensor_basis().n_basis();
 
         std::vector< Basis > partial_basis = tensor_basis().bases();
@@ -68,9 +70,9 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Function(TensorBasis( partial_basis, partial_arguments ), partial_coeff);
     }
 
-    AnyTensor FunctionNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args, bool squeeze_return)  const {
+    AnyTensor FunctionNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args, bool squeeze_return)  const {
 
-        AnyTensor tensor = tensor_basis().grid_eval(x, Argument::from_vector(args), false);
+        AnyTensor tensor = tensor_basis().grid_eval(x, args, squeeze_return);
         int n_dims_tensor = tensor.dims().size();
         int n_dims_grid = x.size();
         std::vector< int > a = mrange(n_dims_tensor);

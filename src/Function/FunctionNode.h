@@ -29,11 +29,11 @@ namespace spline {
         AnyTensor coeff_tensor() const {return coeff_.data();}
         AnyTensor data() const {return coeff_tensor().squeeze(); }
 
-        virtual AnyTensor operator()(const AnyTensor& x, const std::vector< int >& args ) const;
-        virtual AnyTensor list_eval(const AnyTensor& x, const std::vector< int >& args) const;
-        virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& args,  bool squeeze_return) const;
+        virtual AnyTensor operator()(const AnyTensor& x, const std::vector< Argument >& args ) const;
+        virtual AnyTensor list_eval(const AnyTensor& x, const std::vector< Argument >& args) const;
+        virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args,  bool squeeze_return) const;
 
-        virtual Function partial_eval(const AnyTensor& x, int args) const;
+        virtual Function partial_eval(const AnyTensor& x, const Argument& args) const;
 
         Function operator+(const Function& f) const;
         virtual Function operator+(const FunctionNode& f) const;

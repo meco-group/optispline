@@ -16,8 +16,21 @@ class Test_Function_Operations(BasisTestCase):
       self.assertEqualTensor(x([a]), a+2*a**2)
       self.assertEqualTensor(x([a],["x"]), a+2*a**2)
 
+      a = 0.1
+      b = 0.2
+      c = 1.2
+      self.assertEqualTensor(x([a,a],["x","y"]),x([a],["x"]))
+      print(x([a],["x"]))
+      print(x([a,b,c],["x","y", "z"]))
+      print(x([b,a],["y","x"]))
+      self.assertEqualTensor(x([a,b],["x","y"]),x([a],["x"]))
+      self.assertEqualTensor(x([b,a],["y","x"]),x([a],["x"]))
+
       with self.assertRaises(Exception):
         x([a],["y"])
+        x([a,b],["x", "x"])
+        x([a],["x", "y"])
+
 
       a = [0.1, 0.2, 0.3]
       self.assertEqualTensor(x.list_eval(a), np.array(a)+2*np.array(a)**2)
