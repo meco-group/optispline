@@ -2,6 +2,8 @@
 
 namespace spline {
 
+    Parameter::Parameter() : Polynomial({0, 1}) {}
+
     Parameter::Parameter(const std::string& a) : Polynomial({0, 1}, a) {}
 
     std::string Parameter::type() const{
