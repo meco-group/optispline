@@ -315,11 +315,9 @@ namespace spline{
           casadi::MX r = nominal(std::vector<casadi::MX>{xy.as_MT().matrix()})[0];
           return MT(r, {r.size1(), r.size2()});
         }
-
       }
       spline_assert(false);
       return DT();
-
     }
 
     casadi::DM Function::fast_jac(const AnyTensor& xy) const {
