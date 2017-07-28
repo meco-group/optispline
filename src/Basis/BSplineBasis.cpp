@@ -182,14 +182,14 @@ namespace spline {
         int n_knots = 2*degree + n_intervals;
         std::vector<AnyScalar> knot_vector(n_knots);
 
-        for (int i = 0; i < degree; ++i) {
-            knot_vector[i] = bounds[0];
-            knot_vector[n_knots - i - 1] = bounds[1];
-        }
-
-        for (int i = 0; i < n_intervals; ++i) {
+        for (int i = 1; i < n_intervals - 1; ++i) {
             double f = static_cast<double>(i)/(n_intervals-1);
             knot_vector[degree + i] = bounds[0] + (bounds[1] - bounds[0])*f;
+        }
+
+        for (int i = 0; i < degree + 1; ++i) {
+            knot_vector[i] = bounds[0];
+            knot_vector[n_knots - i - 1] = bounds[1];
         }
       assign_node(new BSplineBasisNode(knot_vector, degree));
     }
