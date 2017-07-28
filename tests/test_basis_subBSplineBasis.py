@@ -16,12 +16,30 @@ class Test_Basis_SubBSpline(BasisTestCase):
         x1L = -0.65;    x1U = 0.7;
         x1 = Polynomial([0, 1], 'x1')
         x1 = x1.transform_to(BSplineBasis([x1L,x1U],1,2))
+        self.assertEqual((x1*x1).coeff_tensor().size, 3)
 
         x2L = -0.7;    x2U = 0.7;
         x2 = Polynomial([0, 1], 'x2')
         x2 = x2.transform_to(BSplineBasis([x2L,x2U],1,2))
-        self.assertEqual((x1*x1).coeff_tensor().size, 3)
         self.assertEqual((x2*x2).coeff_tensor().size, 3)
+
+        x2L = -0.8;    x2U = 0.7;
+        x2 = Polynomial([0, 1], 'x2')
+        x2_2 = x2.transform_to(BSplineBasis([x2L,x2U],1,2))
+        x2_3 = x2.transform_to(BSplineBasis([x2L,x2U],1,3))
+        x2_5 = x2.transform_to(BSplineBasis([x2L,x2U],1,5))
+        x2_21 = x2.transform_to(BSplineBasis([x2L,x2U],1,21))
+        self.assertEqual((x2_3+x2_3).coeff_tensor().size, 3)
+        self.assertEqual((x2_5+x2_5).coeff_tensor().size, 5)
+        self.assertEqual((x2_3+x2_5).coeff_tensor().size, 5)
+        self.assertEqual((x2_21+x2_3).coeff_tensor().size, 21)
+        self.assertEqual((x2_21+x2_5).coeff_tensor().size, 21)
+
+        self.assertEqual((x2_3*x2_3).coeff_tensor().size, 5)
+        self.assertEqual((x2_5*x2_5).coeff_tensor().size, 9)
+        self.assertEqual((x2_3*x2_5).coeff_tensor().size, 9)
+        self.assertEqual((x2_21*x2_3).coeff_tensor().size, 41)
+        self.assertEqual((x2_21*x2_5).coeff_tensor().size, 41)
 
     def test_dimension1(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
