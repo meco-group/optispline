@@ -41,6 +41,10 @@ class Test_Basis_SubBSpline(BasisTestCase):
         self.assertEqual((x2_21*x2_3).coeff_tensor().size, 41)
         self.assertEqual((x2_21*x2_5).coeff_tensor().size, 41)
 
+        x = BSplineBasis([0,1.2],1,5)
+        y = BSplineBasis([0,0,0.3,0.6,0.9,1.2,1.2],1)
+        print (x+y).knots()
+
     def test_dimension1(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
         # number of basis functions = number of knots - degree - 1
