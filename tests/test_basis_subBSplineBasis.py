@@ -12,6 +12,17 @@ def wrap(s, casadiType):
 
 class Test_Basis_SubBSpline(BasisTestCase):
 
+    def test_BSpline_constructor(self):
+        x1L = -0.65;    x1U = 0.7;
+        x1 = Polynomial([0, 1], 'x1')
+        x1 = x1.transform_to(BSplineBasis([x1L,x1U],1,2))
+
+        x2L = -0.7;    x2U = 0.7;
+        x2 = Polynomial([0, 1], 'x2')
+        x2 = x2.transform_to(BSplineBasis([x2L,x2U],1,2))
+        self.assertEqual((x1*x1).coeff_tensor().size, 3)
+        self.assertEqual((x2*x2).coeff_tensor().size, 3)
+
     def test_dimension1(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
         # number of basis functions = number of knots - degree - 1
