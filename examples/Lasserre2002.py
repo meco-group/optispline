@@ -8,7 +8,7 @@ b = BSplineBasis([0, 1], 1, 2)
 
 x = Function(b, [0, 1])
 f = x * ( x-1 )
-print f
+print(f)
 
 # for i in range(14):
 #     f_ = f.degree_elevation(i)
@@ -30,29 +30,29 @@ print f
 
 x = Function(b, [0, 1])
 f = ( x**2-0.5 )**2
-print f
-print f.coeff_tensor()
+print(f)
+print(f.coeff_tensor())
 
 polya = []
 bspline = []
-r = range(0,13)
+r = list(range(0,13))
 r = [0,1,3,6,10]
 for i in r:
     f_ = f.degree_elevation(i)
-    print i ,
-    print " : ",
-    print len(f_.coeff_tensor().flatten()) ,
-    print " : ",
-    print min((f_.coeff_tensor().flatten()))
+    #print(i, end=' ')
+    #print(" : ", end=' ')
+    #print(len(f_.coeff_tensor().flatten()), end=' ')
+    #print(" : ", end=' ')
+    #print(min((f_.coeff_tensor().flatten())))
     polya.append(min(f_.coeff_tensor().flatten()))
 
 for i in r:
     f_ = f.insert_knots([(1.0+j)/(i+1) for j in range(i)])
-    print i ,
-    print " : ",
-    print len(f_.coeff_tensor().flatten()) ,
-    print " : ",
-    print min((f_.coeff_tensor().flatten()))
+    #print(i, end=' ')
+    #print(" : ", end=' ')
+    #print(len(f_.coeff_tensor().flatten()), end=' ')
+    #print(" : ", end=' ')
+    #print(min((f_.coeff_tensor().flatten())))
     bspline.append(min(f_.coeff_tensor().flatten()))
 
 import numpy as np

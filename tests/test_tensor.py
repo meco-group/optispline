@@ -24,7 +24,7 @@ class Test_Tensor(BasisTestCase):
               lhs*rhs
               lhs-rhs
 
-        for A in [DTensor(range(4),[2,2]), STensor(range(4),[2,2])]:
+        for A in [DTensor(list(range(4)),[2,2]), STensor(list(range(4)),[2,2])]:
           for s in matrices:
             for lhs, rhs in [(A,s),(s,A)]:
               lhs+rhs
@@ -88,16 +88,16 @@ class Test_Tensor(BasisTestCase):
         with self.assertRaises(Exception):
           DTensor.concat([A,B],0)
 
-        A = DTensor(range(24),[2,3,4])
-        B = DTensor(-DM(range(16)),[2,2,4])
+        A = DTensor(list(range(24)),[2,3,4])
+        B = DTensor(-DM(list(range(16))),[2,2,4])
 
         with self.assertRaises(Exception):
           DTensor.concat([A,B],0)
         with self.assertRaises(Exception):
           DTensor.concat([A,B],2)
 
-        A = DTensor(range(8),[2,2,2])
-        B = DTensor(-DM(range(8)),[2,2,2])
+        A = DTensor(list(range(8)),[2,2,2])
+        B = DTensor(-DM(list(range(8))),[2,2,2])
 
         def myslice(value,axis):
           ret = [-1]*3
@@ -114,7 +114,7 @@ class Test_Tensor(BasisTestCase):
 
         A = DTensor([],[2,0,4])
         B = DTensor([],[2,0,4])
-        C = DTensor(range(2*2*4),[2,2,4])
+        C = DTensor(list(range(2*2*4)),[2,2,4])
 
         R = DTensor.concat([C,A],1)
         self.assertEqualT(C, R)
@@ -158,7 +158,7 @@ class Test_Tensor(BasisTestCase):
 
       a = np.random.random(B.dimension())
       a = DTensor(a)
-      print a
+      print(a)
       a_ = Coefficient(a)
       F = splines.Function(B, a_)
 
@@ -166,20 +166,20 @@ class Test_Tensor(BasisTestCase):
       r = c.data()
 
       a = a.shape(a.dims()+[1,1])
-      print r
-      print a
+      print(r)
+      print(a)
       self.assertEqualT( r, a )
 
     def test_mtimes(self):
-      A = DTensor(range(6),[2,3])
-      B = DTensor(range(12),[3,4])
+      A = DTensor(list(range(6)),[2,3])
+      B = DTensor(list(range(12)),[3,4])
 
       a = np.array(A.matrix())
       b = np.array(B.matrix())
 
-      print "test"
-      print A.mtimes(B)
-      print a.dot(b)
+      print("test")
+      print(A.mtimes(B))
+      print(a.dot(b))
 
       self.assertEqualT(A.mtimes(B), a.dot(b))
 

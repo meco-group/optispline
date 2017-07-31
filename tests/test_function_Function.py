@@ -302,8 +302,8 @@ class Test_Function_Function(BasisTestCase):
 
 
         F = casadi.Function('f',[cMX],[dfMX(0.5,0.3)])
-        print F(c)
-        print df(0.5,0.3)
+        print(F(c))
+        print(df(0.5,0.3))
         
         self.assertEqualTensor(F(c), df(0.5,0.3))      
         
@@ -390,7 +390,7 @@ class Test_Function_Function(BasisTestCase):
         f2 = f1.transform_to(B2)
         g1 = b1b.greville()
         g2 = b2b.greville()
-        g3 = range(d3+3)
+        g3 = list(range(d3+3))
         B3, T = B.transform_to(B2)
         C2 = C.transform(T, [0, 1, 2])
         self.assertEqualT(f2.coeff_tensor()[:,:,:,0,0], C2, 1e-6)
@@ -415,7 +415,7 @@ class Test_Function_Function(BasisTestCase):
 
         d1 = 3
         b1 = MonomialBasis(d1)
-        g1 = range(d1+1)
+        g1 = list(range(d1+1))
         n1 = 1
         init1 = np.random.rand(n1);
 
@@ -444,7 +444,7 @@ class Test_Function_Function(BasisTestCase):
 
        d2 = 3
        b2 = MonomialBasis(d2)
-       g2 = range(d2+1)
+       g2 = list(range(d2+1))
 
        c = np.random.rand(b0.dimension(),b1.dimension(),b2.dimension())
        f = Function(TensorBasis([b0,b1,b2]), c)
@@ -546,7 +546,7 @@ class Test_Function_Function(BasisTestCase):
         f = Function(B,C)
 
         f2 = f.to_casadi()
-        print f2
+        print(f2)
 
         self.assertEqualTensor(f(0.2,0.3), f2([0.2, 0.3]))
 

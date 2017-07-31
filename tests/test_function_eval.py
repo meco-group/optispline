@@ -20,9 +20,9 @@ class Test_Function_Operations(BasisTestCase):
       b = 0.2
       c = 1.2
       self.assertEqualTensor(x([a,a],["x","y"]),x([a],["x"]))
-      print(x([a],["x"]))
-      print(x([a,b,c],["x","y", "z"]))
-      print(x([b,a],["y","x"]))
+      print((x([a],["x"])))
+      print((x([a,b,c],["x","y", "z"])))
+      print((x([b,a],["y","x"])))
       self.assertEqualTensor(x([a,b],["x","y"]),x([a],["x"]))
       self.assertEqualTensor(x([b,a],["y","x"]),x([a],["x"]))
 

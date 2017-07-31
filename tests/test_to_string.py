@@ -12,7 +12,7 @@ class Test_to_string(BasisTestCase):
         b_type = b.type()
         b_string = b.to_string()
 
-        print b_string
+        print(b_string)
 
         self.assertEqual(b_type, 'MonomialBasis')
         self.assertEqual(b_string, 'MonomialBasis of degree 3, on interval [-inf, inf]')
@@ -37,17 +37,17 @@ class Test_to_string(BasisTestCase):
         b3 = TensorBasis([b1,b2])
 
         b3_type = b3.type()
-        print b3_type
+        print(b3_type)
         b3_string = b3.to_string()
-        print b3_string
+        print(b3_string)
         self.assertEqual(b3_type, 'TensorBasis')
         self.assertEqual(b3_string, 'TensorBasis containing 2 bases:\n\tMonomialBasis of degree 3, on interval [-inf, inf]\n\tBSplineBasis of degree 4, with 20 knots, on interval [0.00, 1.00]\n')
 
         b4 = TensorBasis([b1])
         b4_type = b4.type()
-        print b4_type
+        print(b4_type)
         b4_string = b4.to_string()
-        print b4_string
+        print(b4_string)
         self.assertEqual(b4_type, 'TensorBasis')
         self.assertEqual(b4_string, 'TensorBasis containing 1 basis:\n\tMonomialBasis of degree 3, on interval [-inf, inf]\n')
 
@@ -57,9 +57,9 @@ class Test_to_string(BasisTestCase):
         b2 = BSplineBasis(knots,degree)
         b5 = TensorBasis([b1,b2], ['x','y'])
         b5_type = b5.type()
-        print b5_type
+        print(b5_type)
         b5_string = b5.to_string()
-        print b5_string
+        print(b5_string)
         self.assertEqual(b5_type, 'TensorBasis')
         self.assertEqual(b5_string, 'TensorBasis containing 2 bases in 2 arguments: \n \tx: MonomialBasis of degree 3, on interval [-inf, inf]\n\ty: BSplineBasis of degree 4, with 20 knots, on interval [0.00, 1.00]\n')
 
@@ -70,8 +70,8 @@ class Test_to_string(BasisTestCase):
         tens = TensorDomain([interval1, interval2, interval3], ['x','y','z'])
         tens_string = tens.to_string()
         tens_type = tens.type()
-        print tens_type
-        print tens_string
+        print(tens_type)
+        print(tens_string)
         self.assertEqual(tens_type, 'TensorDomain')
         self.assertEqual(tens_string, 'TensorDomain containing 3 domains in 3 arguments: \n \tx: interval [0.00, 1.00]\n\ty: interval [2.00, 3.00]\n\tz: interval [1.00, 100.54]\n')
 
@@ -82,8 +82,8 @@ class Test_to_string(BasisTestCase):
         interval = Interval(a,b)
         interval_string = interval.to_string()
         interval_type = interval.type()
-        print interval_type
-        print interval_string
+        print(interval_type)
+        print(interval_string)
         self.assertEqual(interval_type, 'Interval')
         self.assertEqual(interval_string, 'interval [a, b]')
 
@@ -92,8 +92,8 @@ class Test_to_string(BasisTestCase):
         c1 = Coefficient(np.random.rand(8,1,1))
         c1_type = c1.type()
         c1_string = c1.to_string()
-        print c1_type
-        print c1_string
+        print(c1_type)
+        print(c1_string)
         self.assertEqual(c1_type, 'Coefficient')
         self.assertEqual(c1_string, 'Coefficient, consisting of 8 coefficients with shape [1,1], of dimension [8]')
 
@@ -102,8 +102,8 @@ class Test_to_string(BasisTestCase):
         c2 = Coefficient(t_)
         c2_type = c2.type()
         c2_string = c2.to_string()
-        print c2_type
-        print c2_string
+        print(c2_type)
+        print(c2_string)
         self.assertEqual(c2_type, 'Coefficient')
         self.assertEqual(c2_string, 'Coefficient, consisting of 4 coefficients with shape [1,1], of dimension [2,2]')
 
@@ -112,8 +112,8 @@ class Test_to_string(BasisTestCase):
         c3 = Coefficient(t2_)
         c3_type = c3.type()
         c3_string = c3.to_string()
-        print c3_type
-        print c3_string
+        print(c3_type)
+        print(c3_string)
         self.assertEqual(c3_type, 'Coefficient')
         self.assertEqual(c3_string, 'Coefficient, consisting of 12 coefficients with shape [1,1], of dimension [3,4]')
 
@@ -125,8 +125,8 @@ class Test_to_string(BasisTestCase):
         p_type = p.type()
         p_string = p.to_string()
 
-        print p_type
-        print p_string
+        print(p_type)
+        print(p_string)
         self.assertEqual(p_type, 'Polynomial')
         self.assertEqual(p_string, 'Polynomial, consisting of:\nTensorBasis containing 1 basis:\n\tMonomialBasis of degree 3, on interval [-inf, inf]\nand:\n\t Coefficient, consisting of 4 coefficients with shape [1,1], of dimension [4]')
 
@@ -140,8 +140,8 @@ class Test_to_string(BasisTestCase):
 
         s_type = s1.type()
         s_string = s1.to_string()
-        print s_type
-        print s_string
+        print(s_type)
+        print(s_string)
         self.assertEqual(s_type, 'Function')
         self.assertEqual(s_string, 'Function, consisting of a TensorBasis containing 1 basis:\n\tBSplineBasis of degree 3, with 14 knots, on interval [0.00, 1.00]\nand:\n\tCoefficient, consisting of 10 coefficients with shape [1,1], of dimension [10]')
 
@@ -167,8 +167,8 @@ class Test_to_string(BasisTestCase):
 
         f_type = f.type()
         f_string = f.to_string()
-        print f_type
-        print f_string
+        print(f_type)
+        print(f_string)
         self.assertEqual(f_type, 'Function')
         self.assertEqual(f_string, 'Function, consisting of a TensorBasis containing 3 bases in 3 arguments: \n \tx: BSplineBasis of degree 3, with 14 knots, on interval [0.00, 1.00]\n\ty: BSplineBasis of degree 2, with 9 knots, on interval [0.00, 1.00]\n\tz: MonomialBasis of degree 6, on interval [-inf, inf]\nand:\n\tCoefficient, consisting of 420 coefficients with shape [1,1], of dimension [10,6,7]')
 

@@ -22,6 +22,7 @@ option(WITH_PYTHON "Compile the Python front-end" ON)
 option(WITH_COVERAGE "Enable coverage" OFF)
 option(WITH_STACKTRACE "Enable crashing and getting a stacktrace with gdb" OFF)
 
+set(PYTHON_VERSION 2.7 CACHE STRING "Python version to use")
 
 ######################################################
 ################## compiler options ##################

@@ -107,17 +107,17 @@ class Test_grid_eval(BasisTestCase):
                 for i in range(n_fun - 1): n_ = c[i](n_, r[i+1])
                 test_results.append(n_)
             cnt = 0
-            for fi in it.product(range(len(st_function)), repeat = n_fun):
+            for fi in it.product(list(range(len(st_function))), repeat = n_fun):
                 f = [st_function[i] for i in fi]
                 f_ = f[0]
                 for i in range(n_fun - 1): f_ = c[i](f_, f[i+1])
                 args = f_.tensor_basis().arguments()
                 f_args = [r_data[order.index(k)] for k in args]
 
-                for perm in list(it.permutations(range(len(args))))[:2]:
+                for perm in list(it.permutations(list(range(len(args)))))[:2]:
                   f_args_perm = [f_args[p] for p in perm]
                   args_perm = [args[p] for p in perm]
-                  print f_args_perm, args_perm
+                  print(f_args_perm, args_perm)
                   s = f_(f_args_perm,args_perm)
                   self.assertEqualTensor(s, test_results[cnt],tol=1e-6)
                 #for zip(args,f_args)
@@ -134,18 +134,18 @@ class Test_grid_eval(BasisTestCase):
 
         er = np.random.rand(3)
 
-        print f_(*e1)
-        print f_(*e2)
-        print f_(*e3)
+        print(f_(*e1))
+        print(f_(*e2))
+        print(f_(*e3))
 
         e = e1
-        print f(e, xyz)
+        print(f(e, xyz))
 
-        print f(e, yxz)
-        print f(e, yxz)
+        print(f(e, yxz))
+        print(f(e, yxz))
 
-        print f(e, zxy)
-        print f(e3, zxy)
+        print(f(e, zxy))
+        print(f(e3, zxy))
 
         self.assertEqualTensor(tb_xyz(e1, xyz), tb_xyz(e2, yxz, False))
         self.assertEqualTensor(tb_xyz(e1, xyz), tb_xyz(e3, zxy, False))
@@ -161,8 +161,8 @@ class Test_grid_eval(BasisTestCase):
         self.assertEqualTensor(tb_xyz(e1, xyz), tb_xyz(e3, zxy, False))
         tb = TensorBasis([x,y], ['x', 'y'])
 
-        r1 = range(3)
-        r2 = range(4)
+        r1 = list(range(3))
+        r2 = list(range(4))
 
         grid_e = tb.grid_eval([r1  ,r2],['x', 'y'])
 
@@ -194,8 +194,8 @@ class Test_grid_eval(BasisTestCase):
 
         f  = x + y**2
 
-        r1 = range(3)
-        r2 = range(4)
+        r1 = list(range(3))
+        r2 = list(range(4))
 
         grid_e = f.grid_eval([r1  ,r2],['x', 'y'])
 

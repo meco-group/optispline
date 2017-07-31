@@ -53,6 +53,6 @@ c = Function(B, c.coeff_tensor().squeeze())
 
 
 p = (c - 0.5*no)**2 + (s - 0.5*no)**2
-print min(p.coeff_tensor().flatten())
+print(min(p.coeff_tensor().flatten()))
 for i in range(7):
-    print min(p.midpoint_refinement(i).coeff_tensor().flatten())
+    print(min(p.midpoint_refinement(i).coeff_tensor().flatten()))

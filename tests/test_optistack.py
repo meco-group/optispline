@@ -87,7 +87,7 @@ class Test_Optistack(BasisTestCase):
         
         sol = opti.solver((x[0]-1)**2+(x[1]-2)**2,[x<=0.5],"ipopt")
         sol.solve()
-        print "test", sol.value(x)
+        print("test", sol.value(x))
         self.assertEqualTensor(sol.value(x), [0.5,0.5],tol=1e-7)
 
     def test_parametric(self):
@@ -133,7 +133,7 @@ class Test_Optistack(BasisTestCase):
         x = opti.var()
         y = P(x)
         
-        print jacobian(y,cmx)
+        print(jacobian(y,cmx))
         
         sol = opti.solver(y,[],"ipopt")
         sol.value(cmx, c)
@@ -165,7 +165,7 @@ class Test_Optistack(BasisTestCase):
         
         xsol = sol.value(x)
        
-        print Pd(sol.value(x))
+        print(Pd(sol.value(x)))
         self.assertEqualTensor(Pd(xsol), 0, tol=1e-8)
         kmx = opti.par(len(k))
         b = BSplineBasis(kmx,degree)
@@ -175,7 +175,7 @@ class Test_Optistack(BasisTestCase):
         x = opti.var()
         y = P(x)
         
-        print y
+        print(y)
         self.assertTrue(jacobian(y,kmx).is_zero())
         jtimes(y,kmx,1)
         jtimes(y,kmx,1,True)
@@ -271,17 +271,17 @@ class Test_Optistack(BasisTestCase):
         
         R = DM([[1,2],[4,4]])
         
-        print ((P-R)**2).integral()
-        print ((P-R)**2).integral().shape
+        print(((P-R)**2).integral())
+        print(((P-R)**2).integral().shape)
         
         f = sum2(sum1(((P-R)**2).integral()))
         
-        print f
+        print(f)
 
         x = symvar(f)
         
         F = casadi.Function('f',x,[f])
-        print F(0,0,0,0)
+        print(F(0,0,0,0))
 
         sol = opti.solver(f,[],"ipopt")
 
@@ -293,7 +293,7 @@ class Test_Optistack(BasisTestCase):
 
         P = opti.var(2, 2)
         
-        print 
+        print() 
         
         f = sum2(sum1(((P-R)**2).integral))
 

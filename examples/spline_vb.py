@@ -47,7 +47,7 @@ for k, via_pnt in enumerate(via_pnts):
     g.append(t_via[k]>=0.4)
     g.append(t_via[k]<=0.6)
 
-print g
+print(g)
 
 g.append(vx<=T*vmax)
 g.append(vx>=-T*vmax)

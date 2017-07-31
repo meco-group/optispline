@@ -15,9 +15,9 @@ foreach(file ${files})
         --suppressions=$ENV{CASADI_PREFIX}/casadi/include/casadi/valgrind-python.supp --suppressions=$ENV{CASADI_PREFIX}/casadi/include/casadi/valgrind-python.supp 
         --suppressions=${CMAKE_CURRENT_SOURCE_DIR}/cpp_splines.supp
         --show-possibly-lost=no --error-limit=no --gen-suppressions=all
-        python ${file})
+        python${PYTHON_VERSION} ${file})
     set_tests_properties(valgrind_${BASE} PROPERTIES ENVIRONMENT "VALGRIND=1")
-    add_test("python_${BASE}" python2 ${file})
+    add_test("python_${BASE}" python${PYTHON_VERSION} ${file})
     set_tests_properties("python_${BASE}" valgrind_${BASE} PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_BINARY_DIR}/swig;")
 endforeach()
 
@@ -30,7 +30,7 @@ foreach(file ${files})
     # Test with valgrind (catches memory errors; takes a long while to run)
     # Allow the receiving script to check if it is running inside valgrind
     # This makes it possible to short-circuit expensive tests
-    add_test("python_${BASE}" python2 ${file} -dAgg)
+    add_test("python_${BASE}" python${PYTHON_VERSION} ${file} -dAgg)
     set_tests_properties("python_${BASE}" PROPERTIES ENVIRONMENT "MECO_BINARIES_OVERRIDE_CASADI=$ENV{CASADI_PREFIX};MECO_BINARIES_OVERRIDE_CPP_SPLINES=${CMAKE_BINARY_DIR}/swig")
 endforeach()
 endif()

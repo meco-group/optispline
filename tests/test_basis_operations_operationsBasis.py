@@ -27,10 +27,10 @@ if __name__ == '__main__':
     b1 = TensorBasis([s1,s2])
     b2 = TensorBasis([s3,s4])
 
-    print "NO ARGUMENT"
+    print("NO ARGUMENT")
     b = b1 + b2
-    print b
-    print b.bases()
+    print(b)
+    print(b.bases())
 
 
     x1 = 'x1'
@@ -40,15 +40,15 @@ if __name__ == '__main__':
     b1 = TensorBasis(b1, [x1,x2])
     b2 = TensorBasis(b2, [x2,x1])
 
-    print "SWAP"
+    print("SWAP")
     b = b1 + b2
-    print b
-    print b.bases()
+    print(b)
+    print(b.bases())
 
     b3 = TensorBasis([s3,s4], [x2,x3])
 
-    print "ARGUMENT COMBINE"
+    print("ARGUMENT COMBINE")
     b = b1 + b3
-    print b
-    print b.bases()
+    print(b)
+    print(b.bases())
     unittest.main()

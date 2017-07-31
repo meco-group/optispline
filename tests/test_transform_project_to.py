@@ -64,7 +64,7 @@ class Test_Project_To(BasisTestCase):
 
         g2 = numpy.random.random(10)
         for i in g2:
-            print s1(i), s2(i)
+            print(s1(i), s2(i))
             self.assertEqualTensor(s1(i), s2(i), 1e-6)        #np.random.seed(0)
 
         degree = 3

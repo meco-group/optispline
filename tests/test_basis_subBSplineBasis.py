@@ -43,7 +43,7 @@ class Test_Basis_SubBSpline(BasisTestCase):
 
         x = BSplineBasis([0,1.2],1,5)
         y = BSplineBasis([0,0,0.3,0.6,0.9,1.2,1.2],1)
-        print (x+y).knots()
+        print((x+y).knots())
 
     def test_dimension1(self):
         s = BSplineBasis([0,0,0,0.5,1,1,1], 2)
@@ -104,15 +104,15 @@ class Test_Basis_SubBSpline(BasisTestCase):
       t = TensorBasis([B])
 
       c = np.random.random(*t.dimension())
-      print(np.shape(c))
+      print((np.shape(c)))
       c = DTensor(c)
-      print(c.dims())
+      print((c.dims()))
       # c = c.shape(c.dims()+[ 1])
       c = Coefficient(c)
 
       print("____")
-      print(c.shape())
-      print(c.dimension())
+      print((c.shape()))
+      print((c.dimension()))
 
       f = Function(B,c)
       # print(f(x).dims())

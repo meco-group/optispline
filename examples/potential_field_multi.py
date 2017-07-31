@@ -109,11 +109,11 @@ plt.colorbar(C)
 _stop_plotting = time.time()
 
 # Print some timing diagnostics
-print "Diagnostics"
-print "optimization time = %f" % (_stop_optimization-_start_optimization)
-print "    integration time = %f" % (_stop_integration-_start_integration)
-print "    actual casadi optimization time = %f" %  ((_stop_optimization-_start_optimization)-(_stop_integration-_start_integration))
-print "plotting time = %f" % (_stop_plotting-_start_plotting)
+print("Diagnostics")
+print("optimization time = %f" % (_stop_optimization-_start_optimization))
+print("    integration time = %f" % (_stop_integration-_start_integration))
+print("    actual casadi optimization time = %f" %  ((_stop_optimization-_start_optimization)-(_stop_integration-_start_integration)))
+print("plotting time = %f" % (_stop_plotting-_start_plotting))
 
 # Show the plots
 plt.show()
