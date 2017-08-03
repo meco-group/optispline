@@ -1,4 +1,4 @@
-image: jgillis/meco_build
+image: jgillis/meco_builder:vivid
 
 #pma-rob-dbs.mech.kuleuven.be/meco/meco
 
@@ -16,6 +16,7 @@ variables:
     MOSEKLM_LICENSE_FILE: /repo/mosek/8/mosek.lic
 
 before_script:
+    - source /opt/meco_setup && rclone_setup
     - source env.sh
     - rclone sync dropbox:meco_binaries_debian/$SWIG_HOME_REL $SWIG_HOME
     - rclone sync --include meco_binaries.* dropbox:$BINARIES $DEBIAN_BINARIES
@@ -33,7 +34,7 @@ after_script:
     - rm -rf swig/*.pyc swig/CMakeFiles
     - echo $TARGET
 
-    - rclone delete dropbox:$TARGET
+    - rclone delete dropbox:$TARGET || echo "okay"
     - rclone --transfers 2 sync swig/ dropbox:$TARGET --exclude CMakeFiles || rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles || rclone sync swig/ dropbox:$TARGET --exclude CMakeFiles
 
 coverage:
@@ -41,11 +42,14 @@ coverage:
   variables:
         BUILD_OS: debian
         BUILD_LANG: python27
+        CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy2.7/lib/libpython2.7.so"
+        CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy2.7/include/python2.7"
   script:
     - set -e
+    - source activate condapy2.7
     - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - pushd build
-    - cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
+    - cmake -DPYTHON_LIBRARY=$CMAKE_PYTHON_LIBRARY -DPYTHON_INCLUDE_DIR=$CMAKE_PYTHON_INCLUDE_DIR -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
     - ctest -V -R python_test
     - gcovr -e  ".*wrap.cxx" -r ..
@@ -72,21 +76,39 @@ debian-matlab:
     - export PATH=$PATH:$MATLAB_ROOT/bin/
     - ctest -V -R matlab
 
-debian-python:
+.debian_python_template: &debian_python_definition
   stage: binaries
-  variables:
-        BUILD_OS: debian
-        BUILD_LANG: python27
   script:
     - set -e
+    - source activate condapy$PYTHON_VERSION
     - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - pushd build
-    - cmake -DWITH_MATLAB=OFF ..
+    - cmake -DPYTHON_LIBRARY=$CMAKE_PYTHON_LIBRARY -DPYTHON_INCLUDE_DIR=$CMAKE_PYTHON_INCLUDE_DIR -DPYTHON_VERSION=$PYTHON_VERSION -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
     - cp src/*.so swig
 
     - ctest -V -R python
-    - ctest -V -R valgrind
+    - if [ $WITH_VALGRIND ]; then ctest -V -R valgrind; fi
+
+debian-python27:
+  <<: *debian_python_definition
+  variables:
+     BUILD_OS: debian
+     PYTHON_VERSION: "2.7"
+     BUILD_LANG: python27
+     WITH_VALGRIND: "ON"
+     CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy2.7/lib/libpython2.7.so"
+     CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy2.7/include/python2.7"
+    
+debian-python36:
+  <<: *debian_python_definition
+  variables:
+    BUILD_OS: debian
+    PYTHON_VERSION: "3.6"
+    BUILD_LANG: python36
+    CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy3.6/lib/libpython3.6m.so"
+    CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy3.6/include/python3.6m
+    "
 
 windows-matlab:
   stage: binaries
