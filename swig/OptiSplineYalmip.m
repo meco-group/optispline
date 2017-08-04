@@ -32,45 +32,12 @@ classdef OptiSplineYalmip < splines.OptiSpline
               expr_types = {expr_types{:} t};
           end
 
-          helper = casadi.Function('helper', vars, expr_canon);
-          helper = helper.expand();
-
           name = 'yalmip_helper';
+          helper = casadi.Function(name, vars, expr_canon);
+          helper = helper.expand();
+          
           clear(name);
-
-          main = fopen([name '.m'],'w');
-
-          fprintf(main,['function [varargout] = ' name '(args)\n']);
-
-          algorithm = strsplit(helper.getDescription(),'\n');
-
-          for i=1:helper.n_in()
-           fprintf(main,'argin_%d = args{%d};\n',i-1,i);
-          end
-          for i=1:helper.n_out()
-           fprintf(main,'argout_%d = cell(%d,1);\n',i-1,helper.nnz_out(i-1));
-          end
-          for i=1:numel(algorithm)
-          l = algorithm{i};
-          if strfind(l, '@')
-            break
-          end
-          end
-          algorithm = strjoin(algorithm(i:end),'\n');
-
-          algorithm = regexprep(algorithm,'@','at');
-          algorithm = regexprep(algorithm,'input\[(\d+)\]\[(\d+)\]','argin_$1(${num2str(str2num($2)+1)})');
-          algorithm = regexprep(algorithm,'output\[(\d+)\]\[(\d+)\]','argout_$1{${num2str(str2num($2)+1)}}');
-          algorithm = regexprep(algorithm,'sq\((.*?)\)','($1)^2');
-
-          fprintf(main,algorithm);
-          for i=1:helper.n_out()
-          fprintf(main,'varargout{%d} = [argout_%d{:}];\n',i,i-1);
-          end
-
-          fprintf(main,'end\n');
-
-          fclose(main);
+          opti.matlab_dump(helper, [pwd filesep name '.m']);
           rehash
 
           [out{1:length(expr)}] = feval(name, args);

@@ -151,6 +151,8 @@ public:
   spline::Function Function(const spline::TensorBasis& b, const std::vector<int>& shape=std::vector<int>(), const std::string& variable_type="full");
   OptiSplineSolver solver(const MX& f, const std::vector<MX> & g,
       const std::string& solver, const Dict& options=Dict()) const;
+
+  void matlab_dump(const casadi::Function& f, const std::string &fname) const;
 };
 
 

@@ -412,3 +412,61 @@ OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std:
 OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g) : OptistackSolver(sc, f, g) {
 
 }
+
+void OptiSpline::matlab_dump(const casadi::Function& f, const std::string &fname) const {
+  std::ofstream ss(fname);
+
+
+  ss << "function [varargout] = " << f.name() << "(args)" << std::endl;
+  for (int i=0;i<f.n_in();++i) {
+    ss << "  argin_" << i <<  " = args{" << i+1 << "};" << std::endl;
+  }
+  for (int i=0;i<f.n_out();++i) {
+    ss << "  argout_" << i <<  " = cell(" << f.nnz_out(i) << ",1);" << std::endl;
+  }
+  for (int i=0;i<f.getAlgorithmSize();++i) {
+    int op = f.getAtomicOperation(i);
+    int i1 = f.getAtomicOutput(i);
+    switch (op) {
+      case OP_INPUT:
+        {
+          const std::pair<int, int> ip = f.getAtomicInput(i); int i2=ip.first;int i3=ip.second;
+          ss << "  w" << i1 << " = " << "argin_" << i2 << "(" << i3+1 << ");" << std::endl;
+        }
+        break;
+      case OP_OUTPUT:
+        {
+          const std::pair<int, int> ip = f.getAtomicInput(i); int i2=ip.first;int i3=ip.second;
+          ss << "  argout_" << i1 << "{" << i3+1 << "} = w" << i2 << ";" << std::endl;
+        }
+        break;
+      case OP_CONST:
+        {
+          std::ios_base::fmtflags fmtfl = ss.flags();
+          ss << "  w" << i1 << " = ";
+          ss << std::scientific << std::setprecision(std::numeric_limits<double>::digits10 + 1);
+          ss << f.getAtomicInputReal(i) << ";" << std::endl;
+          ss.flags(fmtfl);
+        }
+        break;
+      case OP_SQ:
+        {
+          const std::pair<int, int> ip = f.getAtomicInput(i); int i2=ip.first;
+          ss << "  w" << i1 << " = " << "w" << i2 << "^2;" << std::endl;
+        }
+        break;
+      default:
+        const std::pair<int, int> ip = f.getAtomicInput(i); int i2=ip.first;int i3=ip.second;
+        if (casadi::casadi_math<double>::ndeps(op)==2) {
+          ss << "  w" << i1 << " = " << casadi::casadi_math<double>::print(op, "w"+std::to_string(i2), "w"+std::to_string(i3)) << ";" << std::endl;
+        } else {
+          ss << "  w" << i1 << " = " << casadi::casadi_math<double>::print(op, "w"+std::to_string(i2)) << ";" << std::endl;          
+        }
+    }
+  }
+
+  for (int i=0;i<f.n_out();++i) {
+    ss << "  varargout{" << i+1 <<  "} = [argout_" << i <<"{:}];" << std::endl;
+  }
+    ss << "end" << std::endl;
+}
