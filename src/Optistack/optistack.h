@@ -16,16 +16,23 @@ class OptistackSolver;
 class Optistack {
   friend class OptistackSolver;
 public:
-  enum ConstraintType {OPTISTACK_UNKNOWN, OPTISTACK_EQUALITY, OPTISTACK_INEQUALITY, OPTISTACK_PSD, OPTISTACK_EXPR};
+  enum ConstraintType {OPTISTACK_UNKNOWN,
+  
+    OPTISTACK_GENERIC_EQUALITY,  // g1(x,p) == g2(x,p)
+    OPTISTACK_GENERIC_INEQUALITY,  // g1(x,p) <= g2(x,p)
+    OPTISTACK_EQUALITY, // g(x,p) == bound(p)
+    OPTISTACK_INEQUALITY,  // g(x,p) <= bound(p)
+    OPTISTACK_DOUBLE_INEQUALITY,  // lb(p) <= g(x,p) <= ub(p)
+    OPTISTACK_PSD, OPTISTACK_EXPR};
   enum VariableType {OPTISTACK_VAR, OPTISTACK_PAR};
 
-  #ifndef SWIG
   struct MetaCon {
     MX original;
     MX flattened;
     ConstraintType type;
+    MX lb;
+    MX ub;
   };
-  #endif
 
   Optistack();
   MX var(int n=1, int m=1, const std::string& variable_type="full");
@@ -45,6 +52,7 @@ public:
   std::vector<MX> sort(const std::vector<MX>& v) const;
 
   Optistack::MetaCon canon_expr(const MX& expr) const;
+  bool is_parametric(const MX& expr) const;
 
 
 protected:
@@ -107,6 +115,7 @@ private:
   DMDict res_;
   DMDict arg_;
   MXDict nlp_;
+  Function bounds_;
   DM pvalue_;
   std::vector< Optistack::MetaCon > constraints_;
 

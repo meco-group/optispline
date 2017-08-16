@@ -110,6 +110,19 @@ std::vector<MX> ineq_unpack(const MX& a) {
   }
 }
 
+bool Optistack::is_parametric(const MX& expr) const {
+  std::vector<MX> deps = symvar(expr);
+
+  for (const auto& d : deps) {
+    auto search = data_.find(d.get());
+    if (search!=data_.end()) {
+      if (search->second==Optistack::OPTISTACK_VAR) return false;
+    }
+  }
+
+  return true;
+}
+
 Optistack::MetaCon Optistack::canon_expr(const MX& expr) const {
   MX c = expr;
 
@@ -120,20 +133,41 @@ Optistack::MetaCon Optistack::canon_expr(const MX& expr) const {
   if (c.is_op(OP_LE) || c.is_op(OP_LT)) {
     std::vector<MX> ret;
     std::vector<MX> args = ineq_unpack(c);
+    std::vector<bool> parametric;
+    for (auto &a : args) parametric.push_back(is_parametric(a));
+
+    if (args.size()==2 && (parametric[0] || parametric[1])) {
+      MX e = args[0]-args[1];
+      if (e.is_vector()) {
+        casadi_assert(!parametric[0] || !parametric[1]);
+        con.type = OPTISTACK_INEQUALITY;
+        if (parametric[0]) {
+          con.lb = args[0]*DM::ones(e.sparsity());
+          con.ub = inf*DM::ones(e.sparsity());
+          con.flattened = args[1];
+        } else {
+          con.lb = -inf*DM::ones(e.sparsity());
+          con.ub = args[1]*DM::ones(e.sparsity());
+          con.flattened = args[0];
+        }
+        return con;
+      }
+    } else if (args.size()==3 && (parametric[0] || parametric[2])) {
+      con.type = OPTISTACK_DOUBLE_INEQUALITY;
+      con.lb = args[0]*DM::ones(args[1].sparsity());
+      con.ub = args[2]*DM::ones(args[1].sparsity());
+      con.flattened = args[1];
+      return con;
+    }
+
     for (int j=0;j<args.size()-1;++j) {
       MX e = args[j]-args[j+1];
       if (e.is_vector()) {
         ret.push_back(e);
-        spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_INEQUALITY);
-        con.type = OPTISTACK_INEQUALITY;
+        spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_GENERIC_INEQUALITY);
+        con.type = OPTISTACK_GENERIC_INEQUALITY;
       } else {
-        //if (args[j+1].is_scalar()) {
-        //  e = DM::eye(args[j+1].size1())*args[j+1]-args[j];
-        //} else if (args[j].is_scalar()) {
-        //  e = args[j+1]-DM::eye(args[j+1].size1())*args[j];
-        //} else {
         e = args[j+1]-args[j];
-        //}
 
         ret.push_back(e);
         spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_PSD);
@@ -141,22 +175,41 @@ Optistack::MetaCon Optistack::canon_expr(const MX& expr) const {
       }
     }
 
-    if (con.type==OPTISTACK_INEQUALITY) {
-      con.flattened = {veccat(ret)};
+    if (con.type==OPTISTACK_GENERIC_INEQUALITY) {
+      con.flattened = veccat(ret);
+      con.lb = -inf*DM::ones(con.flattened.sparsity());
+      con.ub = DM::zeros(con.flattened.sparsity());
     } else {
-      con.flattened = {diagcat(ret)};
+      con.flattened = diagcat(ret);
     }
+    return con;
   } else if (c.is_op(OP_EQ)) {
-    spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_EQUALITY);
-    con.type = OPTISTACK_EQUALITY;
-    con.flattened = {c.dep(0)-c.dep(1)};
+    spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_GENERIC_EQUALITY);
+    
+    MX e = c.dep(0)-c.dep(1);
+    if (is_parametric(c.dep(0))) {
+      con.flattened = c.dep(1);
+      con.lb = c.dep(0)*DM::ones(e.sparsity());
+      con.type = OPTISTACK_EQUALITY;
+    } else if (is_parametric(c.dep(1))) {
+      con.flattened = c.dep(0);
+      con.lb = c.dep(1)*DM::ones(e.sparsity());
+      con.type = OPTISTACK_EQUALITY;
+    } else {
+      con.lb = DM::zeros(con.flattened.sparsity());
+      con.flattened = e;
+      con.type = OPTISTACK_GENERIC_EQUALITY;
+    }
+    con.ub = con.lb;
+    return con;
   } else {
     spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_EXPR);
     con.type = OPTISTACK_EXPR;
-    con.flattened = {c};
+    con.flattened = c;
+    return con;
   }
 
-  return con;
+  
 }
 
 std::vector<MX> Optistack::symvar(const MX& expr, VariableType type) const {
@@ -202,8 +255,15 @@ void OptistackSolver::solve() {
 
 // Solve the problem
 void OptistackSolver::solve_prepare() {
+
   arg_["x0"] = veccat(values(Optistack::OPTISTACK_VAR));
   arg_["p"]  = veccat(values(Optistack::OPTISTACK_PAR));
+  DMDict arg;
+  arg["p"] = arg_["p"];
+  DMDict res = bounds_(arg);
+  arg_["lbg"] = res["lbg"];
+  arg_["ubg"] = res["ubg"];
+
   //if (arg_["p"].is_empty()) arg_["p"] = DM::zeros(0, 1);
 }
 
@@ -238,11 +298,21 @@ OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::ve
     constraints_.push_back(sc_.canon_expr(g[i]));
 
   std::vector<MX> g_all;
+  std::vector<MX> lbg_all;
+  std::vector<MX> ubg_all;
   for (const auto& cm : constraints_) {
     g_all.push_back(cm.flattened);
+    lbg_all.push_back(cm.lb);
+    ubg_all.push_back(cm.ub);
   }
 
   nlp_["g"] = veccat(g_all);
+  MXDict bounds;
+  bounds["p"] = veccat(p);
+  bounds["lbg"] = veccat(lbg_all);
+  bounds["ubg"] = veccat(ubg_all);
+
+  bounds_ = Function("bounds", bounds, {"p"}, {"lbg", "ubg"});
 
   // Initialize decision variables with zero
   for (auto& v : x)
@@ -256,35 +326,18 @@ OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::ve
 OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::vector<MX> & g,
     const std::string& solver, const Dict& options) : OptistackSolver(sc, f, g) {
 
-  int ng = nlp_["g"].is_null()? 0 : nlp_["g"].size1();
   solver_ = nlpsol("solver", solver, nlp_, options);
 
-  // Set constraints
-  std::vector<DM> lbg;lbg.reserve(ng);
-  std::vector<DM> ubg;lbg.reserve(ng);
   for (const auto& cm : constraints_) {
-    switch (cm.type) {
-      case Optistack::OPTISTACK_EQUALITY:
-        lbg.push_back(DM::zeros(cm.flattened.sparsity()));
-        ubg.push_back(DM::zeros(cm.flattened.sparsity()));
-        break;
-      case Optistack::OPTISTACK_INEQUALITY:
-        lbg.push_back(-inf*DM::ones(cm.flattened.sparsity()));
-        ubg.push_back(DM::zeros(cm.flattened.sparsity()));
-        break;
-      case Optistack::OPTISTACK_PSD:
-        spline_error("Psd constraints not implemented yet. "
-          "Perhaps you intended an element-wise inequality? "
-          "In that case, make sure that the matrix is flattened (e.g. mat(:)).");
-      case Optistack::OPTISTACK_EXPR:
-        spline_error("Constraint type unknown. Use ==, >= or <= .");
-      case Optistack::OPTISTACK_UNKNOWN:
-        spline_error("Bug in toolbox. Please notify authors.");
-    }
+    if (cm.type==Optistack::OPTISTACK_PSD)
+      spline_error("Psd constraints not implemented yet. "
+      "Perhaps you intended an element-wise inequality? "
+      "In that case, make sure that the matrix is flattened (e.g. mat(:)).");
+    if (cm.type==Optistack::OPTISTACK_EXPR)
+     spline_error("Constraint type unknown. Use ==, >= or <= .");
+    if (cm.type==Optistack::OPTISTACK_UNKNOWN)
+      spline_error("Bug in toolbox. Please notify authors.");
   }
-
-  arg_["lbg"] = veccat(lbg);
-  arg_["ubg"] = veccat(ubg);
 }
 
 void OptistackSolver::assert_has(const MX& m) const {

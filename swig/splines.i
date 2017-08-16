@@ -71,6 +71,8 @@ def _swig_repr(self):
 //%}
 //{% endif %}
 
+%feature("flatnested") Optistack::MetaCon;
+
 // Renameing MATLAB
 #ifdef SWIGMATLAB
 %rename(eval_internal) spline::Function::operator();
