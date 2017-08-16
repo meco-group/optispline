@@ -44,11 +44,10 @@ public:
 
   std::vector<MX> sort(const std::vector<MX>& v) const;
 
-  static MX canon_expr(const MX& expr, Optistack::ConstraintType& SWIG_OUTPUT(type));
+  Optistack::MetaCon canon_expr(const MX& expr) const;
 
 
 protected:
-  static std::vector< MetaCon > categorize_constraints(const std::vector<MX>& g);
   std::map< VariableType, std::vector<MX> > categorize(const MX& expr);
 
 private:

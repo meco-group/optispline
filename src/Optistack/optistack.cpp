@@ -110,10 +110,13 @@ std::vector<MX> ineq_unpack(const MX& a) {
   }
 }
 
-MX Optistack::canon_expr(const MX& expr, ConstraintType& type) {
+Optistack::MetaCon Optistack::canon_expr(const MX& expr) const {
   MX c = expr;
 
-  type = OPTISTACK_UNKNOWN;
+  MetaCon con;
+  con.original = expr;
+
+  con.type = OPTISTACK_UNKNOWN;
   if (c.is_op(OP_LE) || c.is_op(OP_LT)) {
     std::vector<MX> ret;
     std::vector<MX> args = ineq_unpack(c);
@@ -121,8 +124,8 @@ MX Optistack::canon_expr(const MX& expr, ConstraintType& type) {
       MX e = args[j]-args[j+1];
       if (e.is_vector()) {
         ret.push_back(e);
-        spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_INEQUALITY);
-        type = OPTISTACK_INEQUALITY;
+        spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_INEQUALITY);
+        con.type = OPTISTACK_INEQUALITY;
       } else {
         //if (args[j+1].is_scalar()) {
         //  e = DM::eye(args[j+1].size1())*args[j+1]-args[j];
@@ -133,26 +136,27 @@ MX Optistack::canon_expr(const MX& expr, ConstraintType& type) {
         //}
 
         ret.push_back(e);
-        spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_PSD);
-        type = OPTISTACK_PSD;
+        spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_PSD);
+        con.type = OPTISTACK_PSD;
       }
     }
 
-    if (type==OPTISTACK_INEQUALITY) {
-      return veccat(ret);
+    if (con.type==OPTISTACK_INEQUALITY) {
+      con.flattened = {veccat(ret)};
     } else {
-      return diagcat(ret);
+      con.flattened = {diagcat(ret)};
     }
   } else if (c.is_op(OP_EQ)) {
-    spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_EQUALITY);
-    type = OPTISTACK_EQUALITY;
-    return c.dep(0)-c.dep(1);
+    spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_EQUALITY);
+    con.type = OPTISTACK_EQUALITY;
+    con.flattened = {c.dep(0)-c.dep(1)};
   } else {
-    spline_assert(type==OPTISTACK_UNKNOWN || type==OPTISTACK_EXPR);
-    type = OPTISTACK_EXPR;
-    return c;
+    spline_assert(con.type==OPTISTACK_UNKNOWN || con.type==OPTISTACK_EXPR);
+    con.type = OPTISTACK_EXPR;
+    con.flattened = {c};
   }
 
+  return con;
 }
 
 std::vector<MX> Optistack::symvar(const MX& expr, VariableType type) const {
@@ -227,7 +231,12 @@ OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::ve
   nlp_["p"] = veccat(p);
 
   nlp_["f"] = f;
-  constraints_ = Optistack::categorize_constraints(g);
+
+  constraints_.clear();
+
+  for (int i=0;i<g.size();++i)
+    constraints_.push_back(sc_.canon_expr(g[i]));
+
   std::vector<MX> g_all;
   for (const auto& cm : constraints_) {
     g_all.push_back(cm.flattened);
@@ -276,20 +285,6 @@ OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::ve
 
   arg_["lbg"] = veccat(lbg);
   arg_["ubg"] = veccat(ubg);
-}
-
-std::vector<Optistack::MetaCon> Optistack::categorize_constraints(const std::vector<MX>& g) {
-
-  std::vector<Optistack::MetaCon> ret(g.size());
-
-  for (int i=0;i<g.size();++i) {
-    MX c = g[i];
-    MetaCon& r = ret[i];
-    r.original = c;
-    r.flattened = canon_expr(c, r.type);
-  }
-
-  return ret;
 }
 
 void OptistackSolver::assert_has(const MX& m) const {
