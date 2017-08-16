@@ -271,6 +271,15 @@ DMDict OptistackSolver::solve_actual(const DMDict& arg) const {
   return solver_(arg);
 }
 
+DM OptistackSolver::dual(const MX& x) const {
+  spline_assert(solved_);
+  auto it = con_lookup_.find(x.get());
+  casadi_assert_message(it==con_lookup_.end(), "Unknown constraint");
+  int start = constraints_[it->second].start;
+  int stop = constraints_[it->second].stop;
+  return res_.at("lam_g")(range(start, stop));
+}
+
 DM OptistackSolver::value(const MX& x) const {
   spline_assert(solved_);
   Function helper = Function("helper", std::vector<MX>{nlp_.at("x"), nlp_.at("p")}, {x});
@@ -292,10 +301,18 @@ OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::ve
 
   nlp_["f"] = f;
 
-  constraints_.clear();
+  constraints_.resize(g.size());
 
-  for (int i=0;i<g.size();++i)
-    constraints_.push_back(sc_.canon_expr(g[i]));
+  int offset = 0;
+  for (int i=0;i<g.size();++i) {
+    Optistack::MetaCon r = sc_.canon_expr(g[i]);
+    r.start = offset;
+    r.stop = offset+r.flattened.nnz();
+    constraints_[i] = r;
+
+    con_lookup_[r.original.get()] = i;
+    offset+= r.flattened.nnz();
+  }
 
   std::vector<MX> g_all;
   std::vector<MX> lbg_all;
@@ -318,7 +335,7 @@ OptistackSolver::OptistackSolver(const Optistack& sc, const MX& f, const std::ve
   for (auto& v : x)
     data_[v.get()] = std::vector<DM>(1, DM::zeros(v.sparsity()));
 
-  // Initialize decision variables with nan
+  // Initialize parameters with nan
   for (auto& v : p)
     data_[v.get()] = std::vector<DM>(1, DM::nan(v.sparsity()));
 }

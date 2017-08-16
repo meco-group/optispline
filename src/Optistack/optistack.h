@@ -32,6 +32,8 @@ public:
     ConstraintType type;
     MX lb;
     MX ub;
+    int start;
+    int stop;
   };
 
   Optistack();
@@ -75,6 +77,8 @@ public:
   // Set value
   void value(const MX& x, const DM& v);
 
+  DM dual(const MX& x) const;
+
   #ifndef SWIG
   // Get value
   DM value(const MX& x) const;
@@ -104,7 +108,7 @@ protected:
       const std::string& solver, const Dict& options);
 private:
 
-
+  std::map<MXNode*, int > con_lookup_;
 
   Optistack sc_;
   std::map<MXNode*, std::vector<DM> > data_;
