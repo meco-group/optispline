@@ -27,8 +27,8 @@ classdef OptiSplineSolverYalmip < splines.OptiSplineSolver
           yalmip_options = options.yalmip_options;
         end
         e = veccat(f,g{:});
-        vars_x = opti.symvar(e, opti.OPTISTACK_VAR);
-        vars_p = opti.symvar(e, opti.OPTISTACK_PAR);
+        vars_x = opti.symvar(e, opti.OPTI_VAR);
+        vars_p = opti.symvar(e, opti.OPTI_PAR);
 
         vars_x_yalmip = opti.yalmip_var(vars_x);
         vars_p_yalmip = opti.yalmip_var(vars_p);

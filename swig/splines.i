@@ -71,7 +71,8 @@ def _swig_repr(self):
 //%}
 //{% endif %}
 
-%feature("flatnested") Optistack::MetaCon;
+%feature("flatnested") Opti::MetaCon;
+%feature("flatnested") Opti::MetaVar;
 
 // Renameing MATLAB
 #ifdef SWIGMATLAB
@@ -1018,13 +1019,13 @@ using namespace spline;
  }
 
 
-%apply int &OUTPUT { Optistack::ConstraintType &OUTPUT };
+%apply int &OUTPUT { Opti::ConstraintType &OUTPUT };
 
-%typemap(argout, noblock=1,fragment="casadi_all") Optistack::ConstraintType &OUTPUT {
+%typemap(argout, noblock=1,fragment="casadi_all") Opti::ConstraintType &OUTPUT {
   %append_output(casadi::from_ptr((int *) $1));
 }
 
-%typemap(in, doc="Optistack.ConstraintType", noblock=1, numinputs=0) Optistack::ConstraintType &OUTPUT (Optistack::ConstraintType m) {
+%typemap(in, doc="Opti.ConstraintType", noblock=1, numinputs=0) Opti::ConstraintType &OUTPUT (Opti::ConstraintType m) {
  $1 = &m;
 }
 
@@ -1394,3 +1395,4 @@ namespace spline {
 #define UINT64_T unsigned long long int
 %}
 #endif
+

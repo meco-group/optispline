@@ -5,6 +5,8 @@ import splines.*
 opti = OptiSpline();
 
 
+
+
 x = opti.var();
 y = opti.var();
 z = opti.var();
@@ -129,4 +131,203 @@ z = opti.var(1,3);
 sol = opti.solver(x+trace(y)+z(1),{y>=3},'yalmip')
 sol.solve()
 
+x_yalmip = sdpvar(2,2,'full')
+y_yalmip = sdpvar(2,2,'full')
 
+con = 3<=y_yalmip<=4;
+sol = optimize([con],trace((x_yalmip-1).^2+(y_yalmip-2).^2));
+dual_yalmip = dual(con)
+
+
+x_yalmip = sdpvar();
+y_yalmip = sdpvar();
+
+f_yalmip = (x_yalmip-1)^2+(y_yalmip-2)^2;
+
+eps = 1e-5;
+fun = @(x,y) { 
+          y>=2.5;
+          y>=1.5;
+          2.5>=y;
+          1.5>=y;
+          y<=2.5;
+          y<=1.5;
+          2.5<=y;
+          1.5<=y;
+          y>=x;
+          y<=x;
+          y<=0;
+          y==1.5;
+          y==x;
+          3<= y <=4;
+          0<= y <=1;
+          4>= y >=3;
+          1>= y >=0;
+          3<= x<= y<= 4;
+          3<= y<= x<= 4;
+          4>= y>= x>= 3;
+          4>= x>= y>= 3;};
+
+opti = OptiSpline();
+
+x = opti.var();
+y = opti.var();
+f = (x-1)^2+(y-2)^2;
+
+tests_yalmip = fun(x_yalmip, y_yalmip);
+tests = fun(x, y);
+
+for i = 1:size(tests,1)
+  con = tests_yalmip{i};
+  
+  sol = optimize(con,f_yalmip);
+  dual_yalmip = dual(con);
+  xs_yalmip = value(x_yalmip);
+  ys_yalmip = value(y_yalmip);
+  
+  con = tests{i};
+  
+  sol = opti.solver(f,{con},'ipopt');
+  sol.solve();
+  assert(norm(sol.value(x)-xs_yalmip)<1e-3);
+  assert(norm(sol.value(y)-ys_yalmip)<1e-3);
+  dual_1 = full(sol.dual(con)');
+  assert(norm(dual_1(:)-dual_yalmip)<1e-3);  
+end
+
+x_yalmip = sdpvar(3,1,'full');
+y_yalmip = sdpvar(3,1,'full');
+
+s = [0.9;1.1;1];
+
+f_yalmip = sum((x_yalmip-1).^2+((y_yalmip-2).*s).^2);
+
+eps = 1e-5;
+
+opti = OptiSpline();
+
+x = opti.var(3,1);
+y = opti.var(3,1);
+
+f = sum((x-1).^2+((y-2).*s).^2);
+
+tests_yalmip = fun(x_yalmip, y_yalmip);
+tests = fun(x, y);
+
+for i = 1:size(tests,1)
+  con = tests_yalmip{i};
+  
+  sol = optimize(con,f_yalmip);
+  dual_yalmip = dual(con);
+  xs_yalmip = value(x_yalmip);
+  ys_yalmip = value(y_yalmip);
+  
+  con = tests{i};
+  
+  sol = opti.solver(f,{con},'ipopt');
+  sol.solve();
+  assert(norm(sol.value(x)-xs_yalmip)<1e-3);
+  assert(norm(sol.value(y)-ys_yalmip)<1e-3);
+  dual_1 = full(sol.dual(con)');
+  assert(norm(dual_1(:)-dual_yalmip(:))<1e-3);  
+
+end
+
+x_yalmip = sdpvar(1,3,'full');
+y_yalmip = sdpvar(1,3,'full');
+
+s = [0.9;1.1;1]';
+
+f_yalmip = sum((x_yalmip-1).^2+((y_yalmip-2).*s).^2);
+
+eps = 1e-5;
+
+opti = OptiSpline();
+
+x = opti.var(1,3);
+y = opti.var(1,3);
+
+f = sum((x-1).^2+((y-2).*s).^2);
+
+tests_yalmip = fun(x_yalmip, y_yalmip);
+tests = fun(x, y);
+
+for i = 1:size(tests,1)
+  con = tests_yalmip{i};
+  
+  sol = optimize(con,f_yalmip);
+  dual_yalmip = dual(con);
+  xs_yalmip = value(x_yalmip);
+  ys_yalmip = value(y_yalmip);
+  
+  con = tests{i};
+  
+  sol = opti.solver(f,{con},'ipopt');
+  sol.solve();
+  assert(norm(sol.value(x)-xs_yalmip)<1e-3);
+  assert(norm(sol.value(y)-ys_yalmip)<1e-3);
+  dual_1 = full(sol.dual(con)');
+  assert(norm(dual_1(:)-dual_yalmip(:))<1e-3);  
+
+end
+
+x_yalmip = sdpvar(3,2,'full');
+y_yalmip = sdpvar(3,2,'full');
+
+s = [0.9 0.7;1.1 0.9;1 1];
+
+f_yalmip = sum(sum((x_yalmip-1).^2+((y_yalmip-2).*s).^2));
+
+eps = 1e-5;
+
+opti = OptiSpline();
+
+x = opti.var(3,2);
+y = opti.var(3,2);
+
+f = sum(sum((x-1).^2+((y-2).*s).^2));
+
+fun = @(x,y) { 
+          y(:)>=2.5;
+          y(:)>=1.5;
+          2.5>=y(:);
+          1.5>=y(:);
+          y(:)<=2.5;
+          y(:)<=1.5;
+          2.5<=y(:);
+          1.5<=y(:);
+          y(:)>=x(:);
+          y(:)<=x(:);
+          y(:)<=0;
+          y==1.5;
+          y==x;
+          3<= y(:) <=4;
+          0<= y(:) <=1;
+          4>= y(:) >=3;
+          1>= y(:) >=0;
+          3<= x(:)<= y(:)<= 4;
+          3<= y(:)<= x(:)<= 4;
+          4>= y(:)>= x(:)>= 3;
+          4>= x(:)>= y(:)>= 3;};
+
+tests_yalmip = fun(x_yalmip, y_yalmip);
+tests = fun(x, y);
+
+for i = 1:size(tests,1)
+  con = tests_yalmip{i};
+  
+  sol = optimize(con,f_yalmip);
+  dual_yalmip = dual(con);
+  xs_yalmip = value(x_yalmip);
+  ys_yalmip = value(y_yalmip);
+  
+  con = tests{i};
+  
+  sol = opti.solver(f,{con},'ipopt');
+  sol.solve();
+  assert(norm(sol.value(x)-xs_yalmip)<1e-3);
+  assert(norm(sol.value(y)-ys_yalmip)<1e-3);
+  dual_1 = full(sol.dual(con)');
+  assert(norm(dual_1(:)-dual_yalmip(:))<1e-3);  
+
+end

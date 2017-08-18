@@ -55,7 +55,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
           expr_types = cell(1,length(expr));
           for i=1:length(expr)
               e = opti.canon_expr(expr{i});
-              expr_canon{i} = e.flattened;
+              expr_canon{i} = e.canon;
               expr_lb{i} = e.lb;
               expr_ub{i} = e.ub;
               expr_types{i} = e.type;
@@ -67,7 +67,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
           ub = yalmip_expr_primitive(opti, vars, expr_ub, args);
 
           for i=1:length(out)
-              if (expr_types{i}==opti.OPTISTACK_DOUBLE_INEQUALITY || expr_types{i}==opti.OPTISTACK_INEQUALITY || expr_types{i}==opti.OPTISTACK_GENERIC_INEQUALITY)
+              if (expr_types{i}==opti.OPTI_DOUBLE_INEQUALITY || expr_types{i}==opti.OPTI_INEQUALITY || expr_types{i}==opti.OPTI_GENERIC_INEQUALITY)
                 if isinf(lb{i})
                   if isinf(ub{i})
                     out{i} = {};
@@ -81,9 +81,9 @@ classdef OptiSplineYalmip < splines.OptiSpline
                     out{i} = lb{i}<=out{i}<=ub{i};
                   end
                 end
-              elseif (expr_types{i}==opti.OPTISTACK_EQUALITY || expr_types{i}==opti.OPTISTACK_GENERIC_EQUALITY)
+              elseif (expr_types{i}==opti.OPTI_EQUALITY || expr_types{i}==opti.OPTI_GENERIC_EQUALITY)
                   out{i} = out{i}==ub{i};
-              elseif (expr_types{i}==opti.OPTISTACK_PSD)
+              elseif (expr_types{i}==opti.OPTI_PSD)
                   out{i} = 0.5*(out{i}+out{i}')>=0;
               end
           end
@@ -105,7 +105,7 @@ classdef OptiSplineYalmip < splines.OptiSpline
 
         counts = zeros(1,N);
         for i=1:length(vars)
-          m = opti.meta(vars{i});
+          m = opti.get_meta(vars{i});
           c = m.count;
           counts(i) = c+1;
         end
@@ -114,12 +114,12 @@ classdef OptiSplineYalmip < splines.OptiSpline
         all_vars = opti.symvar();
 
         for i=length(opti.yalmip_variables)+1:max(counts)
-          m = opti.meta(all_vars{i});
-          if strcmp(m.variable_type,'symmetric')
+          m = opti.get_meta(all_vars{i});
+          if strcmp(m.attribute,'symmetric')
               ind = find(tril(ones(m.m, m.n)));
               arg = sdpvar(m.m, m.n, 'symmetric');
               arg = arg(ind);
-          elseif strcmp(m.variable_type,'full');
+          elseif strcmp(m.attribute,'full');
               arg = sdpvar(m.m, m.n, 'full');
           end
 

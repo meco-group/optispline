@@ -7,6 +7,8 @@ class Test_Optistack(BasisTestCase):
     def test_simple(self):
         opti = OptiSpline()
         
+        eps = 1e-5 
+        
         x = opti.var()
         y = opti.var()
         
@@ -16,57 +18,48 @@ class Test_Optistack(BasisTestCase):
         self.assertEqualTensor(sol.value(x), 1)
         self.assertEqualTensor(sol.value(y), 2)
        
-
-
-        sol = opti.solver((x-1)**2+(y-2)**2,[y>=2.5],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2.5,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[y>=1.5],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[2.5>=y],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[1.5>=y],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
-        
+        f = (x-1)**2+(y-2)**2
         
 
-        sol = opti.solver((x-1)**2+(y-2)**2,[y<=2.5],"ipopt")
-        sol.solve()
+        count = 0
+        for con, coneps, xs, ys, mul in [
+          (y>=2.5, y+eps>=2.5, 1, 2.5, 1),
+          (y>=1.5, y+eps>=1.5, 1, 2, 0),
+          (2.5>=y, 2.5+eps>=y, 1, 2, 0),
+          (1.5>=y, 1.5+eps>=y, 1, 1.5, 1),
+          (y<=2.5, y<=2.5+eps, 1, 2, 0),
+          (y<=1.5, y<=1.5+eps, 1, 1.5, 1),
+          (2.5<=y, 2.5<=y+eps, 1, 2.5, 1),
+          (1.5<=y, 1.5<=y+eps, 1, 2, 0),
+          (y>=x,   y+eps>=x, 1, 2, 0),
+          (y<=x,   y<=x+eps, 1.5, 1.5, 1),
+          (y<=0,   y<=eps, 1, 0, 4),
+          ((3<= y) <=4, (3<= y+eps) <=4, 1, 3, None),
+          (3<= (y <=4), 3<= (y+eps <=4), 1, 3, None),
+          (0<= (y <=1), 0<= (y <=1+eps), 1, 1, None),
+          ((0<= y) <=1, (0<= y) <=1+eps, 1, 1, None),
+          ((4>= y) >=3, (4>= y+eps) >=3, 1, 3, None),
+          ((1>= y) >=0, (1+eps>= y) >=0, 1, 1, None),
+          (opti.bounded(3,y,4), opti.bounded(3,y+eps,4), 1, 3, None),
+          (opti.bounded(0,y,1), opti.bounded(0,y+eps,1), 1, 1, None)
         
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
+          
+          
+          ]:
+          sol = opti.solver(f,[con],"ipopt")
+          sol.solve()
+
+          self.assertEqualTensor(sol.value(x), xs,tol=1e-7)
+          self.assertEqualTensor(sol.value(y), ys,tol=1e-7)
         
-        sol = opti.solver((x-1)**2+(y-2)**2,[y<=1.5],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[2.5<=y],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2.5,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[1.5<=y],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
+          sol2 = opti.solver(f,[coneps],"ipopt")
+          sol2.solve()
+          s = -sign(sol2.value(f)-sol.value(f))
+          print "count", count, con, sol.dual(con)
+
+          count+=1
+          if mul is not None:
+            self.assertEqualTensor(sol.dual(con), s*abs(mul),tol=1e-6)
         
         
         sol = opti.solver((x-1)**2+(y-2)**2,[1.5==y],"ipopt")
@@ -80,62 +73,9 @@ class Test_Optistack(BasisTestCase):
         
         self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
         self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
-        
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[y>=x],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
-        
 
         sol = opti.solver((x-1)**2+(y-2)**2,[y==x],"ipopt")
         sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1.5,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[y<=x],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1.5,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
-       
-        sol = opti.solver((x-1)**2+(y-2)**2,[y<=0],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 0,tol=1e-7)
-
-        sol = opti.solver((x-1)**2+(y-2)**2,[(3<= y) <=4],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 3,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[3<= (y <=4)],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 3,tol=1e-7)
-
-        sol = opti.solver((x-1)**2+(y-2)**2,[(0<= y) <=1],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 1,tol=1e-7)
-
-        sol = opti.solver((x-1)**2+(y-2)**2,[(4>= y) >=3],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 3,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[(1>= y) >=0],"ipopt")
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 1,tol=1e-7)
         
         x = opti.var(3,3)
         f = trace(x)
@@ -444,3 +384,4 @@ class Test_Optistack(BasisTestCase):
    
 if __name__ == '__main__':
     unittest.main()
+
