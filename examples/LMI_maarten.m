@@ -53,9 +53,9 @@ W = [W, zeros(rW,mw); zeros(mw,cW), eye(mw)];
 opti = OptiSplineYalmip();
 
 %   2.1. Declaring the variables        
-X = opti.var(n,n,'symmetric');      % nxn top-left subblock of P
-Y = opti.var(n,n,'symmetric');      % nxn top-left subblock of inv(P)
-Gamma = opti.var(mz, mz, 'symmetric'); % Lyapunov shaping
+X = opti.variable(n,n,'symmetric');      % nxn top-left subblock of P
+Y = opti.variable(n,n,'symmetric');      % nxn top-left subblock of inv(P)
+Gamma = opti.variable(mz, mz, 'symmetric'); % Lyapunov shaping
 
 c = zeros(mz,1);
 for i = 1:noc
@@ -63,7 +63,7 @@ for i = 1:noc
     if alpha(i) == 0
         Gamma(Iz1(i):Iz2(i),Iz1(i):Iz2(i)) = eye(Mz(i));
     else
-        Gamma(Iz1(i):Iz2(i),Iz1(i):Iz2(i)) = opti.var(1,1,'symmetric') * eye(Mz(i));
+        Gamma(Iz1(i):Iz2(i),Iz1(i):Iz2(i)) = opti.variable(1,1,'symmetric') * eye(Mz(i));
     end
 end
 
@@ -78,13 +78,15 @@ goal = trace(diag(c)*Gamma);
 
 %   2.4. Solving the SDP
 options = sdpsettings('solver','lmilab','verbose',2);
-sol = opti.solver(goal, {[X,eye(n);eye(n),Y]>=0, -V'*Zx*V>=0, -W'*Zy*W>=0},'yalmip', struct('yalmip_options', options));
-sol.solve()
+opti.solver('yalmip', struct('yalmip_options', options));
+opti.minimize(goal);
+opti.subject_to({[X,eye(n);eye(n),Y]>=0, -V'*Zx*V>=0, -W'*Zy*W>=0});
+sol = opti.solve();
 
-X = sol.value(X)
-Y = sol.value(Y)
+X = sol.value(X);
+Y = sol.value(Y);
 
-Gamma = sol.value(Gamma)
+Gamma = sol.value(Gamma);
 gamma = diag(Gamma);
 gamma = sqrt(gamma(Iz1));
 

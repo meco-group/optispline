@@ -43,8 +43,9 @@ diff = F.fast_eval(data(:,1:2)') - data(:,3);
 
 obj = diff'*diff;
 
-sol = opti.solver(obj,{},'ipopt');
-sol.solve();
+opti.minimize(obj)
+opti.solver('ipopt');
+sol = opti.solve();
 
 F = sol.value(F);
 
@@ -60,8 +61,8 @@ diff = F.fast_jac(data(:,1:2)')*F.coeff_tensor.data - data(:,3);
 
 obj = diff'*diff;
 
-sol = opti.solver(obj,{},'ipopt');
-sol.solve();
+opti.minimize(obj)
+sol = opti.solve();
 
 F = sol.value(F);
 

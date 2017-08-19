@@ -160,11 +160,13 @@ Z2 = [A'*P2*A-P2, A'*P2*B         , C'     ;
       B'*P2*A   , B'*P2*B-gamma_np, D      ;
       C         , D               ,-gamma_np];
 
+
 constr = {Q1 >= 0, Z1 <= 0, Z2 <= 0};
 goal = gamma_p;
-
-sol = opti.solver(goal.integral, constr,'yalmip', struct('yalmip_options', options));
-sol.solve();
+opti.minimize(goal.integral);
+opti.subject_to(constr);
+opti.solver('yalmip', struct('yalmip_options', options));
+sol = opti.solve();
 
 gamma_p1 = sol.value(gamma_p);
 plot(Gamma_np, gamma_p1.list_eval(Gamma_np))
@@ -172,8 +174,11 @@ plot(Gamma_np, gamma_p1.list_eval(Gamma_np))
  constr = {Q1.insert_knots({knots_c},1) >= 0, Z1.insert_knots({knots_c},1) <= 0, Z2.insert_knots({knots_c},1) <= 0};
  goal = gamma_p;
 
- sol = opti.solver(goal.integral, constr,'yalmip', struct('yalmip_options', options));
- sol.solve();
+ opti.minimize(goal.integral);
+ opti.subject_to();
+ opti.subject_to(constr);
+ 
+ sol = opti.solve();
  gamma_p1 = sol.value(gamma_p);
  plot(Gamma_np, gamma_p1.list_eval(Gamma_np))
 
@@ -202,15 +207,19 @@ plot(Gamma_np, gamma_p1.list_eval(Gamma_np))
  constr = { 1 - w1 - u1'*f == 0, Z1 >= 0, Z2 >= 0, H1 >= 0 };
  goal =  gamma_np*(w2+u2'*f) - 2*D*v1(M+1) - 2*D*v2;
 
- sol = opti.solver(goal.integral, constr,'yalmip', struct('yalmip_options', options));
- sol.solve();
+ opti.minimize(goal.integral);
+ opti.subject_to();
+ opti.subject_to(constr);
+ sol = opti.solve();
  gamma_p2 = -sol.value(goal);
  plot(Gamma_np, gamma_p2.list_eval(Gamma_np));
 
  constr = { 1 - w1 - u1'*f == 0, Z1.insert_knots({knots_c},1) >= 0, Z2.insert_knots({knots_c},1) >= 0, H1.insert_knots({knots_c},1) >= 0 };
  goal =  gamma_np*(w2+u2'*f) - 2*D*v1(M+1) - 2*D*v2;
 
- sol = opti.solver(goal.integral, constr,'yalmip', struct('yalmip_options', options));
- sol.solve();
+ opti.minimize(goal.integral);
+ opti.subject_to();
+ opti.subject_to(constr);
+ sol = opti.solve();
  gamma_p2 = -sol.value(goal);
  plot(Gamma_np, gamma_p2.list_eval(Gamma_np));

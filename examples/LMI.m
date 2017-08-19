@@ -43,9 +43,12 @@ gamma = opti.Function({Bg}, [1,1],'symmetric');
 Z = [A'*P+P*A, P*B   , C'    ;
      B'*P    , -gamma, D'    ;
      C       , D     , -gamma];
- 
-sol = opti.solver(gamma.integral, {Z<=0, P>=0}, 'yalmip', struct('yalmip_options', options));
-sol.solve();
+
+opti.minimize(gamma.integral)
+opti.subject_to({Z<=0, P>=0})
+opti.solver('yalmip', struct('yalmip_options', options))
+
+sol = opti.solve();
 
 gamma_prim = sol.value(gamma);
 
@@ -63,9 +66,11 @@ obj = trace(E*Z);
 Q = AB*Z*IO' + IO*Z*AB';
 
 
+opti.subject_to()
+opti.minimize(-obj.integral)
+opti.subject_to({Q >= 0, Z >= 0, Z(nx+1,nx+1)+Z(nx+2,nx+2)<=1})
 
-sol = opti.solver(-obj.integral, {Q >= 0, Z >= 0, Z(nx+1,nx+1)+Z(nx+2,nx+2)<=1}, 'yalmip', struct('yalmip_options', options));
-sol.solve();
+sol = opti.solve();
 
 gamma_dual = sol.value(obj);
 

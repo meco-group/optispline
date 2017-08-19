@@ -4,22 +4,241 @@ from helpers import *
 
 class Test_Optistack(BasisTestCase):
 
+
+    def test_set_value_expr(self):
+        for MyOpti in [Opti, OptiSpline]:
+          opti = MyOpti()
+          p = opti.parameter(3,1)
+          v = opti.parameter(2,1)
+          x = opti.variable(2)
+          
+          opti.set_value(p, 0)
+          opti.set_value(v, 0)
+          opti.set_value(p[0], 3)
+          self.assertEqualTensor(opti.debug().value(p),vertcat(3,0,0))
+          opti.set_value(p[[0,2]], 2)
+          self.assertEqualTensor(opti.debug().value(p),vertcat(2,0,2)) 
+          opti.set_value(p[[0,2]], [1,2])
+          self.assertEqualTensor(opti.debug().value(p),vertcat(1,0,2)) 
+          opti.set_value(p[[2,0]], [1,2])
+          self.assertEqualTensor(opti.debug().value(p),vertcat(2,0,1)) 
+
+          opti.set_value(veccat(v,p), [1,2,3,4,5])
+          self.assertEqualTensor(opti.debug().value(p),vertcat(3,4,5))
+          self.assertEqualTensor(opti.debug().value(v),vertcat(1,2))    
+         
+         
+          opti.set_value(p, 0)
+          opti.set_value(veccat(p[0],p[0]), [4,4])
+          self.assertEqualTensor(opti.debug().value(p),vertcat(4,0,0))
+          with self.assertInException("ambiguous"):
+            opti.set_value(veccat(p[0],p[0]), [4,5])
+          with self.assertInException("cannot set a value for a variable"):
+            opti.set_value(veccat(p,x,v), [4,5])
+          opti.set_value(p, 0)
+          opti.set_value(3*p[0], 3)
+          self.assertEqualTensor(opti.debug().value(p),vertcat(1,0,0))
+          with self.assertInException("cannot set initial/value of an arbitrary expression"):
+            opti.set_value(p[0]+p[1], 3)
+
+          opti.set_value(veccat(v,3), [1,2,3])
+          opti.set_value(veccat(2,v,5,p), [2,3,4,5,6,7,8])
+
+          with self.assertInException("inconsistent"):
+            opti.set_value(veccat(v,3), [1,2,4])
+          with self.assertInException("inconsistent"):
+            opti.set_value(veccat(2,v,5,p), [5,3,4,2,6,7,8])
+          
+    def test_shapes(self):
+        for MyOpti in [Opti, OptiSpline]:
+          opti = MyOpti()
+          
+          F = opti.variable(10,1)
+          x = opti.variable(2,11)
+         
+          opti.subject_to(x[:,0]==x[:,1]) 
+          opti.subject_to(opti.bounded(-1,F,1))
+
+          opti.solver('ipopt')
+          opti.minimize(sum1(F))
+          sol = opti.solve()
+
+    def test_callback(self):
+        for MyOpti in [Opti, OptiSpline]:
+          opti = MyOpti()
+          
+          eps = 1e-5 
+          
+          x = opti.variable()
+          y = opti.variable()
+          
+          p = opti.parameter()
+          
+          opti.minimize((x-1)**4+(y-p)**4)
+          opti.solver("ipopt")
+
+          opti.callback(lambda : ret.setdefault('a',opti.debug().value(p)))
+          opti.set_value(p, 3)
+          ret = {}
+          sol = opti.solve()
+
+          self.assertTrue(ret['a']==3)
+          opti.set_value(p, 2)
+          ret = {}
+          sol = opti.solve()
+          self.assertTrue(ret['a']==2)
+          opti.set_value(p, 3)
+          ret = {}
+          sol = opti.solve()
+          self.assertTrue(ret['a']==3)
+          
+          opti.callback()
+          ret = {}
+          sol = opti.solve()
+          self.assertFalse('a' in ret)
+
+          opti.callback(lambda : ret.setdefault('b',opti.debug().value(p)))
+          sol = opti.solve()
+          self.assertTrue(ret['b']==3)
+
+    def test_debug_value(self):
+      for MyOpti in [Opti, OptiSpline]:
+        opti = MyOpti()
+        p = opti.parameter()
+        opti.set_value(p, 3)
+        self.assertEqualTensor(opti.debug().value(p**2), 9)
+        x = opti.variable()
+        
+        with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
+          opti.debug().value(x**2)
+        
+        with self.assertInException("You cannot set a value for a variable"):
+          opti.set_value(x, 2)
+        opti.set_initial(x, 2)
+        
+        with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
+          opti.debug().value(x**2)
+        
+        self.assertEqualTensor(opti.debug().value(x**2, opti.initial()), 4)
+        
+        y = opti.variable()
+        
+        with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
+          opti.debug().value(x*y)
+      
+      
+      
+    def test_flow(self):
+      opti = Opti()
+      
+      x = opti.variable()
+      y = opti.variable()
+      
+      p = opti.parameter()
+      
+      w = MX.sym("w")
+      
+      opti.minimize(x**2)
+      opti.solver("ipopt")
+      sol = opti.solve()
+      
+      with self.assertInException("do not appear in the constraints and objective"):
+        sol.value(y)
+        
+      with self.assertInException("Symbol not found in Opti stack"):
+        sol.value(w)
+        
+      opti.minimize((x-p)**2)
+      with self.assertInException("You have forgotten to assign a value to a parameter"):
+        sol = opti.solve()
+        
+      opti.set_value(p, 5)
+      opti.solve()
+      opti.debug().value(x);
+      
+      opti.set_value(p, 9)
+      opti.debug().value(p);
+      with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
+          opti.debug().value(x);
+      
+      opti.solve()
+      opti.set_initial(x, 3)
+      opti.debug().value(p);
+      with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
+          opti.debug().value(x);
+      
+      opti = OptiSpline()
+      
+      x = opti.variable()
+      y = opti.variable()
+      
+      p = opti.parameter()
+      
+      w = MX.sym("w")
+      
+      opti.minimize(x**2)
+      opti.solver("ipopt")
+      
+      sol = opti.solve()
+      
+      
+      opti.minimize(x**2)
+      opti.subject_to(x>=0)        
+      opti.variable()
+      opti.parameter()
+        
+      opti.solver("ipopt")
+        
+      opti = OptiSpline()
+      
+      x = opti.variable()
+      y = opti.variable()
+      
+      p = opti.parameter()
+      
+      w = MX.sym("w")
+      
+      opti.minimize(x**2)
+      with self.assertInException("You must call 'solver' on the Opti stack to select a solver."):        
+        opti.solve()
+    
+        
+      opti = OptiSpline()
+      
+      x = opti.variable()
+      y = opti.variable()
+      
+      p = opti.parameter()
+      
+      w = MX.sym("w")
+      opti.solver("ipopt")
+      
+      with self.assertInException("You need to specify at least an objective"):
+        opti.solve()
+
+        
+        
+
+        
+        
     def test_simple(self):
-        opti = OptiSpline()
+      for MyOpti in [Opti, OptiSpline]:
+        opti = MyOpti()
         
         eps = 1e-5 
         
-        x = opti.var()
-        y = opti.var()
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[],"ipopt")
-        sol.solve()
+        x = opti.variable()
+        y = opti.variable()
+      
+        f = (x-1)**2+(y-2)**2  
+        opti.minimize(f)
+
+        opti.solver("ipopt")
+        sol = opti.solve()
         
         self.assertEqualTensor(sol.value(x), 1)
         self.assertEqualTensor(sol.value(y), 2)
-       
-        f = (x-1)**2+(y-2)**2
-        
+      
 
         count = 0
         for con, coneps, xs, ys, mul in [
@@ -46,143 +265,167 @@ class Test_Optistack(BasisTestCase):
           
           
           ]:
-          sol = opti.solver(f,[con],"ipopt")
-          sol.solve()
+          opti.subject_to()
+          opti.subject_to(con)
+          sol = opti.solve()
+  
 
           self.assertEqualTensor(sol.value(x), xs,tol=1e-7)
           self.assertEqualTensor(sol.value(y), ys,tol=1e-7)
         
-          sol2 = opti.solver(f,[coneps],"ipopt")
-          sol2.solve()
-          s = -sign(sol2.value(f)-sol.value(f))
-          print "count", count, con, sol.dual(con)
+          opti.subject_to()
+          opti.subject_to(coneps)
+          sol2 = opti.solve()
 
+          s = -sign(sol2.value(f)-sol.value(f))
+          
           count+=1
           if mul is not None:
             self.assertEqualTensor(sol.dual(con), s*abs(mul),tol=1e-6)
         
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[1.5==y],"ipopt")
-        sol.solve()
+        opti.subject_to()
+        opti.subject_to(1.5==y)
+        sol = opti.solve()
         
         self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
         self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
         
-        sol = opti.solver((x-1)**2+(y-2)**2,[y==1.5],"ipopt")
-        sol.solve()
+        opti.subject_to()
+        opti.subject_to(y==1.5)
+        sol = opti.solve()
+        
         
         self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
         self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
 
-        sol = opti.solver((x-1)**2+(y-2)**2,[y==x],"ipopt")
-        sol.solve()
+        opti.subject_to()
+        opti.subject_to(y==x)
+        sol = opti.solve()
         
-        x = opti.var(3,3)
+        x = opti.variable(3,3)
         f = trace(x)
+        opti.subject_to()
+        opti.subject_to(x>=0)
         with self.assertRaises(Exception):
-          sol = opti.solver(f,[x>=0],"ipopt")
+          sol = opti.solve()
         
-        x = opti.var(2,1)
-        sol = opti.solver((x[0]-1)**2+(x[1]-2)**2,[x[1]>=x[0]],"ipopt")
-        sol.solve()
+        x = opti.variable(2,1)
+        opti.subject_to()
+        opti.minimize((x[0]-1)**2+(x[1]-2)**2)
+        opti.subject_to(x[1]>=x[0])
+        sol = opti.solve()
         self.assertEqualTensor(sol.value(x), [1,2],tol=1e-7)
           
-        sol = opti.solver((x[0]-1)**2+(x[1]-2)**2,[x[1]<=x[0]],"ipopt")
-        sol.solve()
+        opti.subject_to()
+        opti.subject_to(x[1]<=x[0])
+        sol = opti.solve()
+        
         self.assertEqualTensor(sol.value(x), [1.5,1.5],tol=1e-7)
         
-        sol = opti.solver((x[0]-1)**2+(x[1]-2)**2,[x<=0.5],"ipopt")
-        sol.solve()
+        opti.subject_to()
+        opti.subject_to(x<=0.5)
+        sol = opti.solve()
+        
         print("test", sol.value(x))
         self.assertEqualTensor(sol.value(x), [0.5,0.5],tol=1e-7)
 
     def test_parametric(self):
-        opti = OptiSpline()
+      for MyOpti in [Opti, OptiSpline]:
+        opti = MyOpti()
         
-        x = opti.var()
-        y = opti.var()
-        p = opti.par()
+        x = opti.variable()
+        y = opti.variable()
+        p = opti.parameter()
         
-        sol = opti.solver((x-1)**2+(y-p)**2,[],"ipopt")
-        sol.value(p, 2)
-        sol.solve()
+        opti.minimize((x-1)**2+(y-p)**2)
+        opti.solver("ipopt")
+        opti.set_value(p, 2)
+        sol = opti.solve()
 
         self.assertEqualTensor(sol.value(x), 1)
         self.assertEqualTensor(sol.value(y), 2)
 
-        sol.value(p, 3)
-        sol.solve()
+        opti.set_value(p, 3)
+        sol = opti.solve()
 
 
         self.assertEqualTensor(sol.value(x), 1)
         self.assertEqualTensor(sol.value(y), 3)
         
+        opti.minimize((x-1)**2+(y-2)**2)
         
-
-        sol = opti.solver((x-1)**2+(y-2)**2,[y>=p],"ipopt")
-        sol.value(p, 2.5)
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2.5,tol=1e-7)
-        
-        sol.value(p, 1.5)
-        sol.solve()
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[p>=y],"ipopt")
-        sol.value(p, 2.5)
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
-        
-        sol.value(p, 1.5)
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
-        
-        
-
-        sol = opti.solver((x-1)**2+(y-2)**2,[y<=p],"ipopt")
-        sol.value(p, 2.5)
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
-        
-        sol.value(p, 1.5)
-        sol.solve()
-        
-        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
-        self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
-        
-        sol = opti.solver((x-1)**2+(y-2)**2,[p<=y],"ipopt")
-        sol.value(p, 2.5)
-        sol.solve()
+        opti.subject_to()
+        opti.subject_to(y>=p)
+        opti.set_value(p, 2.5)
+        sol = opti.solve()
         
         self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
         self.assertEqualTensor(sol.value(y), 2.5,tol=1e-7)
         
-        sol.value(p, 1.5)
-        sol.solve()
+        opti.set_value(p, 1.5)
+        sol = opti.solve()
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
+        
+        opti.subject_to()
+        opti.subject_to(p>=y)
+        opti.set_value(p, 2.5)
+        sol = opti.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
+        
+        opti.set_value(p, 1.5)
+        sol = opti.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
+        
+        
+        opti.subject_to()
+        opti.subject_to(y<=p)
+        opti.set_value(p, 2.5)
+        sol = opti.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
+        
+        opti.set_value(p, 1.5)
+        sol = opti.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
+        
+        opti.subject_to()
+        opti.subject_to(p<=y)
+        opti.set_value(p, 2.5)
+        sol = opti.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 2.5,tol=1e-7)
+        
+        opti.set_value(p, 1.5)
+        sol = opti.solve()
         
         self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
         self.assertEqualTensor(sol.value(y), 2,tol=1e-7)
         
         
-        sol = opti.solver((x-1)**2+(y-2)**2,[p==y],"ipopt")
-        sol.value(p, 1.5)
-        sol.solve()
+        opti.subject_to()
+        opti.subject_to(p==y)
+        opti.set_value(p, 1.5)
+        sol = opti.solve()
         
         self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
         self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
         
-        sol = opti.solver((x-1)**2+(y-2)**2,[y==p],"ipopt")
-        sol.value(p, 1.5)
-        sol.solve()
+        opti.subject_to()
+        opti.subject_to(y==p)
+        opti.set_value(p, 1.5)
+        sol = opti.solve()
+        
+        self.assertEqualTensor(sol.value(x), 1,tol=1e-7)
+        self.assertEqualTensor(sol.value(y), 1.5,tol=1e-7)
         
 
     def test_parametric_coeffs(self):
@@ -193,30 +436,31 @@ class Test_Optistack(BasisTestCase):
         
         P = Function(b, c)
         
-        x = opti.var()
+        x = opti.variable()
         y = P(x)
         
-        sol = opti.solver(y,[],"ipopt")
-        sol.solve()
+        opti.minimize(y)
+        opti.solver("ipopt")
+        sol = opti.solve()
        
         self.assertEqualTensor(sol.value(x), -1.0/3)
-        cmx = opti.par(3)
+        cmx = opti.parameter(3)
         b = MonomialBasis(2)
         
         P = Function(b, cmx)
         
-        x = opti.var()
+        x = opti.variable()
         y = P(x)
         
         print(jacobian(y,cmx))
         
-        sol = opti.solver(y,[],"ipopt")
-        sol.value(cmx, c)
-        sol.solve()
+        opti.minimize(y)
+        opti.set_value(cmx, c)
+        sol = opti.solve()
         self.assertEqualTensor(sol.value(x), -1.0/3)
 
-        sol.value(cmx, [3, 2, 1])
-        sol.solve()
+        opti.set_value(cmx, [3, 2, 1])
+        sol = opti.solve()
         self.assertEqualTensor(sol.value(x), -1)
         
     def test_parametric_knots(self):
@@ -230,24 +474,25 @@ class Test_Optistack(BasisTestCase):
         
         P = Function(b, r)
         
-        x = opti.var()
+        x = opti.variable()
         y = P(x)
         
         Pd = P.derivative()
         
-        sol = opti.solver(y,[],"ipopt")
-        sol.solve()
+        opti.minimize(y)
+        opti.solver("ipopt")
+        sol = opti.solve()
         
         xsol = sol.value(x)
        
         print(Pd(sol.value(x)))
         self.assertEqualTensor(Pd(xsol), 0, tol=1e-8)
-        kmx = opti.par(len(k))
+        kmx = opti.parameter(len(k))
         b = BSplineBasis(kmx,degree)
         
         P = Function(b, r)
         
-        x = opti.var()
+        x = opti.variable()
         y = P(x)
         
         print(y)
@@ -255,21 +500,22 @@ class Test_Optistack(BasisTestCase):
         jtimes(y,kmx,1)
         jtimes(y,kmx,1,True)
         
-        sol = opti.solver(y,[],"ipopt")
-        sol.value(kmx, k)
-        sol.solve()
+        opti.minimize(y)
+        opti.set_value(kmx, k)
+        sol = opti.solve()
         self.assertEqualTensor(sol.value(x), xsol)
 
-        sol.value(kmx, np.array(k)*2)
-        sol.solve()
+        opti.set_value(kmx, np.array(k)*2)
+        sol = opti.solve()
         with self.assertRaises(Exception):
           self.assertEqualTensor(sol.value(x), xsol)
 
 
     def test_symm(self):
-        opti = OptiSpline()
+      for MyOpti in [Opti, OptiSpline]:
+        opti = MyOpti()
         
-        P = opti.var(2, 2, 'symmetric')
+        P = opti.variable(2, 2, 'symmetric')
         
         R = DM([[1,2],[4,4]])
         
@@ -277,24 +523,25 @@ class Test_Optistack(BasisTestCase):
 
         x = symvar(f)[0]
 
-        sol = opti.solver(f,[],"ipopt")
+        opti.minimize(f)
+        opti.solver("ipopt")
 
-        sol.solve()
+        sol = opti.solve()
         
         F = casadi.Function('f',[x],[f])
 
         self.assertEqualTensor(sol.value(P), DM([[1,3],[3,4]]))
 
-        P = opti.var(2, 2)
+        P = opti.variable(2, 2)
         
         
         f = sum2(sum1((P-R)**2))
 
         x = symvar(f)[0]
 
-        sol = opti.solver(f,[],"ipopt")
-
-        sol.solve()
+        
+        opti.minimize(f)
+        sol = opti.solve()
         
         F = casadi.Function('f',[x],[f])
 
@@ -306,35 +553,37 @@ class Test_Optistack(BasisTestCase):
         opti = OptiSpline()
         
         P = opti.Function(b)
-        sol = opti.solver((P**2).integral(),[],"ipopt")
-        sol.solve()
-        P = sol.value(P)
-    
-        self.assertEqualTensor(P(0), 0)    
-        self.assertEqualTensor(P(0.5), 0)
-        self.assertEqualTensor(P(1), 0)
+        opti.minimize((P**2).integral())
+        opti.solver("ipopt")
         
-        P = opti.Function(b)
-            
-        sol = opti.solver((P**2).integral(),[P<=2],"ipopt",{"ipopt":{"tol":1e-10}})
-        sol.solve()
-        P = sol.value(P)
+        sol = opti.solve()
+        Psol = sol.value(P)
+    
+        self.assertEqualTensor(Psol(0), 0)    
+        self.assertEqualTensor(Psol(0.5), 0)
+        self.assertEqualTensor(Psol(1), 0)
+        
+        opti.subject_to()
+        opti.subject_to(P<=2)
+        opti.solver("ipopt",{"ipopt":{"tol":1e-10}})
+        
+        sol = opti.solve()
+        Psol = sol.value(P)
         for e in [0,0.5,1]:
-          self.assertEqualTensor(P(e), 0,tol=1e-5)
+          self.assertEqualTensor(Psol(e), 0,tol=1e-5)
         
-        P = opti.Function(b)
-        
-        sol = opti.solver((P**2).integral(),[P>=2],"ipopt")
-        sol.solve()
-        P = sol.value(P)
-        for e in [0,0.5,1]: self.assertEqualTensor(P(e), 2,tol=1e-5)
+        opti.subject_to()
+        opti.subject_to(P>=2)
+        sol = opti.solve()
+        Psol = sol.value(P)
+        for e in [0,0.5,1]: self.assertEqualTensor(Psol(e), 2,tol=1e-5)
     
-        P = opti.Function(b)
-    
-        sol = opti.solver((P**2).integral(),[P==2],"ipopt")
-        sol.solve()
-        P = sol.value(P)
-        for e in [0,0.5,1]: self.assertEqualTensor(P(e), 2,tol=1e-5)
+
+        opti.subject_to()
+        opti.subject_to(P==2)
+        sol = opti.solve()
+        Psol = sol.value(P)
+        for e in [0,0.5,1]: self.assertEqualTensor(Psol(e), 2,tol=1e-5)
 
     def test_symmcoef(self):
     
@@ -366,7 +615,7 @@ class Test_Optistack(BasisTestCase):
 
         self.assertEqualTensor(sol.value(P(0)), DM([[1,3],[3,4]]))
 
-        P = opti.var(2, 2)
+        P = opti.variable(2, 2)
         
         print() 
         
@@ -381,7 +630,7 @@ class Test_Optistack(BasisTestCase):
         F = casadi.Function('f',[x],[f])
 
         self.assertEqualTensor(sol.value(P), R)
-   
+
 if __name__ == '__main__':
     unittest.main()
 

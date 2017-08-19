@@ -26,46 +26,43 @@ y = opti.Function(basis)
 vx = x.derivative()
 vy = y.derivative()
 
-T = opti.var()
-t_via = opti.var(len(via_pnts))
+T = opti.variable()
+t_via = opti.variable(len(via_pnts))
 
-g = []
+opti.subject_to(x(0) == start_pnt[0]) #.data() ...
+opti.subject_to(y(0) == start_pnt[1])
+opti.subject_to(x(1) == end_pnt[0])
+opti.subject_to(y(1) == end_pnt[1])
 
-g.append(x(0) == start_pnt[0]) #.data() ...
-g.append(y(0) == start_pnt[1])
-g.append(x(1) == end_pnt[0])
-g.append(y(1) == end_pnt[1])
-
-g.append(vx(0)==0)
-g.append(vy(0)==0)
-g.append(vx(1)==0)
-g.append(vy(1)==0)
+opti.subject_to(vx(0)==0)
+opti.subject_to(vy(0)==0)
+opti.subject_to(vx(1)==0)
+opti.subject_to(vy(1)==0)
 
 for k, via_pnt in enumerate(via_pnts):
-    g.append(x([t_via[k]])== via_pnt[0])
-    g.append(y([t_via[k]])== via_pnt[1])
-    g.append(t_via[k]>=0.4)
-    g.append(t_via[k]<=0.6)
+    opti.subject_to(x([t_via[k]])== via_pnt[0])
+    opti.subject_to(y([t_via[k]])== via_pnt[1])
+    opti.subject_to(t_via[k]>=0.4)
+    opti.subject_to(t_via[k]<=0.6)
 
-print(g)
+opti.subject_to(vx<=T*vmax)
+opti.subject_to(vx>=-T*vmax)
+opti.subject_to(vy<=T*vmax)
+opti.subject_to(vy>=-T*vmax)
 
-g.append(vx<=T*vmax)
-g.append(vx>=-T*vmax)
-g.append(vy<=T*vmax)
-g.append(vy>=-T*vmax)
+opti.minimize(T)
+opti.solver("ipopt")
 
-sol = opti.solver(T,g,"ipopt")
 
-sol.value(x.coeff(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
-sol.value(y.coeff(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
+opti.set_initial(x.coeff(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
+opti.set_initial(y.coeff(),np.linspace(start_pnt[0], end_pnt[0], m.dimension()))
 
-sol.value(T,2)
+opti.set_initial(T,2)
 
 if len(via_pnts)>0:
-  sol.value(t_via, 0.5)
+  opti.set_initial(t_via, 0.5)
 
-sol.solve()
-
+sol = opti.solve()
 T = float(sol.value(T))
 t_via = sol.value(t_via)
 

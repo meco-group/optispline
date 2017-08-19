@@ -52,9 +52,10 @@ if(WITH_MATLAB)
    add_custom_command(TARGET splinesMEX
                    POST_BUILD
                    COMMAND rm -f ${CMAKE_CURRENT_BINARY_DIR}/SwigMem.m)
-                   
+  
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiStackSplineYalmip.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})                 
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiSplineYalmip.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiSplineSolverYalmip.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiCallbackHelper.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 

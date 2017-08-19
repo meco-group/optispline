@@ -71,8 +71,9 @@ def _swig_repr(self):
 //%}
 //{% endif %}
 
-%feature("flatnested") Opti::MetaCon;
-%feature("flatnested") Opti::MetaVar;
+%feature("flatnested") OptiStack::MetaCon;
+%feature("flatnested") OptiStack::MetaVar;
+%feature("flatnested") OptiStack::IndexAbstraction;
 
 // Renameing MATLAB
 #ifdef SWIGMATLAB
@@ -181,6 +182,8 @@ using namespace spline;
     GUESTOBJECT * from_ptr(const AnyTensor *a);
     GUESTOBJECT * from_ptr(const AnyVector *a);
     GUESTOBJECT * from_ptr(const AnySlice *a);
+
+    GUESTOBJECT * from_ptr_nativeDM(const nativeDM *a);
 
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
     GUESTOBJECT * from_ptr(const spline::Basis *a);
@@ -827,6 +830,38 @@ using namespace spline;
       return 0;
     }
 
+
+    GUESTOBJECT * from_ptr_nativeDM(const nativeDM *a) {
+      if (!a->is_dense()) return from_ptr(static_cast<const DM*>(a));
+#if SWIGMATLAB
+      std::vector<size_t> dim = {static_cast<size_t>(a->size1()), static_cast<size_t>(a->size2())};
+      mxArray *p  = mxCreateNumericArray(2, get_ptr(dim), mxDOUBLE_CLASS, mxREAL);
+      double* d = static_cast<double*>(mxGetData(p));
+      const std::vector<double>& nz = a->nonzeros();
+      std::copy(nz.begin(), nz.end(), d);
+      return p;
+#endif
+#ifdef SWIGPYTHON
+      if (a->is_scalar()) return PyFloat_FromDouble(static_cast<double>(*a));
+      PyObject* ret;
+      if (a->is_vector()) {
+        std::vector<npy_intp> dim = {a->numel()};
+        ret = PyArray_SimpleNew(1, get_ptr(dim), NPY_DOUBLE);
+        double* d = static_cast<double*>(array_data(ret));
+        const std::vector<double>& nz = a->nonzeros();
+        std::copy(nz.begin(), nz.end(), d);
+      } else {
+        std::vector<npy_intp> dim = {a->size1(), a->size2()};
+        ret = PyArray_SimpleNew(2, get_ptr(dim), NPY_DOUBLE);
+        double* d = static_cast<double*>(array_data(ret));
+        casadi_densify(a->ptr(), a->sparsity(), d, true); // Row-major
+      }
+
+      return ret;
+#endif
+      return 0;
+    }
+    
     GUESTOBJECT* from_ptr(const DT *a) {
       return SWIG_NewPointerObj(new DT(*a), $descriptor(Tensor< casadi::Matrix<double> > *), SWIG_POINTER_OWN);
     }
@@ -999,6 +1034,10 @@ using namespace spline;
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
 
+ // Return-by-value
+%typemap(out, doc="double", noblock=1, fragment="casadi_all") nativeDM {
+  if(!($result = casadi::from_ptr_nativeDM(&$1))) SWIG_exception_fail(SWIG_TypeError,"Failed to convert output to type 'double'.");
+}
 
 %typemap(in, doc="index", noblock=1, fragment="casadi_all") spline::NumericIndex {
   if (!casadi::to_val($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' index '.");
@@ -1099,9 +1138,92 @@ using namespace spline;
 %include <src/Function/Function.h>
 %include <src/Function/Polynomial.h>
 %include <src/Function/Parameter.h>
+
+%feature("director") OptiCallback;
 %include <src/Optistack/optistack.h>
 
+#ifdef SWIGPYTHON
+%extend Opti {
+  %pythoncode %{
+    def callback(self,fh=None):
+      if fh is None:
+        self.callback_class();
+        return
+      class OptiCallbackHelper(OptiCallback):
+          def __init__(self, callback):
+            OptiCallback.__init__(self)
+            self.callback = callback
+
+          def call(self):
+            self.callback()
+
+      self._fh = fh
+      self._cb = OptiCallbackHelper(fh);
+      self.callback_class(self._cb);
+  %}
+}
+%extend OptiSpline {
+  %pythoncode %{
+    def callback(self,fh=None):
+      if fh is None:
+        self.callback_class();
+        return
+      class OptiCallbackHelper(OptiCallback):
+          def __init__(self, callback):
+            OptiCallback.__init__(self)
+            self.callback = callback
+
+          def call(self):
+            self.callback()
+
+      self._fh = fh
+      self._cb = OptiCallbackHelper(fh);
+      self.callback_class(self._cb);
+  %}
+}
+#endif
+
 #ifdef SWIGMATLAB
+%extend Opti {
+  %matlabcode %{
+    function [] = callback(self, varargin)
+      if length(varargin)==1
+        fh = varargin{1};
+      else
+        self.callback_class();
+        drawnow
+        pause(0.0001)
+        return
+      end
+      persistent cb;
+      if isempty(cb)
+        cb = {};
+      end
+      cb = {cb{:} OptiCallbackHelper(fh)};
+      self.callback_class(cb{end});
+    end
+  %}
+}
+%extend OptiSpline {
+  %matlabcode %{
+    function [] = callback(self, varargin)
+      if length(varargin)==1
+        fh = varargin{1};
+      else
+        self.callback_class();
+        drawnow
+        pause(0.0001)
+        return
+      end
+      persistent cb;
+      if isempty(cb)
+        cb = {};
+      end
+      cb = {cb{:} OptiCallbackHelper(fh)};
+      self.callback_class(cb{end});
+    end
+  %}
+}
 %extend Tensor<casadi::SX> {
   %matlabcode %{
     function [] = disp(self)
@@ -1358,11 +1480,13 @@ namespace spline {
     static Function times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
     static Function mtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
     static Function rmtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.rmtimes(rhs); }
+    static MX le(const Function& lhs, const MX& rhs) { return lhs<=rhs; }
     static Function plus(const AnyTensor& lhs, const Function& rhs) { return rhs+lhs; }
     static Function minus(const AnyTensor& lhs, const Function& rhs) { return (-rhs)+lhs; }
     static Function times(const AnyTensor& lhs, const Function& rhs) { return rhs*lhs; }
     static Function mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.rmtimes(lhs); }
     static Function rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
+    static MX le(const MX& lhs, const Function& rhs) { return rhs>=lhs; }
     Function ctranspose() const { return $self->transpose();}
   }
 } // namespace spline

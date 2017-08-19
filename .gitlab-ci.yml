@@ -16,6 +16,7 @@ variables:
     MOSEKLM_LICENSE_FILE: /repo/mosek/8/mosek.lic
 
 before_script:
+    - rm -rf build
     - source /opt/meco_setup && rclone_setup
     - source env.sh
     - rclone sync dropbox:meco_binaries_debian/$SWIG_HOME_REL $SWIG_HOME

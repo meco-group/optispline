@@ -16,9 +16,19 @@ import casadi as C
 from casadi import *
 from splines import *
 import splines
+from contextlib import contextmanager
 
 class BasisTestCase(unittest.TestCase):
 
+    @contextmanager
+    def assertInException(self,s):
+      e = None
+      try:
+        yield
+      except Exception as err:
+        e = str(err)
+      self.assertFalse(e is None)
+      self.assertTrue(s in e)
 
     @staticmethod
     def polyval(p,x):

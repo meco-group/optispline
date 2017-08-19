@@ -37,32 +37,35 @@ v = x.derivative(1, tau)  # time derivative
 a = v.derivative(1, tau)  # second time derivative
 
 T_to_reach_d = opti.Function(tensorBasis_d) #motion time, function of d
-obj = T_to_reach_d.integral()  #minimize motion time for all d in [0,D]
 
-con = []
+#minimize motion time for all d in [0,D]
+opti.minimize(T_to_reach_d.integral())
+
 # start condictions
-con.append(x.partial_eval(0,'tau') == 0)
-con.append(v.partial_eval(0,'tau') == 0)
+opti.subject_to(x.partial_eval(0,'tau') == 0)
+opti.subject_to(v.partial_eval(0,'tau') == 0)
 
 # end conditions
-con.append(x.partial_eval(1,'tau') - d == 0)
-con.append(v.partial_eval(1,'tau') == 0)
+opti.subject_to(x.partial_eval(1,'tau') - d == 0)
+opti.subject_to(v.partial_eval(1,'tau') == 0)
 
 # global constraints
-con.append(v - T_to_reach_d*v_max <= 0)
-con.append(v - T_to_reach_d*v_min >= 0)
+opti.subject_to(v - T_to_reach_d*v_max <= 0)
+opti.subject_to(v - T_to_reach_d*v_min >= 0)
 
-con.append(a - T_to_reach_d**2*a_max <= 0)
-con.append(a - T_to_reach_d**2*a_min >= 0)
-con.append(T_to_reach_d >= 0)
+opti.subject_to(a - T_to_reach_d**2*a_max <= 0)
+opti.subject_to(a - T_to_reach_d**2*a_min >= 0)
+opti.subject_to(T_to_reach_d >= 0)
 
-sol = opti.solver(obj, con, "ipopt",{"ipopt":{"tol":1e-5}})
+opti.solver("ipopt",{"ipopt":{"tol":1e-5}})
+
 
 # warm starting solver
-sol.value(T_to_reach_d, 2 * d)
-sol.value(x, d*tau)
+opti.set_initial(T_to_reach_d, 2 * d)
+opti.set_initial(x, d*tau)
 
-sol.solve()
+
+sol = opti.solve()
 
 x_ = sol.value(x)
 v_ = sol.value(v)

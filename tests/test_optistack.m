@@ -2,116 +2,194 @@ meco_binaries('cpp_splines','fill_in_the_branch_you_want')
 
 import splines.*
 
+
+
+opti = OptiSpline();
+
+
+x = opti.variable();
+y = opti.variable();
+
+p = opti.parameter();
+
+opti.solver('ipopt');
+opti.minimize((x-1)^4+(y-p)^4)
+
+
+A = [];
+
+opti.set_value(p, 3);
+sol = opti.solve();
+
+opti.debug.value(p)
+
+d = opti.debug
+d.value(p)
+sol.value(p)
+
+opti.callback(@() evalin('base',['A=' num2str(opti.debug.value(p)) ';']));
+opti.set_value(p, 3);
+sol = opti.solve();
+disp(A)
+assert(A==3);
+opti.set_value(p, 2);
+sol = opti.solve();
+assert(A==2);
+opti.set_value(p, 3);
+sol = opti.solve();
+assert(A==3);
+
+A = [];
+opti.callback();
+sol = opti.solve();
+assert(isempty(A));
+
+B = [];
+
+opti.callback(@() evalin('base',['B=' num2str(opti.debug.value(p)) ';']));
+sol = opti.solve();
+assert(B==3);
+
 opti = OptiSpline();
 
 
 
 
-x = opti.var();
-y = opti.var();
-z = opti.var();
+x = opti.variable();
+y = opti.variable();
+z = opti.variable();
 
-sol = opti.solver((x-1)^2+(y-2)^2+(z-3)^2,{},'ipopt')
-sol.solve()
+opti.minimize((x-1)^2+(y-2)^2+(z-3)^2)
+opti.solver('ipopt')
+sol = opti.solve();
 assert(norm(sol.value(x)-1)<1e-7)
 assert(norm(sol.value(y)-2)<1e-7)
 assert(norm(sol.value(z)-3)<1e-7)
 
-sol = opti.solver((x-1)^2+(y-2)^2+(z-3)^2,{z<=y, y<=x},'ipopt')
-sol.solve()
+opti.subject_to()
+opti.subject_to({z<=y, y<=x})
+sol = opti.solve();
+
 assert(norm(sol.value(x)-2)<1e-7)
 assert(norm(sol.value(y)-2)<1e-7)
 assert(norm(sol.value(z)-2)<1e-7)
 
-sol = opti.solver((x-1)^2+(y-2)^2+(z-3)^2,{z<=y<=x},'ipopt')
-sol.solve()
+opti.subject_to()
+opti.subject_to({z<=y<=x})
+sol = opti.solve();
+
 assert(norm(sol.value(x)-2)<1e-7)
 assert(norm(sol.value(y)-2)<1e-7)
 assert(norm(sol.value(z)-2)<1e-7)
 
-sol = opti.solver((x-1)^2+(y-2)^2+(z-3)^2,{z>=y>=x},'ipopt')
-sol.solve()
+opti.subject_to()
+opti.subject_to({z>=y>=x})
+sol = opti.solve();
+
 assert(norm(sol.value(x)-1)<1e-4)
 assert(norm(sol.value(y)-2)<1e-4)
 assert(norm(sol.value(z)-3)<1e-4)
 
 opti = OptiSplineYalmip();
-P = opti.var(2,2,'symmetric');
+P = opti.variable(2,2,'symmetric');
 
 T = 2*eye(2);
 
-sol = opti.solver(trace(P),{P>=T},'yalmip')
-sol.solve()
 
-assert(norm(sol.value(P)-T)<1e-2)
+opti.minimize(trace(P));
+opti.subject_to(P>=T);
+sol = opti.solve();
 
-sol = opti.solver(-trace(P),{P<=T},'yalmip')
-sol.solve()
+assert(norm(sol.value(P)-T)<1e-2);
 
-assert(norm(sol.value(P)-T)<1e-2)
+opti.subject_to();
+opti.minimize(-trace(P));
+opti.subject_to(P<=T);
+sol = opti.solve();
 
+assert(norm(sol.value(P)-T)<1e-2);
 
-sol = opti.solver(trace(P),{3*eye(2)>=P>=T},'yalmip')
-sol.solve()
+opti.subject_to();
+opti.minimize(trace(P));
+opti.subject_to(3*eye(2)>=P>=T);
+sol = opti.solve();
 
-assert(norm(sol.value(P)-T)<1e-2)
+assert(norm(sol.value(P)-T)<1e-2);
 
+opti.subject_to();
+opti.minimize(-trace(P));
+opti.subject_to(3*eye(2)>=P>=T);
+sol = opti.solve();
 
-sol = opti.solver(-trace(P),{3*eye(2)>=P>=T},'yalmip')
-sol.solve()
+assert(norm(sol.value(P)-3*eye(2))<1e-2);
+
+opti.subject_to();
+opti.minimize(trace(P));
+opti.subject_to(T<=P<=3*eye(2));
+sol = opti.solve();
+
+assert(norm(sol.value(P)-T)<1e-2);
+
+opti.subject_to();
+opti.minimize(-trace(P));
+opti.subject_to(T<=P<=3*eye(2));
+sol = opti.solve();
 
 assert(norm(sol.value(P)-3*eye(2))<1e-2)
 
-sol = opti.solver(trace(P),{T<=P<=3*eye(2)},'yalmip')
-sol.solve()
+opti.subject_to();
+opti.minimize(trace(P));
+opti.subject_to(-P<=-T);
+sol = opti.solve();
 
 assert(norm(sol.value(P)-T)<1e-2)
 
+x = opti.variable();
 
-sol = opti.solver(-trace(P),{T<=P<=3*eye(2)},'yalmip')
-sol.solve()
+opti.subject_to()
+opti.minimize((1-x)^2)
+sol = opti.solve()
 
-assert(norm(sol.value(P)-3*eye(2))<1e-2)
-
-
-sol = opti.solver(trace(P),{-P<=-T},'yalmip')
-sol.solve()
-
-assert(norm(sol.value(P)-T)<1e-2)
-
-x = opti.var();
-sol = opti.solver((1-x)^2,{},'yalmip');
-sol.solve();
-assert(norm(sol.value(x)-1)<1e-5)
+sol.value(x)-1
+assert(norm(sol.value(x)-1)<1e-4)
 
 yalmip_options = sdpsettings('solver','quadprog','verbose',2);
 
-x = opti.var();
-p = opti.par();
-sol = opti.solver((p-x)^2,{},'yalmip',struct('yalmip_options',yalmip_options));
-sol.value(p,3)
-sol.solve();
+x = opti.variable();
+p = opti.parameter();
+
+opti.subject_to();
+opti.minimize((p-x)^2);
+opti.solver('yalmip',struct('yalmip_options',yalmip_options));
+opti.set_value(p, 3)
+sol = opti.solve()
 
 sol.value(x)
 
 assert(norm(sol.value(x)-3)<1e-5)
-sol.value(p,2)
-sol.solve();
+opti.set_value(p,2)
+sol = opti.solve();
 
 assert(norm(sol.value(x)-2)<1e-5)
 
 
-sol = opti.solver((p-x)^2,{x<=0},'yalmip',struct('yalmip_options',yalmip_options));
-sol.value(p,3)
-sol.solve();
+opti.subject_to();
+opti.minimize((p-x)^2);
+opti.subject_to(x<=0);
+opti.solver('yalmip',struct('yalmip_options',yalmip_options));
+opti.set_value(p, 3);
+
+sol = opti.solve();
 
 sol.value(x)
 
 assert(norm(sol.value(x))<1e-5)
-sol.value(p,-2)
-sol.solve();
+opti.set_value(p,-2);
+sol = opti.solve();
 
-assert(norm(sol.value(x)+2)<1e-5)
+norm(sol.value(x)+2)
+sol.value(x)
+assert(norm(sol.value(x)+2)<1e-4)
 
 
 b = MonomialBasis(4);
@@ -123,13 +201,13 @@ opti = OptiSplineYalmip();
 
 
 
-x = opti.var();
-y = opti.var(4,4);
-z = opti.var(1,3);
+x = opti.variable();
+y = opti.variable(4,4);
+z = opti.variable(1,3);
 
-123
-sol = opti.solver(x+trace(y)+z(1),{y>=3},'yalmip')
-sol.solve()
+opti.minimize(x+trace(y)+z(1))
+opti.subject_to(y>=3)
+sol = opti.solve()
 
 x_yalmip = sdpvar(2,2,'full')
 y_yalmip = sdpvar(2,2,'full')
@@ -170,12 +248,16 @@ fun = @(x,y) {
 
 opti = OptiSpline();
 
-x = opti.var();
-y = opti.var();
+x = opti.variable();
+y = opti.variable();
 f = (x-1)^2+(y-2)^2;
+opti.minimize(f);
+
+opti.solver('ipopt')
 
 tests_yalmip = fun(x_yalmip, y_yalmip);
 tests = fun(x, y);
+
 
 for i = 1:size(tests,1)
   con = tests_yalmip{i};
@@ -187,8 +269,9 @@ for i = 1:size(tests,1)
   
   con = tests{i};
   
-  sol = opti.solver(f,{con},'ipopt');
-  sol.solve();
+  opti.subject_to();
+  opti.subject_to(con);
+  sol = opti.solve();
   assert(norm(sol.value(x)-xs_yalmip)<1e-3);
   assert(norm(sol.value(y)-ys_yalmip)<1e-3);
   dual_1 = full(sol.dual(con)');
@@ -206,10 +289,12 @@ eps = 1e-5;
 
 opti = OptiSpline();
 
-x = opti.var(3,1);
-y = opti.var(3,1);
+x = opti.variable(3,1);
+y = opti.variable(3,1);
 
 f = sum((x-1).^2+((y-2).*s).^2);
+opti.minimize(f);
+opti.solver('ipopt');
 
 tests_yalmip = fun(x_yalmip, y_yalmip);
 tests = fun(x, y);
@@ -224,8 +309,9 @@ for i = 1:size(tests,1)
   
   con = tests{i};
   
-  sol = opti.solver(f,{con},'ipopt');
-  sol.solve();
+  opti.subject_to();
+  opti.subject_to(con);
+  sol = opti.solve();
   assert(norm(sol.value(x)-xs_yalmip)<1e-3);
   assert(norm(sol.value(y)-ys_yalmip)<1e-3);
   dual_1 = full(sol.dual(con)');
@@ -244,10 +330,12 @@ eps = 1e-5;
 
 opti = OptiSpline();
 
-x = opti.var(1,3);
-y = opti.var(1,3);
+x = opti.variable(1,3);
+y = opti.variable(1,3);
 
+opti.solver('ipopt');
 f = sum((x-1).^2+((y-2).*s).^2);
+opti.minimize(f);
 
 tests_yalmip = fun(x_yalmip, y_yalmip);
 tests = fun(x, y);
@@ -262,8 +350,9 @@ for i = 1:size(tests,1)
   
   con = tests{i};
   
-  sol = opti.solver(f,{con},'ipopt');
-  sol.solve();
+  opti.subject_to();
+  opti.subject_to(con);
+  sol = opti.solve();
   assert(norm(sol.value(x)-xs_yalmip)<1e-3);
   assert(norm(sol.value(y)-ys_yalmip)<1e-3);
   dual_1 = full(sol.dual(con)');
@@ -282,10 +371,11 @@ eps = 1e-5;
 
 opti = OptiSpline();
 
-x = opti.var(3,2);
-y = opti.var(3,2);
-
+x = opti.variable(3,2);
+y = opti.variable(3,2);
+opti.solver('ipopt')
 f = sum(sum((x-1).^2+((y-2).*s).^2));
+opti.minimize(f);
 
 fun = @(x,y) { 
           y(:)>=2.5;
@@ -323,11 +413,15 @@ for i = 1:size(tests,1)
   
   con = tests{i};
   
-  sol = opti.solver(f,{con},'ipopt');
-  sol.solve();
+  opti.subject_to();
+  opti.subject_to(con);
+  sol = opti.solve();
   assert(norm(sol.value(x)-xs_yalmip)<1e-3);
   assert(norm(sol.value(y)-ys_yalmip)<1e-3);
   dual_1 = full(sol.dual(con)');
   assert(norm(dual_1(:)-dual_yalmip(:))<1e-3);  
 
 end
+
+
+disp('the end')

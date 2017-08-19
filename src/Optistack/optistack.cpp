@@ -4,11 +4,91 @@
 
 using namespace casadi;
 
-Opti::Opti() : count_(0) {
+class InternalOptiCallback : public Callback {
+  public:    
+  InternalOptiCallback(OptiStack* sol);
 
+  ~InternalOptiCallback();
+
+  // Initialize the object
+  void init() override;
+
+  // Number of inputs and outputs
+  int get_n_in() override;
+
+  Sparsity get_sparsity_in(int i);
+
+  // Evaluate numerically
+  std::vector<DM> eval(const std::vector<DM>& arg) override;
+
+  void set_sol(OptiStack* sol) { sol_= sol;}
+
+  private:
+    OptiStack* sol_;
+};
+
+
+InternalOptiCallback::InternalOptiCallback(OptiStack* sol) : sol_(sol) {
 }
 
-MX Opti::var(int n, int m, const std::string& attribute) {
+InternalOptiCallback::~InternalOptiCallback() {  };
+
+// Initialize the object
+void InternalOptiCallback::init() {
+}
+
+// Number of inputs and outputs
+int InternalOptiCallback::get_n_in() { return nlpsol_n_out();}
+
+Sparsity InternalOptiCallback::get_sparsity_in(int i) {
+  std::string n = nlpsol_out(i);
+  int size = 0;
+  if (n=="f") {
+    size = 1;
+  } else if (n=="lam_x" || n=="x") {
+    size = sol_->nx();
+  } else if (n=="lam_g" || n=="g") {
+    size = sol_->ng();
+  } else if (n=="p" || n=="lam_p") {
+    size = sol_->np();
+    if (size==0) return Sparsity::dense(0, 0);
+  } else {
+    return Sparsity::dense(0, 0);
+  }
+  return Sparsity::dense(size, 1);
+}
+
+// Evaluate numerically
+std::vector<DM> InternalOptiCallback::eval(const std::vector<DM>& arg) {
+  DMDict r;
+
+  for (int i=0;i<nlpsol_n_out();++i) {
+    r[nlpsol_out(i)] = arg[i];
+  }
+
+  sol_->res(r);
+
+
+  for (OptiCallback* cb : sol_->callbacks_)
+    cb->call();
+  return {0};
+}
+
+void OptiStack::callback_class(OptiCallback* callback) {
+  callbacks_ = {callback};
+}
+
+void OptiStack::callback_class() {
+  callbacks_ = {};
+}
+
+OptiStack::OptiStack() : count_(0), count_var_(0), count_par_(0) {
+  solver_has_callback_ = false;
+  internal_callback_ = 0;
+  mark_problem_dirty();
+}
+
+MX OptiStack::variable(int n, int m, const std::string& attribute) {
 
   // Prepare metadata
   MetaVar meta_data;
@@ -17,6 +97,7 @@ MX Opti::var(int n, int m, const std::string& attribute) {
   meta_data.m = m;
   meta_data.type = OPTI_VAR;
   meta_data.count = count_++;
+  meta_data.i = count_var_++;
 
   MX symbol, ret;
 
@@ -33,13 +114,15 @@ MX Opti::var(int n, int m, const std::string& attribute) {
   }
 
   // Store the symbol; preventing it from going ut of scope
-  store_.push_back(symbol);
+  symbols_.push_back(symbol);
+  initial_.push_back(DM::zeros(symbol.sparsity()));
+  latest_.push_back(DM::nan(symbol.sparsity()));
 
   set_meta(symbol, meta_data);
   return ret;
 }
 
-MX Opti::par(int n, int m, const std::string& attribute) {
+MX OptiStack::parameter(int n, int m, const std::string& attribute) {
   casadi_assert(attribute=="full");
 
   // Prepare metadata
@@ -49,38 +132,168 @@ MX Opti::par(int n, int m, const std::string& attribute) {
   meta_data.m = m;
   meta_data.type = OPTI_PAR;
   meta_data.count = count_++;
-  
+  meta_data.i = count_par_++;
+
   MX symbol = MX::sym("p_" + std::to_string(count_), n, m);
-  store_.push_back(symbol);
+  symbols_.push_back(symbol);
+  values_.push_back(DM::nan(symbol.sparsity()));
+
   set_meta(symbol, meta_data);
   return symbol;
 }
 
-void Opti::set_meta(const MX& m, const MetaVar& meta) {
+Dict OptiStack::stats() const {
+  assert_solved();
+  return solver_.stats();
+}
+
+std::string OptiStack::return_status() const {
+  Dict mystats = stats();
+  if (mystats.find("return_status")!=mystats.end())
+    return mystats.at("return_status");
+  return "unkown";
+}
+
+Function OptiStack::casadi_solver() const {
+  return solver_;
+}
+
+void OptiStack::set_meta(const MX& m, const MetaVar& meta) {
   meta_[m.get()] = meta;
 }
 
-const Opti::MetaVar& Opti::meta(const MX& m) const {
+const OptiStack::MetaVar& OptiStack::meta(const MX& m) const {
   assert_has(m);
   auto find = meta_.find(m.get());
   return find->second;
 }
 
-Opti::MetaVar Opti::get_meta(const MX& m) const {
+OptiStack::MetaVar& OptiStack::meta(const MX& m) {
+  assert_has(m);
+  auto find = meta_.find(m.get());
+  return find->second;
+}
+
+OptiStack::MetaVar OptiStack::get_meta(const MX& m) const {
   return meta(m);
 }
 
-void Opti::assert_has(const MX& m) const {
-  bool found = meta_.find(m.get())!=meta_.end();
-  spline_assert_message(found, "Symbol not found in Opti.");
+bool OptiStack::has(const MX& m) const {
+  return meta_.find(m.get())!=meta_.end();
 }
 
-OptiSolver Opti::solver(const MX& f, const std::vector<MX> & g,
-    const std::string& solver, const Dict& options) const {
-  return OptiSolver(*this, f, g, solver, options);
+void OptiStack::assert_has(const MX& m) const {
+  spline_assert_message(has(m), "Symbol not found in Opti stack.");
 }
 
-std::vector<MX> Opti::sort(const std::vector<MX>& v) const {
+std::vector<MX> OptiStack::initial() const {
+  std::vector<MX> ret;
+  for (const auto& e : symvar()) {
+    if (meta(e).type==OPTI_VAR)
+      ret.push_back(e==initial_[meta(e).i]);
+  }
+  return ret;
+}
+
+std::vector<MX> OptiStack::value() const {
+  std::vector<MX> ret;
+  for (const auto& e : symvar()) {
+    if (meta(e).type==OPTI_VAR)
+      ret.push_back(e==latest_[meta(e).i]);
+  }
+  return ret;
+}
+
+void OptiStack::internal_bake() {
+  casadi_assert_message(!f_.is_empty() || !g_.empty(),
+    "You need to specify at least an objective (y calling 'minimize'), "
+    "or a constraint (by calling 'subject_to').");
+
+  symbol_active_.clear();
+  symbol_active_.resize(symbols_.size());
+
+  // Gather all expressions
+  MX total_expr = vertcat(f_, veccat(g_));
+
+  // Categorize the symbols appearing in those expressions
+  for (const auto& d : symvar(total_expr))
+    symbol_active_[meta(d).count] = true;
+
+  std::vector<MX> x = active_symvar(OptiStack::OPTI_VAR);
+  int offset = 0;
+  for (const auto& v : x) {
+    meta(v).start = offset;
+    offset+= v.nnz();
+    meta(v).stop = offset;
+  }
+  std::vector<MX> p = active_symvar(OptiStack::OPTI_PAR);
+
+  // Fill the nlp definition
+  nlp_["x"] = veccat(x);
+  nlp_["p"] = veccat(p);
+
+  nlp_["f"] = f_;
+
+  // Allocate space for constraint Fmetadata
+  meta_con_.clear();
+  meta_con_.reserve(g_.size());
+
+  offset = 0;
+  for (int i=0;i<g_.size();++i) {
+    // Store the meta-dat for each constraint 
+    meta_con_.push_back(canon_expr(g_[i]));
+    OptiStack::MetaCon& r = meta_con_.back();
+
+    // Compute offsets for this constraint:
+    // location into the global constraint variable
+    r.start = offset;
+    offset+= r.canon.nnz();
+    r.stop = offset;
+
+    // Add entry to constraint lookup table
+    con_lookup_[r.original.get()] = i;
+
+  }
+
+  // Collect bounds and canonical form of constraints
+  std::vector<MX> g_all;
+  std::vector<MX> lbg_all;
+  std::vector<MX> ubg_all;
+  for (const auto& cm : meta_con_) {
+    g_all.push_back(cm.canon);
+    lbg_all.push_back(cm.lb);
+    ubg_all.push_back(cm.ub);
+  }
+
+  nlp_["g"] = veccat(g_all);
+
+  // Create bounds helper function
+  MXDict bounds;
+  bounds["p"] = nlp_["p"];
+  bounds["lbg"] = veccat(lbg_all);
+  bounds["ubg"] = veccat(ubg_all);
+
+  bounds_ = Function("bounds", bounds, {"p"}, {"lbg", "ubg"});
+  mark_problem_dirty(false);
+  userOut() << "Baked problem structure" << std::endl;
+  userOut() << "  #vars: " << x.size()  << " (scalarized " << nx() << ")" << std::endl;
+  if (np()!=0) {
+    userOut() << "  #pars: " << p.size() << " (scalarized " << np() << ")" << std::endl;
+  }
+  if (ng()==0) {
+    userOut() << "  unconstrained" << std::endl;
+  } else {
+    userOut() << "  #constraints: " << g_.size() << " (scalarized " << ng() << ")" << std::endl;
+  }
+}
+
+void OptiStack::solver(const std::string& solver_name, const Dict& solver_options) {
+  solver_name_ = solver_name;
+  solver_options_ = solver_options;
+  mark_solver_dirty();
+}
+
+std::vector<MX> OptiStack::sort(const std::vector<MX>& v) const {
   // We exploit the fact that std::map is ordered
 
   // Populate map
@@ -95,15 +308,15 @@ std::vector<MX> Opti::sort(const std::vector<MX>& v) const {
   return ret;
 }
 
-std::vector<MX> Opti::symvar() const {
-  return store_;
+std::vector<MX> OptiStack::symvar() const {
+  return symbols_;
 }
 
-std::vector<MX> Opti::symvar(const MX& expr) const {
+std::vector<MX> OptiStack::symvar(const MX& expr) const {
   return sort(MX::symvar(expr));
 }
 
-std::vector<MX> Opti::ineq_unchain(const MX& a, bool& flipped) {
+std::vector<MX> OptiStack::ineq_unchain(const MX& a, bool& flipped) {
   flipped = false; 
   casadi_assert(a.is_op(OP_LE) || a.is_op(OP_LT));
 
@@ -132,11 +345,11 @@ std::vector<MX> Opti::ineq_unchain(const MX& a, bool& flipped) {
   return ret;
 }
 
-bool Opti::is_parametric(const MX& expr) const {
-  return symvar(expr, Opti::OPTI_VAR).empty();
+bool OptiStack::is_parametric(const MX& expr) const {
+  return symvar(expr, OptiStack::OPTI_VAR).empty();
 }
 
-Opti::MetaCon Opti::canon_expr(const MX& expr) const {
+OptiStack::MetaCon OptiStack::canon_expr(const MX& expr) const {
   MX c = expr;
 
   MetaCon con;
@@ -222,7 +435,7 @@ Opti::MetaCon Opti::canon_expr(const MX& expr) const {
       con.lb = c.dep(1)*DM::ones(e.sparsity());
       con.type = OPTI_EQUALITY;
     } else {
-      con.lb = DM::zeros(con.canon.sparsity());
+      con.lb = DM::zeros(e.sparsity());
       con.canon = e;
       con.type = OPTI_GENERIC_EQUALITY;
     }
@@ -236,7 +449,31 @@ Opti::MetaCon Opti::canon_expr(const MX& expr) const {
 
 }
 
-std::vector<MX> Opti::symvar(const MX& expr, VariableType type) const {
+void OptiStack::assert_solved() const {
+  casadi_assert_message(solved(),
+    "This action is forbidden since you have not solved the Opti stack yet (with calling 'solve').");
+}
+void OptiStack::assert_empty() const {
+  casadi_assert(g_.empty());
+  casadi_assert(f_.is_empty());
+}
+
+void OptiStack::minimize(const MX& f) {
+  mark_problem_dirty();
+  f_ = f;
+}
+
+void OptiStack::subject_to(const std::vector<MX>& g) {
+  mark_problem_dirty();
+  g_.insert(g_.end(), g.begin(), g.end());
+}
+
+void OptiStack::subject_to() {
+  mark_problem_dirty();
+  g_.clear();
+}
+
+std::vector<MX> OptiStack::symvar(const MX& expr, VariableType type) const {
   std::vector<MX> ret;
   for (const auto& d : symvar(expr)) {
     if (meta(d).type==type) ret.push_back(d);
@@ -245,18 +482,94 @@ std::vector<MX> Opti::symvar(const MX& expr, VariableType type) const {
   return ret;
 }
 
-// Solve the problem
-void OptiSolver::solve() {
-  solve_prepare();
-  res(solve_actual(arg_));
+void OptiStack::res(const DMDict& res) {
+  const std::vector<double> & x_v = res.at("x").nonzeros();
+  for (const auto &v : active_symvar(OPTI_VAR)) {
+    int i = meta(v).i;
+    std::vector<double> & data_v = latest_[i].nonzeros();
+    std::copy(x_v.begin()+meta(v).start, x_v.begin()+meta(v).stop, data_v.begin());
+  }
+  res_ = res;
+  mark_solved();
 }
 
 // Solve the problem
-void OptiSolver::solve_prepare() {
+OptiSol OptiStack::solve() {
+
+  if (problem_dirty()) {
+    internal_bake();
+
+    // Verify the constraint types
+    for (const auto& cm : meta_con_) {
+      if (cm.type==OptiStack::OPTI_PSD)
+        spline_error("Psd constraints not implemented yet. "
+        "Perhaps you intended an element-wise inequality? "
+        "In that case, make sure that the matrix is flattened (e.g. mat(:)).");
+    }
+
+  }
+
+  bool need_callback = !callbacks_.empty();
+
+  bool solver_update =  solver_dirty() ||  need_callback!=  solver_has_callback_;
+
+  if (solver_update) {
+    Dict opts = solver_options_;
+
+    // Handle callbacks
+    if (need_callback) {
+      if (!internal_callback_) delete internal_callback_;
+      internal_callback_ = new InternalOptiCallback(this);
+      internal_callback_->construct("InternalOptiCallback", Dict());
+      callback_ = *internal_callback_;
+      internal_callback_->transfer_ownership();
+
+      //callback_ = InternalOptiCallback::create();
+      
+      opts["iteration_callback"] = callback_;
+    } else {
+      if (!internal_callback_) delete internal_callback_;
+      internal_callback_ = 0;
+    }
+    solver_has_callback_ = need_callback;
+
+    casadi_assert_message(solver_name_!="", "You must call 'solver' on the Opti stack to select a solver.");
+    solver_ = nlpsol("solver", solver_name_, nlp_, opts);
+    userOut() << "Initialized " << solver_name_ << " solver." << std::endl;
+  }
+
+  solve_prepare();
+  res(solve_actual(arg_));
+
+  std::string ret = return_status();
+
+  bool success = ret=="Solve_Succeeded" || ret=="Solved_To_Acceptable_Level";
+
+  casadi_assert_message(success,
+    "Solver failed. You may use opti.debug_value to investigate the latest values of variables. return_status is '" <<
+      ret << "'");
+
+  return copy();
+}
+
+// Solve the problem
+void OptiStack::solve_prepare() {
+
+
+  // Verify the constraint types
+  for (const auto& cm : meta_con_) {
+    if (cm.type==OptiStack::OPTI_UNKNOWN)
+     spline_error("Constraint type unknown. Use ==, >= or <= .");
+  }
+
+  if (internal_callback_)
+    internal_callback_->set_sol(this);
 
   // Get initial guess and parameter values
-  arg_["x0"] = veccat(values(Opti::OPTI_VAR));
-  arg_["p"]  = veccat(values(Opti::OPTI_PAR));
+  arg_["x0"] = veccat(active_values(OptiStack::OPTI_VAR));
+  arg_["p"]  = veccat(active_values(OptiStack::OPTI_PAR));
+  casadi_assert_message(arg_["p"].is_regular(),
+    "You have forgotten to assign a value to a parameter ('set_value'), or have set it to NaN/Inf.");
 
   // Evaluate bounds for given parameter values
   DMDict arg;
@@ -267,31 +580,28 @@ void OptiSolver::solve_prepare() {
 
 }
 
-DMDict OptiSolver::solve_actual(const DMDict& arg) const {
+DMDict OptiStack::solve_actual(const DMDict& arg) {
   return solver_(arg);
 }
 
-DM OptiSolver::dual(const MX& con) const {
-  spline_assert(solved_);
+DM OptiStack::dual(const MX& con) const {
+  assert_solved();
   
   // Look up index of constraint
   auto it = con_lookup_.find(con.get());
   casadi_assert_message(it!=con_lookup_.end(), "Unknown constraint");
   int i = it->second;
 
-  const Opti::MetaCon& c = meta_con_[i];
+  const OptiStack::MetaCon& c = meta_con_[i];
 
-  int start = start_con_[i];
-  int stop = stop_con_[i];
-
-  int N = stop-start;
+  int N = c.stop-c.start;
   DM ret = DM::zeros(repmat(c.original.sparsity(), 1, c.n));
   std::vector<double>& ret_nz = ret.nonzeros();
 
   const std::vector<double>& lam_g = res_.at("lam_g").nonzeros();
-  if (c.type==Opti::OPTI_DOUBLE_INEQUALITY) {
+  if (c.type==OptiStack::OPTI_DOUBLE_INEQUALITY) {
     for (int i=0;i<N;++i) {
-      double v = (c.flipped ? -1 : 1) * lam_g[start+i];
+      double v = (c.flipped ? -1 : 1) * lam_g[c.start+i];
       if (v<0) {
         ret_nz[i] = -v;
       } else {
@@ -303,184 +613,246 @@ DM OptiSolver::dual(const MX& con) const {
     for (int i=0;i<c.n;++i) {
       int p = c.flipped? c.n-i-1: i;
       for (int k=0;k<block_size;++k) {
-        ret_nz[p*block_size+k] = fabs(lam_g[start+i*block_size+k]);
+        ret_nz[p*block_size+k] = fabs(lam_g[c.start+i*block_size+k]);
       }
     }
   }
   return ret.T();
 }
 
-DM OptiSolver::value(const MX& x) const {
-  spline_assert(solved_);
-  Function helper = Function("helper", std::vector<MX>{nlp_.at("x"), nlp_.at("p")}, {x});
-  std::vector<DM> arg = helper(std::vector<DM>{res_.at("x"), arg_.at("p")});
+DM OptiStack::value(const MX& expr, const std::vector<MX>& values) const {
+  std::vector<MX> x = symvar(expr, OPTI_VAR);
+  std::vector<MX> p = symvar(expr, OPTI_PAR);
+
+  Function helper = Function("helper", std::vector<MX>{veccat(x), veccat(p)}, {expr});
+  if (helper.has_free())
+    casadi_error("This expression has symbols that are not defined within Opti using variable/parameter.");
+
+
+  std::map<int, MX> temp;
+  for (const auto& v : values) {
+    casadi_assert(v.is_op(OP_EQ));
+    int i = meta(v.dep(1)).i;
+    casadi_assert(v.dep(0).is_constant());
+    temp[i] = v.dep(0);
+  }
+
+  bool undecided_vars = false;
+  std::vector<DM> x_num;
+  for (const auto& e: x) {
+    int i = meta(e).i;
+    x_num.push_back(latest_[i]);
+
+    // Override when values are supplied
+    auto it = temp.find(i);
+    if (it==temp.end()) {
+      undecided_vars = true;
+    } else {
+      Slice all;
+      DM t = static_cast<DM>(it->second);
+      x_num.back().set(t, false, all, all);
+    }
+
+  }
+
+  if (undecided_vars) {
+    assert_solved();
+    for (const auto& e: x) casadi_assert_message(symbol_active_[meta(e).count], "This expression has symbols that do not appear in the constraints and objective.");
+  }
+
+  std::vector<DM> p_num;
+  for (const auto& e: p) {
+    p_num.push_back(values_[meta(e).i]);
+  }
+
+  std::vector<DM> arg = helper(std::vector<DM>{veccat(x_num), veccat(p_num)});
   return arg[0];
 }
 
-OptiSolver::OptiSolver(const Opti& sc, const MX& f, const std::vector<MX> & g) : sc_(sc), g_(g), f_(f) {
-  solved_ = false;
-
-  // Gather all expressions
-  MX total_expr = vertcat(f, veccat(g));
-
-  // Categorize the symbols appearing in those expressions
-  for (const auto& d : sc.symvar(total_expr))
-    symbols_[sc.meta(d).type].push_back(d);
-
-  // Fill the nlp definition
-  nlp_["x"] = veccat(symvar(Opti::OPTI_VAR));
-  nlp_["p"] = veccat(symvar(Opti::OPTI_PAR));
-
-  nlp_["f"] = f;
-
-  // Allocate space for constraint metadata
-  meta_con_.reserve(g.size());
-  start_con_.reserve(g.size());
-  stop_con_.reserve(g.size());
-
-  int offset = 0;
-  for (int i=0;i<g.size();++i) {
-    // Store the meta-dat for each constraint 
-    Opti::MetaCon r = sc_.canon_expr(g[i]);
-    meta_con_.push_back(r);
-
-    // Compute offsets for this constraint:
-    // location into the global constraint variable
-    start_con_.push_back(offset);
-    offset+= r.canon.nnz();
-    stop_con_.push_back(offset);
-
-    // Add entry to constraint lookup table
-    con_lookup_[r.original.get()] = i;
-
-  }
-
-  // Collect bounds and canonical form of constraints
-  std::vector<MX> g_all;
-  std::vector<MX> lbg_all;
-  std::vector<MX> ubg_all;
-  for (const auto& cm : meta_con_) {
-    g_all.push_back(cm.canon);
-    lbg_all.push_back(cm.lb);
-    ubg_all.push_back(cm.ub);
-  }
-
-  nlp_["g"] = veccat(g_all);
-
-  // Create bounds helper function
-  MXDict bounds;
-  bounds["p"] = nlp_["p"];
-  bounds["lbg"] = veccat(lbg_all);
-  bounds["ubg"] = veccat(ubg_all);
-
-  bounds_ = Function("bounds", bounds, {"p"}, {"lbg", "ubg"});
-
-  // Initialize decision variables with zero
-  for (auto& v : symvar(Opti::OPTI_VAR))
-    data_[v.get()] = std::vector<DM>(1, DM::zeros(v.sparsity()));
-
-  // Initialize parameters with nan
-  for (auto& v : symvar(Opti::OPTI_PAR))
-    data_[v.get()] = std::vector<DM>(1, DM::nan(v.sparsity()));
-}
-
-OptiSolver::OptiSolver(const Opti& sc, const MX& f, const std::vector<MX> & g,
-    const std::string& solver, const Dict& options) : OptiSolver(sc, f, g) {
-
-  solver_ = nlpsol("solver", solver, nlp_, options);
-
-  // Verify the constraint types
-  for (const auto& cm : meta_con_) {
-    if (cm.type==Opti::OPTI_PSD)
-      spline_error("Psd constraints not implemented yet. "
-      "Perhaps you intended an element-wise inequality? "
-      "In that case, make sure that the matrix is flattened (e.g. mat(:)).");
-    if (cm.type==Opti::OPTI_UNKNOWN)
-     spline_error("Constraint type unknown. Use ==, >= or <= .");
-  }
-}
-
-void OptiSolver::assert_has(const MX& m) const {
-  sc_.assert_has(m);
-  bool found = data_.find(m.get())!=data_.end();
-  spline_assert_message(found, "Opti symbol is not used in Solver."
+void OptiStack::assert_active_symbol(const MX& m) const {
+  assert_has(m);
+  spline_assert_message(symbol_active_[meta(m).count], "Opti symbol is not used in Solver."
     " It does not make sense to assign a value to it.");
 }
 
-void OptiSolver::value(const MX& x, const DM& v) {
-  solved_ = false;
-  assert_has(x);
-  std::vector<DM>& targets = data_.at(x.get());
-  DM& target = targets[0];
-  Slice all;
-  target.set(v, false, all, all);
+void OptiStack::set_initial(const std::vector<MX>& assignments) {
+  for (const auto& v : assignments) {
+    casadi_assert(v.is_op(OP_EQ));
+    casadi_assert(v.dep(0).is_constant());
+    if (has(v.dep(1)))
+      set_initial(v.dep(1), static_cast<DM>(v.dep(0)));
+  }
 }
 
-std::vector<MX> OptiSolver::symvar(Opti::VariableType type) const {
-  if (symbols_.find(type)==symbols_.end()) return std::vector<MX>();
-  return symbols_.at(type);
-}
-
-std::vector<DM> OptiSolver::values(Opti::VariableType type) const {
-  std::vector<MX> v = symvar(type);
-  std::vector<DM> ret;
-  ret.reserve(v.size());
-
-  // Initialize decision variables with zero
-  for (auto& e : v) {
-    auto it = data_.find(e.get());
-    spline_assert(it!=data_.end());
-    ret.push_back(it->second[0]);
+void OptiStack::set_value_internal(const MX& x, const DM& v, std::vector<DM>& store) {
+  casadi_assert(v.is_regular());
+  if (x.is_symbolic()) {
+    DM& target = store[meta(x).i];
+    Slice all;
+    mark_solver_dirty();
+    target.set(v, false, all, all);
+    return;
   }
 
+  // Obtain symbolic primitives
+  std::vector<MX> symbols = MX::symvar(x);
+  MX symbols_cat = veccat(symbols);
+
+  std::string failmessage = "You cannot set initial/value of an arbitrary expression. Use symbols or simple mappings of symbols.";
+
+  // Assert x is linear in its symbolic primitives
+  for (bool b : which_depends(x, symbols_cat, 2, false)) casadi_assert_message(!b, failmessage);
+
+  // Evaluate jacobian of expr wrt symbols
+  Function Jf("Jf", {}, {jacobian(x, veccat(symbols), {{"compact",true}})});
+  DM J = Jf(std::vector<DM>{})[0];
+  Sparsity sp_JT = J.T().sparsity();
+
+  Function Ff("Ff", symbols, {x});
+  DM E = Ff(std::vector<DM>(symbols.size(), 0))[0];
+  std::vector<double>& e = E.nonzeros();
+
+  // Cast the v input into the expected sparsity
+  Slice all;
+  DM value(x.sparsity());
+  value.set(v, false, all, all);
+
+  // Get rows and columns of the mapping
+  std::vector<int> row, col;
+  J.sparsity().get_triplet(row, col);
+  const std::vector<double>& scaling = J.nonzeros();
+  const std::vector<double>& data_original = value.nonzeros();
+
+  std::vector<double> data; data.reserve(value.nnz());
+  for (int i=0;i<value.nnz();++i) {
+    double v = data_original[i];
+    int nz = sp_JT.colind()[i+1]-sp_JT.colind()[i];
+    casadi_assert_message(nz<=1, failmessage);
+    if (nz) {
+      data.push_back(v);
+    } else {
+      casadi_assert_message(v==e[i], "In initial/value assignment: inconsistent numerical values. "
+        "At nonzero " << i << ", lhs has " << e[i] << ", while rhs has " << v << ".");
+    }
+  }
+
+  // Contiguous workspace for nonzeros of all involved symbols
+  std::vector<double> temp(symbols_cat.nnz(), casadi::nan);
+  for (int k=0;k<data.size();++k) {
+    double& lhs = temp[col[k]];
+    double rhs = data[row[k]]/scaling[row[k]];
+    if (std::isnan(lhs)) {
+      // Assign in the workspace
+      lhs = rhs;
+    } else {
+      casadi_assert_message(lhs==rhs, "Initial/value assignment with mapping is ambiguous.");
+    }
+  }
+
+  int offset = 0;
+  for (const auto & s : symbols) {
+    DM& target = store[meta(s).i];
+    std::vector<double>& data = target.nonzeros();
+    // Loop over nonzeros in each symbol
+    for (int i=0;i<s.nnz();++i) {
+      // Copy from the workspace (barring fields that were not set)
+      double v = temp[offset+i];
+      if (!std::isnan(v)) data[i] = v;
+    }
+    offset+=s.nnz();
+  }
+
+}
+
+void OptiStack::set_initial(const MX& x, const DM& v) {
+  for (const auto & s: MX::symvar(x))
+    casadi_assert_message(meta(s).type!=OPTI_PAR, "You cannot set an initial value for a parameter. Did you mean 'set_value'?");
+  set_value_internal(x, v, initial_);
+}
+
+void OptiStack::set_value(const MX& x, const DM& v) {
+  for (const auto & s: MX::symvar(x))
+    casadi_assert_message(meta(s).type!=OPTI_VAR, "You cannot set a value for a variable. Did you mean 'set_initial'?");
+  set_value_internal(x, v, values_);
+}
+
+std::vector<MX> OptiStack::active_symvar(OptiStack::VariableType type) const {
+  std::vector<MX> ret;
+  for (const auto& s: symbols_) {
+    if (symbol_active_[meta(s).count] && meta(s).type==type)
+      ret.push_back(s);
+  }
   return ret;
 }
 
+std::vector<DM> OptiStack::active_values(OptiStack::VariableType type) const {
+  std::vector<DM> ret;
+  for (const auto& s: symbols_) {
+    if (symbol_active_[meta(s).count] && meta(s).type==type) {
+      if (type==OPTI_VAR) {
+        ret.push_back(initial_[meta(s).i]);
+      } else if (type==OPTI_PAR) {
+        ret.push_back(values_[meta(s).i]);
+      }
+    }
+  }
+  return ret;
+}
 
-
-
-
-
-
-
-
-
-spline::Function OptiSplineSolver::value(const spline::Function& f) const {
+spline::Function OptiStackSpline::value(const spline::Function& f) const {
   return spline::Function(f.tensor_basis(), value(f.coeff()));
 }
 
-spline::Coefficient OptiSplineSolver::value(const spline::Coefficient& c) const {
+spline::Coefficient OptiStackSpline::value(const spline::Coefficient& c) const {
   return spline::Coefficient(value(c.data()));
 }
 
-void OptiSplineSolver::value(const spline::Coefficient& c, const Tensor<DM>& d) {
+void OptiStackSpline::set_initial(const spline::Coefficient& c, const Tensor<DM>& d) {
   spline_assert_message(c.data().is_MT(), "Value only supported for MX");
-  value(c.data().as_MT(), d);
+  set_initial(c.data().as_MT(), d);
 }
 
-void OptiSplineSolver::value(const spline::Function& f, const spline::Function& g) {
+void OptiStackSpline::set_value(const spline::Coefficient& c, const Tensor<DM>& d) {
+  spline_assert_message(c.data().is_MT(), "Value only supported for MX");
+  set_value(c.data().as_MT(), d);
+}
+
+void OptiStackSpline::set_value(const spline::Function& f, const spline::Function& g) {
   spline_assert_message(f.coeff().data().is_MT(), "Value only supported for MX");
-  value(f.coeff_tensor().as_MT(), g.project_to(f.tensor_basis()).coeff_tensor().as_DT());
+  set_value(f.coeff_tensor().as_MT(), g.project_to(f.tensor_basis()).coeff_tensor().as_DT());
 }
 
-AnyTensor OptiSplineSolver::value(const AnyTensor& t) const {
+void OptiStackSpline::set_initial(const spline::Function& f, const spline::Function& g) {
+  spline_assert_message(f.coeff().data().is_MT(), "Value only supported for MX");
+  set_initial(f.coeff_tensor().as_MT(), g.project_to(f.tensor_basis()).coeff_tensor().as_DT());
+}
+
+AnyTensor OptiStackSpline::value(const AnyTensor& t) const {
   if (t.is_DT()) return t.as_DT();
   if (t.is_MT()) return value(t.as_MT());
   spline_assert_message(false, "Value only supported for MX");
   return DT();
 }
 
-Tensor<DM> OptiSplineSolver::value(const Tensor<MX>& t) const {
-  return Tensor<DM>(OptiSolver::value(t.data()), t.dims());
+Tensor<DM> OptiStackSpline::value(const Tensor<MX>& t, const std::vector< Tensor<MX> >& values) const {
+  std::vector<MX> values_data;
+  for (const auto& e: values) values_data.push_back(e.data());
+  return Tensor<DM>(OptiStack::value(t.data(), values_data), t.dims());
 }
 
-void OptiSplineSolver::value(const Tensor<MX>& t, const Tensor<DM>& d) {
+void OptiStackSpline::set_value(const Tensor<MX>& t, const Tensor<DM>& d) {
   spline_assert_message(t.squeeze().dims()==d.squeeze().dims(),
     "Tensor dimensions must match. Got " << t.dims() << " and " << d.dims() <<".");
-  OptiSolver::value(t.data(), d.data());
+  OptiStack::set_value(t.data(), d.data());
 }
 
-spline::Function OptiSpline::Function(const spline::TensorBasis& b,
+void OptiStackSpline::set_initial(const Tensor<MX>& t, const Tensor<DM>& d) {
+  spline_assert_message(t.squeeze().dims()==d.squeeze().dims(),
+    "Tensor dimensions must match. Got " << t.dims() << " and " << d.dims() <<".");
+  OptiStack::set_initial(t.data(), d.data());
+}
+
+spline::Function OptiStackSpline::Function(const spline::TensorBasis& b,
     const std::vector<int>& var_shape, const std::string& attribute) {
 
   casadi_assert(var_shape.size()<=2);
@@ -490,19 +862,19 @@ spline::Function OptiSpline::Function(const spline::TensorBasis& b,
   return spline::Function(b, spline::Coefficient(coeff_var(b.dimension(), n, m, attribute)));
 }
 
-MT OptiSpline::coeff_var(const std::vector<int> & shape, int n, int m, const std::string& attribute) {
+MT OptiStackSpline::coeff_var(const std::vector<int> & shape, int n, int m, const std::string& attribute) {
   int cs = spline::product(shape);
 
   if (attribute=="full") {
     std::vector<int> ret_shape = shape;
     ret_shape.push_back(n);
     ret_shape.push_back(m);
-    return MT(var(spline::product(ret_shape)), ret_shape);
+    return MT(variable(spline::product(ret_shape)), ret_shape);
   }
 
   std::vector<MX> args;
   for (int i=0;i<cs;++i)
-    args.push_back(var(n, m, attribute));
+    args.push_back(variable(n, m, attribute));
 
   std::vector<int> t_shape = {n, m};
   t_shape.insert(t_shape.end(), shape.begin(), shape.end());
@@ -515,22 +887,7 @@ MT OptiSpline::coeff_var(const std::vector<int> & shape, int n, int m, const std
   return t.reorder_dims(reorder);
 }
 
-
-OptiSplineSolver OptiSpline::solver(const MX& f, const std::vector<MX> & g,
-    const std::string& solver, const Dict& options) const {
-  return OptiSplineSolver(*this, f, g, solver, options);
-}
-
-OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g,
-    const std::string& solver, const Dict& options) : OptiSolver(sc, f, g, solver, options) {
-
-}
-
-OptiSplineSolver::OptiSplineSolver(const OptiSpline& sc, const MX& f, const std::vector<MX> & g) : OptiSolver(sc, f, g) {
-
-}
-
-void OptiSpline::matlab_dump(const casadi::Function& f, const std::string &fname) const {
+void OptiStackSpline::matlab_dump(const casadi::Function& f, const std::string &fname) const {
   std::ofstream ss(fname);
 
 
@@ -586,4 +943,10 @@ void OptiSpline::matlab_dump(const casadi::Function& f, const std::string &fname
     ss << "  varargout{" << i+1 <<  "} = [argout_" << i <<"{:}];" << std::endl;
   }
     ss << "end" << std::endl;
+}
+
+// Solve the problem
+OptiSplineSol OptiStackSpline::solve() {
+  OptiStack::solve();
+  return copy();
 }

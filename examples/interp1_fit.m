@@ -22,9 +22,11 @@ e = F-Flin;
 
 curve_bound = 1;
 
-L = opti.var(dimension(e.coeff));
-sol = opti.solver(sum(L),{e<=L, e>=0, H<=curve_bound, H>=-curve_bound},'ipopt',struct('ipopt',struct('tol',1e-12)));
-sol.solve();
+L = opti.variable(dimension(e.coeff));
+opti.minimize(sum(L))
+opti.subject_to({e<=L, e>=0, H<=curve_bound, H>=-curve_bound})
+opti.solver('ipopt',struct('ipopt',struct('tol',1e-12)))
+sol = opti.solve();
 
 F = sol.value(F);
 

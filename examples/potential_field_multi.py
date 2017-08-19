@@ -71,18 +71,18 @@ while (x_ < r):
     x_ = x_ + dx
 _stop_integration = time.time()
 
-# Now, let's do the constraints.
-con = []
+
+opti.minimize(obj)
 
 # constraint (1)
-con.append(potential_field.list_eval(x,y)>=0)
+opti.subject_to(potential_field.list_eval(x,y)>=0)
 
 # constraint (2)
-con.append(potential_field>=-1)
+opti.subject_to(potential_field>=-1)
 
 # Now let's solve the problem
-sol = opti.solver(obj,con,"ipopt")
-sol.solve()
+opti.solver("ipopt")
+sol = opti.solve()
 
 potential_field = sol.value(potential_field)
 _stop_optimization = time.time()
