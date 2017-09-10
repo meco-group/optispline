@@ -6,15 +6,6 @@
 import casadi
 %}
 
-%{
-#define SWIG_FILE_WITH_INIT
-#include "casadi/casadi_numpy.hpp"
-%}
-
-%init %{
-import_array();
-%}
-
 #endif // SWIGPYTHON
 // Incude cmath early on, see #622
 %begin %{
@@ -43,6 +34,19 @@ def _swig_repr(self):
   else:
     return _swig_repr_default(self)
 
+def DT_from_array(m, check_only=True):
+  import numpy as np
+  if isinstance(m, np.ndarray):
+    try:
+      m = m.astype(float,casting="same_kind",copy=False)
+    except:
+      return False
+    if check_only:
+      return True
+    else:
+      return (m.shape,m.flat)
+  return False
+
 %}
 #endif // WITH_SWIGPYTHON
 
@@ -70,10 +74,6 @@ def _swig_repr(self):
 //%remame(__eval__) TensorBasis::evalBasis
 //%}
 //{% endif %}
-
-%feature("flatnested") OptiStack::MetaCon;
-%feature("flatnested") OptiStack::MetaVar;
-%feature("flatnested") OptiStack::IndexAbstraction;
 
 // Renameing MATLAB
 #ifdef SWIGMATLAB
@@ -182,8 +182,6 @@ using namespace spline;
     GUESTOBJECT * from_ptr(const AnyTensor *a);
     GUESTOBJECT * from_ptr(const AnyVector *a);
     GUESTOBJECT * from_ptr(const AnySlice *a);
-
-    GUESTOBJECT * from_ptr_nativeDM(const nativeDM *a);
 
     GUESTOBJECT * from_ptr(const spline::TensorBasis *a);
     GUESTOBJECT * from_ptr(const spline::Basis *a);
@@ -391,7 +389,47 @@ using namespace spline;
       }
       return false;
     }
-
+    
+#ifdef SWIGPYTHON
+    GUESTOBJECT* full(const DT& m, bool simplify=false) {
+      PyObject *p = from_ptr(&m);
+      PyObject *method_name = PyString_FromString("toarray");
+      PyObject *cr = PyObject_CallMethodObjArgs(p, method_name, (simplify? Py_True: Py_False), 0);
+      Py_DECREF(method_name);
+      Py_DECREF(p);
+      if (cr) return cr;
+      return Py_None;
+    }
+    PyObject* get_Python_helper_splines(const std::string& name) {
+      PyObject* module = PyImport_AddModule("splines");
+      PyObject* dict = PyModule_GetDict(module);
+      return PyDict_GetItemString(dict, (char*) name.c_str());
+    }
+    bool DT_from_array(GUESTOBJECT *p, DT** m) {
+      PyObject* dm = get_Python_helper_splines("DT_from_array");
+      if (!dm) return false;
+      PyObject *check_only = m? Py_False : Py_True;
+      PyObject *cr = PyObject_CallFunctionObjArgs(dm, p, check_only, NULL);
+      if (!cr) return false;
+      if (PyBool_Check(cr)) {
+        Py_DECREF(cr);
+        return PyObject_IsTrue(cr);
+      } else {
+        if (m) {
+          std::vector<double> data;
+          if (!to_val(PyTuple_GetItem(cr, 1), &data)) return false;
+          std::vector<int> dim;
+          if (!to_val(PyTuple_GetItem(cr, 0), &dim)) return false;
+          std::vector<int> dim_rev = dim;
+          std::reverse(dim_rev.begin(), dim_rev.end());
+          std::vector<int> order_rev = range(dim.size());
+          std::reverse(order_rev.begin(), order_rev.end());
+          **m = DT(data, dim_rev).reorder_dims(order_rev);
+        }
+        return true;
+      }
+    }
+#endif // SWIGPYTHON
     bool to_ptr(GUESTOBJECT *p, DT** m) {
       // Treat Null
       if (is_null(p)) return false;
@@ -416,33 +454,8 @@ using namespace spline;
       #else
       #endif // SWIGMATLAB
       #ifdef SWIGPYTHON
-      // 1D numpy array
-      if (is_array(p) && array_is_native(p)) {
-
-        // Make sure we have a contigous array
-        int array_is_new_object;
-        PyArrayObject* array;
-
-        array = obj_to_array_contiguous_allow_conversion(p, NPY_DOUBLE, &array_is_new_object);
-        if (array) {
-            int n_dim = array_numdims(p);
-            std::vector<int> dim(n_dim);
-            for (int i=0;i<dim.size();++i) dim[i] = array_size(p,i);
-            std::vector<int> dim_rev = dim;
-            std::reverse(dim_rev.begin(), dim_rev.end());
-
-            double* d = reinterpret_cast<double*>(array_data(array));
-            std::vector<double> data(d, d+product(dim));
-            std::vector<int> order_rev = range(n_dim);
-            std::reverse(order_rev.begin(), order_rev.end());
-            if (m) **m = DT(data, dim_rev).reorder_dims(order_rev);
-            if (array_is_new_object) Py_DECREF(array);
-            return true;
-        }
-
-        // No match
-        return false;
-      }
+      
+      if (DT_from_array(p, m)) return true;
       #endif
 
       // Try first converting to a temporary DM
@@ -789,23 +802,9 @@ using namespace spline;
         return p;
 #endif
 #ifdef SWIGPYTHON
-        int n_dim = temp.n_dims();
-        if (n_dim==0 || n_dim==1 && temp.dims(0)==1 || n_dim==2 && temp.dims(0)==1 && temp.dims(1)==1) return PyFloat_FromDouble(static_cast<double>(temp.data()));
-        std::vector<npy_intp> dim(n_dim);
-        for (int i=0;i<n_dim;++i) dim[i] = temp.dims(i);
-        PyObject* ret = PyArray_SimpleNew(n_dim, get_ptr(dim), NPY_DOUBLE);
-        std::vector<int> order = range(n_dim);
-        std::reverse(order.begin(), order.end());
-        double* d = static_cast<double*>(array_data(ret));
-        std::vector<double> nz = temp.reorder_dims(order).data().nonzeros();
-        std::copy(nz.begin(), nz.end(), d);
-        return ret;
+        return full(temp, true);
 #endif
-        if (temp.n_dims()<=2) {
-          DM r = temp.matrix();
-          if (r.is_scalar()) return from_ref(static_cast<double>(r));
-          return from_ref(r);
-        }
+
         return from_ref(temp);
       }
       if (a->is_ST()) {
@@ -827,38 +826,6 @@ using namespace spline;
 #ifdef SWIGPYTHON
       return Py_None;
 #endif // SWIGPYTHON
-      return 0;
-    }
-
-
-    GUESTOBJECT * from_ptr_nativeDM(const nativeDM *a) {
-      if (!a->is_dense()) return from_ptr(static_cast<const DM*>(a));
-#if SWIGMATLAB
-      std::vector<size_t> dim = {static_cast<size_t>(a->size1()), static_cast<size_t>(a->size2())};
-      mxArray *p  = mxCreateNumericArray(2, get_ptr(dim), mxDOUBLE_CLASS, mxREAL);
-      double* d = static_cast<double*>(mxGetData(p));
-      const std::vector<double>& nz = a->nonzeros();
-      std::copy(nz.begin(), nz.end(), d);
-      return p;
-#endif
-#ifdef SWIGPYTHON
-      if (a->is_scalar()) return PyFloat_FromDouble(static_cast<double>(*a));
-      PyObject* ret;
-      if (a->is_vector()) {
-        std::vector<npy_intp> dim = {a->numel()};
-        ret = PyArray_SimpleNew(1, get_ptr(dim), NPY_DOUBLE);
-        double* d = static_cast<double*>(array_data(ret));
-        const std::vector<double>& nz = a->nonzeros();
-        std::copy(nz.begin(), nz.end(), d);
-      } else {
-        std::vector<npy_intp> dim = {a->size1(), a->size2()};
-        ret = PyArray_SimpleNew(2, get_ptr(dim), NPY_DOUBLE);
-        double* d = static_cast<double*>(array_data(ret));
-        casadi_densify(a->ptr(), a->sparsity(), d, true); // Row-major
-      }
-
-      return ret;
-#endif
       return 0;
     }
     
@@ -915,6 +882,8 @@ using namespace spline;
  }
 
 %import "casadi/casadi.i"
+
+
 
 #ifdef WITH_STACKTRACE
 %exception {
@@ -1034,10 +1003,6 @@ using namespace spline;
 %casadi_template("[index]", PREC_IVector, std::vector< spline::Argument >)
 %casadi_template("[double]", SWIG_TYPECHECK_DOUBLE, std::vector<double>)
 
- // Return-by-value
-%typemap(out, doc="double", noblock=1, fragment="casadi_all") nativeDM {
-  if(!($result = casadi::from_ptr_nativeDM(&$1))) SWIG_exception_fail(SWIG_TypeError,"Failed to convert output to type 'double'.");
-}
 
 %typemap(in, doc="index", noblock=1, fragment="casadi_all") spline::NumericIndex {
   if (!casadi::to_val($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' index '.");
@@ -1057,16 +1022,6 @@ using namespace spline;
   interpret_NumericIndex(m);
  }
 
-
-%apply int &OUTPUT { Opti::ConstraintType &OUTPUT };
-
-%typemap(argout, noblock=1,fragment="casadi_all") Opti::ConstraintType &OUTPUT {
-  %append_output(casadi::from_ptr((int *) $1));
-}
-
-%typemap(in, doc="Opti.ConstraintType", noblock=1, numinputs=0) Opti::ConstraintType &OUTPUT (Opti::ConstraintType m) {
- $1 = &m;
-}
 
 %include <src/SharedObject/PrintableObject.h>
 %template(PrintSharedObject) spline::PrintableObject<spline::SharedObject>;
@@ -1139,88 +1094,56 @@ using namespace spline;
 %include <src/Function/Polynomial.h>
 %include <src/Function/Parameter.h>
 
-%feature("director") OptiCallback;
+#ifdef SWIGPYTHON
+make_property(OptiSpline, debug);
+make_property(OptiSplineSol, debug);
+make_property(OptiSplineSol, opti);
+
+%define make_property_optispline(name)
+  make_property(OptiSpline, name);
+%enddef
+
+make_property(OptiSplineSol, debug);
+make_property_optispline(f)
+make_property_optispline(g)
+make_property_optispline(x)
+make_property_optispline(p)
+make_property_optispline(lam_g)
+make_property_optispline(nx)
+make_property_optispline(np)
+make_property_optispline(ng)
+
+opti_metadata_modifiers(OptiSpline)
+#endif //SWIGPYTHON
+
+#ifdef SWIGMATLAB
+opti_metadata_modifiers(OptiSpline)
+#endif
+
+%include <src/Optistack/optistack_interface.h>
+
+%template(OptiSplineI) OptiSplineInterface<OptiSpline>;
+%template(OptiSplineAdvancedI) OptiSplineInterface<OptiSplineAdvanced>;
+
 %include <src/Optistack/optistack.h>
 
+
+
 #ifdef SWIGPYTHON
-%extend Opti {
-  %pythoncode %{
-    def callback(self,fh=None):
-      if fh is None:
-        self.callback_class();
-        return
-      class OptiCallbackHelper(OptiCallback):
-          def __init__(self, callback):
-            OptiCallback.__init__(self)
-            self.callback = callback
-
-          def call(self):
-            self.callback()
-
-      self._fh = fh
-      self._cb = OptiCallbackHelper(fh);
-      self.callback_class(self._cb);
-  %}
-}
 %extend OptiSpline {
   %pythoncode %{
     def callback(self,fh=None):
-      if fh is None:
-        self.callback_class();
-        return
-      class OptiCallbackHelper(OptiCallback):
-          def __init__(self, callback):
-            OptiCallback.__init__(self)
-            self.callback = callback
-
-          def call(self):
-            self.callback()
-
-      self._fh = fh
-      self._cb = OptiCallbackHelper(fh);
-      self.callback_class(self._cb);
+      import casadi
+      casadi.Opti._callback(self,fh)
   %}
 }
 #endif
 
 #ifdef SWIGMATLAB
-%extend Opti {
-  %matlabcode %{
-    function [] = callback(self, varargin)
-      if length(varargin)==1
-        fh = varargin{1};
-      else
-        self.callback_class();
-        drawnow
-        pause(0.0001)
-        return
-      end
-      persistent cb;
-      if isempty(cb)
-        cb = {};
-      end
-      cb = {cb{:} OptiCallbackHelper(fh)};
-      self.callback_class(cb{end});
-    end
-  %}
-}
 %extend OptiSpline {
   %matlabcode %{
     function [] = callback(self, varargin)
-      if length(varargin)==1
-        fh = varargin{1};
-      else
-        self.callback_class();
-        drawnow
-        pause(0.0001)
-        return
-      end
-      persistent cb;
-      if isempty(cb)
-        cb = {};
-      end
-      cb = {cb{:} OptiCallbackHelper(fh)};
-      self.callback_class(cb{end});
+      casadi.OptiCallbackHelper.callback_setup(self, varargin{:})
     end
   %}
 }
@@ -1372,6 +1295,22 @@ namespace spline {
 %extend Tensor<MX> {
   %tensor_helpers(2002.0)
 }
+
+#ifdef SWIGPYTHON
+%extend Tensor<DM> {
+  %pythoncode %{
+  
+    def toarray(self,simplify=False):
+      import numpy as np
+      if simplify:
+        s = self.dims()
+        if len(s)==0 or len(s)==1 and s[0]==1 or len(s)==2 and s[0]==1 and s[1]==1:
+          return float(self.data())
+      reversed = range(self.n_dims()-1,-1,-1)
+      return np.array(self.reorder_dims(reversed).data().elements()).reshape(self.dims())
+  %}
+}
+#endif
 
 namespace spline {
 %extend Function {

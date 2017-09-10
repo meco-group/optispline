@@ -4,7 +4,6 @@ from helpers import *
 
 class Test_Optistack(BasisTestCase):
 
-
     def test_set_value_expr(self):
         for MyOpti in [Opti, OptiSpline]:
           opti = MyOpti()
@@ -15,29 +14,29 @@ class Test_Optistack(BasisTestCase):
           opti.set_value(p, 0)
           opti.set_value(v, 0)
           opti.set_value(p[0], 3)
-          self.assertEqualTensor(opti.debug().value(p),vertcat(3,0,0))
+          self.assertEqualTensor(opti.debug.value(p),vertcat(3,0,0))
           opti.set_value(p[[0,2]], 2)
-          self.assertEqualTensor(opti.debug().value(p),vertcat(2,0,2)) 
+          self.assertEqualTensor(opti.debug.value(p),vertcat(2,0,2)) 
           opti.set_value(p[[0,2]], [1,2])
-          self.assertEqualTensor(opti.debug().value(p),vertcat(1,0,2)) 
+          self.assertEqualTensor(opti.debug.value(p),vertcat(1,0,2)) 
           opti.set_value(p[[2,0]], [1,2])
-          self.assertEqualTensor(opti.debug().value(p),vertcat(2,0,1)) 
+          self.assertEqualTensor(opti.debug.value(p),vertcat(2,0,1)) 
 
           opti.set_value(veccat(v,p), [1,2,3,4,5])
-          self.assertEqualTensor(opti.debug().value(p),vertcat(3,4,5))
-          self.assertEqualTensor(opti.debug().value(v),vertcat(1,2))    
+          self.assertEqualTensor(opti.debug.value(p),vertcat(3,4,5))
+          self.assertEqualTensor(opti.debug.value(v),vertcat(1,2))    
          
          
           opti.set_value(p, 0)
           opti.set_value(veccat(p[0],p[0]), [4,4])
-          self.assertEqualTensor(opti.debug().value(p),vertcat(4,0,0))
+          self.assertEqualTensor(opti.debug.value(p),vertcat(4,0,0))
           with self.assertInException("ambiguous"):
             opti.set_value(veccat(p[0],p[0]), [4,5])
           with self.assertInException("cannot set a value for a variable"):
             opti.set_value(veccat(p,x,v), [4,5])
           opti.set_value(p, 0)
           opti.set_value(3*p[0], 3)
-          self.assertEqualTensor(opti.debug().value(p),vertcat(1,0,0))
+          self.assertEqualTensor(opti.debug.value(p),vertcat(1,0,0))
           with self.assertInException("cannot set initial/value of an arbitrary expression"):
             opti.set_value(p[0]+p[1], 3)
 
@@ -62,7 +61,43 @@ class Test_Optistack(BasisTestCase):
           opti.solver('ipopt')
           opti.minimize(sum1(F))
           sol = opti.solve()
-
+    def test_print(self):
+      opti = OptiSpline()
+      print(opti)
+      self.assertTrue("variables" in str(opti))
+      self.assertTrue("variables" in str(opti.debug))
+      x = opti.variable()
+      y = opti.variable()
+      
+      p = opti.parameter()
+      print(opti)
+      
+      opti.minimize((x**2-y)**2)
+      print(opti)
+      opti.solver("ipopt")
+      print(opti)
+      sol = opti.solve()
+      print(sol)
+      print(opti)      
+            
+      opti = Opti()
+      print(opti)
+      x = opti.variable()
+      y = opti.variable()
+      
+      p = opti.parameter()
+      print(opti)
+      
+      opti.subject_to((x**2-y)**2<=1)
+      print(opti)
+      opti.solver("ipopt")
+      print(opti)
+      sol = opti.solve()
+      print(sol)
+      print(opti)
+      
+      self.assertTrue("variables" in str(sol))
+      
     def test_callback(self):
         for MyOpti in [Opti, OptiSpline]:
           opti = MyOpti()
@@ -77,7 +112,7 @@ class Test_Optistack(BasisTestCase):
           opti.minimize((x-1)**4+(y-p)**4)
           opti.solver("ipopt")
 
-          opti.callback(lambda : ret.setdefault('a',opti.debug().value(p)))
+          opti.callback(lambda i: ret.setdefault('a',opti.debug.value(p)))
           opti.set_value(p, 3)
           ret = {}
           sol = opti.solve()
@@ -97,7 +132,7 @@ class Test_Optistack(BasisTestCase):
           sol = opti.solve()
           self.assertFalse('a' in ret)
 
-          opti.callback(lambda : ret.setdefault('b',opti.debug().value(p)))
+          opti.callback(lambda i: ret.setdefault('b',opti.debug.value(p)))
           sol = opti.solve()
           self.assertTrue(ret['b']==3)
 
@@ -106,120 +141,26 @@ class Test_Optistack(BasisTestCase):
         opti = MyOpti()
         p = opti.parameter()
         opti.set_value(p, 3)
-        self.assertEqualTensor(opti.debug().value(p**2), 9)
+        self.assertEqualTensor(opti.debug.value(p**2), 9)
         x = opti.variable()
         
         with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
-          opti.debug().value(x**2)
+          opti.debug.value(x**2)
         
         with self.assertInException("You cannot set a value for a variable"):
           opti.set_value(x, 2)
         opti.set_initial(x, 2)
         
         with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
-          opti.debug().value(x**2)
+          opti.debug.value(x**2)
         
-        self.assertEqualTensor(opti.debug().value(x**2, opti.initial()), 4)
+        self.assertEqualTensor(opti.debug.value(x**2, opti.initial()), 4)
         
         y = opti.variable()
         
         with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
-          opti.debug().value(x*y)
+          opti.debug.value(x*y)
       
-      
-      
-    def test_flow(self):
-      opti = Opti()
-      
-      x = opti.variable()
-      y = opti.variable()
-      
-      p = opti.parameter()
-      
-      w = MX.sym("w")
-      
-      opti.minimize(x**2)
-      opti.solver("ipopt")
-      sol = opti.solve()
-      
-      with self.assertInException("do not appear in the constraints and objective"):
-        sol.value(y)
-        
-      with self.assertInException("Symbol not found in Opti stack"):
-        sol.value(w)
-        
-      opti.minimize((x-p)**2)
-      with self.assertInException("You have forgotten to assign a value to a parameter"):
-        sol = opti.solve()
-        
-      opti.set_value(p, 5)
-      opti.solve()
-      opti.debug().value(x);
-      
-      opti.set_value(p, 9)
-      opti.debug().value(p);
-      with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
-          opti.debug().value(x);
-      
-      opti.solve()
-      opti.set_initial(x, 3)
-      opti.debug().value(p);
-      with self.assertInException("This action is forbidden since you have not solved the Opti stack yet"):
-          opti.debug().value(x);
-      
-      opti = OptiSpline()
-      
-      x = opti.variable()
-      y = opti.variable()
-      
-      p = opti.parameter()
-      
-      w = MX.sym("w")
-      
-      opti.minimize(x**2)
-      opti.solver("ipopt")
-      
-      sol = opti.solve()
-      
-      
-      opti.minimize(x**2)
-      opti.subject_to(x>=0)        
-      opti.variable()
-      opti.parameter()
-        
-      opti.solver("ipopt")
-        
-      opti = OptiSpline()
-      
-      x = opti.variable()
-      y = opti.variable()
-      
-      p = opti.parameter()
-      
-      w = MX.sym("w")
-      
-      opti.minimize(x**2)
-      with self.assertInException("You must call 'solver' on the Opti stack to select a solver."):        
-        opti.solve()
-    
-        
-      opti = OptiSpline()
-      
-      x = opti.variable()
-      y = opti.variable()
-      
-      p = opti.parameter()
-      
-      w = MX.sym("w")
-      opti.solver("ipopt")
-      
-      with self.assertInException("You need to specify at least an objective"):
-        opti.solve()
-
-        
-        
-
-        
         
     def test_simple(self):
       for MyOpti in [Opti, OptiSpline]:
@@ -281,7 +222,7 @@ class Test_Optistack(BasisTestCase):
           
           count+=1
           if mul is not None:
-            self.assertEqualTensor(sol.dual(con), s*abs(mul),tol=1e-6)
+            self.assertEqualTensor(sol.value(opti.dual(con)), s*abs(mul),tol=1e-6)
         
         opti.subject_to()
         opti.subject_to(1.5==y)
@@ -548,7 +489,6 @@ class Test_Optistack(BasisTestCase):
         self.assertEqualTensor(sol.value(P), R)
 
     def test_functionconstr(self):
-        opti = OptiSpline()
         b = BSplineBasis([0,1],3,10)
         opti = OptiSpline()
         

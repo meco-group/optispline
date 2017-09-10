@@ -464,14 +464,9 @@ std::vector<AnyScalar> AnyVector::to_scalar_vector() const {
 namespace casadi {
   class Sorter : public casadi::Callback {
   public:
-
-    // Creator function, creates an owning reference
-    static Function create(const std::string& name, int size, int ascending,
-                            const Dict& opts=Dict()) {
-       return Callback::create(name, new Sorter(size, ascending), opts);
-    }
-    
-    Sorter(int size, int ascending) : size_(size), ascending_(ascending) { };
+    Sorter(int size, int ascending) : size_(size), ascending_(ascending) {
+      construct("sorter");
+    };
 
     /** \brief  Destructor */
     ~Sorter() override {};
@@ -490,17 +485,19 @@ namespace casadi {
 
     ///@{
     /** \brief Return Jacobian of all input elements with respect to all output elements */
-    bool has_jacobian() const { return true; }
+    bool has_jacobian() const override { return true; }
     casadi::Function get_jacobian(const std::string& name,
-                                     const Dict& opts) {
-      std::vector<MX> arg = mx_in();
+                                  const std::vector<std::string>& inames,
+                                  const std::vector<std::string>& onames,
+                                  const Dict& opts) const override {
+      std::vector<MX> arg = join(mx_in(), mx_out());
       return casadi::Function(name, arg, {DM(size_, size_) }, opts);
     }
     ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
-    void eval(const double** arg, double** res, int* iw, double* w, int mem) override {
-      if (!res[0]) return;
+    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override {
+      if (!res[0]) return 0;
       std::copy(arg[0], arg[0]+size_, res[0]);
 
       if (ascending_) {
@@ -522,6 +519,7 @@ namespace casadi {
             return 0;
         });
       }
+      return 0;
     }
 
     int size_;
@@ -531,13 +529,7 @@ namespace casadi {
 class Uniquifier : public casadi::Callback {
   public:
 
-    // Creator function, creates an owning reference
-    static Function create(const std::string& name, int size,
-                            const Dict& opts=Dict()) {
-       return Callback::create(name, new Uniquifier(size), opts);
-    }
-   
-    Uniquifier(int size) : size_(size) {};
+    Uniquifier(int size) : size_(size) { construct("uniquifier"); };
 
     /** \brief  Destructor */
     ~Uniquifier() override {};
@@ -556,17 +548,19 @@ class Uniquifier : public casadi::Callback {
 
     ///@{
     /** \brief Return Jacobian of all input elements with respect to all output elements */
-    bool has_jacobian() const { return true; }
+    bool has_jacobian() const override { return true; }
     casadi::Function get_jacobian(const std::string& name,
-                                     const Dict& opts) {
-      std::vector<MX> arg = mx_in();
+                                  const std::vector<std::string>& inames,
+                                  const std::vector<std::string>& onames,
+                                  const Dict& opts) const override {
+      std::vector<MX> arg = join(mx_in(), mx_out());
       return casadi::Function(name, arg, {DM(size_, size_) }, opts);
     }
     ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
-    void eval(const double** arg, double** res, int* iw, double* w, int mem) override {
-      if (!res[0]) return;
+    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override {
+      if (!res[0]) return 0;
       std::copy(arg[0], arg[0]+size_, res[0]);
 
       for (int i=1;i<size_-2;++i) {
@@ -575,7 +569,7 @@ class Uniquifier : public casadi::Callback {
           res[0][i+1] = (res[0][i+1]+res[0][i+2])/2;
         }
       }
-
+      return 0;
     }
 
     int size_;
@@ -585,22 +579,22 @@ class Uniquifier : public casadi::Callback {
 AnyVector AnyVector::sort(bool ascending) const {
   tensor_assert(!is_ST());
 
-  casadi::Function sorter = casadi::Sorter::create("sorter", dims()[0], ascending);
+  casadi::Sorter* sorter = new casadi::Sorter(dims()[0], ascending);
   if (is_DT()) {
-    return DT(sorter(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
+    return DT(sorter->operator()(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
   } else {
-    return MT(sorter(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
+    return MT(sorter->operator()(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
   }
 }
 
 AnyVector AnyVector::uniquify() const {
   tensor_assert(!is_ST());
 
-  casadi::Function uniquifier = casadi::Uniquifier::create("uniquifier", dims()[0]);
+  casadi::Uniquifier* uniquifier = new casadi::Uniquifier(dims()[0]);
   if (is_DT()) {
-    return DT(uniquifier(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
+    return DT(uniquifier->operator()(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
   } else {
-    return MT(uniquifier(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
+    return MT(uniquifier->operator()(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
   }
 }
 

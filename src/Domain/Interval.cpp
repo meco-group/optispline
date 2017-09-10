@@ -72,12 +72,12 @@ namespace spline {
                    max_ss.str() + "]";
         }
         else if (vertcat(data()).is_ST()) {
-            return "interval [" + min().as_SX().getDescription() + ", " +
-            max().as_SX().getDescription() + "]";
+            return "interval [" + str(min().as_SX()) + ", " +
+            str(max().as_SX()) + "]";
         }
         else if (vertcat(data()).is_MT()) {
-            return "interval [" + min().as_MX().getDescription() + ", " +
-            max().as_MX().getDescription() + "]";
+            return "interval [" + str(min().as_MX()) + ", " +
+            str(max().as_MX()) + "]";
         }
         return "Undefined interval";
     };

@@ -3,6 +3,7 @@ import splines.*
 
 
 opti = OptiSplineYalmip();
+opti = opti.advanced;
 % LPD model
 aL = 1;
 aU = 2;

@@ -149,7 +149,7 @@ namespace spline {
         if (!linear_expansion) return ret_data;
         casadi::Function f = casadi::Function("f", {s}, {ret_data.as_MT().data()});
         casadi::Function J = f.jacobian();
-        casadi::DM jac = sparsify(J(std::vector<casadi::DM>{0})[0]);
+        casadi::DM jac = sparsify(J(std::vector<casadi::DM>{0, 0})[0]);
         return MT(casadi::MX::mtimes(jac, data().as_MT().data()), ret_data.dims());
     }
 

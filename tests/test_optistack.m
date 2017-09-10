@@ -21,13 +21,16 @@ A = [];
 opti.set_value(p, 3);
 sol = opti.solve();
 
+
+opti.debug
+
 opti.debug.value(p)
 
 d = opti.debug
 d.value(p)
 sol.value(p)
 
-opti.callback(@() evalin('base',['A=' num2str(opti.debug.value(p)) ';']));
+opti.callback(@(i) evalin('base',['A=' num2str(opti.debug.value(p)) ';']));
 opti.set_value(p, 3);
 sol = opti.solve();
 disp(A)
@@ -46,7 +49,7 @@ assert(isempty(A));
 
 B = [];
 
-opti.callback(@() evalin('base',['B=' num2str(opti.debug.value(p)) ';']));
+opti.callback(@(i) evalin('base',['B=' num2str(opti.debug.value(p)) ';']));
 sol = opti.solve();
 assert(B==3);
 
@@ -258,7 +261,7 @@ opti.solver('ipopt')
 tests_yalmip = fun(x_yalmip, y_yalmip);
 tests = fun(x, y);
 
-
+data = {};
 for i = 1:size(tests,1)
   con = tests_yalmip{i};
   
@@ -266,7 +269,7 @@ for i = 1:size(tests,1)
   dual_yalmip = dual(con);
   xs_yalmip = value(x_yalmip);
   ys_yalmip = value(y_yalmip);
-  
+  data = [data {xs_yalmip;ys_yalmip;dual_yalmip}];
   con = tests{i};
   
   opti.subject_to();
@@ -274,7 +277,7 @@ for i = 1:size(tests,1)
   sol = opti.solve();
   assert(norm(sol.value(x)-xs_yalmip)<1e-3);
   assert(norm(sol.value(y)-ys_yalmip)<1e-3);
-  dual_1 = full(sol.dual(con)');
+  dual_1 = sol.value(opti.dual(con));
   assert(norm(dual_1(:)-dual_yalmip)<1e-3);  
 end
 
@@ -299,6 +302,7 @@ opti.solver('ipopt');
 tests_yalmip = fun(x_yalmip, y_yalmip);
 tests = fun(x, y);
 
+data2 = {};
 for i = 1:size(tests,1)
   con = tests_yalmip{i};
   
@@ -306,7 +310,7 @@ for i = 1:size(tests,1)
   dual_yalmip = dual(con);
   xs_yalmip = value(x_yalmip);
   ys_yalmip = value(y_yalmip);
-  
+  data2 = [data2 {xs_yalmip;ys_yalmip;dual_yalmip}];
   con = tests{i};
   
   opti.subject_to();
@@ -314,7 +318,7 @@ for i = 1:size(tests,1)
   sol = opti.solve();
   assert(norm(sol.value(x)-xs_yalmip)<1e-3);
   assert(norm(sol.value(y)-ys_yalmip)<1e-3);
-  dual_1 = full(sol.dual(con)');
+  dual_1 = sol.value(opti.dual(con));
   assert(norm(dual_1(:)-dual_yalmip(:))<1e-3);  
 
 end
@@ -340,6 +344,7 @@ opti.minimize(f);
 tests_yalmip = fun(x_yalmip, y_yalmip);
 tests = fun(x, y);
 
+data3 = {};
 for i = 1:size(tests,1)
   con = tests_yalmip{i};
   
@@ -347,7 +352,7 @@ for i = 1:size(tests,1)
   dual_yalmip = dual(con);
   xs_yalmip = value(x_yalmip);
   ys_yalmip = value(y_yalmip);
-  
+  data3 = [data3 {xs_yalmip;ys_yalmip;dual_yalmip}];
   con = tests{i};
   
   opti.subject_to();
@@ -355,7 +360,7 @@ for i = 1:size(tests,1)
   sol = opti.solve();
   assert(norm(sol.value(x)-xs_yalmip)<1e-3);
   assert(norm(sol.value(y)-ys_yalmip)<1e-3);
-  dual_1 = full(sol.dual(con)');
+  dual_1 = sol.value(opti.dual(con));
   assert(norm(dual_1(:)-dual_yalmip(:))<1e-3);  
 
 end
@@ -403,6 +408,8 @@ fun = @(x,y) {
 tests_yalmip = fun(x_yalmip, y_yalmip);
 tests = fun(x, y);
 
+
+data4 = {};
 for i = 1:size(tests,1)
   con = tests_yalmip{i};
   
@@ -410,7 +417,7 @@ for i = 1:size(tests,1)
   dual_yalmip = dual(con);
   xs_yalmip = value(x_yalmip);
   ys_yalmip = value(y_yalmip);
-  
+  data4 = [data4 {xs_yalmip;ys_yalmip;dual_yalmip}];
   con = tests{i};
   
   opti.subject_to();
@@ -418,7 +425,7 @@ for i = 1:size(tests,1)
   sol = opti.solve();
   assert(norm(sol.value(x)-xs_yalmip)<1e-3);
   assert(norm(sol.value(y)-ys_yalmip)<1e-3);
-  dual_1 = full(sol.dual(con)');
+  dual_1 = sol.value(opti.dual(con));
   assert(norm(dual_1(:)-dual_yalmip(:))<1e-3);  
 
 end

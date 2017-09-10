@@ -9,10 +9,11 @@ endif()
 include_directories(${CASADI_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-tools)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 if(WITH_PYTHON)
-  find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
-  find_package(NUMPY REQUIRED)
+  find_package(PythonLibs ${PYTHON_VERSION})
+  if(NOT PYTHON_INCLUDE_PATH)
+    message(SEND_ERROR "Python include headers not found, but required." )
+  endif()
   include_directories(${PYTHON_INCLUDE_PATH})
-  include_directories(${NUMPY_PATH})
 endif()
 if(WITH_MATLAB)
   if(NOT MATLAB_LIBRARIES)
@@ -41,7 +42,13 @@ set_property(SOURCE splines.i PROPERTY SWIG_FLAGS "-I${PROJECT_SOURCE_DIR}" "-I$
   
 if(WITH_PYTHON)
   swig_add_module(splines python splines.i)
-  swig_link_libraries(splines ${PYTHON_LIBRARIES} splines ${CASADI_LIBRARIES})
+  swig_link_libraries(splines splines ${CASADI_LIBRARIES})
+  if(WIN32) # dlls don't allow missing symbols
+    if(NOT PYTHON_LIBRARIES)
+      message(SEND_ERROR "Python libraries not found, but required." )
+    endif()
+    swig_link_libraries(splines ${PYTHON_LIBRARIES})
+  endif()
 endif()
 
 if(WITH_MATLAB)
@@ -53,9 +60,9 @@ if(WITH_MATLAB)
                    POST_BUILD
                    COMMAND rm -f ${CMAKE_CURRENT_BINARY_DIR}/SwigMem.m)
   
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiStackSplineYalmip.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})                 
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiSplineYalmipAdvanced.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})                 
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiSplineYalmip.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiCallbackHelper.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OptiSplineYalmipInterface.m DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 

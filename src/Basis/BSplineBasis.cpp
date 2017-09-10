@@ -26,14 +26,19 @@ namespace casadi {
 
 
       BSplineEvaluator::BSplineEvaluator(int n_knots, int degree) :
-        n_knots_(n_knots), degree_(degree) { }
+        n_knots_(n_knots), degree_(degree) {
+           construct("BSplineEvaluator");
+      }
 
       void BSplineEvaluator::init() {
         casadi::Callback::init();
         alloc_w((degree_+1)*(n_knots_-1), true);
       }
 
-      Function BSplineEvaluator::get_jacobian(const std::string& name, const Dict& opts) {
+      Function BSplineEvaluator::get_jacobian(const std::string& name,
+                                  const std::vector<std::string>& inames,
+                                  const std::vector<std::string>& onames,
+                                  const Dict& opts) const {
         int n = n_knots_ - degree_ - 1;
         MX knots = MX::sym("knots", n_knots_);
         MX x = MX::sym("x");
@@ -47,21 +52,23 @@ namespace casadi {
         MX delta_knots_inv = 1/delta_knots;
         MX T = MX(sp_diag, -delta_knots_inv) + MX(sp_band, delta_knots_inv);
 
-        Function bspline_evaluator = BSplineEvaluator::create("f", n_knots_-2, degree_-1);
+        Function* bspline_evaluator = new BSplineEvaluator(n_knots_-2, degree_-1);
 
-        MX res = bspline_evaluator({knots(range(1, n_knots_-1)), x})[0];
+        MX res = bspline_evaluator->operator()({knots(range(1, n_knots_-1)), x})[0];
 
-        MX J = mtimes(T.T(), res);
-        return Function("J", {knots, x}, { horzcat(MX(n, n_knots_), degree_*J) });
+        MX J = MX::mtimes(T.T(), res);
+        return Function("J", {knots, x, MX::sym("dummy", sparsity_out(0))}, { horzcat(MX(n, n_knots_), degree_*J) });
       }
 
-      void BSplineEvaluator::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, int mem) const {
+      int BSplineEvaluator::eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const {
         eval_generic<SXElem>(0, arg, res, iw, w);
+        return 0;
       }
 
-      void BSplineEvaluator::eval(const double** arg, double** res,
-          int* iw, double* w, int mem) {
+      int BSplineEvaluator::eval(const double** arg, double** res,
+          int* iw, double* w, void* mem) const {
         eval_generic<double>(mem, arg, res, iw, w);
+        return 0;
       }
 }
 
@@ -158,7 +165,7 @@ namespace spline {
 
     BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree)
         : UnivariateBasisNode(degree, Interval(knots[degree], knots[knots.size()-degree-1])),
-      bspline_evaluator_(casadi::BSplineEvaluator::create("f", knots.size(), degree)) {
+      bspline_evaluator_(*(new casadi::BSplineEvaluator(knots.size(), degree))) {
         AnyVector kn(vertcat(knots));
         knots_ = kn.sort().to_scalar_vector();
       }

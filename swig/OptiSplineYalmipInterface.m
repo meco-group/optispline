@@ -1,4 +1,4 @@
-classdef OptiStackSplineYalmip < splines.OptiStackSpline
+classdef OptiSplineYalmipInterface < handle
 
   properties
       yalmip_variables
@@ -11,8 +11,7 @@ classdef OptiStackSplineYalmip < splines.OptiStackSpline
   end
   methods
       
-      function [ self ] = OptiStackSplineYalmip()
-        self@splines.OptiStackSpline();
+      function [ self ] = OptiSplineYalmipInterface()
         self.yalmip_variables = {};
       end
       function [out] = yalmip_expr_primitive( opti, vars, expr, args )
@@ -73,7 +72,7 @@ classdef OptiStackSplineYalmip < splines.OptiStackSpline
           ub = yalmip_expr_primitive(opti, vars, expr_ub, args);
 
           for i=1:length(out)
-              if (expr_types{i}==opti.OPTI_DOUBLE_INEQUALITY || expr_types{i}==opti.OPTI_INEQUALITY || expr_types{i}==opti.OPTI_GENERIC_INEQUALITY)
+              if (expr_types{i}==casadi.OPTI_DOUBLE_INEQUALITY || expr_types{i}==casadi.OPTI_INEQUALITY || expr_types{i}==casadi.OPTI_GENERIC_INEQUALITY)
                 if isinf(lb{i})
                   if isinf(ub{i})
                     out{i} = {};
@@ -87,9 +86,9 @@ classdef OptiStackSplineYalmip < splines.OptiStackSpline
                     out{i} = lb{i}<=out{i}<=ub{i};
                   end
                 end
-              elseif (expr_types{i}==opti.OPTI_EQUALITY || expr_types{i}==opti.OPTI_GENERIC_EQUALITY)
+              elseif (expr_types{i}==casadi.OPTI_EQUALITY || expr_types{i}==casadi.OPTI_GENERIC_EQUALITY)
                   out{i} = out{i}==ub{i};
-              elseif (expr_types{i}==opti.OPTI_PSD)
+              elseif (expr_types{i}==casadi.OPTI_PSD)
                   out{i} = 0.5*(out{i}+out{i}')>=0;
               end
           end
@@ -135,7 +134,7 @@ classdef OptiStackSplineYalmip < splines.OptiStackSpline
         ret = opti.yalmip_variables(counts);
 
       end
-
+      
       function [ opti ] = solver(opti, solver, varargin)
         
         if length(varargin)==0
@@ -145,40 +144,43 @@ classdef OptiStackSplineYalmip < splines.OptiStackSpline
         else
           error('Invalid arguments');
         end
-
+ 
         if isempty(options) || ~isfield(options, 'yalmip_options')
+
           yalmip_options = sdpsettings('solver','lmilab','verbose',2);
         else
           yalmip_options = options.yalmip_options;
         end
-        
+   
         opti.yalmip_options = yalmip_options;
-        
+ 
       end
 
-
-      function out = solve(opti)
+      function out = solve(self)
+      
+          opti = self.advanced()
+          opti.yalmip_options = self.yalmip_options;
 
           if opti.problem_dirty
-            opti.internal_bake();
+            opti.bake();
             g = opti.constraints;
             f = opti.objective;
             e = veccat(f,g{:});
-            vars_x = opti.symvar(e, opti.OPTI_VAR);
-            vars_p = opti.symvar(e, opti.OPTI_PAR);
+            vars_x = opti.symvar(e, casadi.OPTI_VAR);
+            vars_p = opti.symvar(e, casadi.OPTI_PAR);
 
             vars_x_yalmip = opti.yalmip_var(vars_x);
             vars_p_yalmip = opti.yalmip_var(vars_p);
 
             vars_x_yalmip = cellfun(@(e) e(:), vars_x_yalmip, 'uni', false);
             vars_p_yalmip = cellfun(@(e) e(:), vars_p_yalmip, 'uni', false);
-                    
+          
             constr = opti.yalmip_expr(g);
             c = [constr{:}];
             if isempty(c)
               c = zeros(0,1);
             end
-
+            
             opti.variables = vertcat(vars_x_yalmip{:});
             opti.yalmip_parameters = vertcat(vars_p_yalmip{:});
             opti.yalmip_objective = opti.yalmip_expr(f);
@@ -201,7 +203,7 @@ classdef OptiStackSplineYalmip < splines.OptiStackSpline
           %  checkset(self.yalmip_constraints)
           %end
           opti.res(struct('x',r));
-          out = splines.OptiSplineSol(opti);
+          out = splines.OptiSplineSol(splines.OptiSpline(opti));
      end
    end
 end

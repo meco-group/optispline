@@ -15,13 +15,6 @@ namespace casadi {
 
   class BSplineEvaluator : public casadi::Callback {
   public:
-  
-    // Creator function, creates an owning reference
-    static casadi::Function create(const std::string& name, int n_knots, int degree,
-                            const Dict& opts=Dict()) {
-       return Callback::create(name, new BSplineEvaluator(n_knots, degree), opts);
-    }
-
     BSplineEvaluator(int n_knots, int degree);
 
     /** \brief  Destructor */
@@ -43,12 +36,12 @@ namespace casadi {
     void init() override;
 
     /** \brief  Evaluate numerically, work vectors given */
-    void eval(const double** arg, double** res, int* iw, double* w, int mem) override;
+    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
 
-    void eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, int mem) const override;
+    int eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const override;
 
     template<class T>
-    void eval_generic(int mem, const T** arg, T** res, int* iw, T* w) const {
+    void eval_generic(void* mem, const T** arg, T** res, int* iw, T* w) const {
       T x = arg[1][0];
       const T* knots= arg[0];
 
@@ -85,7 +78,10 @@ namespace casadi {
       std::copy(temp+degree_*n1, temp+degree_*n1+length, res[0]);
     }
     bool has_jacobian() const override { return true;}
-    casadi::Function get_jacobian(const std::string& name, const Dict& opts) override;
+    casadi::Function get_jacobian(const std::string& name,
+                                  const std::vector<std::string>& inames,
+                                  const std::vector<std::string>& onames,
+                                  const Dict& opts) const override;
 
     int n_knots_;
     int degree_;
