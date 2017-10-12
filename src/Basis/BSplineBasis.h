@@ -86,6 +86,8 @@ namespace casadi {
     int n_knots_;
     int degree_;
 
+
+    static BSplineEvaluator& construct_cached(int n_knots, int degree);
   };
 
 }
@@ -143,7 +145,7 @@ namespace spline{
 
     private:
         std::vector<AnyScalar> knots_;
-        mutable casadi::Function bspline_evaluator_;
+        casadi::Callback& bspline_evaluator_;
     };
 
 #endif // SWIG

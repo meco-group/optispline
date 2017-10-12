@@ -1,4 +1,5 @@
 #include "any_tensor.hpp"
+#include <memory>
 
 //#include <casadi/core/function/function_internal.hpp>
 
@@ -524,6 +525,15 @@ namespace casadi {
 
     int size_;
     bool ascending_;
+    
+    static Sorter& construct_cached(int size, bool ascending) {
+      static std::map<std::pair<int, bool>, std::unique_ptr<casadi::Sorter> > cache;
+      std::pair<int, bool> key = {size, ascending};
+      auto it = cache.find(key);
+      if (it==cache.end()) cache[key] = std::unique_ptr<casadi::Sorter>(new casadi::Sorter(key.first, key.second));
+      it = cache.find(key);
+      return *it->second;
+    }
   };
 
 class Uniquifier : public casadi::Callback {
@@ -573,28 +583,40 @@ class Uniquifier : public casadi::Callback {
     }
 
     int size_;
+
+    static Uniquifier& construct_cached(int size) {
+      static std::map<int, std::unique_ptr<casadi::Uniquifier> > cache;
+      int key = size;
+      auto it = cache.find(key);
+      if (it==cache.end()) cache[key] = std::unique_ptr<casadi::Uniquifier>(new casadi::Uniquifier(key));
+      it = cache.find(key);
+      return *it->second;
+    }    
+
   };
+  
 } // namespace casadi
 
 AnyVector AnyVector::sort(bool ascending) const {
   tensor_assert(!is_ST());
-
-  casadi::Sorter* sorter = new casadi::Sorter(dims()[0], ascending);
+  
+  casadi::Sorter& sorter = casadi::Sorter::construct_cached(dims()[0], ascending); 
   if (is_DT()) {
-    return DT(sorter->operator()(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
+    return DT(sorter(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
   } else {
-    return MT(sorter->operator()(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
+    return MT(sorter(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
   }
 }
 
 AnyVector AnyVector::uniquify() const {
   tensor_assert(!is_ST());
 
-  casadi::Uniquifier* uniquifier = new casadi::Uniquifier(dims()[0]);
+  casadi::Uniquifier& uniquifier = casadi::Uniquifier::construct_cached(dims()[0]); 
+  
   if (is_DT()) {
-    return DT(uniquifier->operator()(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
+    return DT(uniquifier(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
   } else {
-    return MT(uniquifier->operator()(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
+    return MT(uniquifier(std::vector<casadi::MX>{as_MT().data()})[0], {dims()[0]});
   }
 }
 

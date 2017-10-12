@@ -52,9 +52,9 @@ namespace casadi {
         MX delta_knots_inv = 1/delta_knots;
         MX T = MX(sp_diag, -delta_knots_inv) + MX(sp_band, delta_knots_inv);
 
-        Function* bspline_evaluator = new BSplineEvaluator(n_knots_-2, degree_-1);
+        Callback& bspline_evaluator = BSplineEvaluator::construct_cached(n_knots_-2, degree_-1);
 
-        MX res = bspline_evaluator->operator()({knots(range(1, n_knots_-1)), x})[0];
+        MX res = bspline_evaluator({knots(range(1, n_knots_-1)), x})[0];
 
         MX J = MX::mtimes(T.T(), res);
         return Function("J", {knots, x, MX::sym("dummy", sparsity_out(0))}, { horzcat(MX(n, n_knots_), degree_*J) });
@@ -69,6 +69,16 @@ namespace casadi {
           int* iw, double* w, void* mem) const {
         eval_generic<double>(mem, arg, res, iw, w);
         return 0;
+      }
+
+
+      BSplineEvaluator& BSplineEvaluator::construct_cached(int n_knots, int degree) {
+        static std::map<std::pair<int, int>, std::unique_ptr<BSplineEvaluator> > cache;
+        std::pair<int, int> key = {n_knots, degree};
+        auto it = cache.find(key);
+        if (it==cache.end()) cache[key] = std::unique_ptr<BSplineEvaluator>(new casadi::BSplineEvaluator(key.first, key.second));
+        it = cache.find(key);
+        return *it->second;
       }
 }
 
@@ -165,7 +175,7 @@ namespace spline {
 
     BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree)
         : UnivariateBasisNode(degree, Interval(knots[degree], knots[knots.size()-degree-1])),
-      bspline_evaluator_(*(new casadi::BSplineEvaluator(knots.size(), degree))) {
+      bspline_evaluator_(casadi::BSplineEvaluator::construct_cached(knots.size(), degree)) {
         AnyVector kn(vertcat(knots));
         knots_ = kn.sort().to_scalar_vector();
       }
