@@ -683,11 +683,13 @@ namespace casadi {
     return false;
   }
 
+
+
+} //namespace casadi
+
+
 template <>
 Tensor<casadi::SX> Tensor<casadi::SX>::solve(const Tensor<casadi::SX>& B) const {
   return casadi::SX::solve(matrix(), B.matrix());
 }
 
-
-
-} //namespace casadi
