@@ -97,7 +97,6 @@ debian-python27:
      BUILD_OS: debian
      PYTHON_VERSION: "2.7"
      BUILD_LANG: python27
-     WITH_VALGRIND: "ON"
      CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy2.7/lib/libpython2.7.so"
      CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy2.7/include/python2.7"
     
