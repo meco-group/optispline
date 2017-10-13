@@ -181,23 +181,23 @@ classdef OptiSplineYalmipInterface < handle
               c = zeros(0,1);
             end
             
-            opti.variables = vertcat(vars_x_yalmip{:});
-            opti.yalmip_parameters = vertcat(vars_p_yalmip{:});
-            opti.yalmip_objective = opti.yalmip_expr(f);
-            sol = optimizer(c, opti.yalmip_objective, opti.yalmip_options, opti.yalmip_parameters, opti.variables);
-            opti.yalmip_optimizer = sol;
-            opti.yalmip_constraints = c;
+            self.variables = vertcat(vars_x_yalmip{:});
+            self.yalmip_parameters = vertcat(vars_p_yalmip{:});
+            self.yalmip_objective = opti.yalmip_expr(f);
+            sol = optimizer(c, self.yalmip_objective, self.yalmip_options, self.yalmip_parameters, self.variables);
+            self.yalmip_optimizer = sol;
+            self.yalmip_constraints = c;
           end
 
           opti.solve_prepare();
           a = opti.arg();
-          r = opti.yalmip_optimizer{full(a.p)};
+          r = self.yalmip_optimizer{full(a.p)};
           %if ~isempty(self.constraints)
           %  checkset(self.constraints);
           %end
-          assign(opti.variables,r);
-          if ~isempty(opti.yalmip_parameters)
-            assign(opti.yalmip_parameters,full(a.p));
+          assign(self.variables,r);
+          if ~isempty(self.yalmip_parameters)
+            assign(self.yalmip_parameters,full(a.p));
           end
           %if ~isempty(self.yalmip_constraints)
           %  checkset(self.yalmip_constraints)
