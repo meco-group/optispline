@@ -29,6 +29,7 @@ void OptiSplineAdvanced::matlab_dump(const casadi::Function& f, const std::strin
 
 
   ss << "function [varargout] = " << f.name() << "(args)" << std::endl;
+  ss << "feature('jit','off');feature('accel','on');" << std::endl;
   for (int i=0;i<f.n_in();++i) {
     ss << "  argin_" << i <<  " = args{" << i+1 << "};" << std::endl;
   }
@@ -79,6 +80,8 @@ void OptiSplineAdvanced::matlab_dump(const casadi::Function& f, const std::strin
   for (int i=0;i<f.n_out();++i) {
     ss << "  varargout{" << i+1 <<  "} = [argout_" << i <<"{:}];" << std::endl;
   }
+  
+    ss << "feature('jit','on');feature('accel','on');" << std::endl;
     ss << "end" << std::endl;
 }
 

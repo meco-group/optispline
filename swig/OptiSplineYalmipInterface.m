@@ -17,14 +17,20 @@ classdef OptiSplineYalmipInterface < handle
       function [out] = yalmip_expr_primitive( opti, vars, expr, args )
       
           name = 'yalmip_helper';
+          disp('  Create SX graph')
           helper = casadi.Function(name, vars, expr);
           helper = helper.expand();
           
           clear(name);
+          disp('  Dump SX graph to matlab file with yalmip instructions')
           opti.matlab_dump(helper, [pwd filesep name '.m']);
           rehash
 
+          disp('  Run matlab file')
+          tic
           [out{1:length(expr)}] = feval(name, args);
+          toc
+          disp('  Post-processing')
           
           for i=1:helper.n_out()
               sp = helper.sparsity_out(i-1);
@@ -169,22 +175,31 @@ classdef OptiSplineYalmipInterface < handle
             vars_x = opti.symvar(e, casadi.OPTI_VAR);
             vars_p = opti.symvar(e, casadi.OPTI_PAR);
 
+            disp('Converting CasADi graph (variables) to Yalmip')
             vars_x_yalmip = opti.yalmip_var(vars_x);
             vars_p_yalmip = opti.yalmip_var(vars_p);
+            disp('Done')
 
             vars_x_yalmip = cellfun(@(e) e(:), vars_x_yalmip, 'uni', false);
             vars_p_yalmip = cellfun(@(e) e(:), vars_p_yalmip, 'uni', false);
           
+            disp('Converting CasADi graph (constraints) to Yalmip')
             constr = opti.yalmip_expr(g);
             c = [constr{:}];
             if isempty(c)
               c = zeros(0,1);
             end
+            disp('Done')
+            disp('Converting CasADi graph (objective) to Yalmip')
+            self.yalmip_objective = opti.yalmip_expr(f);
+            disp('Done')
             
             self.variables = vertcat(vars_x_yalmip{:});
             self.yalmip_parameters = vertcat(vars_p_yalmip{:});
-            self.yalmip_objective = opti.yalmip_expr(f);
+            
+            disp('Call yalmip ''optimizer''')
             sol = optimizer(c, self.yalmip_objective, self.yalmip_options, self.yalmip_parameters, self.variables);
+            disp('Done')
             self.yalmip_optimizer = sol;
             self.yalmip_constraints = c;
           end
