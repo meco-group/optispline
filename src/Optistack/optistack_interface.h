@@ -48,7 +48,7 @@ class OptiSplineInterface {
     spline::Function Function(const spline::TensorBasis& b,
         const std::vector<int>& shape=std::vector<int>(),
         const std::string& attribute="full") {
-      casadi_assert(shape.size()<=2);
+      casadi_assert(shape.size()<=2, "shape must be 2D at most; got " + str(shape.size()));
       int n = shape.size()>=1 ? shape[0] : 1;
       int m = shape.size()==2 ? shape[1] : 1;
 

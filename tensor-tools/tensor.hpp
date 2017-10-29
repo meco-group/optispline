@@ -277,20 +277,12 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     if (n_dims()==2) {
       return T::reshape(data_, n, m)(i_e, j_e);
     }
+    
+    std::vector<AnySlice> ret(n_dims()-2);
+    ret.push_back(i);
+    ret.push_back(j);
 
-    casadi::DM R = casadi::DM::zeros(m, j_e.size());
-    for (int ii=0;ii<j_e.size();++ii) {
-      R(j_e[ii],ii)=1;
-    }
-
-    casadi::DM L = casadi::DM::zeros(i_e.size(), n);
-    for (int ii=0;ii<i_e.size();++ii) {
-      L(ii,i_e[ii])=1;
-    }
-
-    return Tensor<T>(L).trailing_rmtimes(trailing_mtimes(Tensor<T>(R)));
-
-
+    return index_anyslice(ret);
   }
 
 
@@ -311,6 +303,7 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     return dims_[i];
   }
 
+  bool empty() const { return casadi::product(dims())==0; }
   static Tensor sym(const std::string& name, const std::vector<int> & dims) {
     T v = T::sym(name, normalize_dim(dims));
     return Tensor<T>(v, dims);
@@ -376,46 +369,69 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     if (ind.size()==1 && ind[0]==-1) {
       return shape({numel()});
     }
+    std::vector<AnySlice> ind_new;
+    for (auto e : ind) {
+      if (e==-1) {
+        ind_new.push_back(AnySlice());
+      } else {
+        ind_new.push_back(e);
+      }
+    }
+    Tensor ret = index_anyslice(ind_new);
+    std::vector<int> dims;
+    for (int i=0;i<ind.size();++i) {
+      if (ind[i]==-1) {
+        dims.push_back(ret.dims(i));
+      }
+    }
+    return ret.shape(dims);
+  }
+
+  Tensor index_anyslice(const std::vector<AnySlice>& ind) const {
     // Check that input is a permutation of range(n_dims())
     tensor_assert(ind.size()==n_dims());
+        
+    std::vector<std::vector<int> > ind_new;
+    for (int i=0;i<ind.size();++i)
+      ind_new.push_back(ind[i].indices(dims(i)));
 
     std::vector<int> slice_dims;
+    for (auto e : ind_new) slice_dims.push_back(e.size());
 
-    std::vector<int> slice_location;
+    int N = casadi::product(slice_dims);
+    std::vector<int> mapping(N);
 
-    for (int i=0;i<n_dims();++i) {
-      if (ind[i]==-1) {
-        slice_dims.push_back(dims(i));
-        slice_location.push_back(i);
-      } else {
-        tensor_assert(ind[i]>=0);
-        tensor_assert(ind[i]<dims(i));
-      }
+    for (int k=0;k<N;k++) {
+      std::vector<int> slice_indices = sub2ind(slice_dims, k);
+      for (int i=0;i<n_dims();++i) slice_indices[i] = ind_new[i][slice_indices[i]];
+      mapping[k] = ind2sub(dims(), slice_indices);
     }
-
-    int c=1;
-    std::vector<int> a_e;
-    std::vector<int> c_e;
-    for (int i=0;i<ind.size();++i) {
-      if (ind[i]>=0) {
-        a_e.push_back(ind[i]);
-      } else {
-        a_e.push_back(-c);
-        c_e.push_back(-c);
-        c+=1;
-      }
-    }
-
-    return einstein(a_e, c_e);
+      
+    return Tensor(data_.nz(mapping), slice_dims);
   }
 
   /** \brief Generalization of transpose
+  *
+  *
+  *       4 ---- 6
+  *      /|     /|
+  *   k / |    / |
+  *    /  5 --/- 7  
+  *   0 -/-- 2  /
+  * i | /    | /
+  *   |/     |/
+  *   1 ---- 3
+  *       j
+  *   
   */
   Tensor reorder_dims(const spline::NumericIndexVector& order) const {
+  
+    
     // Check that input is a permutaion of range(n_dims())
     tensor_assert(order.size()==n_dims());
 
     std::vector<bool> occured(n_dims(), false);
+
 
     for (int i : order) {
       tensor_assert(i>=0);
@@ -426,13 +442,20 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     for (bool occ : occured) {
       tensor_assert(occ);
     }
+    
+    int N = numel();
+    std::vector<int> mapping(N);
 
-    std::vector<int> ind(order.size());
-    for (int i=0;i<ind.size();++i) {
-      ind[i] = -order[i]-1;
+    std::vector<int> new_dims = reorder(dims_, order);
+
+    for (int i=0;i<N;i++) {
+      std::vector<int> slice_indices = sub2ind(dims_, i);
+      std::vector<int> new_indices = reorder(slice_indices, order);
+      int j = ind2sub(new_dims, new_indices);
+      mapping[j] = i;
     }
 
-    return einstein(mrange(n_dims()), ind);
+    return Tensor(data_.nz(mapping), new_dims);
   }
 
   Tensor einstein(const std::vector<int>& a_e, const std::vector<int>& c_e) const {
@@ -454,6 +477,10 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
   Tensor einstein(const Tensor &B, const std::vector<int>& a,
       const std::vector<int>& b, const std::vector<int>& c) const {
 
+    for (int e : a) casadi_assert_dev(e<0);
+    for (int e : b) casadi_assert_dev(e<0);
+    for (int e : c) casadi_assert_dev(e<0);
+    
     const Tensor& A = *this;
 
     // Dimension check
@@ -495,14 +522,108 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
       tensor_assert(cl!=dim_map.end());
       new_dims.push_back(dim_map[ci]);
     }
+    
+    if (casadi::product(new_dims)==0 || casadi::product(dims())==0 || casadi::product(B.dims())==0) return Tensor(casadi::DM::zeros(casadi::product(new_dims), 1), new_dims);
+    
+    
+    /// C_IKL = A_IJL B_JKL
+    std::set<int> a_set(a.begin(), a.end());
+    std::set<int> b_set(b.begin(), b.end());
+    std::set<int> c_set(c.begin(), c.end());
+    
+    std::vector<int> J;
+    std::set_intersection(a_set.begin(), a_set.end(), b_set.begin(), b_set.end(), std::inserter(J, J.end()));
+    std::vector<int> I;
+    std::set_difference(a_set.begin(), a_set.end(), J.begin(), J.end(), std::inserter(I, I.end()));
+    std::vector<int> K;
+    std::set_difference(b_set.begin(), b_set.end(), J.begin(), J.end(), std::inserter(K, K.end()));
+    
+    std::vector<int> J_temp = J;
+    J.clear();
+    std::set_difference(J_temp.begin(), J_temp.end(), c_set.begin(), c_set.end(), std::inserter(J, J.end()));
+    
+    std::vector<int> L_temp, L;
+    std::set_difference(c_set.begin(), c_set.end(), I.begin(), I.end(), std::inserter(L_temp, L_temp.end()));
+    std::set_difference(L_temp.begin(), L_temp.end(), K.begin(), K.end(), std::inserter(L, L.end()));
+    
+    std::vector<int> reorder_a, reorder_b, reorder_c;
+    int prod_I = 1, prod_J = 1, prod_K = 1, prod_L = 1;
+    for (auto e : I) {
+      for (int i=0;i<a.size();++i) {
+        if (e==a[i]) {
+          reorder_a.push_back(i);
+          prod_I *= A.dims(i);
+        }
+      }
+      for (int i=0;i<c.size();++i) {
+        if (e==c[i]) reorder_c.push_back(i);
+      }
+    }
+    for (auto e : J) {
+      for (int i=0;i<a.size();++i) {
+        if (e==a[i]) {
+          reorder_a.push_back(i);
+          prod_J *= A.dims(i);
+        }
+      }
+      for (int i=0;i<b.size();++i) {
+        if (e==b[i]) reorder_b.push_back(i);
+      }
+    }
+    for (auto e : K) {
+      for (int i=0;i<b.size();++i) {
+        if (e==b[i]) {
+          reorder_b.push_back(i);
+          prod_K *= B.dims(i);
+        }
+      }
+      for (int i=0;i<c.size();++i) {
+        if (e==c[i]) reorder_c.push_back(i);
+      }
+    }
+    for (auto e : L) {
+      for (int i=0;i<c.size();++i) {
+        if (e==c[i]) {
+          reorder_c.push_back(i);
+          prod_L *= new_dims[i];
+        }
+      }
+      for (int i=0;i<a.size();++i) {
+        if (e==a[i]) reorder_a.push_back(i);
+      }
+      for (int i=0;i<b.size();++i) {
+        if (e==b[i]) reorder_b.push_back(i);
+      }
+    }
+    T A_mat = T::reshape(A.reorder_dims(reorder_a).data(), prod_I, prod_J*prod_L);
+    T B_mat = T::reshape(B.reorder_dims(reorder_b).data(), prod_J, prod_K*prod_L);
+    
+    Tensor C_tensor;
 
-    T data = T::zeros(casadi::product(new_dims), 1);
+    if (1) {
+      A_mat = T(kron(casadi::Sparsity::diag(prod_L), casadi::Sparsity::dense(prod_I, prod_J)), vec(A_mat));
+      B_mat = T(kron(casadi::Sparsity::diag(prod_L), casadi::Sparsity::dense(prod_J, prod_K)), vec(B_mat));
+      T C_mat = T::mtimes(A_mat, B_mat);
+      C_tensor = Tensor(C_mat.nz(casadi::Slice()), reorder(new_dims, reorder_c));
+    } else {
+      std::vector<T> As = horzsplit(A_mat, prod_J);
+      std::vector<T> Bs = horzsplit(B_mat, prod_K);
+      
+      casadi_assert_dev(As.size()==prod_L);
+      casadi_assert_dev(Bs.size()==prod_L);
+    
+      std::vector<T> Cs;
+      for (int i=0;i<prod_L;++i) {
+        Cs.push_back(T::mtimes(As[i], Bs[i]));
+      }
+      
+      T C_mat = horzcat(Cs);
+      C_tensor = Tensor(vec(C_mat), reorder(new_dims, reorder_c));
+    }
 
-    if (b==c && a.empty()) return Tensor(B.data()*A.data(), new_dims);
-    if (a==c && b.empty()) return Tensor(A.data()*B.data(), new_dims);
-    data = T::einstein(A.data(), B.data(), data, A.dims(), B.dims(), new_dims, a, b, c);
+    C_tensor = C_tensor.reorder_dims(invert_order(reorder_c));
 
-    return Tensor(data, new_dims);
+    return C_tensor;
   }
 
   /**

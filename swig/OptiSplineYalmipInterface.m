@@ -7,6 +7,7 @@ classdef OptiSplineYalmipInterface < handle
       yalmip_parameters
       yalmip_objective
       yalmip_options
+      expand
       variables
   end
   methods
@@ -17,31 +18,23 @@ classdef OptiSplineYalmipInterface < handle
       function [out] = yalmip_expr_primitive( opti, vars, expr, args )
       
           name = 'yalmip_helper';
-          disp('  Create SX graph')
+          disp('  Create MX graph')
           helper = casadi.Function(name, vars, expr);
-          helper = helper.expand();
-          
+          %helper.disp(true);
+          if opti.expand
+            disp('  Expanding to SX')
+            helper = helper.expand();
+          end
           clear(name);
-          disp('  Dump SX graph to matlab file with yalmip instructions')
+          disp('  Dump graph to matlab file with yalmip instructions')
           opti.matlab_dump(helper, [pwd filesep name '.m']);
           rehash
-
-          disp('  Run matlab file')
-          tic
-          [out{1:length(expr)}] = feval(name, args);
-          toc
-          disp('  Post-processing')
           
-          for i=1:helper.n_out()
-              sp = helper.sparsity_out(i-1);
-              if (sp.is_dense())
-                  out{i} = reshape(out{i},size(sp));
-              else
-                  [sp_i,sp_j] = sp.get_triplet();
-                  [m,n] = size(sp);
-                  out{i} = sparse(sp_i+1,sp_j+1,out{i},m,n);
-              end
-          end
+
+          disp('  Run matlab file with sdpvar inputs')
+          tic
+          [out{1:length(expr)}] = feval(name, args{:});
+          toc
           
           delete([name '.m'])
       end
@@ -127,11 +120,11 @@ classdef OptiSplineYalmipInterface < handle
         for i=length(opti.yalmip_variables)+1:max(counts)
           m = opti.get_meta(all_vars{i});
           if strcmp(m.attribute,'symmetric')
-              ind = find(tril(ones(m.m, m.n)));
-              arg = sdpvar(m.m, m.n, 'symmetric');
+              ind = find(tril(ones(m.n, m.m)));
+              arg = sdpvar(m.n, m.m, 'symmetric');
               arg = arg(ind);
           elseif strcmp(m.attribute,'full');
-              arg = sdpvar(m.m, m.n, 'full');
+              arg = sdpvar(m.n, m.m, 'full');
           end
 
           opti.yalmip_variables{i} = arg;
@@ -157,7 +150,12 @@ classdef OptiSplineYalmipInterface < handle
         else
           yalmip_options = options.yalmip_options;
         end
-   
+        
+        opti.expand = false;
+        if isfield(options, 'expand')
+          opti.expand = options.expand
+        end
+        
         opti.yalmip_options = yalmip_options;
  
       end
@@ -166,6 +164,7 @@ classdef OptiSplineYalmipInterface < handle
       
           opti = self.advanced()
           opti.yalmip_options = self.yalmip_options;
+          opti.expand = self.expand;
 
           if opti.problem_dirty
             opti.bake();
