@@ -235,6 +235,14 @@ namespace spline {
         return (*this)->trace();
     }
 
+    Coefficient Coefficient::sum(int axis) const {
+        return (*this)->sum(axis);
+    }
+
+    Coefficient Coefficient::sum() const {
+        return (*this)->sum();
+    }
+
     Coefficient CoefficientNode::trace() const {
         spline_assert_message(shape()[0] == shape()[1],
                 "Trace only defined for square matrices. Dimensions are " << shape() << ".");
@@ -244,6 +252,16 @@ namespace spline {
         std::vector< int > b = {a[d], a[d+1]};
         std::vector< int > c = mrange(d);
         return data().einstein(ones,a,b,c);
+    }
+    Coefficient CoefficientNode::sum(int axis) const {
+        std::vector<int> dim = data().dims();
+        dim[axis+dimension().size()] = 1;
+        return data().sum(axis+dimension().size()).shape(dim);
+    }
+
+    Coefficient CoefficientNode::sum() const {
+        if (is_vector() && !is_column()) return sum(1).transpose();
+        return sum(0);
     }
 
     Coefficient Coefficient::to_matrix_valued() const {
@@ -260,6 +278,30 @@ namespace spline {
 
     bool CoefficientNode::is_true_scalar() const {
         return data().numel() == 1;
+    }
+
+    bool Coefficient::is_scalar() const {
+        return (*this)->is_scalar();
+    }
+
+    bool Coefficient::is_vector() const {
+        return (*this)->is_vector();
+    }
+
+    bool Coefficient::is_column() const {
+        return (*this)->is_column();
+    }
+
+    bool CoefficientNode::is_scalar() const {
+        return shape()[0] == 1 && shape()[1] == 1;
+    }
+
+    bool CoefficientNode::is_vector() const {
+        return shape()[0] == 1 || shape()[1] == 1;
+    }
+
+    bool CoefficientNode::is_column() const {
+        return shape()[1] == 1;
     }
 
 }  // namespace spline

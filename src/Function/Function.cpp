@@ -131,6 +131,8 @@ namespace spline{
 
     Function Function::transpose() const { return (*this)->transpose() ;}
     Function Function::trace() const { return (*this)->trace() ;}
+    Function Function::sum(int axis) const { return (*this)->sum(axis) ;}
+    Function Function::sum() const { return (*this)->sum() ;}
 
     Coefficient Function::coeff() const {return (*this)->coeff() ;}
     AnyTensor Function::coeff_tensor() const {return (*this)->coeff_tensor() ;}
@@ -143,6 +145,9 @@ namespace spline{
     TensorDomain Function::domain() const { return (*this)->domain(); }
 
     bool Function::is_scalar() const { return (*this)->is_scalar() ;}
+    bool Function::is_vector() const { return (*this)->is_vector() ;}
+    bool Function::is_column() const { return (*this)->is_column() ;}
+
 
     std::vector< int > Function::shape() const { return (*this)->shape() ;}
 

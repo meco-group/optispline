@@ -199,8 +199,22 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Function(tensor_basis(), coeff().trace());
     }
 
+    Function FunctionNode::sum(int axis) const {
+        return Function(tensor_basis(), coeff().sum(axis));
+    }
+    Function FunctionNode::sum() const {
+        return Function(tensor_basis(), coeff().sum());
+    }
     bool FunctionNode::is_scalar() const {
-        return shape()[0] == 1 && shape()[1] == 1;
+        return coeff().is_scalar();
+    }
+
+    bool FunctionNode::is_vector() const {
+        return coeff().is_vector();
+    }
+
+    bool FunctionNode::is_column() const {
+        return coeff().is_column();
     }
 
     Function FunctionNode::transform_to(const TensorBasis& basis) const {

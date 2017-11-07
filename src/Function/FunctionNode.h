@@ -47,6 +47,8 @@ namespace spline {
         virtual Function rmtimes(const FunctionNode& f) const;
 
         bool is_scalar() const;
+        bool is_vector() const;
+        bool is_column() const;
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
         virtual Function reshape(const std::vector< int >& shape) const;
 
@@ -55,6 +57,8 @@ namespace spline {
 
         virtual Function transpose() const;
         virtual Function trace() const;
+        virtual Function sum(int axis) const;
+        virtual Function sum() const;
 
         virtual Function transform_to(const TensorBasis& basis) const;
         virtual Function project_to(const TensorBasis& basis) const;

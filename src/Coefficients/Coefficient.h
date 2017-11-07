@@ -38,10 +38,16 @@ namespace spline {
 
         Coefficient reshape(const std::vector< int >& shape) const;
         Coefficient trace() const;
+        Coefficient sum(int axis) const;
+        Coefficient sum() const;
 
         Coefficient to_matrix_valued() const;
 
         bool is_true_scalar() const ;
+
+        bool is_scalar() const;
+        bool is_vector() const;
+        bool is_column() const;
     private:
         AnyTensor data_;
     };
@@ -78,12 +84,18 @@ namespace spline {
         Coefficient rm_direction(const std::vector<NumericIndex>& indices) const;
         Coefficient reshape(const std::vector< int >& shape) const;
         Coefficient trace() const;
+        Coefficient sum(NumericIndex axis) const;
+        Coefficient sum() const;
 
         Coefficient to_matrix_valued() const;
 
         static Coefficient cat(const NumericIndex& index, const std::vector< Coefficient >& coefs);
 
         bool is_true_scalar() const ;
+
+        bool is_scalar() const;
+        bool is_vector() const;
+        bool is_column() const;
 
     };
 } // namespace spline

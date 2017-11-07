@@ -60,6 +60,9 @@ namespace spline {
         Function transpose() const;
         Function trace() const;
 
+        Function sum(NumericIndex axis) const;
+        Function sum() const;
+
         static Function vertcat(const std::vector< spline::Function >& f);
         static Function horzcat(const std::vector< spline::Function >& f);
         static Function cat(NumericIndex index, const std::vector< spline::Function >& f);
@@ -75,6 +78,8 @@ namespace spline {
         TensorDomain domain() const;
 
         bool is_scalar() const;
+        bool is_vector() const;
+        bool is_column() const;
 
         std::vector< int > shape() const;  // Shape result obtained after function evaluation
         Function reshape(const std::vector< int >& shape) const;

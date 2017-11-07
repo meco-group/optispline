@@ -255,6 +255,17 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
       return get_slice(0, i);
     }
   }
+  
+  Tensor sum(const spline::NumericIndex& axis) {
+    Tensor<T> b(casadi::DM::ones(dims(axis)), {dims(axis)});
+    
+    std::vector<int> a_e = mrange(n_dims());
+    std::vector<int> b_e = {-axis-1};
+    std::vector<int> c_e = a_e;
+    c_e.erase(c_e.begin()+axis);
+
+    return einstein(b, a_e, b_e, c_e);
+  }
 
   Tensor get_slice(const AnySlice& i, const AnySlice& j) {
     int n = dims()[n_dims()-2];
@@ -295,7 +306,10 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
 
   int n_dims() const {return dims_.size(); }
   const std::vector<int>& dims() const { return dims_; }
-  const int dims(int i) const { return dims_[i]; }
+  const int dims(int i) const {
+    spline_assert_message(i>=0 && i<n_dims(), "Must have 0<=i<"<< n_dims() << ", got " << i << ".");
+    return dims_[i];
+  }
 
   static Tensor sym(const std::string& name, const std::vector<int> & dims) {
     T v = T::sym(name, normalize_dim(dims));

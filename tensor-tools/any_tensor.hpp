@@ -296,6 +296,10 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
       return DT();
     }
 
+    AnyTensor sum(int axis) const {
+      ANYTENSOR_METHOD(sum(axis));
+      return DT();
+    }
     AnyTensor operator>=(const AnyTensor &b) const {
       ANYTENSOR_BINARY((*this), b, operator>=);
     }

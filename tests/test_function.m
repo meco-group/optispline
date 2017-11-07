@@ -159,3 +159,33 @@ assert(norm(f.list_eval([a b],{'x','y'})-x.list_eval(a).*y.list_eval(b))<1e-12)
 assert(norm(f.list_eval([a b],{'y','x'})-x.list_eval(b).*y.list_eval(a))<1e-12)
 assert(norm(f.list_eval([b a],{'x','y'})-x.list_eval(b).*y.list_eval(a))<1e-12)
 assert(norm(f.list_eval([b a],{'y','x'})-x.list_eval(a).*y.list_eval(b))<1e-12)
+
+
+basis1 = BSplineBasis([0,0,0.4,1,1],1);
+basis2 = MonomialBasis(2);
+mbasis = TensorBasis({basis1,basis2});
+
+
+r = [0.5;0.2];
+ds = {[3,3,4,1] [3,3,1,4] [3,3,1,1] [3,3,4,3]};
+
+for i=1:length(ds)
+  d=ds{i}
+  coeff = reshape(rand(prod(d),1),d);
+  func = Function(mbasis,coeff);
+
+  a=sum(func.eval(r))
+  func_sum = sum(func);
+  b = func_sum.eval(r)
+  assert(norm(a-b)<1e-12)
+
+  a=sum(func.eval(r),1)
+  func_sum = sum(func,1);
+  b = func_sum.eval(r)
+  assert(norm(a-b)<1e-12)
+
+  a=sum(func.eval(r),2)
+  func_sum = sum(func,2);
+  b = func_sum.eval(r)
+  assert(norm(a-b)<1e-12)
+end
