@@ -19,6 +19,9 @@ classdef OptiSplineYalmipInterface < handle
       
           name = 'yalmip_helper';
           disp('  Create MX graph')
+          if isempty(vars)
+            vars = {};
+          end
           helper = casadi.Function(name, vars, expr);
           %helper.disp(true);
           if opti.expand
