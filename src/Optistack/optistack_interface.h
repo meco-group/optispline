@@ -47,28 +47,37 @@ class OptiSplineInterface {
 
     spline::Function Function(const spline::TensorBasis& b,
         const std::vector<int>& shape=std::vector<int>(),
-        const std::string& attribute="full") {
+        const std::string& attribute="full",
+        const std::string& opti_type="variable") {
       casadi_assert(shape.size()<=2, "shape must be 2D at most; got " + str(shape.size()));
       int n = shape.size()>=1 ? shape[0] : 1;
       int m = shape.size()==2 ? shape[1] : 1;
 
-      return spline::Function(b, spline::Coefficient(coeff_variable(b.dimension(), n, m, attribute)));
+      MT c;
+      if (opti_type=="variable") {
+        c = coeff_variable(b.dimension(), n, m, attribute);
+      } else if (opti_type=="parameter") {
+        c = coeff_parameter(b.dimension(), n, m, attribute);
+      }
+      return spline::Function(b, spline::Coefficient(c));
     }
+
   private:
     #ifndef SWIG
-      MT coeff_variable(const std::vector<int>& shape, int n=1, int m=1, const std::string& attribute="full") {
+      typedef std::function<MX(T&, int, int, const std::string&)> Opti_create;
+      MT coeff_varpar(Opti_create& opti_create, const std::vector<int>& shape, int n=1, int m=1, const std::string& attribute="full") {
         int cs = spline::product(shape);
 
         if (attribute=="full") {
           std::vector<int> ret_shape = shape;
           ret_shape.push_back(n);
           ret_shape.push_back(m);
-          return MT(static_cast<T &>(*this).variable(spline::product(ret_shape)), ret_shape);
+          return MT(opti_create(static_cast<T &>(*this), spline::product(ret_shape), 1, "full"), ret_shape);
         }
 
         std::vector<MX> args;
         for (int i=0;i<cs;++i)
-          args.push_back(static_cast<T &>(*this).variable(n, m, attribute));
+          args.push_back(opti_create(static_cast<T &>(*this), n, m, attribute));
 
         std::vector<int> t_shape = {n, m};
         t_shape.insert(t_shape.end(), shape.begin(), shape.end());
@@ -79,6 +88,14 @@ class OptiSplineInterface {
         reorder.push_back(1);
 
         return t.reorder_dims(reorder);
+      }
+      MT coeff_variable(const std::vector<int>& shape, int n=1, int m=1, const std::string& attribute="full") {
+        Opti_create opti_creator = [](T& opti, int nn, int mm, const std::string& aattribute) { return opti.variable(nn, mm, aattribute); };
+        return coeff_varpar(opti_creator, shape, n, m, attribute);
+      }
+      MT coeff_parameter(const std::vector<int>& shape, int n=1, int m=1, const std::string& attribute="full") {
+        Opti_create opti_creator = [](T& opti, int nn, int mm, const std::string& aattribute) { return opti.parameter(nn, mm, aattribute); };
+        return coeff_varpar(opti_creator, shape, n, m, attribute);
       }
     #endif
 };

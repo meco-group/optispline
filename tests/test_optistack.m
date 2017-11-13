@@ -200,6 +200,23 @@ F = opti.Function(b,[4,4]);
 F = opti.Function(b,[4,4],'full');
 F = opti.Function(b,[4,4],'symmetric');
 
+
+opti = OptiSpline();
+
+F = opti.Function(b,[4,4],'full');
+
+G = opti.Function(b,[4,4],'full','parameter');
+
+
+opti.subject_to(F+G>=0);
+
+Gnum = Function(b,rand(5,4,4));
+Fnum = Function(b,rand(5,4,4));
+
+opti.set_initial(F, Fnum);
+opti.set_value(G, Gnum);
+
+
 opti = OptiSplineYalmip();
 
 
