@@ -245,7 +245,11 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
     }
 
     Function FunctionNode::project_to(const TensorBasis& b) const {
-        if (b==tensor_basis()) return shared_from_this<Function>();
+        try {
+            if (b==tensor_basis()) return shared_from_this<Function>();
+        } catch(...) {
+            // Not supported for BSpline
+        }
         Function b2 = b.basis_functions();
         Function f = reshape(std::vector< int >{1,spline::product(shape())});
 
