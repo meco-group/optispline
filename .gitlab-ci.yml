@@ -51,7 +51,7 @@ coverage:
     - source activate condapy2.7
     - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - pushd build
-    - cmake -DWITH_COVERGAE=ON -DPYTHON_LIBRARY=$CMAKE_PYTHON_LIBRARY -DPYTHON_INCLUDE_DIR=$CMAKE_PYTHON_INCLUDE_DIR -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
+    - cmake -DWITH_COVERAGE=ON -DPYTHON_LIBRARY=$CMAKE_PYTHON_LIBRARY -DPYTHON_INCLUDE_DIR=$CMAKE_PYTHON_INCLUDE_DIR -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
     - ctest -V -R python_test
     - gcovr -e  ".*wrap.cxx" -r ..
@@ -71,7 +71,7 @@ debian-matlab:
 
     - pushd build
 
-    - cmake -DWITH_COVERAGE=ON -DWITH_PYTHON=OFF ..
+    - cmake -DWITH_PYTHON=OFF ..
     - make VERBOSE=1
     - cp src/*.so swig
 
