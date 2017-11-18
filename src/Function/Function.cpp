@@ -293,6 +293,8 @@ namespace spline{
 
       spline_assert(xy.n_dims()==2);
       spline_assert(xy.dims()[0]==n_inputs());
+      std::vector<int> dims = shape();
+      dims.insert(dims.begin(), xy.dims()[1]);
 
       if (xy.is_DT()) {
         std::vector<double> points = xy.as_DT().data().nonzeros();
@@ -301,11 +303,11 @@ namespace spline{
         casadi::DM jac = J(std::vector<casadi::DM>{0, 0})[0];
         AnyTensor c = coeff_tensor();
         if (c.is_DT()) {
-          casadi::DM r = casadi::DM::mtimes(jac, c.as_DT().data());
-          return DT(r, {r.size1(), r.size2()});
+          casadi::DM r = casadi::DM::mtimes(jac, casadi::DM::reshape(c.as_DT().data(), jac.size2(), -1));
+          return DT(r, dims).squeeze_tailing();
         } else {
-          casadi::MX r = casadi::MX::mtimes(jac, c.as_MT().data());
-          return MT(r, {r.size1(), r.size2()});
+          casadi::MX r = casadi::MX::mtimes(jac, casadi::MX::reshape(c.as_MT().data(), jac.size2(), -1));
+          return MT(r, dims).squeeze_tailing();
         }
       }
       if (coeff_tensor().is_DT()) {
@@ -315,10 +317,10 @@ namespace spline{
 
         if (xy.is_DT()) {
           casadi::DM r = nominal(std::vector<casadi::DM>{xy.as_DT().matrix()})[0];
-          return DT(r, {r.size1(), r.size2()});
+          return DT(r, dims).squeeze_tailing();
         } else {
           casadi::MX r = nominal(std::vector<casadi::MX>{xy.as_MT().matrix()})[0];
-          return MT(r, {r.size1(), r.size2()});
+          return MT(r, dims).squeeze_tailing();
         }
       }
       spline_assert(false);

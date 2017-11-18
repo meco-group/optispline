@@ -115,6 +115,23 @@ class Test_Function_Function(BasisTestCase):
             for y in range(-5, 4):
                 self.assertEqual( f(x,y) , 1 + y + 2*x*y)
 
+    def test_function_evaluation_fast(self):
+        np.random.seed(0)
+        b1 = BSplineBasis([0,1], 3, 8)
+        b2 = BSplineBasis([2,3], 3, 10)
+
+        b = TensorBasis([b1,b2])
+        print b.dimension()+[2,3]
+        c = np.random.rand(*(b.dimension()+[2,3]))
+        f = Function(b, c)
+        
+        
+        a = np.array([[0.2,2.7],[0.3,2.6],[1,2]])
+        v1 = f.list_eval(a)
+        v2 = f.fast_eval(a.T)
+        
+        self.assertEqualT(v1, v2)
+
     def test_get_coefficient_tensor(self):
         a = DM([[1,1],[0,2]]) # 1 + y + 2xy
         a = DTensor(a, [2,2,1,1])
