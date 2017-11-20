@@ -65,6 +65,7 @@ namespace spline {
 
         static Function vertcat(const std::vector< spline::Function >& f);
         static Function horzcat(const std::vector< spline::Function >& f);
+        static Function blockcat(const std::vector< std::vector<spline::Function> >& f);
         static Function cat(NumericIndex index, const std::vector< spline::Function >& f);
         static Function blkdiag(const std::vector< spline::Function >& f);
 
@@ -119,6 +120,9 @@ namespace spline {
             const std::vector< Argument >& arg_ind) const;
 
         std::vector<spline::Function> jacobian() const;
+        std::vector<std::vector<spline::Function> > hessian() const;
+        spline::Function jacobian_matrix() const;
+        spline::Function hessian_matrix() const;
 
         AnyTensor integral() const;
         AnyTensor integral(const TensorDomain& domain) const;

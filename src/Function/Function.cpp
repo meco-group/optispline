@@ -196,6 +196,10 @@ namespace spline{
     }
 
     std::vector<spline::Function> Function::jacobian() const { return (*this)->jacobian() ;}
+    std::vector<std::vector<spline::Function> > Function::hessian() const { return (*this)->hessian(); }
+    spline::Function Function::jacobian_matrix() const { return (*this)->jacobian_matrix() ;}
+    spline::Function Function::hessian_matrix() const { return (*this)->hessian_matrix() ;}
+
 
     AnyTensor Function::integral() const { return (*this)->integral() ;}
     AnyTensor Function::integral(const TensorDomain& domain) const { return (*this)->integral( domain) ;}
@@ -204,6 +208,19 @@ namespace spline{
 
     Function Function::vertcat(const std::vector< spline::Function >& f) {
         return Function::cat(0, f);
+    }
+
+    Function Function::blockcat(const std::vector< std::vector<spline::Function> >& f) {
+        std::vector< spline::Function > flat;
+        int n = -1;
+        for (auto e : f) {
+            if (n==-1) n = e.size();
+            spline_assert(e.size()==n);
+            flat.insert(flat.end(), e.begin(), e.end());
+        }
+        Function c = vertcat(flat);
+        int m = f.size();
+        return c.reshape(std::vector<int>{n, m});
     }
 
     Function Function::horzcat(const std::vector< spline::Function >& f) {

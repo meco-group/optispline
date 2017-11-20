@@ -995,6 +995,7 @@ using namespace spline;
 %casadi_template("[MTensor]", PREC_MXVector, std::vector< Tensor<casadi::MX> >)
 %casadi_template("[Basis]", PREC_MXVector, std::vector< spline::Basis >)
 %casadi_template("[Function]", PREC_FUNCTION, std::vector< spline::Function >)
+%casadi_template("[[Function]]", PREC_FUNCTION, std::vector< std::vector<spline::Function> >)
 %casadi_typemaps("Function", PREC_FUNCTION, spline::Function)
 %casadi_typemaps("[Coefficient]", PREC_FUNCTION, std::vector<spline::Coefficient>)
 %casadi_template("[Parameter]", PREC_FUNCTION, std::vector< spline::Parameter >)

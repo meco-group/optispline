@@ -92,6 +92,9 @@ namespace spline {
                 const std::vector< int >& arg_ind) const;
 
         virtual std::vector<spline::Function> jacobian() const;
+        virtual std::vector<std::vector<spline::Function> > hessian() const;
+        virtual spline::Function jacobian_matrix() const;
+        virtual spline::Function hessian_matrix() const;
 
         virtual AnyTensor integral() const;
         virtual AnyTensor integral(const TensorDomain& domain) const;

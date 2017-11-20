@@ -617,6 +617,21 @@ class Test_Function_Function(BasisTestCase):
             self.assertEqualT(fx2(g), f123_antider_yz(g, 0.6, 0.9) - f123_antider_yz(g, 0.6, -0.1) - f123_antider_yz(g, 0.5, 0.9) + f123_antider_yz(g, 0.5, -0.1))
             self.assertEqualT(fx3(g), f123_antider_yz(g, 0.6, 0.9) - f123_antider_yz(g, 0.6, -0.1) - f123_antider_yz(g, 0.5, 0.9) + f123_antider_yz(g, 0.5, -0.1))
 
+    def test_hessian(self):
+       b0 = BSplineBasis([0,1],3,4)
+       b1 = BSplineBasis([0,2],3,4)
+       c = np.random.rand(b0.dimension(),b1.dimension())
+       f = Function(TensorBasis([b0,b1]), c)
+       Hs = f.hessian()
+
+       Js = f.jacobian()
+       
+       Href = [j.jacobian() for j in Js]
+       
+       for i in range(2):
+         for j in range(2):
+           self.assertEqualT(Hs[i][j]([0.2,0.3]), Href[i][j]([0.2,0.3]))
+
 
 if __name__ == '__main__':
     unittest.main()

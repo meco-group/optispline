@@ -394,6 +394,31 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Jacobian;
     }
 
+    std::vector<std::vector<Function> > FunctionNode::hessian() const {
+        spline_assert(is_scalar());
+        std::vector<std::vector<Function> > ret(n_inputs());
+        for (std::vector<Function> & e : ret) e.resize(n_inputs());
+        for (int i=0; i<n_inputs(); i++) {
+            for (int j=i; j<n_inputs(); j++) {
+              if (i==j) {
+                ret[i][j] = derivative({2},{i});
+              } else {
+                ret[i][j] = derivative({1, 1}, {i, j});
+                ret[j][i] = ret[i][j];
+              }
+            }
+        }
+        return ret;
+    }
+
+    Function FunctionNode::jacobian_matrix() const {
+        return Function::horzcat(jacobian());
+    }
+
+    Function FunctionNode::hessian_matrix() const {
+        return Function::blockcat(hessian());
+    }
+
     AnyTensor FunctionNode::integral() const {
         return integral(tensor_basis().domain());
     }
