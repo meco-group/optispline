@@ -121,7 +121,6 @@ class Test_Function_Function(BasisTestCase):
         b2 = BSplineBasis([2,3], 3, 10)
 
         b = TensorBasis([b1,b2])
-        print b.dimension()+[2,3]
         c = np.random.rand(*(b.dimension()+[2,3]))
         f = Function(b, c)
         
