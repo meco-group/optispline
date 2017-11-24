@@ -264,6 +264,20 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
       return get_slice(0, i);
     }
   }
+
+  Tensor diff(const int n=1, const spline::NumericIndex& axis=0) {
+    spline_assert(n>=1);
+    if (n>1) return diff(1, axis).diff(n-1, axis);
+
+    std::vector<AnySlice> ret;
+    for (int i=0;i<n_dims();++i) ret.push_back(casadi::range(dims(i));
+    
+    std::vector<AnySlice> a = ret;
+    a[axis] = casadi::range(1, dims(axis));
+    std::vector<AnySlice> b = ret;
+    b[axis] = casadi::range(0, dims(axis)-1);
+    return index_anyslice(a)-index_anyslice(b);
+  }
   
   Tensor sum(const spline::NumericIndex& axis) {
     Tensor<T> b(casadi::DM::ones(dims(axis)), {dims(axis)});

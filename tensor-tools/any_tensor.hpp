@@ -300,6 +300,10 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
       ANYTENSOR_METHOD(sum(axis));
       return DT();
     }
+    AnyTensor diff(int n=1, const spline::NumericIndex& axis=0) const {
+      ANYTENSOR_METHOD(diff(n, axis));
+      return DT();
+    }
     AnyTensor operator>=(const AnyTensor &b) const {
       ANYTENSOR_BINARY((*this), b, operator>=);
     }

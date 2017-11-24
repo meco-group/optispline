@@ -6,6 +6,10 @@ import splines.*
 a = rand(2,2,2);
 b = DTensor(a);
 
+
+e = diff(b)-diff(a);
+assert(all(full(matrix(e(:)))==0))
+
 assert(all(all(squeeze(a(:,:,1))==full(matrix(b(:,:,1))))))
 assert(all(all(squeeze(a(:,:,2))==full(matrix(b(:,:,2))))))
 
@@ -31,3 +35,6 @@ c = F.coeff();
 r = c.data();
 
 assert(all(all(all(a==r))))
+
+
+

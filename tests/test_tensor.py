@@ -186,6 +186,20 @@ class Test_Tensor(BasisTestCase):
       with self.assertRaises(Exception):
         B.mtimes(A)
 
+
+    def test_diff(self):
+      a = np.random.random((3,4,5))
+
+      A = DTensor(a)
+      
+      for axis in range(3):
+        for n in [1,2]:
+          ad = np.diff(a,n=n,axis=axis)
+          Ad = A.diff(n,axis)
+        
+          self.assertEqualT(ad, Ad)
+
+
 if __name__ == '__main__':
     unittest.main()
 
