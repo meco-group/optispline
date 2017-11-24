@@ -270,7 +270,7 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     if (n>1) return diff(1, axis).diff(n-1, axis);
 
     std::vector<AnySlice> ret;
-    for (int i=0;i<n_dims();++i) ret.push_back(casadi::range(dims(i));
+    for (int i=0;i<n_dims();++i) ret.push_back(casadi::range(dims(i)));
     
     std::vector<AnySlice> a = ret;
     a[axis] = casadi::range(1, dims(axis));
