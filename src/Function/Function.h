@@ -50,6 +50,17 @@ namespace spline {
          * C = reshape(1:8,[2,2,2]);
          * Correspondingly, the flattened out version of this tensor, C(:), is just 
          *  1     2     3     4     5     6     7     8
+         * Matlab printout would be:
+         * 
+         * C(:,:,1) =
+         *
+         *   1     3
+         *   2     4
+         *
+         * C(:,:,2) =
+         *
+         *   5     7
+         *   6     8
          * 
          * Let's make a spline Function with it:
          * F = splines.Function(b,C);
