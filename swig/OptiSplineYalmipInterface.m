@@ -149,7 +149,7 @@ classdef OptiSplineYalmipInterface < handle
  
         if isempty(options) || ~isfield(options, 'yalmip_options')
 
-          yalmip_options = sdpsettings('solver','lmilab','verbose',2);
+          yalmip_options = sdpsettings('solver','mosek','verbose',2);
         else
           yalmip_options = options.yalmip_options;
         end
