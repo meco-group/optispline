@@ -18,6 +18,59 @@ namespace spline {
     class Function : public SharedObject{
     public:
         Function();
+        /**
+         *
+         * Some information about ordering:
+         * 
+         *  
+         * Suppose basis is a univariate BSpline basis, and we want to create a Function that
+         * represents a parametrised  2 x 2 matrix.
+         * We would need to supply a d x 2 x 2 tensor as coefficient,
+         * where d is basis.dimension
+         * 
+         * For example choose a simple degree-1 basis:
+         * b = BSplineBasis([0 1],1,2);
+         * 
+         * Here, we have d==2.
+         * Let's make the coefficient tensor C very concrete by drawing a cube,
+         * labeling the axes, and choosing numbers.
+         * 
+         *       5 ---- 7
+         *      /|     /|
+         *   k / |    / |
+         *    /  6 --/- 8  
+         *   1 -/-- 3  /
+         * i | /    | /
+         *   |/     |/
+         *   2 ---- 4
+         *       j
+         * 
+         * C(i,j,k) is a tensor notation with 3 labeled axes.
+         * The drawn tensor can be constructed as:
+         * C = reshape(1:8,[2,2,2]);
+         * Correspondingly, the flattened out version of this tensor, C(:), is just 
+         *  1     2     3     4     5     6     7     8
+         * 
+         * Let's make a spline Function with it:
+         * F = splines.Function(b,C);
+         * 
+         * Evaluating F for the parameter==0 corresponds to slicing the tensor at i==1,
+         * Evaluating F for the parameter==1 corresponds to slicing the tensor at i==2.
+         * 
+         * 
+         * F.eval(0)
+         *   1     5
+         *   3     7
+         * 
+         * Same as squeeze(C(1,:,:))
+         * 
+         * F.eval(1)
+         *   2     6
+         *   4     8
+         * 
+         * Same as squeeze(C(2,:,:))
+         * 
+         */
         Function(const TensorBasis& basis, const Coefficient& coeff);
         Function(const AnyTensor& tensor);
         Function(const AnyScalar& value, const std::vector< int >& shape);
