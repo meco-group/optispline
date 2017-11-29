@@ -45,6 +45,17 @@ class OptiSplineInterface {
       static_cast<T &>(*this).T::type_base::set_value(t.data(), d.data());
     }
 
+    void update_user_dict(const Tensor<MX>& t, const Dict& meta) {
+      static_cast<T &>(*this).T::type_base::update_user_dict(t.data(), meta);
+    }
+    void update_user_dict(const spline::Function& f, const Dict& meta) {
+      spline_assert_message(f.coeff().data().is_MT(), "update_user_dict only supported for MX");
+      update_user_dict(f.coeff_tensor().as_MT(), meta);
+    }
+    void update_user_dict(const spline::Coefficient& c, const Dict& meta) {
+      spline_assert_message(c.data().is_MT(), "update_user_dict only supported for MX");
+      update_user_dict(c.data().as_MT(), meta);
+    }
     spline::Function Function(const spline::TensorBasis& b,
         const std::vector<int>& shape=std::vector<int>(),
         const std::string& attribute="full",

@@ -122,12 +122,24 @@ classdef OptiSplineYalmipInterface < handle
 
         for i=length(opti.yalmip_variables)+1:max(counts)
           m = opti.get_meta(all_vars{i});
+          u = opti.user_dict(all_vars{i});
+          
+          if isfield(u,'binvar')
+            var = @binvar;
+          elseif isfield(u,'intvar')
+            var = @intvar;
+          else
+            var = @sdpvar;
+          end
+          
+          var
+          
           if strcmp(m.attribute,'symmetric')
               ind = find(tril(ones(m.n, m.m)));
-              arg = sdpvar(m.n, m.m, 'symmetric');
+              arg = var(m.n, m.m, 'symmetric');
               arg = arg(ind);
           elseif strcmp(m.attribute,'full');
-              arg = sdpvar(m.n, m.m, 'full');
+              arg = var(m.n, m.m, 'full');
           end
 
           opti.yalmip_variables{i} = arg;

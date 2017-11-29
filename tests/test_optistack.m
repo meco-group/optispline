@@ -3,6 +3,22 @@ meco_binaries('cpp_splines','fill_in_the_branch_you_want')
 import splines.*
 
 
+opti = OptiSplineYalmip();
+x = opti.variable();
+y = opti.variable();
+
+opti.update_user_dict(x,struct('intvar',true));
+
+opti.minimize((x-1.4)^2+y^2);
+
+opti.solver('yalmip');
+
+sol = opti.solve()
+
+sol.value(x)
+
+assert(norm(sol.value(x)-1)<1e-10);
+
 
 opti = OptiSpline();
 
@@ -218,7 +234,6 @@ opti.set_value(G, Gnum);
 
 
 opti = OptiSplineYalmip();
-
 
 
 x = opti.variable();

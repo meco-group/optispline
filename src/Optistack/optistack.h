@@ -18,8 +18,10 @@ public:
 
     using OptiSplineInterface<OptiSpline>::set_initial;
     using OptiSplineInterface<OptiSpline>::set_value;
+    using OptiSplineInterface<OptiSpline>::update_user_dict;
     using Opti::set_initial;
     using Opti::set_value;
+    using Opti::update_user_dict;
     OptiSpline(const OptiSplineAdvanced& rhs);
     OptiSpline() {}
 #ifndef SWIG
@@ -52,8 +54,10 @@ public:
 
   using OptiSplineInterface<OptiSplineAdvanced>::set_initial;
   using OptiSplineInterface<OptiSplineAdvanced>::set_value;
+  using OptiSplineInterface<OptiSplineAdvanced>::update_user_dict;
   using OptiAdvanced::set_initial;
   using OptiAdvanced::set_value;
+  using OptiAdvanced::update_user_dict;
   OptiSplineAdvanced(const OptiSpline& rhs);
 protected:
   OptiSplineAdvanced() {};
