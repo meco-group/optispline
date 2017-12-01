@@ -132,8 +132,6 @@ classdef OptiSplineYalmipInterface < handle
             var = @sdpvar;
           end
           
-          var
-          
           if strcmp(m.attribute,'symmetric')
               ind = find(tril(ones(m.n, m.m)));
               arg = var(m.n, m.m, 'symmetric');
