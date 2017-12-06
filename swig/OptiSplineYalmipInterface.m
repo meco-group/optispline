@@ -42,9 +42,13 @@ classdef OptiSplineYalmipInterface < handle
           if opti.verbose
             disp('  Run matlab file with sdpvar inputs')
           end
-          tic
+          if opti.verbose
+            tic
+          end
           [out{1:length(expr)}] = feval(name, args{:});
-          toc
+          if opti.verbose
+            toc
+          end
           
           delete([name '.m'])
       end
