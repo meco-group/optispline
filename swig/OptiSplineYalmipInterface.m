@@ -9,6 +9,7 @@ classdef OptiSplineYalmipInterface < handle
       yalmip_options
       expand
       variables
+      verbose
   end
   methods
       
@@ -18,23 +19,29 @@ classdef OptiSplineYalmipInterface < handle
       function [out] = yalmip_expr_primitive( opti, vars, expr, args )
       
           name = 'yalmip_helper';
-          disp('  Create MX graph')
+          if opti.verbose
+            disp('  Create MX graph')
+          end
           if isempty(vars)
             vars = {};
           end
           helper = casadi.Function(name, vars, expr);
-          %helper.disp(true);
           if opti.expand
-            disp('  Expanding to SX')
+            if opti.verbose
+               disp('  Expanding to SX')
+            end
             helper = helper.expand();
           end
           clear(name);
-          disp('  Dump graph to matlab file with yalmip instructions')
+          if opti.verbose
+            disp('  Dump graph to matlab file with yalmip instructions')
+          end
           opti.matlab_dump(helper, [pwd filesep name '.m']);
           rehash
           
-
-          disp('  Run matlab file with sdpvar inputs')
+          if opti.verbose
+            disp('  Run matlab file with sdpvar inputs')
+          end
           tic
           [out{1:length(expr)}] = feval(name, args{:});
           toc
@@ -168,6 +175,10 @@ classdef OptiSplineYalmipInterface < handle
         if isfield(options, 'expand')
           opti.expand = options.expand
         end
+        opti.verbose = false;
+        if isfield(options, 'verbose')
+          opti.verbose = options.verbose
+        end
         
         opti.yalmip_options = yalmip_options;
  
@@ -178,7 +189,8 @@ classdef OptiSplineYalmipInterface < handle
           opti = self.advanced()
           opti.yalmip_options = self.yalmip_options;
           opti.expand = self.expand;
-
+          opti.verbose = self.verbose;
+          
           if opti.problem_dirty
             opti.bake();
             g = opti.constraints;
@@ -187,31 +199,43 @@ classdef OptiSplineYalmipInterface < handle
             vars_x = opti.symvar(e, casadi.OPTI_VAR);
             vars_p = opti.symvar(e, casadi.OPTI_PAR);
 
-            disp('Converting CasADi graph (variables) to Yalmip')
+            if opti.verbose
+              disp('Converting CasADi graph (variables) to Yalmip')
+            end
             vars_x_yalmip = opti.yalmip_var(vars_x);
             vars_p_yalmip = opti.yalmip_var(vars_p);
-            disp('Done')
-
+            if opti.verbose
+              disp('Done')
+            end
             vars_x_yalmip = cellfun(@(e) e(:), vars_x_yalmip, 'uni', false);
             vars_p_yalmip = cellfun(@(e) e(:), vars_p_yalmip, 'uni', false);
           
-            disp('Converting CasADi graph (constraints) to Yalmip')
+            if opti.verbose
+              disp('Converting CasADi graph (constraints) to Yalmip')
+            end
             constr = opti.yalmip_expr(g);
             c = [constr{:}];
             if isempty(c)
               c = zeros(0,1);
             end
-            disp('Done')
-            disp('Converting CasADi graph (objective) to Yalmip')
+            if opti.verbose
+              disp('Done')
+              disp('Converting CasADi graph (objective) to Yalmip')
+            end
             self.yalmip_objective = opti.yalmip_expr(f);
-            disp('Done')
-            
+            if opti.verbose
+              disp('Done')
+            end
             self.variables = vertcat(vars_x_yalmip{:});
             self.yalmip_parameters = vertcat(vars_p_yalmip{:});
             
-            disp('Call yalmip ''optimizer''')
+            if opti.verbose
+              disp('Call yalmip ''optimizer''')
+            end
             sol = optimizer(c, self.yalmip_objective, self.yalmip_options, self.yalmip_parameters, self.variables);
-            disp('Done')
+            if opti.verbose
+              disp('Done')
+            end
             self.yalmip_optimizer = sol;
             self.yalmip_constraints = c;
           end
