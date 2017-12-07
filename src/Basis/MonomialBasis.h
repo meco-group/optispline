@@ -1,29 +1,26 @@
-#ifndef SUBMONOMIALBASIS_H_
-#define SUBMONOMIALBASIS_H_
+#ifndef SRC_BASIS_MONOMIALBASIS_H_
+#define SRC_BASIS_MONOMIALBASIS_H_
 
-#include <any_tensor.hpp>
 #include <vector>
+#include <any_tensor.hpp>
 
 #include "Basis.h"
 #include "UnivariateBasis.h"
 
-namespace spline{
+namespace spline {
 
-    class MonomialBasisNode;
+class MonomialBasisNode;
 
-    class MonomialBasis : public UnivariateBasis {
-
-    public:
-
+class MonomialBasis : public UnivariateBasis {
+ public:
 #ifndef SWIG
-        MonomialBasis(){}
-        MonomialBasisNode* get() const ;
-        MonomialBasisNode* operator->() const ;
-#endif // SWIG
-        MonomialBasis(int degree);
-
-    };
+    MonomialBasis() {}
+    MonomialBasisNode* get() const;
+    MonomialBasisNode* operator->() const;
+#endif  // SWIG
+    MonomialBasis(int degree);
+};
 
 }  // namespace spline
 
-#endif  // SUBMONOMIALBASIS_H_
+#endif  // SRC_BASIS_MONOMIALBASIS_H_
