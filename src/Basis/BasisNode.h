@@ -13,7 +13,7 @@
 // #include <tensor.hpp>
 #include <any_tensor.hpp>
 
-#include "BasisNode.h"
+#include "Basis.h"
 
 namespace spline {
 
@@ -21,7 +21,6 @@ namespace spline {
     class BSplineBasisNode;
     class MonomialBasisNode;
 
-    class Basis;
     class EmptyBasis;
     class BSplineBasis;
     class MonomialBasis;

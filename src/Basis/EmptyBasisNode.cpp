@@ -1,4 +1,4 @@
-#include "EmptyBasis.h"
+#include "EmptyBasisNode.h"
 #include "MonomialBasis.h"
 #include "BSplineBasis.h"
 

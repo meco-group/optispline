@@ -6,7 +6,7 @@
 
 #include "Basis.h"
 
-#include "EmptyBasisNode.h"
+#include "EmptyBasis.h"
 
 namespace spline {
 

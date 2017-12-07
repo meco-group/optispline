@@ -7,7 +7,7 @@
 #include "Basis.h"
 #include "UnivariateBasis.h"
 
-#include "MonomialBasisNode.h"
+#include "MonomialBasis.h"
 
 namespace spline{
 

@@ -16,7 +16,7 @@ namespace spline {
     class MonomialBasis;
     class BSplineBasis;
 
-
+    class UnivariateBasisNode;
     class UnivariateBasis : public Basis {
     public:
 #ifndef SWIG

@@ -9,7 +9,7 @@
 #include "Basis.h"
 #include "UnivariateBasis.h"
 
-#include "BSplineBasisNode.h"
+#include "BSplineBasis.h"
 
 
 namespace casadi {

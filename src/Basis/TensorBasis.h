@@ -16,7 +16,7 @@
 
 namespace spline {
 
-class TensorBasis;
+class TensorBasisNode;
 class BSplineBasis;
 class MonomialBasis;
 class Function;

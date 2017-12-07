@@ -1,5 +1,5 @@
 #include <sstream>
-#include "BSplineBasis.h"
+#include "BSplineBasisNode.h"
 
 #include "operations/operationsBasis.h"
 

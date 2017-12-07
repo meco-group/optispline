@@ -1,5 +1,5 @@
 #include <vector>
-#include "UnivariateBasis.h"
+#include "UnivariateBasisNode.h"
 
 #include "operations/operationsBasis.h"
 #include "../common.h"

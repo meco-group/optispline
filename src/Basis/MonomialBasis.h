@@ -9,6 +9,7 @@
 
 namespace spline{
 
+    class MonomialBasisNode;
 
     class MonomialBasis : public UnivariateBasis {
 

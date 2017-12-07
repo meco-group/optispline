@@ -18,7 +18,7 @@ namespace spline {
     class BSplineBasisNode;
     class MonomialBasisNode;
 
-    class Basis;
+    class BasisNode;
     class EmptyBasis;
     class BSplineBasis;
     class MonomialBasis;

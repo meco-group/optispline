@@ -8,10 +8,9 @@
 #include "Basis.h"
 #include "../Domain/Interval.h"
 
-#include "UnivariateBasisNode.h"
+#include "UnivariateBasis.h"
 
 namespace spline {
-
 
     class MonomialBasisNode;
     class BSplineBasisNode;

@@ -14,6 +14,8 @@
 namespace spline{
     class MonomialBasis;
 
+    class BSplineBasisNode;
+
     class BSplineBasis : public UnivariateBasis {
 
     public:

@@ -8,6 +8,7 @@
 
 namespace spline {
 
+    class EmptyBasisNode;
 
     class EmptyBasis : public Basis {
     public:
