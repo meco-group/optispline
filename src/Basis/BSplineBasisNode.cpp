@@ -439,11 +439,4 @@ namespace spline {
         return new_basis;
     }
 
-    BSplineBasis BSplineBasis::from_single(const AnyVector& knots, int degree) {
-      AnyTensor head = AnyTensor::repeat(knots[0], {degree});
-      AnyTensor tail = AnyTensor::repeat(knots[knots.size()-1], {degree});
-      AnyVector k = AnyTensor::concat({head, knots, tail}, 0);
-      return BSplineBasis(k, degree);
-    }
-
 } // namespace spline
