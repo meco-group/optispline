@@ -107,13 +107,15 @@ def DT_from_array(m, check_only=True):
 #include <src/SharedObject/SharedObjectNode.h>
 
 #include <src/Basis/Basis.h>
+#include <src/Basis/BasisNode.h>
 #include <src/Basis/UnivariateBasis.h>
+#include <src/Basis/UnivariateBasisNode.h>
 #include <src/Basis/MonomialBasis.h>
+#include <src/Basis/MonomialBasisNode.h>
 #include <src/Basis/BSplineBasis.h>
+#include <src/Basis/BSplineBasisNode.h>
 #include <src/Basis/TensorBasis.h>
-#include <src/Basis/UnivariateBasis.h>
-#include <src/Basis/MonomialBasis.h>
-#include <src/Basis/BSplineBasis.h>
+#include <src/Basis/TensorBasisNode.h>
 #include <src/Basis/utils/vectorUtilities.h> // Debug
 
 #include <src/Coefficients/Coefficient.h>
@@ -389,7 +391,7 @@ using namespace spline;
       }
       return false;
     }
-    
+
 #ifdef SWIGPYTHON
     GUESTOBJECT* full(const DT& m, bool simplify=false) {
       PyObject *p = from_ptr(&m);
@@ -454,7 +456,7 @@ using namespace spline;
       #else
       #endif // SWIGMATLAB
       #ifdef SWIGPYTHON
-      
+
       if (DT_from_array(p, m)) return true;
       #endif
 
@@ -828,7 +830,7 @@ using namespace spline;
 #endif // SWIGPYTHON
       return 0;
     }
-    
+
     GUESTOBJECT* from_ptr(const DT *a) {
       return SWIG_NewPointerObj(new DT(*a), $descriptor(Tensor< casadi::Matrix<double> > *), SWIG_POINTER_OWN);
     }
@@ -1201,7 +1203,7 @@ namespace spline {
         ind = size(self, i);
       end
     end
-    
+
     function self = subsasgn(self,varargin)
         error('Not supported: subsasgn');
     end
@@ -1301,7 +1303,7 @@ namespace spline {
 #ifdef SWIGPYTHON
 %extend Tensor<DM> {
   %pythoncode %{
-  
+
     def toarray(self,simplify=False):
       import numpy as np
       if simplify:
