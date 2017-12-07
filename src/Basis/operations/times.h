@@ -4,6 +4,7 @@
 #include "Basis.h"
 #include "MonomialBasis.h"
 #include "BSplineBasis.h"
+#include "BSplineBasisNode.h"
 
 namespace spline{
 #ifndef SWIG

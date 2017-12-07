@@ -1,6 +1,7 @@
 #include "TensorBasis.h"
 #include "EmptyBasis.h"
 #include "BSplineBasis.h"
+#include "BSplineBasisNode.h"
 #include "../common.h"
 #include "operations/operationsBasis.h"
 #include "../Function/Function.h"
