@@ -5,7 +5,7 @@
 #include <string>
 
 #include "../common.h"
-#include "Basis.h"
+#include "BasisNode.h"
 #include "../Domain/Interval.h"
 
 #include "UnivariateBasis.h"

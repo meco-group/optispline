@@ -1,4 +1,5 @@
 #include "Basis.h"
+#include "BasisNode.h"
 #include "operations/operationsBasis.h"
 #include "../Function/Function.h"
 #include "../common.h"

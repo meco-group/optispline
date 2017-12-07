@@ -7,7 +7,7 @@
 #include <casadi/core/callback.hpp>
 
 #include "Basis.h"
-#include "UnivariateBasis.h"
+#include "UnivariateBasisNode.h"
 
 #include "BSplineBasis.h"
 

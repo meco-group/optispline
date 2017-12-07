@@ -1,6 +1,6 @@
 #include "EmptyBasisNode.h"
-#include "MonomialBasis.h"
-#include "BSplineBasis.h"
+#include "MonomialBasisNode.h"
+#include "BSplineBasisNode.h"
 
 namespace spline {
 

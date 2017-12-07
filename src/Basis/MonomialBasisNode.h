@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Basis.h"
-#include "UnivariateBasis.h"
+#include "UnivariateBasisNode.h"
 
 #include "MonomialBasis.h"
 

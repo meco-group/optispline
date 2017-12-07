@@ -4,7 +4,7 @@
 #include <casadi/casadi.hpp>
 #include <string>
 
-#include "Basis.h"
+#include "BasisNode.h"
 
 #include "EmptyBasis.h"
 
