@@ -50,6 +50,16 @@ namespace spline{
         virtual Basis degree_elevation(int elevation, AnyTensor& T) const override;
     };
 
+    template<class T>
+    AnyTensor MonomialBasisNode::basis_evaluation(const std::vector< T >& x ) const {
+        T x_ = x[0];
+        int lenght  = this->dimension();
+        std::vector<T> evaluation_basis(lenght);
+        for (int i = 0; i < lenght; ++i) {
+              evaluation_basis[i] = pow(x_,i);
+        }
+        return AnyTensor(vertcat(evaluation_basis));
+    }
 }  // namespace spline
 
 #endif  // CPP_SPLINE_MONOMIALBASISNODE_H_
