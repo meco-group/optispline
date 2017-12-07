@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 #include "../common.h"
 #include "../Domain/Domain.h"
@@ -17,13 +16,15 @@
 
 namespace spline {
 
+    class EmptyBasis;
     class EmptyBasisNode;
+
+    class BSplineBasis;
     class BSplineBasisNode;
+
+    class MonomialBasis;
     class MonomialBasisNode;
 
-    class EmptyBasis;
-    class BSplineBasis;
-    class MonomialBasis;
     class Function;
 
     class BasisNode : public SharedObjectNode {

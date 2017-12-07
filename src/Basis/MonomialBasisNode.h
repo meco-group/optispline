@@ -1,13 +1,17 @@
 #ifndef CPP_SPLINE_MONOMIALBASISNODE_H_
 #define CPP_SPLINE_MONOMIALBASISNODE_H_
 
-#include <any_tensor.hpp>
 #include <vector>
+#include <any_tensor.hpp>
 
 #include "Basis.h"
+#include "BasisNode.h"
+
+#include "UnivariateBasis.h"
 #include "UnivariateBasisNode.h"
 
 #include "MonomialBasis.h"
+#include "MonomialBasisNode.h"
 
 namespace spline{
 
@@ -42,7 +46,7 @@ namespace spline{
         template<class T>
         AnyTensor basis_evaluation(const std::vector< T >& x ) const ;
 
-    virtual AnyTensor evaluation_grid() const override;
+        virtual AnyTensor evaluation_grid() const override;
 
         virtual Basis derivative(int order, AnyTensor& T) const override;
         virtual Basis antiderivative(int order, AnyTensor& T) const override;

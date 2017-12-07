@@ -17,16 +17,16 @@ add_library(splines SHARED
 
     Basis/utils/vectorUtilities.h
 
-    Basis/Basis.h Basis/Basis.cpp
     Basis/BasisNode.h Basis/BasisNode.cpp
-    Basis/EmptyBasis.h Basis/EmptyBasis.cpp
+    Basis/Basis.h Basis/Basis.cpp
     Basis/EmptyBasisNode.h Basis/EmptyBasisNode.cpp
-    Basis/BSplineBasis.h Basis/BSplineBasis.cpp
+    Basis/EmptyBasis.h Basis/EmptyBasis.cpp
     Basis/BSplineBasisNode.h Basis/BSplineBasisNode.cpp
-    Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
+    Basis/BSplineBasis.h Basis/BSplineBasis.cpp
     Basis/UnivariateBasisNode.h Basis/UnivariateBasisNode.cpp
-    Basis/MonomialBasis.h Basis/MonomialBasis.cpp
+    Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
     Basis/MonomialBasisNode.h Basis/MonomialBasisNode.cpp
+    Basis/MonomialBasis.h Basis/MonomialBasis.cpp
 
     Basis/operations/operationsBasis.h Basis/operations/operationsBasis.cpp
     Basis/operations/plus.h Basis/operations/plus.cpp

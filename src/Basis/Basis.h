@@ -1,5 +1,5 @@
-#ifndef BASIS_H_
-#define BASIS_H_
+#ifndef SRC_BASIS_BASIS_H_
+#define SRC_BASIS_BASIS_H_
 
 #include <iostream>
 #include <string>
@@ -14,16 +14,18 @@
 
 namespace spline {
 
+    class BasisNode;
+
+    class EmptyBasis;
     class EmptyBasisNode;
+
+    class BSplineBasis;
     class BSplineBasisNode;
+
+    class MonomialBasis;
     class MonomialBasisNode;
 
-    class BasisNode;
-    class EmptyBasis;
-    class BSplineBasis;
-    class MonomialBasis;
     class Function;
-
 
     class Basis : public SharedObject{
     public:
@@ -70,6 +72,5 @@ namespace spline {
 
     };
 
-
 }  // namespace spline
-#endif  // BASIS_H_
+#endif  // SRC_BASIS_BASIS_H_

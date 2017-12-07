@@ -1,8 +1,8 @@
 #ifndef CPP_SPLINE_UNIVARIATEBASISNODE_H_
 #define CPP_SPLINE_UNIVARIATEBASISNODE_H_
 
-#include <casadi/casadi.hpp>
-#include <string>
+/* #include <casadi/casadi.hpp> */
+/* #include <string> */
 
 #include "../common.h"
 #include "BasisNode.h"
@@ -12,12 +12,11 @@
 
 namespace spline {
 
-    class MonomialBasisNode;
-    class BSplineBasisNode;
+/*     class MonomialBasisNode; */
+/*     class BSplineBasisNode; */
 
-    class MonomialBasis;
-    class BSplineBasis;
-
+/*     class MonomialBasis; */
+/*     class BSplineBasis; */
 
     class UnivariateBasisNode : public BasisNode {
     public:
