@@ -179,25 +179,26 @@ namespace spline {
         AnyVector kn(vertcat(knots));
         knots_ = kn.sort().to_scalar_vector();
       }
+      
+    std::vector<AnyScalar> linspace(const AnyScalar& start, const AnyScalar& stop, int N) {
+        std::vector<AnyScalar> ret(N);
+        spline_assert(N>=2);
+        AnyScalar d = stop-start;
+
+        for (int i = 0; i < N; ++i) {
+            ret[i] = start + (i*d)/(N-1);
+        }
+        return ret;
+    }
 
     BSplineBasis::BSplineBasis(const std::vector<AnyScalar>& bounds, int degree, int n_intervals)  {
-        int n_knots = 2*degree + n_intervals;
-        std::vector<AnyScalar> knot_vector(n_knots);
+        spline_assert(n_intervals>=2);
+        std::vector<AnyScalar> knot_vector = linspace(bounds[0], bounds[1], n_intervals);
 
-/*         for (int i = 1; i < n_intervals - 1; ++i) { */
-/*             knot_vector[degree + i] = (i*bounds[0] + (n_intervals - i - 1) *bounds[1])/(n_intervals - 1.0); */
-/*         } */
+        knot_vector.insert(knot_vector.begin(), degree, knot_vector[0]);
+        knot_vector.insert(knot_vector.end(), degree, knot_vector.back());
 
-        for (int i = 1; i < n_intervals - 1; ++i) {
-            double f = static_cast<double>(i)/(n_intervals-1);
-            knot_vector[degree + i] = bounds[0] + (bounds[1] - bounds[0])*f;
-        }
-
-        for (int i = 0; i < degree + 1; ++i) {
-            knot_vector[i] = bounds[0];
-            knot_vector[n_knots - i - 1] = bounds[1];
-        }
-      assign_node(new BSplineBasisNode(knot_vector, degree));
+        assign_node(new BSplineBasisNode(knot_vector, degree));
     }
 
     std::vector<AnyScalar> BSplineBasis::knots() const { return (*this)->knots(); }
