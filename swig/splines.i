@@ -1423,13 +1423,13 @@ namespace spline {
     static Function times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
     static Function mtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
     static Function rmtimes(const Function& lhs, const AnyTensor& rhs) { return lhs.rmtimes(rhs); }
-    static MX le(const Function& lhs, const MX& rhs) { return lhs<=rhs; }
+    static casadi::MX le(const Function& lhs, const casadi::MX& rhs) { return lhs<=rhs; }
     static Function plus(const AnyTensor& lhs, const Function& rhs) { return rhs+lhs; }
     static Function minus(const AnyTensor& lhs, const Function& rhs) { return (-rhs)+lhs; }
     static Function times(const AnyTensor& lhs, const Function& rhs) { return rhs*lhs; }
     static Function mtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.rmtimes(lhs); }
     static Function rmtimes(const AnyTensor& lhs, const Function& rhs) { return rhs.mtimes(rhs); }
-    static MX le(const MX& lhs, const Function& rhs) { return rhs>=lhs; }
+    static casadi::MX le(const casadi::MX& lhs, const Function& rhs) { return rhs>=lhs; }
     Function ctranspose() const { return $self->transpose();}
   }
 } // namespace spline
