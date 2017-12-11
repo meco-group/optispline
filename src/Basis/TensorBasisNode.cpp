@@ -541,12 +541,4 @@ namespace spline {
         return  s;
     }
 
-    std::vector<int> TensorBasis::vectorize(const Argument& arg) const{
-        if(arg.is_all()){
-            return casadi::range(n_basis());
-        } else {
-            return {arg.concrete(arguments())};
-        }
-    }
-
 } // namespace spline
