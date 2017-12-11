@@ -9,10 +9,6 @@
 #include "Basis.h"
 #include "UnivariateBasis.h"
 
-#include "BSplineBasis.h"
-#include "BSplineBasisNode.h"
-
-
 namespace casadi {
 
     class BSplineEvaluator : public casadi::Callback {
@@ -96,6 +92,7 @@ namespace casadi {
 
 namespace spline{
     class MonomialBasis;
+    class BSplineBasis;
 
     class BSplineBasisNode : public UnivariateBasisNode {
 

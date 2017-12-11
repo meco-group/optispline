@@ -8,13 +8,12 @@
 
 #include "Basis.h"
 #include "UnivariateBasis.h"
+#include "BSplineBasisNode.h"
 
 
 
 namespace spline{
     class MonomialBasis;
-
-    class BSplineBasisNode;
 
     class BSplineBasis : public UnivariateBasis {
 
