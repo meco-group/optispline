@@ -109,8 +109,8 @@ def DT_from_array(m, check_only=True):
 #include <src/Basis/Basis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/MonomialBasis.h>
-#include <src/Basis/BSplineBasisNode.h>
 #include <src/Basis/BSplineBasis.h>
+#include <src/Basis/BSplineBasisNode.h>
 #include <src/Basis/TensorBasis.h>
 #include <src/Basis/UnivariateBasis.h>
 #include <src/Basis/utils/vectorUtilities.h> // Debug
