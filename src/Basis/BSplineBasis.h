@@ -9,8 +9,6 @@
 #include "Basis.h"
 #include "UnivariateBasis.h"
 
-
-
 namespace spline{
     class MonomialBasis;
 
