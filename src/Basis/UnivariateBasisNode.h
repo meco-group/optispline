@@ -8,8 +8,6 @@
 #include "BasisNode.h"
 #include "../Domain/Interval.h"
 
-#include "UnivariateBasis.h"
-
 namespace spline {
 
 /*     class MonomialBasisNode; */
@@ -17,6 +15,8 @@ namespace spline {
 
 /*     class MonomialBasis; */
 /*     class BSplineBasis; */
+
+    class UnivariateBasis;
 
     class UnivariateBasisNode : public BasisNode {
     public:

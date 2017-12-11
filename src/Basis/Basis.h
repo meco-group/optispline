@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "../SharedObject/SharedObject.h"
+#include "BasisNode.h"
 #include "../common.h"
 #include "../Domain/Domain.h"
 
@@ -13,8 +14,6 @@
 #include <any_tensor.hpp>
 
 namespace spline {
-
-    class BasisNode;
 
     class EmptyBasis;
     class EmptyBasisNode;

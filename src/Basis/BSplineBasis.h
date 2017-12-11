@@ -7,12 +7,11 @@
 #include <casadi/core/callback.hpp>
 
 #include "Basis.h"
+#include "BSplineBasisNode.h"
 #include "UnivariateBasis.h"
 
 namespace spline{
     class MonomialBasis;
-
-    class BSplineBasisNode;
 
     class BSplineBasis : public UnivariateBasis {
 

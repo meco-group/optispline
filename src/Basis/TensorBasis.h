@@ -9,6 +9,7 @@
 #include "../SharedObject/SharedObject.h"
 #include "../SharedObject/SharedObjectNode.h"
 
+#include "TensorBasisNode.h"
 #include "Basis.h"
 #include "../Function/Argument.h"
 #include "../Function/NumericIndex.h"
@@ -16,7 +17,6 @@
 
 namespace spline {
 
-class TensorBasisNode;
 class BSplineBasis;
 class MonomialBasis;
 class Function;

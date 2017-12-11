@@ -1,3 +1,4 @@
+#include "TensorBasis.h"
 #include "TensorBasisNode.h"
 #include "EmptyBasis.h"
 #include "BSplineBasis.h"

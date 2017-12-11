@@ -12,9 +12,9 @@
 // #include <tensor.hpp>
 #include <any_tensor.hpp>
 
-#include "Basis.h"
-
 namespace spline {
+
+    class Basis;
 
     class EmptyBasis;
     class EmptyBasisNode;

@@ -10,10 +10,9 @@
 #include "UnivariateBasis.h"
 #include "UnivariateBasisNode.h"
 
-#include "MonomialBasis.h"
-#include "MonomialBasisNode.h"
-
 namespace spline{
+
+    class MonomialBasis;
 
     class MonomialBasisNode : public UnivariateBasisNode {
 

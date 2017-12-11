@@ -5,11 +5,10 @@
 #include <any_tensor.hpp>
 
 #include "Basis.h"
+#include "MonomialBasisNode.h"
 #include "UnivariateBasis.h"
 
 namespace spline {
-
-class MonomialBasisNode;
 
 class MonomialBasis : public UnivariateBasis {
  public:

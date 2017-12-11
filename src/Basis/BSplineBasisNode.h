@@ -91,6 +91,7 @@ namespace casadi {
 }
 
 namespace spline{
+
     class MonomialBasis;
     class BSplineBasis;
 

@@ -14,8 +14,6 @@
 #include "../Function/NumericIndex.h"
 #include "../Domain/TensorDomain.h"
 
-#include "TensorBasis.h"
-
 namespace spline {
 
 class TensorBasis;

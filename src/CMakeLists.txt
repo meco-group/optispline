@@ -21,13 +21,14 @@ add_library(splines SHARED
     Basis/Basis.h Basis/Basis.cpp
     Basis/EmptyBasisNode.h Basis/EmptyBasisNode.cpp
     Basis/EmptyBasis.h Basis/EmptyBasis.cpp
-    Basis/TensorBasis.h Basis/TensorBasis.cpp
-    Basis/BSplineBasisNode.h Basis/BSplineBasisNode.cpp
-    Basis/BSplineBasis.h Basis/BSplineBasis.cpp
     Basis/UnivariateBasisNode.h Basis/UnivariateBasisNode.cpp
     Basis/UnivariateBasis.h Basis/UnivariateBasis.cpp
+    Basis/BSplineBasisNode.h Basis/BSplineBasisNode.cpp
+    Basis/BSplineBasis.h Basis/BSplineBasis.cpp
     Basis/MonomialBasisNode.h Basis/MonomialBasisNode.cpp
     Basis/MonomialBasis.h Basis/MonomialBasis.cpp
+    Basis/TensorBasisNode.h Basis/TensorBasisNode.cpp
+    Basis/TensorBasis.h Basis/TensorBasis.cpp
 
     Basis/operations/operationsBasis.h Basis/operations/operationsBasis.cpp
     Basis/operations/plus.h Basis/operations/plus.cpp

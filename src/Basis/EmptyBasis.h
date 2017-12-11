@@ -5,10 +5,9 @@
 #include <string>
 
 #include "Basis.h"
+#include "EmptyBasisNode.h"
 
 namespace spline {
-
-    class EmptyBasisNode;
 
     class EmptyBasis : public Basis {
     public:
