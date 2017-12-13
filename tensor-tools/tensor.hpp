@@ -10,7 +10,7 @@
 #include "slice.hpp"
 #include "../src/common.h"
 #include "../src/Function/NumericIndex.h"
-#include "../SharedObject/PrintableObject.h"
+#include "../src/SharedObject/PrintableObject.h"
 
 template <class T>
 std::vector<T> reorder(const std::vector<T>& data, const std::vector<int>& order) {
@@ -271,17 +271,17 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
 
     std::vector<AnySlice> ret;
     for (int i=0;i<n_dims();++i) ret.push_back(casadi::range(dims(i)));
-    
+
     std::vector<AnySlice> a = ret;
     a[axis] = casadi::range(1, dims(axis));
     std::vector<AnySlice> b = ret;
     b[axis] = casadi::range(0, dims(axis)-1);
     return index_anyslice(a)-index_anyslice(b);
   }
-  
+
   Tensor sum(const spline::NumericIndex& axis) {
     Tensor<T> b(casadi::DM::ones(dims(axis)), {dims(axis)});
-    
+
     std::vector<int> a_e = mrange(n_dims());
     std::vector<int> b_e = {-axis-1};
     std::vector<int> c_e = a_e;
@@ -300,7 +300,7 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     if (n_dims()==2) {
       return T::reshape(data_, n, m)(i_e, j_e);
     }
-    
+
     std::vector<AnySlice> ret(n_dims()-2);
     ret.push_back(i);
     ret.push_back(j);
@@ -413,7 +413,7 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
   Tensor index_anyslice(const std::vector<AnySlice>& ind) const {
     // Check that input is a permutation of range(n_dims())
     tensor_assert(ind.size()==n_dims());
-        
+
     std::vector<std::vector<int> > ind_new;
     for (int i=0;i<ind.size();++i)
       ind_new.push_back(ind[i].indices(dims(i)));
@@ -429,7 +429,7 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
       for (int i=0;i<n_dims();++i) slice_indices[i] = ind_new[i][slice_indices[i]];
       mapping[k] = ind2sub(dims(), slice_indices);
     }
-      
+
     return Tensor(data_.nz(mapping), slice_dims);
   }
 
@@ -439,17 +439,17 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
   *       4 ---- 6
   *      /|     /|
   *   k / |    / |
-  *    /  5 --/- 7  
+  *    /  5 --/- 7
   *   0 -/-- 2  /
   * i | /    | /
   *   |/     |/
   *   1 ---- 3
   *       j
-  *   
+  *
   */
   Tensor reorder_dims(const spline::NumericIndexVector& order) const {
-  
-    
+
+
     // Check that input is a permutaion of range(n_dims())
     tensor_assert(order.size()==n_dims());
 
@@ -465,7 +465,7 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     for (bool occ : occured) {
       tensor_assert(occ);
     }
-    
+
     int N = numel();
     std::vector<int> mapping(N);
 
@@ -503,7 +503,7 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     for (int e : a) casadi_assert_dev(e<0);
     for (int e : b) casadi_assert_dev(e<0);
     for (int e : c) casadi_assert_dev(e<0);
-    
+
     const Tensor& A = *this;
 
     // Dimension check
@@ -545,30 +545,30 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
       tensor_assert(cl!=dim_map.end());
       new_dims.push_back(dim_map[ci]);
     }
-    
+
     if (casadi::product(new_dims)==0 || casadi::product(dims())==0 || casadi::product(B.dims())==0) return Tensor(casadi::DM::zeros(casadi::product(new_dims), 1), new_dims);
-    
-    
+
+
     /// C_IKL = A_IJL B_JKL
     std::set<int> a_set(a.begin(), a.end());
     std::set<int> b_set(b.begin(), b.end());
     std::set<int> c_set(c.begin(), c.end());
-    
+
     std::vector<int> J;
     std::set_intersection(a_set.begin(), a_set.end(), b_set.begin(), b_set.end(), std::inserter(J, J.end()));
     std::vector<int> I;
     std::set_difference(a_set.begin(), a_set.end(), J.begin(), J.end(), std::inserter(I, I.end()));
     std::vector<int> K;
     std::set_difference(b_set.begin(), b_set.end(), J.begin(), J.end(), std::inserter(K, K.end()));
-    
+
     std::vector<int> J_temp = J;
     J.clear();
     std::set_difference(J_temp.begin(), J_temp.end(), c_set.begin(), c_set.end(), std::inserter(J, J.end()));
-    
+
     std::vector<int> L_temp, L;
     std::set_difference(c_set.begin(), c_set.end(), I.begin(), I.end(), std::inserter(L_temp, L_temp.end()));
     std::set_difference(L_temp.begin(), L_temp.end(), K.begin(), K.end(), std::inserter(L, L.end()));
-    
+
     std::vector<int> reorder_a, reorder_b, reorder_c;
     int prod_I = 1, prod_J = 1, prod_K = 1, prod_L = 1;
     for (auto e : I) {
@@ -620,7 +620,7 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     }
     T A_mat = T::reshape(A.reorder_dims(reorder_a).data(), prod_I, prod_J*prod_L);
     T B_mat = T::reshape(B.reorder_dims(reorder_b).data(), prod_J, prod_K*prod_L);
-    
+
     Tensor C_tensor;
 
     if (1) {
@@ -631,15 +631,15 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
     } else {
       std::vector<T> As = horzsplit(A_mat, prod_J);
       std::vector<T> Bs = horzsplit(B_mat, prod_K);
-      
+
       casadi_assert_dev(As.size()==prod_L);
       casadi_assert_dev(Bs.size()==prod_L);
-    
+
       std::vector<T> Cs;
       for (int i=0;i<prod_L;++i) {
         Cs.push_back(T::mtimes(As[i], Bs[i]));
       }
-      
+
       T C_mat = horzcat(Cs);
       C_tensor = Tensor(vec(C_mat), reorder(new_dims, reorder_c));
     }
