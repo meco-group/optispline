@@ -107,13 +107,15 @@ def DT_from_array(m, check_only=True):
 #include <src/SharedObject/SharedObjectNode.h>
 
 #include <src/Basis/Basis.h>
+#include <src/Basis/BasisNode.h>
 #include <src/Basis/UnivariateBasis.h>
+#include <src/Basis/UnivariateBasisNode.h>
 #include <src/Basis/MonomialBasis.h>
+#include <src/Basis/MonomialBasisNode.h>
 #include <src/Basis/BSplineBasis.h>
+#include <src/Basis/BSplineBasisNode.h>
 #include <src/Basis/TensorBasis.h>
-#include <src/Basis/UnivariateBasis.h>
-#include <src/Basis/MonomialBasis.h>
-#include <src/Basis/BSplineBasis.h>
+#include <src/Basis/TensorBasisNode.h>
 #include <src/Basis/utils/vectorUtilities.h> // Debug
 
 #include <src/Coefficients/Coefficient.h>
