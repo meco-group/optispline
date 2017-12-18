@@ -101,7 +101,7 @@ namespace spline {
         std::vector< int > number_occurence = n_inputs_list();
         std::vector< int > index = Argument::concrete(args, shared_from_this<TensorBasis>());
         for ( auto &i : index){
-            if (i >= 0 && i < n_basis()) number_occurence[i]--;
+            if (i >= 0 && i < n_basis()) number_occurence.at( i )--;
         }
         return std::all_of(number_occurence.begin(), number_occurence.end(), [](int i){ return i == 0; });
     }
@@ -415,7 +415,7 @@ namespace spline {
         return (*this)->n_inputs_list();
     }
     std::vector< int > TensorBasisNode::n_inputs_list() const {
-        std::vector< int > ret {n_basis()};
+        std::vector< int > ret ( n_basis(), 0 );
         for (int i =0 ; i < n_basis(); i++) {
             ret[i] = basis(i).n_inputs();
         }
