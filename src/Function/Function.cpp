@@ -2,6 +2,7 @@
 #include "FunctionNode.h"
 
 #include "../Basis/BSplineBasis.h"
+#include "../Basis/BSplineBasisNode.h"
 
 namespace spline{
 
