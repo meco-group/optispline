@@ -2,6 +2,9 @@
 #include "plus.h"
 #include "../utils/vectorUtilities.h"
 
+#include "MonomialBasis.h"
+#include "BSplineBasis.h"
+
 namespace spline {
 
     Basis plus_basis(const BSplineBasisNode& b1, const BSplineBasisNode& b2) {

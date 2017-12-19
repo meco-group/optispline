@@ -2,8 +2,8 @@
 #define PLUSUNIVARIATE_H
 
 #include "Basis.h"
-#include "MonomialBasis.h"
-#include "BSplineBasis.h"
+#include "MonomialBasisNode.h"
+#include "BSplineBasisNode.h"
 
 namespace spline{
 #ifndef SWIG
