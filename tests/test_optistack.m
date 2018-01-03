@@ -178,6 +178,32 @@ x = opti.variable();
 p = opti.parameter();
 
 opti.subject_to();
+opti.minimize((1-x/p)^2);
+opti.solver('yalmip',struct('yalmip_options',yalmip_options,'use_optimize',true));
+opti.set_value(p, 3)
+sol = opti.solve()
+
+sol.value(x)
+
+assert(norm(sol.value(x)-3)<1e-5)
+opti.set_value(p,2)
+sol = opti.solve();
+
+assert(norm(sol.value(x)-2)<1e-5)
+
+opti.subject_to();
+opti.minimize((1-x)^2);
+opti.solver('yalmip',struct('yalmip_options',yalmip_options,'use_optimize',true));
+sol = opti.solve()
+
+assert(norm(sol.value(x)-1)<1e-5)
+
+yalmip_options = sdpsettings('solver','quadprog','verbose',2);
+
+x = opti.variable();
+p = opti.parameter();
+
+opti.subject_to();
 opti.minimize((p-x)^2);
 opti.solver('yalmip',struct('yalmip_options',yalmip_options));
 opti.set_value(p, 3)

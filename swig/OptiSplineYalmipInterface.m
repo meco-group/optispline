@@ -7,14 +7,17 @@ classdef OptiSplineYalmipInterface < handle
       yalmip_parameters
       yalmip_objective
       yalmip_options
+      yalmip_diagnostics
       expand
       variables
       verbose
+      use_optimize
   end
   methods
       
       function [ self ] = OptiSplineYalmipInterface()
         self.yalmip_variables = {};
+        self.use_optimize = false;
       end
       function [out] = yalmip_expr_primitive( opti, vars, expr, args )
       
@@ -183,6 +186,10 @@ classdef OptiSplineYalmipInterface < handle
         if isfield(options, 'verbose')
           opti.verbose = options.verbose
         end
+        opti.use_optimize = false;
+        if isfield(options, 'use_optimize')
+          opti.use_optimize = options.use_optimize;
+        end
         
         opti.yalmip_options = yalmip_options;
  
@@ -194,6 +201,7 @@ classdef OptiSplineYalmipInterface < handle
           opti.yalmip_options = self.yalmip_options;
           opti.expand = self.expand;
           opti.verbose = self.verbose;
+          opti.use_optimize = self.use_optimize;
           
           if opti.problem_dirty
             opti.bake();
@@ -233,30 +241,39 @@ classdef OptiSplineYalmipInterface < handle
             self.variables = vertcat(vars_x_yalmip{:});
             self.yalmip_parameters = vertcat(vars_p_yalmip{:});
             
-            if opti.verbose
-              disp('Call yalmip ''optimizer''')
+            if ~opti.use_optimize
+              if opti.verbose
+                disp('Call yalmip ''optimizer''')
+              end
+              sol = optimizer(c, self.yalmip_objective, self.yalmip_options, self.yalmip_parameters, self.variables);
+              if opti.verbose
+                disp('Done')
+              end
+              self.yalmip_optimizer = sol;
             end
-            sol = optimizer(c, self.yalmip_objective, self.yalmip_options, self.yalmip_parameters, self.variables);
-            if opti.verbose
-              disp('Done')
-            end
-            self.yalmip_optimizer = sol;
             self.yalmip_constraints = c;
           end
 
           opti.solve_prepare();
           a = opti.arg();
-          r = self.yalmip_optimizer{full(a.p)};
-          %if ~isempty(self.constraints)
-          %  checkset(self.constraints);
-          %end
-          assign(self.variables,r);
+          
           if ~isempty(self.yalmip_parameters)
             assign(self.yalmip_parameters,full(a.p));
           end
-          %if ~isempty(self.yalmip_constraints)
-          %  checkset(self.yalmip_constraints)
-          %end
+          
+          if opti.use_optimize
+            f = self.yalmip_objective;
+            if ~isempty(self.yalmip_parameters)
+              c = replace(c,self.yalmip_parameters,full(a.p));
+              f = replace(f,self.yalmip_parameters,full(a.p));
+            end
+            self.yalmip_diagnostics = optimize(c,f, self.yalmip_options);
+            r = value(self.variables);
+          else
+            r = self.yalmip_optimizer{full(a.p)};
+            assign(self.variables,r);
+          end
+
           opti.res(struct('x',r));
           out = splines.OptiSplineSol(splines.OptiSpline(opti));
      end

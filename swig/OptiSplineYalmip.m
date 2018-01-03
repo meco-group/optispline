@@ -12,7 +12,7 @@ classdef OptiSplineYalmip < splines.OptiSpline & OptiSplineYalmipInterface
         out = solve@OptiSplineYalmipInterface(opti);
       end
       function [ opti ] = solver(opti, varargin)
-        opti = solver@OptiSplineYalmipInterface(opti, varargin{:})
+        opti = solver@OptiSplineYalmipInterface(opti, varargin{:});
       end
       
       function out = debug(self)
