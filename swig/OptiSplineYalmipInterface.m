@@ -197,7 +197,7 @@ classdef OptiSplineYalmipInterface < handle
 
       function out = solve(self)
       
-          opti = self.advanced()
+          opti = self.advanced();
           opti.yalmip_options = self.yalmip_options;
           opti.expand = self.expand;
           opti.verbose = self.verbose;
