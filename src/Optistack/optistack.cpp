@@ -417,6 +417,10 @@ spline::Coefficient OptiSplineSol::value(const spline::Coefficient& c) const {
     return static_cast<const OptiSplineAdvanced&>(optistack_).value(c);
 }
 
+AnyTensor OptiSplineSol::value(const AnyTensor& t) const {
+  return static_cast<const OptiSplineAdvanced&>(optistack_).value(t);
+}
+
 OptiSplineAdvanced OptiSpline::debug() const {
   OptiSplineAdvanced ret;
   ret.own(get());

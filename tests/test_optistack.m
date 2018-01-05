@@ -37,6 +37,10 @@ A = [];
 opti.set_value(p, 3);
 sol = opti.solve();
 
+assert(isa(sol.value(MTensor(repmat(x,1,8),[2,2,2])),'double'))
+assert(isa(sol.value(Coefficient(MTensor(repmat(x,1,8),[2,2,2]))),'splines.Coefficient'))
+
+assert(issparse(sol.value(diag(repmat(x,8,1)))))
 
 opti.debug
 

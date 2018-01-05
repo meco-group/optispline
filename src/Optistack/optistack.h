@@ -69,6 +69,7 @@ class OptiSplineSol : public OptiSol {
   public:
     spline::Function value(const spline::Function& f) const;
     spline::Coefficient value(const spline::Coefficient& c) const;
+    AnyTensor value(const AnyTensor& c) const;
     using OptiSol::value;
     OptiSpline opti() const;
     OptiSplineSol(const OptiSpline& opti) : OptiSol(opti) {}
