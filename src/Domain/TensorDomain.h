@@ -23,14 +23,14 @@ class TensorDomainNode : public SharedObjectNode {
         TensorDomainNode(const std::vector< Domain >& allDomain);
         TensorDomainNode(const std::vector< Domain >& allDomain, const std::vector< std::string >& args);
         std::vector< std::string > arguments() const;
-        std::string argument(int index) const;
-        int indexArgument(std::string a) const;
+        std::string argument(casadi_int index) const;
+        casadi_int indexArgument(std::string a) const;
         bool hasArguments() const;
 
         virtual std::string to_string() const override;
         virtual std::string type() const;
 
-        int n_domains() const;
+        casadi_int n_domains() const;
         std::vector< Domain > domains() const;
         Domain domain() const;
         Domain domain(const std::string& a) const;
@@ -59,13 +59,13 @@ public:
         TensorDomain(const std::vector< Domain >& allDomain, const std::vector< std::string >& args);
 
         std::vector< std::string > arguments() const;
-        std::string argument(int index) const;
-        int indexArgument(std::string a) const;
+        std::string argument(casadi_int index) const;
+        casadi_int indexArgument(std::string a) const;
         bool hasArguments() const;
 
         std::string type() const;
 
-        int n_domains() const;
+        casadi_int n_domains() const;
         std::vector< Domain > domains() const;
         Domain domain() const;
         Domain domain(const std::string& a) const;

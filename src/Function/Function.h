@@ -84,7 +84,7 @@ namespace spline {
          */
         Function(const TensorBasis& basis, const Coefficient& coeff);
         Function(const AnyTensor& tensor);
-        Function(const AnyScalar& value, const std::vector< int >& shape);
+        Function(const AnyScalar& value, const std::vector< casadi_int >& shape);
 
 #ifndef SWIG
         FunctionNode* get() const ;
@@ -118,8 +118,8 @@ namespace spline {
         Function mtimes(const AnyTensor& f) const;
         Function rmtimes(const AnyTensor& f) const;
 
-        Function pow(int power) const;
-        Function mpow(int power) const;
+        Function pow(casadi_int power) const;
+        Function mpow(casadi_int power) const;
 
         Function slice(const AnySlice& i, const AnySlice& j) const;
         Function slice(const AnySlice& i) const;
@@ -149,26 +149,26 @@ namespace spline {
         bool is_vector() const;
         bool is_column() const;
 
-        std::vector< int > shape() const;  // Shape result obtained after function evaluation
-        Function reshape(const std::vector< int >& shape) const;
+        std::vector< casadi_int > shape() const;  // Shape result obtained after function evaluation
+        Function reshape(const std::vector< casadi_int >& shape) const;
 
         Function transform_to(const Basis& basis) const;
         Function transform_to(const TensorBasis& basis) const;
         Function project_to(const Basis& basis) const;
         Function project_to(const TensorBasis& basis) const;
 
-        int n_inputs() const;  // Number of inputs of the function
+        casadi_int n_inputs() const;  // Number of inputs of the function
 
         Function insert_knots(const AnyVector & new_knots, const Argument& arg = Argument()) const;
         Function insert_knots(const std::vector<AnyVector> & new_knots,
             const std::vector<Argument> & arg) const;
 
-        Function midpoint_refinement(int refinement = 1, const Argument& arg = Argument()) const;
-        Function midpoint_refinement(const std::vector<int>& refinement,
+        Function midpoint_refinement(casadi_int refinement = 1, const Argument& arg = Argument()) const;
+        Function midpoint_refinement(const std::vector<casadi_int>& refinement,
             const std::vector< Argument >& arg_ind) const;
 
-        Function degree_elevation(int order = 1, const Argument& arg = Argument()) const;
-        Function degree_elevation(const std::vector<int>& orders,
+        Function degree_elevation(casadi_int order = 1, const Argument& arg = Argument()) const;
+        Function degree_elevation(const std::vector<casadi_int>& orders,
             const std::vector< Argument >& arg_ind) const;
 
         Function kick_boundary(const TensorDomain& boundary) const;
@@ -178,12 +178,12 @@ namespace spline {
         Function kick_boundary(const TensorDomain& boundary,
             const NumericIndexVector & arg_ind) const;
 
-        Function derivative(int order = 1, const Argument& arg = Argument()) const;
-        Function derivative(const std::vector<int>& orders,
+        Function derivative(casadi_int order = 1, const Argument& arg = Argument()) const;
+        Function derivative(const std::vector<casadi_int>& orders,
             const std::vector< Argument >& arg_ind) const;
 
-        Function antiderivative(int order = 1, const Argument& arg = Argument()) const;
-        Function antiderivative(const std::vector<int>& orders,
+        Function antiderivative(casadi_int order = 1, const Argument& arg = Argument()) const;
+        Function antiderivative(const std::vector<casadi_int>& orders,
             const std::vector< Argument >& arg_ind) const;
 
         std::vector<spline::Function> jacobian() const;
@@ -218,7 +218,7 @@ namespace spline {
             return ret;
         }
 
-        std::vector<int> vectorize(const Argument& arg) const;
+        std::vector<casadi_int> vectorize(const Argument& arg) const;
     };
 
 } // namespace spline

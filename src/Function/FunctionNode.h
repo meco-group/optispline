@@ -49,15 +49,15 @@ namespace spline {
         bool is_scalar() const;
         bool is_vector() const;
         bool is_column() const;
-        std::vector< int > shape() const;  // Shape result obtained after function evaluation
-        virtual Function reshape(const std::vector< int >& shape) const;
+        std::vector< casadi_int > shape() const;  // Shape result obtained after function evaluation
+        virtual Function reshape(const std::vector< casadi_int >& shape) const;
 
         virtual Function slice(const AnySlice& i, const AnySlice& j) const;
         virtual Function slice(const AnySlice& i) const;
 
         virtual Function transpose() const;
         virtual Function trace() const;
-        virtual Function sum(int axis) const;
+        virtual Function sum(casadi_int axis) const;
         virtual Function sum() const;
 
         virtual Function transform_to(const TensorBasis& basis) const;
@@ -67,16 +67,16 @@ namespace spline {
         virtual Basis basis() const;
         virtual Basis basis(const Argument& i) const;
 
-        virtual int n_inputs() const;  // Number of inputs of the function
+        virtual casadi_int n_inputs() const;  // Number of inputs of the function
 
         virtual Function insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<int> & arg) const;
+            const std::vector<casadi_int> & arg) const;
 
-        virtual Function midpoint_refinement(const std::vector<int>& refinement,
-                const std::vector< int >& arg_ind) const;
+        virtual Function midpoint_refinement(const std::vector<casadi_int>& refinement,
+                const std::vector< casadi_int >& arg_ind) const;
 
-        virtual Function degree_elevation(const std::vector<int>& elivations,
-                const std::vector< int >& arg_ind) const;
+        virtual Function degree_elevation(const std::vector<casadi_int>& elivations,
+                const std::vector< casadi_int >& arg_ind) const;
 
         virtual Function kick_boundary(const TensorDomain& boundary) const;
         virtual Function kick_boundary(const TensorDomain& boundary, const NumericIndex& arg_ind) const;
@@ -85,11 +85,11 @@ namespace spline {
         virtual Function kick_boundary(const TensorDomain& boundary,
             const NumericIndexVector & arg_ind) const;
 
-        virtual Function derivative(const std::vector<int>& orders,
-            const std::vector< int >& arg_ind) const;
+        virtual Function derivative(const std::vector<casadi_int>& orders,
+            const std::vector< casadi_int >& arg_ind) const;
 
-        virtual Function antiderivative(const std::vector<int>& orders,
-                const std::vector< int >& arg_ind) const;
+        virtual Function antiderivative(const std::vector<casadi_int>& orders,
+                const std::vector< casadi_int >& arg_ind) const;
 
         virtual std::vector<spline::Function> jacobian() const;
         virtual std::vector<std::vector<spline::Function> > hessian() const;

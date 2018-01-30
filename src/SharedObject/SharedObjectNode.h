@@ -3,6 +3,8 @@
 
 #include <string>
 #include "PrintableObject.h"
+#include "../common.h"
+
 
 namespace spline {
 
@@ -33,7 +35,7 @@ public:
         const T shared_from_this() const;
 
 private:
-    int count_;
+    casadi_int count_;
 };
 
 template<class T>

@@ -10,7 +10,7 @@ namespace spline {
     }
     MonomialBasisNode* MonomialBasis::operator->() const { return get(); }
 
-    MonomialBasis::MonomialBasis(int degree)  {
+    MonomialBasis::MonomialBasis(casadi_int degree)  {
         assign_node(new MonomialBasisNode(degree));
     }
 }  // namespace spline

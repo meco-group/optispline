@@ -60,16 +60,16 @@ namespace spline {
 
             virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const ;
 
-            virtual int dimension() const {return 0;};  // Number of basis functions in the basis
-            virtual int n_inputs() const {return 0;};  // Number of inputs of the basis
+            virtual casadi_int dimension() const {return 0;};  // Number of basis functions in the basis
+            virtual casadi_int n_inputs() const {return 0;};  // Number of inputs of the basis
 
-            virtual Basis derivative(int order, AnyTensor& T) const;
-            virtual Basis antiderivative(int order, AnyTensor& T) const;
+            virtual Basis derivative(casadi_int order, AnyTensor& T) const;
+            virtual Basis antiderivative(casadi_int order, AnyTensor& T) const;
             virtual AnyTensor integral(const Domain& domain) const;
 
             virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const;
-            virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const;
-            virtual Basis degree_elevation(int elevation, AnyTensor& T) const;
+            virtual Basis midpoint_refinement(casadi_int refinement, AnyTensor& T) const;
+            virtual Basis degree_elevation(casadi_int elevation, AnyTensor& T) const;
             virtual Basis kick_boundary(const Domain& boundary, AnyTensor& T) const;
 
             AnyTensor project_to(const Basis& b) const ;

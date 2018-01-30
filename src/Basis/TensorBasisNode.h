@@ -29,17 +29,17 @@ class TensorBasisNode : public SharedObjectNode {
         virtual std::string type() const;
         virtual std::string to_string() const override;
 
-        virtual int n_basis() const;
-        virtual std::vector<int> dimension() const;
-        virtual int n_inputs() const;
-        std::vector< int > n_inputs_list() const;
+        virtual casadi_int n_basis() const;
+        virtual std::vector<casadi_int> dimension() const;
+        virtual casadi_int n_inputs() const;
+        std::vector< casadi_int > n_inputs_list() const;
 
         std::vector< std::string > arguments() const;
         std::vector<Argument> arguments_temp() const;
 
-        std::string argument(int index) const;
-        int index_argument(const Argument& a) const;
-        int indexArgument(const std::string& a) const;
+        std::string argument(casadi_int index) const;
+        casadi_int index_argument(const Argument& a) const;
+        casadi_int indexArgument(const std::string& a) const;
 
         bool hasArguments() const;
         bool valid_argument(const Argument& a) const;
@@ -48,7 +48,7 @@ class TensorBasisNode : public SharedObjectNode {
         TensorDomain domain() const;
 
         std::vector< Basis > bases() const;
-        TensorBasis bases(int index) const;
+        TensorBasis bases(casadi_int index) const;
         Basis basis() const;
         Basis basis(const std::string& a) const;
         virtual Basis basis(const Argument& index) const;
@@ -63,24 +63,24 @@ class TensorBasisNode : public SharedObjectNode {
         virtual TensorBasis operator+(const TensorBasis& rhs) const;
         virtual TensorBasis operator*(const TensorBasis& rhs) const;
 
-        virtual AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< int >& arg_ind, bool reorder_output) const;
+        virtual AnyTensor operator()(const std::vector< AnyScalar >& x, const std::vector< casadi_int >& arg_ind, bool reorder_output) const;
 
-        virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< int >& arg_ind, bool reorder_output) const;
+        virtual AnyTensor grid_eval(const std::vector< AnyTensor >& x, const std::vector< casadi_int >& arg_ind, bool reorder_output) const;
         virtual std::vector< AnyTensor >  evaluation_grid() const;
 
         virtual bool operator==(const TensorBasis& rhs) const;
 
-        int totalNumberBasisFunctions() const;
+        casadi_int totalNumberBasisFunctions() const;
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
         TensorBasis insert_knots(const std::vector<AnyVector> & new_knots,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
-        TensorBasis midpoint_refinement(const std::vector<int> & refinement,
+        TensorBasis midpoint_refinement(const std::vector<casadi_int> & refinement,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
 
-        TensorBasis derivative(const std::vector<int>& orders,
-            const std::vector<int>& arg_ind, std::vector<AnyTensor>& T) const;
-        TensorBasis antiderivative(const std::vector<int>& orders,
+        TensorBasis derivative(const std::vector<casadi_int>& orders,
+            const std::vector<casadi_int>& arg_ind, std::vector<AnyTensor>& T) const;
+        TensorBasis antiderivative(const std::vector<casadi_int>& orders,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const;
         std::vector<AnyTensor> integral(const TensorDomain& domain) const;
         TensorBasis partial_integral(const TensorDomain& domain,
@@ -88,7 +88,7 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis partial_integral(const TensorDomain& domain,
             const std::vector<std::string>& args, std::vector<AnyTensor>& T) const;
 
-        TensorBasis degree_elevation(const std::vector<int>& elevation,
+        TensorBasis degree_elevation(const std::vector<casadi_int>& elevation,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor> & T) const;
 
         TensorBasis kick_boundary(const TensorDomain& boundary,
@@ -100,8 +100,8 @@ class TensorBasisNode : public SharedObjectNode {
         TensorBasis transform_to(const TensorBasis& b, std::vector<AnyTensor>& T) const;
         spline::Function basis_functions() const ;
 
-        virtual std::vector< int > get_permutation(const TensorBasis& grid) const;
-        std::vector< int > input_border() const;
+        virtual std::vector< casadi_int > get_permutation(const TensorBasis& grid) const;
+        std::vector< casadi_int > input_border() const;
     // protected:
         std::vector< Basis > bases_;
         std::vector< std::string > allArguments;

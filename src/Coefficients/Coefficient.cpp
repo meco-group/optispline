@@ -19,12 +19,12 @@ namespace spline {
     }
 
     CoefficientNode::CoefficientNode(const std::vector< double >& v) :
-        data_(DT(v, std::vector<int>{static_cast<int>(v.size()), 1, 1})) {
+        data_(DT(v, std::vector<casadi_int>{static_cast<casadi_int>(v.size()), 1, 1})) {
     }
 
-    std::vector< int > Coefficient::dimension() const { return (*this)->dimension(); }
-    std::vector< int > CoefficientNode::dimension() const {
-        std::vector< int > dims_ = data_.dims();
+    std::vector< casadi_int > Coefficient::dimension() const { return (*this)->dimension(); }
+    std::vector< casadi_int > CoefficientNode::dimension() const {
+        std::vector< casadi_int > dims_ = data_.dims();
         for (size_t i=0; i<2; i++) {
             dims_.pop_back();
         }
@@ -44,10 +44,10 @@ namespace spline {
         shape_str += std::to_string(shape()[1]);
         shape_str += "]";
 
-        std::vector<int> dims = dimension();
+        std::vector<casadi_int> dims = dimension();
         std::string dim_str;
         dim_str += "[";
-        for (int i = 0; i<dims.size(); i++){
+        for (casadi_int i = 0; i<dims.size(); i++){
             dim_str += std::to_string(dims[i]);
             dim_str += ",";
         }
@@ -57,18 +57,18 @@ namespace spline {
                 shape_str + ", of dimension " + dim_str;
     }
 
-    std::vector< int > Coefficient::shape() const { return (*this)->shape(); }
-    std::vector< int > CoefficientNode::shape() const {
-        std::vector< int > dims = data_.dims();
-        int d = dims.size();
-        int i = dims[d-2];
-        int j = dims[d-1];
+    std::vector< casadi_int > Coefficient::shape() const { return (*this)->shape(); }
+    std::vector< casadi_int > CoefficientNode::shape() const {
+        std::vector< casadi_int > dims = data_.dims();
+        casadi_int d = dims.size();
+        casadi_int i = dims[d-2];
+        casadi_int j = dims[d-1];
         return {i, j};
     }
 
-    int Coefficient::n_coeff() const { return (*this)->n_coeff(); }
-    int CoefficientNode::n_coeff() const {
-        return spline::product(dimension());
+    casadi_int Coefficient::n_coeff() const { return (*this)->n_coeff(); }
+    casadi_int CoefficientNode::n_coeff() const {
+        return casadi::product(dimension());
     }
 
     Coefficient Coefficient::operator-() const {
@@ -77,7 +77,7 @@ namespace spline {
     AnyTensor Coefficient::data() const  { return (*this)->data(); }
 
     AnyTensor Coefficient::transform(const AnyTensor& T) const {
-        std::vector< int > direction = casadi::range((int)T.n_dims()/2);
+        std::vector< casadi_int > direction = casadi::range((casadi_int)T.n_dims()/2);
         return (*this)->transform(T, direction);
     }
 
@@ -87,17 +87,17 @@ namespace spline {
 
     AnyTensor CoefficientNode::transform(const AnyTensor& T, const NumericIndexVector& direction) const {
         //check dimensions
-        int n = T.n_dims()/2;
+        casadi_int n = T.n_dims()/2;
         spline_assert_message(T.n_dims()%2 == 0, "The transform tensor should have an even number of dimensions");
         spline_assert_message(n == direction.size(), "Number of directions does not match the number of dimensions.");
         //do einstein
-        std::vector< int > index_t = mrange(2*n);
-        std::vector< int > index_c = mrange(2*n, 2*n+data().n_dims());
-        std::vector< int > index_r = mrange(0, 2*n+data().n_dims());
+        std::vector< casadi_int > index_t = mrange(2*n);
+        std::vector< casadi_int > index_c = mrange(2*n, 2*n+data().n_dims());
+        std::vector< casadi_int > index_r = mrange(0, 2*n+data().n_dims());
         index_r.erase(index_r.begin()+n, index_r.begin()+2*n);
 
         //scramble indices
-        for (int i = 0; i < direction.size(); i++) {
+        for (casadi_int i = 0; i < direction.size(); i++) {
             spline_assert_message(direction[i] < n, "Direction of the transform should be smaller than the transform dimension/2");
             spline_assert_message(T.dims()[n+i] == dimension()[direction[i]], "Transformation matrix dimensions mismatch. For direction " << direction[i] << ": " << T.dims()[n+i] << " is not equal to " << dimension()[direction[i]] << ".");
 
@@ -133,7 +133,7 @@ namespace spline {
           ret_data = MT(s, ret_data.dims());
         }
 
-        for (int k=0; k<T.size(); k++) {
+        for (casadi_int k=0; k<T.size(); k++) {
             // check dimension of transformation matrix
             spline_assert_message(T[k].n_dims()==2,
               "Transformation matrix should have 2 dimensions. It has " <<
@@ -158,12 +158,12 @@ namespace spline {
       return flat.index({k, -1, -1});
     }
 
-    Coefficient Coefficient::add_trival_dimension(int extra_dims) const {
+    Coefficient Coefficient::add_trival_dimension(casadi_int extra_dims) const {
         return (*this)->add_trival_dimension(extra_dims);
     }
-    Coefficient CoefficientNode::add_trival_dimension(int extra_dims) const {
-        std::vector< int > dims_ = data_.dims();
-        for (int i = 0; i < extra_dims; i++) {
+    Coefficient CoefficientNode::add_trival_dimension(casadi_int extra_dims) const {
+        std::vector< casadi_int > dims_ = data_.dims();
+        for (casadi_int i = 0; i < extra_dims; i++) {
             dims_.push_back(1);
         }
         return data().shape(dims_);
@@ -173,8 +173,8 @@ namespace spline {
         return (*this)->transpose();
     }
     Coefficient CoefficientNode::transpose() const {
-        std::vector< int > order = std::vector< int >(data().n_dims(), 0);
-        for (int i=1; i<order.size(); i++) {
+        std::vector< casadi_int > order = std::vector< casadi_int >(data().n_dims(), 0);
+        for (casadi_int i=1; i<order.size(); i++) {
             order[i] = i;
         }
         order[order.size()-2] = order.size()-1;
@@ -187,10 +187,10 @@ namespace spline {
         return (*this)->rm_direction(indices);
     }
     Coefficient CoefficientNode::rm_direction(const std::vector<NumericIndex>& indices) const {
-        std::vector< int > dims = data_.dims();
-        std::vector< int > new_dims;
-        int j;
-        for (int i=0; i<dims.size(); i++) {
+        std::vector< casadi_int > dims = data_.dims();
+        std::vector< casadi_int > new_dims;
+        casadi_int j;
+        for (casadi_int i=0; i<dims.size(); i++) {
             for (j=0; j<indices.size(); j++) {
                 if (i == indices[j]) {
                     break;
@@ -210,7 +210,7 @@ namespace spline {
           const std::vector< Coefficient >& coefs) {
         Coefficient c = coefs[0];
         std::vector< AnyTensor > all_tensor = {};
-        for (int i = 0; i< coefs.size(); i++) {
+        for (casadi_int i = 0; i< coefs.size(); i++) {
             tensor_assert_message(c.shape()[1-index] == coefs[i].shape()[1-index],
               "cat has mismatched coefficients" << c.shape()[1-index] <<
               " != " << coefs[i].shape()[1-index] << ".");
@@ -219,13 +219,13 @@ namespace spline {
        return AnyTensor::concat(all_tensor, c.dimension().size() + index);
     }
 
-    Coefficient Coefficient::reshape(const std::vector< int >& shape) const {
+    Coefficient Coefficient::reshape(const std::vector< casadi_int >& shape) const {
         return (*this)->reshape(shape);
     }
 
-    Coefficient CoefficientNode::reshape(const std::vector< int >& shape) const {
+    Coefficient CoefficientNode::reshape(const std::vector< casadi_int >& shape) const {
         spline_assert(shape.size() > 0);
-        std::vector< int > shape_ = dimension();
+        std::vector< casadi_int > shape_ = dimension();
         shape_.insert(shape_.end(), shape.begin(), shape.end());
 
         return Coefficient(data().shape(shape_));
@@ -235,7 +235,7 @@ namespace spline {
         return (*this)->trace();
     }
 
-    Coefficient Coefficient::sum(int axis) const {
+    Coefficient Coefficient::sum(casadi_int axis) const {
         return (*this)->sum(axis);
     }
 
@@ -247,14 +247,14 @@ namespace spline {
         spline_assert_message(shape()[0] == shape()[1],
                 "Trace only defined for square matrices. Dimensions are " << shape() << ".");
         AnyTensor ones = Tensor<casadi::DM>(casadi::DM::eye(shape()[0]), shape());
-        int d = dimension().size();
-        std::vector< int > a = mrange(d + 2);
-        std::vector< int > b = {a[d], a[d+1]};
-        std::vector< int > c = mrange(d);
+        casadi_int d = dimension().size();
+        std::vector< casadi_int > a = mrange(d + 2);
+        std::vector< casadi_int > b = {a[d], a[d+1]};
+        std::vector< casadi_int > c = mrange(d);
         return data().einstein(ones,a,b,c);
     }
-    Coefficient CoefficientNode::sum(int axis) const {
-        std::vector<int> dim = data().dims();
+    Coefficient CoefficientNode::sum(casadi_int axis) const {
+        std::vector<casadi_int> dim = data().dims();
         dim[axis+dimension().size()] = 1;
         return data().sum(axis+dimension().size()).shape(dim);
     }

@@ -13,43 +13,43 @@ namespace casadi {
 
     class BSplineEvaluator : public casadi::Callback {
         public:
-            BSplineEvaluator(int n_knots, int degree);
+            BSplineEvaluator(casadi_int n_knots, casadi_int degree);
 
             /** \brief  Destructor */
             ~BSplineEvaluator() override {};
 
             ///@{
             /** \brief Number of function inputs and outputs */
-            int get_n_in() override;
-            int get_n_out() override;
+            casadi_int get_n_in() override;
+            casadi_int get_n_out() override;
             ///@}
 
             /// @{
             /** \brief Sparsities of function inputs and outputs */
-            Sparsity get_sparsity_in(int i) override;
-            Sparsity get_sparsity_out(int i) override;
+            Sparsity get_sparsity_in(casadi_int i) override;
+            Sparsity get_sparsity_out(casadi_int i) override;
             /// @}
 
             /** \brief  Initialize */
             void init() override;
 
             /** \brief  Evaluate numerically, work vectors given */
-            int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override;
+            int eval(const double** arg, double** res, casadi_int* iw, double* w, void* mem) const override;
 
-            int eval_sx(const SXElem** arg, SXElem** res, int* iw, SXElem* w, void* mem) const override;
+            int eval_sx(const SXElem** arg, SXElem** res, casadi_int* iw, SXElem* w, void* mem) const override;
 
             template<class T>
-                void eval_generic(void* mem, const T** arg, T** res, int* iw, T* w) const {
+                void eval_generic(void* mem, const T** arg, T** res, casadi_int* iw, T* w) const {
                     T x = arg[1][0];
                     const T* knots= arg[0];
 
-                    int length = n_knots_ - degree_ - 1;
+                    casadi_int length = n_knots_ - degree_ - 1;
 
                     T *temp = w;
 
-                    int n1 = n_knots_-1;
+                    casadi_int n1 = n_knots_-1;
 
-                    for (int i=0; i<(n_knots_-1); i++) {
+                    for (casadi_int i=0; i<(n_knots_-1); i++) {
                         if ((i < degree_+1) && casadi_limits<T>::is_zero(knots[0]-knots[i])) {
                             temp[i] = ((x >= knots[i]) && (x <= knots[i+1]));
                         } else {
@@ -57,9 +57,9 @@ namespace casadi {
                         }
                     }
 
-                    for (int d=1; d<(degree_+1); d++) {
-                        int offset = (d-1)*n1;
-                        for (int i=0; i < length; i++) {
+                    for (casadi_int d=1; d<(degree_+1); d++) {
+                        casadi_int offset = (d-1)*n1;
+                        for (casadi_int i=0; i < length; i++) {
                             T b = 0;
                             T bottom = knots[i+d] - knots[i];
                             if (!casadi_limits<T>::is_zero(bottom)) {
@@ -81,11 +81,11 @@ namespace casadi {
                     const std::vector<std::string>& onames,
                     const Dict& opts) const override;
 
-            int n_knots_;
-            int degree_;
+            casadi_int n_knots_;
+            casadi_int degree_;
 
 
-            static BSplineEvaluator& construct_cached(int n_knots, int degree);
+            static BSplineEvaluator& construct_cached(casadi_int n_knots, casadi_int degree);
     };
 
 }
@@ -98,7 +98,7 @@ namespace spline{
     class BSplineBasisNode : public UnivariateBasisNode {
 
         public:
-            BSplineBasisNode(const std::vector<AnyScalar>& knots, int degree);
+            BSplineBasisNode(const std::vector<AnyScalar>& knots, casadi_int degree);
 
             virtual std::string type() const override {return "BSplineBasis";}
             virtual std::string to_string() const override;
@@ -125,18 +125,18 @@ namespace spline{
 
             virtual AnyTensor const_coeff_tensor(const AnyTensor& t) const override ;
 
-            virtual int dimension() const override;
+            virtual casadi_int dimension() const override;
 
             AnyTensor basis_evaluation(const std::vector<AnyScalar> & x ) const;
 
             virtual AnyTensor evaluation_grid() const override;
 
-            virtual Basis derivative(int order, AnyTensor& T) const override;
-            virtual Basis antiderivative(int order, AnyTensor& T) const override;
+            virtual Basis derivative(casadi_int order, AnyTensor& T) const override;
+            virtual Basis antiderivative(casadi_int order, AnyTensor& T) const override;
             virtual AnyTensor integral(const Interval& domain) const override;
             virtual Basis insert_knots(const AnyVector & new_knots, AnyTensor & T) const override;
-            virtual Basis midpoint_refinement(int refinement, AnyTensor& T) const override;
-            virtual Basis degree_elevation(int elevation, AnyTensor& T) const override;
+            virtual Basis midpoint_refinement(casadi_int refinement, AnyTensor& T) const override;
+            virtual Basis degree_elevation(casadi_int elevation, AnyTensor& T) const override;
             virtual Basis kick_boundary(const Interval& boundary, AnyTensor& T) const override;
 
         private:

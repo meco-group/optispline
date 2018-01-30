@@ -48,22 +48,22 @@ namespace spline {
         AnyTensor evaluation_grid() const;
 
         Basis insert_knots(const AnyVector & new_knots, AnyTensor & SWIG_OUTPUT(T)) const;
-        Basis midpoint_refinement(int refinement, AnyTensor& SWIG_OUTPUT(T)) const;
-        Basis degree_elevation(int elevation, AnyTensor& SWIG_OUTPUT(T)) const;
+        Basis midpoint_refinement(casadi_int refinement, AnyTensor& SWIG_OUTPUT(T)) const;
+        Basis degree_elevation(casadi_int elevation, AnyTensor& SWIG_OUTPUT(T)) const;
         Basis kick_boundary(const Domain& boundary, AnyTensor& SWIG_OUTPUT(T)) const;
 
         AnyTensor project_to(const Basis& b) const ;
         Basis transform_to(const Basis& b, AnyTensor& SWIG_OUTPUT(T)) const ;
         spline::Function basis_functions() const;
 
-        int dimension() const;
-        int n_inputs() const;
+        casadi_int dimension() const;
+        casadi_int n_inputs() const;
 
         Basis derivative(AnyTensor& SWIG_OUTPUT(T)) const;  // default order = 1
-        Basis derivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
+        Basis derivative(casadi_int order, AnyTensor& SWIG_OUTPUT(T)) const;
 
         Basis antiderivative(AnyTensor& SWIG_OUTPUT(T)) const;  // default order = 1
-        Basis antiderivative(int order, AnyTensor& SWIG_OUTPUT(T)) const;
+        Basis antiderivative(casadi_int order, AnyTensor& SWIG_OUTPUT(T)) const;
 
         AnyTensor integral(const Domain& domain) const;
 

@@ -334,7 +334,7 @@ using namespace spline;
 
       // Integer scalar
       {
-        int tmp;
+        casadi_int tmp;
         if (to_val(p, &tmp)) {
           if (m) **m=tmp;
           return true;
@@ -391,7 +391,7 @@ using namespace spline;
       }
       return false;
     }
-    
+
 #ifdef SWIGPYTHON
     GUESTOBJECT* full(const DT& m, bool simplify=false) {
       PyObject *p = from_ptr(&m);
@@ -420,11 +420,11 @@ using namespace spline;
         if (m) {
           std::vector<double> data;
           if (!to_val(PyTuple_GetItem(cr, 1), &data)) return false;
-          std::vector<int> dim;
+          std::vector<casadi_int> dim;
           if (!to_val(PyTuple_GetItem(cr, 0), &dim)) return false;
-          std::vector<int> dim_rev = dim;
+          std::vector<casadi_int> dim_rev = dim;
           std::reverse(dim_rev.begin(), dim_rev.end());
-          std::vector<int> order_rev = range(dim.size());
+          std::vector<casadi_int> order_rev = range(dim.size());
           std::reverse(order_rev.begin(), order_rev.end());
           **m = DT(data, dim_rev).reorder_dims(order_rev);
         }
@@ -444,9 +444,9 @@ using namespace spline;
       #ifdef SWIGMATLAB
       if (mxIsDouble(p) && !mxIsSparse(p)) {
         if (m) {
-          int n_dims = mxGetNumberOfDimensions(p);
+          casadi_int n_dims = mxGetNumberOfDimensions(p);
           const size_t* p_dim = static_cast<const size_t*>(mxGetDimensions(p));
-          std::vector<int> dim(p_dim, p_dim+n_dims);
+          std::vector<casadi_int> dim(p_dim, p_dim+n_dims);
           double* p_data = static_cast<double*>(mxGetData(p));
           std::vector<double> data(p_data, p_data+product(dim));
           **m = DT(data, dim);
@@ -456,7 +456,7 @@ using namespace spline;
       #else
       #endif // SWIGMATLAB
       #ifdef SWIGPYTHON
-      
+
       if (DT_from_array(p, m)) return true;
       #endif
 
@@ -593,6 +593,8 @@ using namespace spline;
       // Treat Null
       if (is_null(p)) return false;
 
+ uout() << "hey" << std::endl;
+
       if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
                                     $descriptor(AnySlice*), 0))) {
         return true;
@@ -623,13 +625,17 @@ using namespace spline;
       // Python slice
       if (PySlice_Check(p)) {
         PySliceObject *r = (PySliceObject*)(p);
+uout() << "PyNumber_AsSsize_t(r->start, NULL) " << PyNumber_AsSsize_t(r->start, NULL)  << std::endl;
+uout() << "PyNumber_AsSsize_t(r->start, NULL) " << PyNumber_AsSsize_t(r->stop, NULL)  << std::endl;
+uout() << " " << PyInt_AsLong(r->step) << std::endl;
         if (m) {
-          int start = (r->start == Py_None || PyNumber_AsSsize_t(r->start, NULL) <= std::numeric_limits<int>::min())
+          casadi_int start = (r->start == Py_None || PyNumber_AsSsize_t(r->start, NULL) <= std::numeric_limits<int>::min())
             ? std::numeric_limits<int>::min() : PyInt_AsLong(r->start);
-          int stop = (r->stop ==Py_None || PyNumber_AsSsize_t(r->stop, NULL)>= std::numeric_limits<int>::max())
+          casadi_int stop = (r->stop ==Py_None || PyNumber_AsSsize_t(r->stop, NULL)>= std::numeric_limits<int>::max())
             ? std::numeric_limits<int>::max() : PyInt_AsLong(r->stop);
-          int step = (r->step !=Py_None)? PyInt_AsLong(r->step) : 1;
+          casadi_int step = (r->step !=Py_None)? PyInt_AsLong(r->step) : 1;
 
+          uout() << start << ":" << stop << ":" << step <<std::endl;
           **m = AnySlice(start, stop, step);
         }
         return true;
@@ -656,10 +662,10 @@ using namespace spline;
         return true;
       }
       {
-        std::vector<int> tmp;
+        std::vector<casadi_int> tmp;
         if (to_val(p, &tmp)) {
 #ifdef SWIGMATLAB
-          for (int i=0;i<tmp.size();++i) tmp[i]-=1;
+          for (casadi_int i=0;i<tmp.size();++i) tmp[i]-=1;
 #endif
           if (m) **m = Argument::from_vector(tmp);
           return true;
@@ -699,7 +705,7 @@ using namespace spline;
       }
       // Integer scalar
       {
-        int tmp;
+        casadi_int tmp;
         if (to_val(p, &tmp)) {
 #ifdef SWIGMATLAB
           if (m) **m=tmp-1;
@@ -791,10 +797,10 @@ using namespace spline;
       if (a->is_DT()) {
         DT temp = static_cast<DT>(*a);
 #if SWIGMATLAB
-        int n_dim = temp.n_dims();
+        casadi_int n_dim = temp.n_dims();
         if (n_dim==0) return mxCreateDoubleScalar(static_cast<double>(temp.data()));
         std::vector<size_t> dim(n_dim);
-        std::vector<int> dims = temp.dims();
+        std::vector<casadi_int> dims = temp.dims();
         std::copy(dims.begin(), dims.end(), dim.begin());
         mxArray *p  = mxCreateNumericArray(n_dim, get_ptr(dim), mxDOUBLE_CLASS, mxREAL);
         spline_assert(p);
@@ -830,7 +836,7 @@ using namespace spline;
 #endif // SWIGPYTHON
       return 0;
     }
-    
+
     GUESTOBJECT* from_ptr(const DT *a) {
       return SWIG_NewPointerObj(new DT(*a), $descriptor(Tensor< casadi::Matrix<double> > *), SWIG_POINTER_OWN);
     }
@@ -1203,7 +1209,7 @@ namespace spline {
         ind = size(self, i);
       end
     end
-    
+
     function self = subsasgn(self,varargin)
         error('Not supported: subsasgn');
     end
@@ -1303,7 +1309,7 @@ namespace spline {
 #ifdef SWIGPYTHON
 %extend Tensor<DM> {
   %pythoncode %{
-  
+
     def toarray(self,simplify=False):
       import numpy as np
       if simplify:
@@ -1371,7 +1377,7 @@ namespace spline {
     AnyTensor spline_times(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs*rhs; }
     AnyTensor spline_mtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return lhs.mtimes(rhs); }
     AnyTensor spline_rmtimes(const AnyTensor& lhs, const AnyTensor& rhs) { return rhs.mtimes(lhs); }
-    Function spline_power(const Function& lhs, int rhs) { return lhs.pow(rhs); }
+    Function spline_power(const Function& lhs, casadi_int rhs) { return lhs.pow(rhs); }
     Function spline_plus(const Function& lhs, const Function& rhs) { return lhs+rhs; }
     Function spline_minus(const Function& lhs, const Function& rhs) { return lhs-rhs; }
     Function spline_times(const Function& lhs, const Function& rhs) { return lhs*rhs; }
@@ -1416,8 +1422,8 @@ namespace spline {
     static Function times(const Function& lhs, const Function& rhs) { return lhs*rhs; }
     static Function mtimes(const Function& lhs, const Function& rhs) { return lhs.mtimes(rhs); }
     static Function rmtimes(const Function& lhs, const Function& rhs) { return rhs.mtimes(lhs); }
-    static Function power(const Function& lhs, int rhs) { return lhs.pow(rhs); }
-    static Function mpower(const Function& lhs, int rhs) { spline_assert(lhs.is_scalar()); return lhs.pow(rhs); }
+    static Function power(const Function& lhs, casadi_int rhs) { return lhs.pow(rhs); }
+    static Function mpower(const Function& lhs, casadi_int rhs) { spline_assert(lhs.is_scalar()); return lhs.pow(rhs); }
     static Function plus(const Function& lhs, const AnyTensor& rhs) { return lhs+rhs; }
     static Function minus(const Function& lhs, const AnyTensor& rhs) { return lhs-rhs; }
     static Function times(const Function& lhs, const AnyTensor& rhs) { return lhs*rhs; }
@@ -1459,7 +1465,6 @@ namespace spline {
 
 #ifdef WINMAT64
 %begin %{
-#define UINT64_T unsigned long long int
+#define UINT64_T unsigned long long casadi_int
 %}
 #endif
-

@@ -50,18 +50,18 @@ namespace spline {
         assign_node(new TensorBasisNode(bases_, args));
     }
 
-    int TensorBasis::n_basis() const { return (*this)->n_basis(); }
+    casadi_int TensorBasis::n_basis() const { return (*this)->n_basis(); }
     std::vector< std::string > TensorBasis::arguments() const {
         return (*this)->arguments();
     }
     std::vector<Argument> TensorBasis::arguments_temp() const {
         return (*this)->arguments_temp();
     }
-    std::string TensorBasis::argument(int index) const {
+    std::string TensorBasis::argument(casadi_int index) const {
         return (*this)->argument(index);
     }
-    int TensorBasis::index_argument(const Argument& a) const { return (*this)->index_argument(a); }
-    int TensorBasis::indexArgument(const std::string& a) const { return (*this)->indexArgument(a); }
+    casadi_int TensorBasis::index_argument(const Argument& a) const { return (*this)->index_argument(a); }
+    casadi_int TensorBasis::indexArgument(const std::string& a) const { return (*this)->indexArgument(a); }
     bool TensorBasis::valid_argument_list(const std::vector<Argument>& args) const { return (*this)->valid_argument_list(args);}
     bool TensorBasis::valid_argument(const Argument& a) const{ return (*this)->valid_argument(a);}
     bool TensorBasis::hasArguments() const { return (*this)->hasArguments();}
@@ -86,7 +86,7 @@ namespace spline {
         return (*this)->substitute_bases(indices, bases);
     }
 
-    std::vector<int> TensorBasis::dimension() const { return (*this)->dimension ();}
+    std::vector<casadi_int> TensorBasis::dimension() const { return (*this)->dimension ();}
     TensorDomain TensorBasis::domain() const { return (*this)->domain(); }
 
     std::string TensorBasis::type() const { return (*this)->type() ;}
@@ -124,13 +124,13 @@ namespace spline {
         if(this->get() == rhs.get()) return true;
         return (*this)->operator==(rhs);
     }
-    int TensorBasis::totalNumberBasisFunctions() const {
+    casadi_int TensorBasis::totalNumberBasisFunctions() const {
         return (*this)->totalNumberBasisFunctions();
     }
-    int TensorBasis::n_inputs() const {
+    casadi_int TensorBasis::n_inputs() const {
         return (*this)->n_inputs();
     }
-    std::vector< int > TensorBasis::n_inputs_list() const {
+    std::vector< casadi_int > TensorBasis::n_inputs_list() const {
         return (*this)->n_inputs_list();
     }
     AnyTensor TensorBasis::const_coeff_tensor(const AnyTensor& t) const {
@@ -141,12 +141,12 @@ namespace spline {
         return (*this)->insert_knots(new_knots, Argument::concrete(args, arguments()), T);
     }
 
-    TensorBasis TensorBasis::midpoint_refinement(const std::vector<int> & refinement,
+    TensorBasis TensorBasis::midpoint_refinement(const std::vector<casadi_int> & refinement,
             const std::vector<Argument>& args, std::vector<AnyTensor> & T) const {
         return (*this)->midpoint_refinement(refinement, Argument::concrete(args, arguments()), T);
     }
 
-    TensorBasis TensorBasis::degree_elevation(const std::vector<int>& elevation,
+    TensorBasis TensorBasis::degree_elevation(const std::vector<casadi_int>& elevation,
             const std::vector<Argument>& args, std::vector<AnyTensor> & T) const {
         return (*this)->degree_elevation(elevation, Argument::concrete(args, arguments()), T);
     }
@@ -163,20 +163,20 @@ namespace spline {
 
     TensorBasis TensorBasis::derivative(const std::vector<Argument>& arg,
             std::vector<AnyTensor>& T) const {
-        return (*this)->derivative(std::vector<int>(1, arg.size()), Argument::concrete(arg, arguments()), T);
+        return (*this)->derivative(std::vector<casadi_int>(1, arg.size()), Argument::concrete(arg, arguments()), T);
     }
 
-    TensorBasis TensorBasis::derivative(const std::vector<int>& order,
+    TensorBasis TensorBasis::derivative(const std::vector<casadi_int>& order,
             const std::vector<Argument>& arg, std::vector<AnyTensor>& T) const {
         return (*this)->derivative(order, Argument::concrete(arg, arguments()), T);
     }
 
     TensorBasis TensorBasis::antiderivative(const std::vector<Argument>& arg,
             std::vector<AnyTensor>& T) const {
-        return (*this)->antiderivative(std::vector<int>(1, arg.size()), Argument::concrete(arg, arguments()), T);
+        return (*this)->antiderivative(std::vector<casadi_int>(1, arg.size()), Argument::concrete(arg, arguments()), T);
     }
 
-    TensorBasis TensorBasis::antiderivative(const std::vector<int>& order,
+    TensorBasis TensorBasis::antiderivative(const std::vector<casadi_int>& order,
             const std::vector<Argument>& arg, std::vector<AnyTensor>& T) const {
         return (*this)->antiderivative(order, Argument::concrete(arg, arguments()), T);
     }
@@ -207,11 +207,11 @@ namespace spline {
         return (*this)->transform_to(b, T);
     }
 
-    std::vector< int > TensorBasis::get_permutation(const TensorBasis& grid) const{
+    std::vector< casadi_int > TensorBasis::get_permutation(const TensorBasis& grid) const{
         return (*this)->get_permutation(grid);
     }
 
-    std::vector<int> TensorBasis::vectorize(const Argument& arg) const{
+    std::vector<casadi_int> TensorBasis::vectorize(const Argument& arg) const{
         if(arg.is_all()){
             return casadi::range(n_basis());
         } else {
