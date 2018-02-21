@@ -20,8 +20,8 @@ classdef OptiSplineYalmipInterface < handle
         self.use_optimize = false;
       end
       function [out] = yalmip_expr_primitive( opti, vars, expr, args )
-      
-          name = 'yalmip_helper';
+          [~,name,~] = fileparts(tempname);
+          name = ['yalmip_helper_' name];
           if opti.verbose
             disp('  Create MX graph')
           end
