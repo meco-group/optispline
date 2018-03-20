@@ -469,17 +469,8 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
       tensor_assert(occ);
     }
 
-    casadi_int N = numel();
-    std::vector<casadi_int> mapping(N);
-
+    std::vector<casadi_int> mapping = casadi::tensor_permute_mapping(dims_, order);
     std::vector<casadi_int> new_dims = reorder(dims_, order);
-
-    for (casadi_int i=0;i<N;i++) {
-      std::vector<casadi_int> slice_indices = sub2ind(dims_, i);
-      std::vector<casadi_int> new_indices = reorder(slice_indices, order);
-      casadi_int j = ind2sub(new_dims, new_indices);
-      mapping[j] = i;
-    }
 
     return Tensor(data_.nz(mapping), new_dims);
   }

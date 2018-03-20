@@ -598,6 +598,7 @@ class Uniquifier : public casadi::Callback {
 } // namespace casadi
 
 AnyVector AnyVector::sort(bool ascending) const {
+  if (is_ST()) return *this;
   tensor_assert(!is_ST());
 
   casadi::Sorter& sorter = casadi::Sorter::construct_cached(dims()[0], ascending);
