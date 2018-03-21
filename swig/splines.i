@@ -593,8 +593,6 @@ using namespace spline;
       // Treat Null
       if (is_null(p)) return false;
 
- uout() << "hey" << std::endl;
-
       if (SWIG_IsOK(SWIG_ConvertPtr(p, reinterpret_cast<void**>(m),
                                     $descriptor(AnySlice*), 0))) {
         return true;
@@ -635,7 +633,6 @@ uout() << " " << PyInt_AsLong(r->step) << std::endl;
             ? std::numeric_limits<int>::max() : PyInt_AsLong(r->stop);
           casadi_int step = (r->step !=Py_None)? PyInt_AsLong(r->step) : 1;
 
-          uout() << start << ":" << stop << ":" << step <<std::endl;
           **m = AnySlice(start, stop, step);
         }
         return true;

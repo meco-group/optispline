@@ -256,7 +256,6 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
 #endif //SWIG
 
   Tensor get_slice(const AnySlice& i) {
-    casadi::uout() << "hey" << std::endl;
     casadi_int n = dims()[n_dims()-2];
     casadi_int m = dims()[n_dims()-1];
     tensor_assert(n==1 || m==1);
@@ -293,7 +292,6 @@ class Tensor : public spline::PrintableObject< Tensor<T> > {
   }
 
   Tensor get_slice(const AnySlice& i, const AnySlice& j) {
-    casadi::uout() << "hey1" << std::endl;
     casadi_int n = dims()[n_dims()-2];
     casadi_int m = dims()[n_dims()-1];
 
