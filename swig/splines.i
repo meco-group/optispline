@@ -1462,6 +1462,6 @@ namespace spline {
 
 #ifdef WINMAT64
 %begin %{
-#define UINT64_T unsigned long long casadi_int
+#define UINT64_T unsigned long long int
 %}
 #endif
