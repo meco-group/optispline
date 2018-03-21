@@ -27,7 +27,7 @@ before_script:
     - mkdir build
     - echo $CASADI_PREFIX
     - sudo apt-get install -y xvfb
-    - Xvfb :0 &
+    - Xvfb :0 -screen 0 800x600x24 &
     - export DISPLAY=:0
 
 after_script:
