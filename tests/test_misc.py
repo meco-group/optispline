@@ -47,8 +47,8 @@ class Test_Misc(BasisTestCase):
     b1 = BSplineBasis(k1, d1)
     C = casadi.MX(np.random.rand(b1.dimension()))
     f = Function(b1,C)
-    np.array([f,f])<0
-    pass
+    #np.array([f,f])<0
+    #pass
          
 if __name__ == '__main__':        
     unittest.main()
