@@ -623,9 +623,6 @@ using namespace spline;
       // Python slice
       if (PySlice_Check(p)) {
         PySliceObject *r = (PySliceObject*)(p);
-uout() << "PyNumber_AsSsize_t(r->start, NULL) " << PyNumber_AsSsize_t(r->start, NULL)  << std::endl;
-uout() << "PyNumber_AsSsize_t(r->start, NULL) " << PyNumber_AsSsize_t(r->stop, NULL)  << std::endl;
-uout() << " " << PyInt_AsLong(r->step) << std::endl;
         if (m) {
           casadi_int start = (r->start == Py_None || PyNumber_AsSsize_t(r->start, NULL) <= std::numeric_limits<int>::min())
             ? std::numeric_limits<int>::min() : PyInt_AsLong(r->start);
