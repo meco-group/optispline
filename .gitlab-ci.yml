@@ -15,6 +15,7 @@ variables:
     MATLABPATH: $DEBIAN_BINARIES
     PYTHONPATH: $PYTHONPATH:$DEBIAN_BINARIES
     MOSEKLM_LICENSE_FILE: /repo/mosek/8/mosek.lic
+    MPLBACKEND: Agg
 
 before_script:
     - rm -rf build
