@@ -56,8 +56,8 @@ public:
         std::vector<Argument> arguments_temp() const;
 
         std::string argument(int index) const;
-        int index_argument(const Argument& a) const;
-        int indexArgument(const std::string& a) const;
+        NumericIndex index_argument(const Argument& a) const;
+        NumericIndex indexArgument(const std::string& a) const;
 
         bool hasArguments() const;
         bool valid_argument(const Argument& a) const;
