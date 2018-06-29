@@ -55,7 +55,7 @@ public:
         std::vector< std::string > arguments() const;
         std::vector<Argument> arguments_temp() const;
 
-        std::string argument(int index) const;
+        std::string argument(NumericIndex index) const;
         NumericIndex index_argument(const Argument& a) const;
         NumericIndex indexArgument(const std::string& a) const;
 

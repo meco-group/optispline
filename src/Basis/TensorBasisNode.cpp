@@ -32,7 +32,7 @@ namespace spline {
     }
 
     std::string TensorBasisNode::argument(int index) const {
-        return allArguments[index];
+        return allArguments.at(index);
     }
 
     int TensorBasisNode::index_argument(const Argument& a) const {
