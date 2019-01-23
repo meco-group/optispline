@@ -1,4 +1,4 @@
-image: jgillis/meco_builder:vivid
+image: jgillis/meco_builder:xenial
 
 #pma-rob-dbs.mech.kuleuven.be/meco/meco
 
@@ -15,6 +15,7 @@ variables:
     MATLABPATH: $DEBIAN_BINARIES
     PYTHONPATH: $PYTHONPATH:$DEBIAN_BINARIES
     MOSEKLM_LICENSE_FILE: /repo/mosek/8/mosek.lic
+    MPLBACKEND: Agg
 
 before_script:
     - rm -rf build
@@ -25,7 +26,13 @@ before_script:
     - chmod +x $SWIG_HOME/bin/swig
     - set -e
     - mkdir build
+    - pwd
+    - ls
     - echo $CASADI_PREFIX
+    - sudo apt-get install -y xvfb mesa-utils libgl1-mesa-glx
+    - Xvfb :0 -screen 0 800x600x24 &
+    - export DISPLAY=:0
+    - export LIBGL_DEBUG=verbose
 
 after_script:
     - source env.sh
@@ -175,6 +182,8 @@ osx-matlab:
     - export CXX=/usr/osxcross/bin/o64-clang++-libc++
     - export CC=/usr/osxcross/bin/o64-clang
     - printenv | grep -v rclone > /builds/env.txt
+    - printenv
+    - env
     - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild cmake -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_TOOLCHAIN_FILE=/usr/share/cmake-3.0/Modules/Platform/Darwin.cmake -DWITH_PYTHON=OFF -DMATLAB_INCLUDE_DIR="$MATLAB_ROOT/extern/include" -DMATLAB_LIBRARIES="$MATLAB_ROOT/bin/maci64/libut.dylib;$MATLAB_ROOT/bin/maci64/libmex.dylib;$MATLAB_ROOT/bin/maci64/libmx.dylib;$MATLAB_ROOT/bin/maci64/libeng.dylib" -DMATLAB_EXTRA_CXXFLAGS="-D__STDC_UTF_16__" -DMATLAB_MEX_EXT="mexmaci64" ..
     - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild make VERBOSE=1
     - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild install_name_tool -change `realpath src/libsplines.dylib` "@rpath/libsplines.dylib" swig/splinesMEX.mexmaci64

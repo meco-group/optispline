@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace spline {
-  typedef int NumericIndex;
-  typedef std::vector<int> NumericIndexVector;
+  typedef casadi_int NumericIndex;
+  typedef std::vector<casadi_int> NumericIndexVector;
 } // namespace spline
 #endif //CPP_SPLINES_NUMERICINDEX_H

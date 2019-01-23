@@ -14,7 +14,7 @@ namespace spline{
     bool AnyScalarEq(const T& lhs, const T& rhs) { return casadi::casadi_limits<T>::is_zero(lhs-rhs); }
 
     template<class T>
-    const std::vector<T> unionKnots(const std::vector<T> & kn1,  const std::vector<T> & kn2, int degree, int degree1, int degree2) {
+    const std::vector<T> unionKnots(const std::vector<T> & kn1,  const std::vector<T> & kn2, casadi_int degree, casadi_int degree1, casadi_int degree2) {
       // assume knots are sorted
       std::vector<T> uniqueKnots(kn1.size() + kn2.size());
 
@@ -22,7 +22,7 @@ namespace spline{
       uniqueKnots.resize(it-uniqueKnots.begin());
       uniqueKnots.erase( unique( uniqueKnots.begin(), uniqueKnots.end(), AnyScalarEq<T>), uniqueKnots.end() );
 
-      int count1, count2, count;
+      casadi_int count1, count2, count;
       std::vector<T> knots (0);
       std::vector<T> multiple (0);
 
@@ -57,7 +57,7 @@ namespace spline{
       uniqueKnots.resize(it-uniqueKnots.begin());
       uniqueKnots.erase( unique( uniqueKnots.begin(), uniqueKnots.end(), AnyScalarEq<T>), uniqueKnots.end() );
 
-      int count;
+      casadi_int count;
       std::vector<double> returnKnots (0);
       std::vector<double> multiple (0);
 
@@ -85,26 +85,26 @@ namespace spline{
     }
 
     template<class T>
-    const std::vector<T> increaseMultiplicityKnots(const std::vector<T>& knots_,  int increase) {
+    const std::vector<T> increaseMultiplicityKnots(const std::vector<T>& knots_,  casadi_int increase) {
       if (increase <= 0) { // noting happens
           return knots_;
       } else {
-          int newSize = 0;
+          casadi_int newSize = 0;
           std::vector<T> returnKnots(knots_.size() * (increase+1));
 
-          for (int i = 0; i < knots_.size() - 1; ++i) {
+          for (casadi_int i = 0; i < knots_.size() - 1; ++i) {
               if (casadi::casadi_limits<T>::is_zero(knots_[i] - knots_[i+1])) {
                   returnKnots[newSize] = knots_[i];
                   newSize++;
               } else {
-                  for (int j = 0; j < increase + 1; ++j) {
+                  for (casadi_int j = 0; j < increase + 1; ++j) {
                       returnKnots[newSize] = knots_[i];
                       newSize++;
                   }
               }
           }
 
-          for (int j = 0; j < increase + 1; ++j) {
+          for (casadi_int j = 0; j < increase + 1; ++j) {
               returnKnots[newSize] = knots_[knots_.size()-1];
               newSize++;
           }
@@ -114,24 +114,24 @@ namespace spline{
     }
 
     template<class T>
-    const std::vector<T> increaseMultiplicityFirstLast(const std::vector<T>& knots_,  int increase) {
+    const std::vector<T> increaseMultiplicityFirstLast(const std::vector<T>& knots_,  casadi_int increase) {
       if (increase <= 0) { // noting happens
           return knots_;
       } else {
-          int newSize = 0;
+          casadi_int newSize = 0;
           std::vector<T> returnKnots(knots_.size() + (increase*2));
 
-          for (int j = 0; j < increase ; ++j) {
+          for (casadi_int j = 0; j < increase ; ++j) {
               returnKnots[newSize] = knots_[0];
               newSize++;
           }
 
-          for (int i = 0; i < knots_.size(); ++i) {
+          for (casadi_int i = 0; i < knots_.size(); ++i) {
               returnKnots[newSize] = knots_[i];
               newSize++;
           }
 
-          for (int j = 0; j < increase ; ++j) {
+          for (casadi_int j = 0; j < increase ; ++j) {
               returnKnots[newSize] = knots_[knots_.size()-1];
               newSize++;
           }

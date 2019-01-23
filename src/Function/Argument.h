@@ -20,7 +20,7 @@ namespace spline {
     class ArgumentNode : public SharedObjectNode {
     public:
         virtual std::string type() const;
-        virtual int concrete(const std::vector<std::string> & args) const = 0;
+        virtual casadi_int concrete(const std::vector<std::string> & args) const = 0;
         virtual bool is_all() const ;
     };
 
@@ -28,7 +28,7 @@ namespace spline {
     public:
         StringArgumentNode(const std::string &name);
         virtual std::string to_string() const override;
-        virtual int concrete(const std::vector<std::string> & args) const;
+        virtual casadi_int concrete(const std::vector<std::string> & args) const;
 
         std::string name() const {return name_;}
     private:
@@ -37,20 +37,20 @@ namespace spline {
 
     class IntArgumentNode : public ArgumentNode {
     public:
-        IntArgumentNode(int index);
+        IntArgumentNode(casadi_int index);
         virtual std::string to_string() const override;
-        virtual int concrete(const std::vector<std::string> & args) const;
+        virtual casadi_int concrete(const std::vector<std::string> & args) const;
 
-        int index() const {return index_;}
+        casadi_int index() const {return index_;}
     private:
-        int index_;
+        casadi_int index_;
     };
 
     class NullArgumentNode : public ArgumentNode {
     public:
         NullArgumentNode();
         virtual std::string to_string() const override;
-        virtual int concrete(const std::vector<std::string> & args) const;
+        virtual casadi_int concrete(const std::vector<std::string> & args) const;
         virtual bool is_all() const override;
     };
 
@@ -64,21 +64,21 @@ namespace spline {
 #endif // SWIG
         Argument();
         Argument(const std::string &name);
-        Argument(int index);
+        Argument(casadi_int index);
         Argument(const Parameter& parameter);
 
-        int concrete(const std::vector<std::string> & args) const;
+        casadi_int concrete(const std::vector<std::string> & args) const;
 
-        static std::vector<Argument> from_vector(const std::vector<int>& ind);
+        static std::vector<Argument> from_vector(const std::vector<casadi_int>& ind);
         static std::vector<Argument> from_vector(const std::vector<std::string>& ind);
         static std::vector<Argument> from_vector(const std::vector<Parameter>& ind);
 
         std::string type() const;
         bool is_all() const;
 
-        static std::vector< int > concrete(const std::vector< Argument >& args, const std::vector< std::string >& strings);
-        static std::vector< int > concrete(const std::vector< Argument >& args, const TensorBasis& tb);
-        static int concrete(const Argument& arg, const TensorBasis& tb);
+        static std::vector< casadi_int > concrete(const std::vector< Argument >& args, const std::vector< std::string >& strings);
+        static std::vector< casadi_int > concrete(const std::vector< Argument >& args, const TensorBasis& tb);
+        static casadi_int concrete(const Argument& arg, const TensorBasis& tb);
     };
 } // namespace spline
 #endif //CPP_SPLINES_INDEX_H

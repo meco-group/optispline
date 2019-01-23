@@ -17,7 +17,7 @@ class MonomialBasis : public UnivariateBasis {
     MonomialBasisNode* get() const;
     MonomialBasisNode* operator->() const;
 #endif  // SWIG
-    MonomialBasis(int degree);
+    MonomialBasis(casadi_int degree);
 };
 
 }  // namespace spline

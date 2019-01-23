@@ -20,12 +20,11 @@ b = BSplineBasis([-2,2],1, 3)
 
 g = f.transform_to(b)
 
-plt.plot(g.basis().greville(), g.coeff_tensor().flatten())
+plt.plot(g.basis().greville(), g.coeff_tensor().flatten(),'-go')
 opti = OptiSpline()
 
 alpha = opti.variable()
-# opti.subject_to(g<=alpha)  Werkt niet
-opti.subject_to(alpha - g >= 0)
+opti.subject_to(g<=alpha)
 opti.solver('ipopt')
 opti.minimize(alpha)
 sol = opti.solve()
@@ -39,13 +38,12 @@ b = BSplineBasis([-2,2],1, 6)
 
 g = f.transform_to(b)
 
-plt.plot(g.basis().greville(), g.coeff_tensor().flatten())
+plt.plot(g.basis().greville(), g.coeff_tensor().flatten(),'-go')
 
 opti = OptiSpline()
 
 alpha = opti.variable()
-# opti.subject_to(g<=alpha)  Werkt niet
-opti.subject_to(alpha - g >= 0)
+opti.subject_to(g<=alpha)
 opti.solver('ipopt')
 opti.minimize(alpha)
 sol = opti.solve()
@@ -53,9 +51,9 @@ sol = opti.solve()
 plt.plot([-2, 2], [sol.value(alpha)] *2)
 plt.show()
 
-#########################################################
-### simple multi variate global optinmization problem ###
-#########################################################
+########################################################
+### simple multi variate global optimization problem ###
+########################################################
 grens = 1.25
 knots = [0.5]
 b = BSplineBasis([0, 0, 0.8, grens, grens], 1)
@@ -98,7 +96,7 @@ print(Y_wire)
 C = F.coeff_tensor()[:,:,0,0]
 ax.plot_wireframe(X_wire, Y_wire, C, linewidth=0.8 , color="black")
 X_G, Y_G = np.meshgrid([0, grens], [0, grens])
-surf = ax.plot_surface(X_G, Y_G, np.ndarray.min(C),
+surf = ax.plot_surface(X_G, Y_G, np.ndarray.min(C)*np.ones(X_G.shape),
                        linewidth=0, antialiased=False, alpha=0.3, color="grey")
 # ax.plot_wireframe(F.basis(0).greville() , F.basis(1).greville(), F.coeff_tensor()[:,:,0,0], rstride=10, cstride=10)
 ax.set_xlim(0, grens)

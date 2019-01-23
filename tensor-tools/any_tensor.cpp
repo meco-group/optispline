@@ -3,10 +3,10 @@
 
 //#include <casadi/core/function/function_internal.hpp>
 
-std::vector<int> invert_order(const std::vector<int>& order) {
-  std::vector<int> ret(order.size());
-  for (int i=0;i<order.size();++i) {
-    int j=order[i];
+std::vector<casadi_int> invert_order(const std::vector<casadi_int>& order) {
+  std::vector<casadi_int> ret(order.size());
+  for (casadi_int i=0;i<order.size();++i) {
+    casadi_int j=order[i];
     ret[j] = i;
   }
   return ret;
@@ -84,7 +84,7 @@ AnyScalar& AnyScalar::operator+=(const AnyScalar& rhs) {
   return false;
 }*/
 
-AnyScalar pow(const AnyScalar&x, int i) {
+AnyScalar pow(const AnyScalar&x, casadi_int i) {
   if (x.is_double()) return pow(x.as_double(), static_cast<double>(i));
   if (x.is_SX()) return pow(x.as_SX(), casadi::SX(i));
   if (x.is_MX()) return pow(x.as_MX(), casadi::MX(i));
@@ -252,7 +252,7 @@ AnyTensor::operator MT() const {
 }
 
 
-AnyTensor AnyTensor::concat(const std::vector<AnyTensor>& v, int axis) {
+AnyTensor AnyTensor::concat(const std::vector<AnyTensor>& v, casadi_int axis) {
   switch (AnyTensor::type(v)) {
     case TENSOR_DOUBLE: return DT::concat(AnyTensor::as_DT(v), axis);
     case TENSOR_SX: return ST::concat(AnyTensor::as_ST(v), axis);
@@ -309,7 +309,7 @@ std::vector<MT> AnyTensor::as_MT(const std::vector<AnyTensor>& v) {
   return ret;
 }
 
-AnyTensor AnyTensor::pack(const std::vector<AnyTensor>& v, int axis) {
+AnyTensor AnyTensor::pack(const std::vector<AnyTensor>& v, casadi_int axis) {
   switch (AnyTensor::type(v)) {
     case TENSOR_DOUBLE: return DT::pack(AnyTensor::as_DT(v), axis);
     case TENSOR_SX: return ST::pack(AnyTensor::as_ST(v), axis);
@@ -318,23 +318,23 @@ AnyTensor AnyTensor::pack(const std::vector<AnyTensor>& v, int axis) {
   }
 }
 
-AnyTensor AnyTensor::repeat(const AnyTensor&e, const std::vector<int>& factors) {
+AnyTensor AnyTensor::repeat(const AnyTensor&e, const std::vector<casadi_int>& factors) {
     if (e.is_DT()) return DT::repeat(e.as_DT(), factors);
     if (e.is_ST()) return ST::repeat(e.as_ST(), factors);
     if (e.is_MT()) return MT::repeat(e.as_MT(), factors);
     return {DT()};
 }
 
-std::vector<AnyTensor> AnyTensor::unpack(const AnyTensor& v, int axis) {
+std::vector<AnyTensor> AnyTensor::unpack(const AnyTensor& v, casadi_int axis) {
     spline_assert(axis<v.n_dims());
-    int n = v.dims()[axis];
-    int N = v.n_dims();
+    casadi_int n = v.dims()[axis];
+    casadi_int N = v.n_dims();
     std::vector<AnyTensor> ret;
-    std::vector<int> a_e = mrange(N);
-    std::vector<int> c_e = a_e;
+    std::vector<casadi_int> a_e = mrange(N);
+    std::vector<casadi_int> c_e = a_e;
     c_e.erase(c_e.begin()+axis);
 
-    for (int i=0;i<n;++i) {
+    for (casadi_int i=0;i<n;++i) {
         casadi::DM ind = casadi::DM::zeros(n, 1);
         ind.nz(i) = 1;
         ret.push_back(v.einstein(DT(ind, {n}), a_e, {-axis-1}, c_e));
@@ -346,15 +346,15 @@ std::vector<AnyTensor> AnyTensor::unpack(const AnyTensor& v, int axis) {
 
 AnyTensor AnyTensor::vertcat(const std::vector<AnyScalar>& v) {
   switch (AnyScalar::type(v)) {
-    case TENSOR_DOUBLE: return DT(AnyScalar::as_double(v), {static_cast<int>(v.size())});
-    case TENSOR_SX: return ST(casadi::SX::vertcat(AnyScalar::as_SX(v)), {static_cast<int>(v.size())});
-    case TENSOR_MX: return MT(casadi::MX::vertcat(AnyScalar::as_MX(v)), {static_cast<int>(v.size())});
+    case TENSOR_DOUBLE: return DT(AnyScalar::as_double(v), {static_cast<casadi_int>(v.size())});
+    case TENSOR_SX: return ST(casadi::SX::vertcat(AnyScalar::as_SX(v)), {static_cast<casadi_int>(v.size())});
+    case TENSOR_MX: return MT(casadi::MX::vertcat(AnyScalar::as_MX(v)), {static_cast<casadi_int>(v.size())});
     default: tensor_assert(false); return DT();
   }
 }
 
 /**
-AnyTensor::AnyTensor(const std::vector<AnyScalar>&v, const std::vector<int>& dim) {
+AnyTensor::AnyTensor(const std::vector<AnyScalar>&v, const std::vector<casadi_int>& dim) {
   std::vector<>
 }
 */
@@ -363,13 +363,13 @@ AnyTensor vertcat(const std::vector<AnyScalar> & v) {
   return AnyTensor::vertcat(v);
 }
 
-AnyTensor concat(const std::vector<AnyTensor> & v, int axis) {
+AnyTensor concat(const std::vector<AnyTensor> & v, casadi_int axis) {
   return AnyTensor::concat(v, axis);
 }
 
 
 AnyTensor vertcat(const std::vector<double>& v) {
-  return DT(v, {static_cast<int>(v.size())});
+  return DT(v, {static_cast<casadi_int>(v.size())});
 }
 
 std::vector<AnyScalar> AnyScalar::from_vector(const std::vector<double>& v) {
@@ -439,7 +439,7 @@ AnyVector AnyVector::perturbation() const {
 
 AnyVector::AnyVector() : AnyTensor() { }
 
-AnyScalar AnyVector::operator[](int index) const {
+AnyScalar AnyVector::operator[](casadi_int index) const {
   if (is_DT()) {
     return static_cast<double>(as_DT().data().nz(index));
   }
@@ -456,7 +456,7 @@ AnyScalar AnyVector::operator[](int index) const {
 
 std::vector<AnyScalar> AnyVector::to_scalar_vector() const {
   std::vector<AnyScalar> ret(size());
-  for (int i=0; i<size(); i++) {
+  for (casadi_int i=0; i<size(); i++) {
     ret[i] = (*this)[i];
   }
   return ret;
@@ -465,7 +465,7 @@ std::vector<AnyScalar> AnyVector::to_scalar_vector() const {
 namespace casadi {
   class Sorter : public casadi::Callback {
   public:
-    Sorter(int size, int ascending) : size_(size), ascending_(ascending) {
+    Sorter(casadi_int size, casadi_int ascending) : size_(size), ascending_(ascending) {
       construct("sorter");
     };
 
@@ -474,14 +474,14 @@ namespace casadi {
 
     ///@{
     /** \brief Number of function inputs and outputs */
-    int get_n_in() override { return 1; };
-    int get_n_out() override { return 1; };
+    casadi_int get_n_in() override { return 1; };
+    casadi_int get_n_out() override { return 1; };
     ///@}
 
     /// @{
     /** \brief Sparsities of function inputs and outputs */
-    Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
-    Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
+    Sparsity get_sparsity_in(casadi_int i) override { return Sparsity::dense(size_, 1); }
+    Sparsity get_sparsity_out(casadi_int i) override { return Sparsity::dense(size_, 1); }
     /// @}
 
     ///@{
@@ -497,7 +497,7 @@ namespace casadi {
     ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
-    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override {
+    int eval(const double** arg, double** res, casadi_int* iw, double* w, void* mem) const override {
       if (!res[0]) return 0;
       std::copy(arg[0], arg[0]+size_, res[0]);
 
@@ -523,12 +523,12 @@ namespace casadi {
       return 0;
     }
 
-    int size_;
+    casadi_int size_;
     bool ascending_;
-    
-    static Sorter& construct_cached(int size, bool ascending) {
-      static std::map<std::pair<int, bool>, std::unique_ptr<casadi::Sorter> > cache;
-      std::pair<int, bool> key = {size, ascending};
+
+    static Sorter& construct_cached(casadi_int size, bool ascending) {
+      static std::map<std::pair<casadi_int, bool>, std::unique_ptr<casadi::Sorter> > cache;
+      std::pair<casadi_int, bool> key = {size, ascending};
       auto it = cache.find(key);
       if (it==cache.end()) cache[key] = std::unique_ptr<casadi::Sorter>(new casadi::Sorter(key.first, key.second));
       it = cache.find(key);
@@ -539,21 +539,21 @@ namespace casadi {
 class Uniquifier : public casadi::Callback {
   public:
 
-    Uniquifier(int size) : size_(size) { construct("uniquifier"); };
+    Uniquifier(casadi_int size) : size_(size) { construct("uniquifier"); };
 
     /** \brief  Destructor */
     ~Uniquifier() override {};
 
     ///@{
     /** \brief Number of function inputs and outputs */
-    int get_n_in() override { return 1; };
-    int get_n_out() override { return 1; };
+    casadi_int get_n_in() override { return 1; };
+    casadi_int get_n_out() override { return 1; };
     ///@}
 
     /// @{
     /** \brief Sparsities of function inputs and outputs */
-    Sparsity get_sparsity_in(int i) override { return Sparsity::dense(size_, 1); }
-    Sparsity get_sparsity_out(int i) override { return Sparsity::dense(size_, 1); }
+    Sparsity get_sparsity_in(casadi_int i) override { return Sparsity::dense(size_, 1); }
+    Sparsity get_sparsity_out(casadi_int i) override { return Sparsity::dense(size_, 1); }
     /// @}
 
     ///@{
@@ -569,11 +569,11 @@ class Uniquifier : public casadi::Callback {
     ///@}
 
     /** \brief  Evaluate numerically, work vectors given */
-    int eval(const double** arg, double** res, int* iw, double* w, void* mem) const override {
+    int eval(const double** arg, double** res, casadi_int* iw, double* w, void* mem) const override {
       if (!res[0]) return 0;
       std::copy(arg[0], arg[0]+size_, res[0]);
 
-      for (int i=1;i<size_-2;++i) {
+      for (casadi_int i=1;i<size_-2;++i) {
         if (arg[0][i]==arg[0][i+1]) {
           res[0][i]   = (res[0][i-1]+res[0][i])/2;
           res[0][i+1] = (res[0][i+1]+res[0][i+2])/2;
@@ -582,25 +582,26 @@ class Uniquifier : public casadi::Callback {
       return 0;
     }
 
-    int size_;
+    casadi_int size_;
 
-    static Uniquifier& construct_cached(int size) {
-      static std::map<int, std::unique_ptr<casadi::Uniquifier> > cache;
-      int key = size;
+    static Uniquifier& construct_cached(casadi_int size) {
+      static std::map<casadi_int, std::unique_ptr<casadi::Uniquifier> > cache;
+      casadi_int key = size;
       auto it = cache.find(key);
       if (it==cache.end()) cache[key] = std::unique_ptr<casadi::Uniquifier>(new casadi::Uniquifier(key));
       it = cache.find(key);
       return *it->second;
-    }    
+    }
 
   };
-  
+
 } // namespace casadi
 
 AnyVector AnyVector::sort(bool ascending) const {
+  if (is_ST()) return *this;
   tensor_assert(!is_ST());
-  
-  casadi::Sorter& sorter = casadi::Sorter::construct_cached(dims()[0], ascending); 
+
+  casadi::Sorter& sorter = casadi::Sorter::construct_cached(dims()[0], ascending);
   if (is_DT()) {
     return DT(sorter(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
   } else {
@@ -611,8 +612,8 @@ AnyVector AnyVector::sort(bool ascending) const {
 AnyVector AnyVector::uniquify() const {
   tensor_assert(!is_ST());
 
-  casadi::Uniquifier& uniquifier = casadi::Uniquifier::construct_cached(dims()[0]); 
-  
+  casadi::Uniquifier& uniquifier = casadi::Uniquifier::construct_cached(dims()[0]);
+
   if (is_DT()) {
     return DT(uniquifier(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
   } else {
@@ -624,7 +625,7 @@ bool AnyVector::is_equal(const AnyVector& rhs) const {
   std::vector< AnyScalar > a = to_scalar_vector();
   std::vector< AnyScalar > b = rhs.to_scalar_vector();
   if (a.size()!=b.size()) return false;
-  for (int i=0;i<a.size();++i) {
+  for (casadi_int i=0;i<a.size();++i) {
     if (!a[i].is_equal(b[i])) return false;
   }
   return true;
@@ -692,4 +693,3 @@ template <>
 Tensor<casadi::SX> Tensor<casadi::SX>::solve(const Tensor<casadi::SX>& B) const {
   return casadi::SX::solve(matrix(), B.matrix());
 }
-

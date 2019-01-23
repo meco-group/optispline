@@ -8,7 +8,7 @@ namespace spline {
 
     FunctionNode::FunctionNode(const TensorBasis& basis, const Coefficient& coeff) : coeff_(coeff.to_matrix_valued()), basis_(basis) {}
 
-std::vector< int > FunctionNode::shape() const {         return coeff_.shape();     }
+std::vector< casadi_int > FunctionNode::shape() const {         return coeff_.shape();     }
 
     AnyTensor FunctionNode::operator()(const AnyTensor& arg, const std::vector< Argument >& args) const{
         AnyTensor x = arg.squeeze();
@@ -31,39 +31,39 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         std::vector< std::vector< AnyScalar > > X_ = x.unpack_2();
 
         std::vector< AnyTensor > tensor = {};
-        for (int i = 0; i < X_.size(); i++) {
+        for (casadi_int i = 0; i < X_.size(); i++) {
             tensor.push_back(tensor_basis()(X_[i], args, false));
         }
         AnyTensor packed_tensor = AnyTensor::pack(tensor, 0);
-        int shared_dim = packed_tensor.n_dims();
-        std::vector<int> a_r = mrange(0, shared_dim);
-        std::vector<int> b_r = mrange(1, shared_dim + 2);
-        std::vector<int> c_r = { a_r[0] };
+        casadi_int shared_dim = packed_tensor.n_dims();
+        std::vector<casadi_int> a_r = mrange(0, shared_dim);
+        std::vector<casadi_int> b_r = mrange(1, shared_dim + 2);
+        std::vector<casadi_int> c_r = { a_r[0] };
         c_r.push_back(b_r[b_r.size() - 2]);
         c_r.push_back(b_r[b_r.size() - 1]);
         packed_tensor = packed_tensor.einstein(coeff_tensor(), a_r, b_r, c_r).squeeze_tailing();
         if(X_.size() == 1){
-            std::vector< int > squeeze_dims;
-            for(int i = 1; i < packed_tensor.dims().size(); i++) squeeze_dims.push_back(packed_tensor.dims()[i]);
+            std::vector< casadi_int > squeeze_dims;
+            for(casadi_int i = 1; i < packed_tensor.dims().size(); i++) squeeze_dims.push_back(packed_tensor.dims()[i]);
             packed_tensor = packed_tensor.shape(squeeze_dims);
         }
         return packed_tensor;
     }
 
     Function FunctionNode::partial_eval(const AnyTensor& x, const Argument& arg) const{
-        int index = tensor_basis().index_argument(arg);
+        casadi_int index = tensor_basis().index_argument(arg);
         if(index < 0) return shared_from_this<Function>();
 
-        int n_basis = tensor_basis().n_basis();
+        casadi_int n_basis = tensor_basis().n_basis();
 
         std::vector< Basis > partial_basis = tensor_basis().bases();
         partial_basis.erase(partial_basis.begin() + index);
         std::vector< std::string > partial_arguments = tensor_basis().arguments();
         partial_arguments.erase(partial_arguments.begin() + index);
 
-        std::vector< int > a = mrange(n_basis + 2);
-        std::vector< int > b = std::vector< int > {-1-index};
-        std::vector< int > c = mrange(n_basis + 2);
+        std::vector< casadi_int > a = mrange(n_basis + 2);
+        std::vector< casadi_int > b = std::vector< casadi_int > {-1-index};
+        std::vector< casadi_int > c = mrange(n_basis + 2);
         c.erase(c.begin() + index);
         AnyTensor partial_coeff = coeff_tensor().einstein(basis(index)(x),a,b,c);
 
@@ -73,11 +73,11 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
     AnyTensor FunctionNode::grid_eval(const std::vector< AnyTensor >& x, const std::vector< Argument >& args, bool squeeze_return)  const {
 
         AnyTensor tensor = tensor_basis().grid_eval(x, args, squeeze_return);
-        int n_dims_tensor = tensor.dims().size();
-        int n_dims_grid = x.size();
-        std::vector< int > a = mrange(n_dims_tensor);
-        std::vector< int > b = mrange(n_dims_grid, n_dims_tensor + 2);
-        std::vector< int > c = mrange(n_dims_grid);
+        casadi_int n_dims_tensor = tensor.dims().size();
+        casadi_int n_dims_grid = x.size();
+        std::vector< casadi_int > a = mrange(n_dims_tensor);
+        std::vector< casadi_int > b = mrange(n_dims_grid, n_dims_tensor + 2);
+        std::vector< casadi_int > c = mrange(n_dims_grid);
         c.insert(c.end(), b.end() - 2, b.end());
         tensor = tensor.einstein( coeff_tensor(), a, b, c);
         return tensor;
@@ -114,23 +114,23 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         AnyTensor thisFunctionEvaluated = shared_from_this<Function>().grid_eval(eval_g, args, false);
         AnyTensor otherFunctionEvaluated = f.grid_eval(eval_g, args, false);
 
-        int n_dims_grid = eval_g.size();
+        casadi_int n_dims_grid = eval_g.size();
         AnyTensor A = basisEvaluated;
 
         thisFunctionEvaluated = thisFunctionEvaluated.flatten_first(n_dims_grid);
         otherFunctionEvaluated = otherFunctionEvaluated.flatten_first(n_dims_grid);
         AnyTensor B = tc(thisFunctionEvaluated, otherFunctionEvaluated);
 
-        std::vector< int > elemShape = B.dims();
-        elemShape = std::vector<int>(elemShape.begin()+1, elemShape.end());
+        std::vector< casadi_int > elemShape = B.dims();
+        elemShape = std::vector<casadi_int>(elemShape.begin()+1, elemShape.end());
 
         A = A.flatten_first(n_dims_grid);
         A = A.flatten_last(n_dims_grid);
         B = B.flatten_last(2);
         AnyTensor C = A.solve(B);
 
-        std::vector< int > shapeCoef = elemShape;
-        std::vector< int > shapeBasis = sumBasis.dimension();
+        std::vector< casadi_int > shapeCoef = elemShape;
+        std::vector< casadi_int > shapeBasis = sumBasis.dimension();
         shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
 
         C = C.shape(shapeBasis);
@@ -141,8 +141,8 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
             const BasisComposition & bc, const TensorComposition & tc) const  {
         return generic_operation(f, bc,
                 [&](const AnyTensor& lhs, const AnyTensor& rhs) {
-                int n = lhs.n_dims();
-                std::vector<int> rep(n, 1);
+                casadi_int n = lhs.n_dims();
+                std::vector<casadi_int> rep(n, 1);
                 if (lhs.dims()[n-2]==1 && lhs.dims()[n-1]==1) {
                     rep[n-2] = rhs.dims()[n-2];
                     rep[n-1] = rhs.dims()[n-1];
@@ -199,7 +199,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Function(tensor_basis(), coeff().trace());
     }
 
-    Function FunctionNode::sum(int axis) const {
+    Function FunctionNode::sum(casadi_int axis) const {
         return Function(tensor_basis(), coeff().sum(axis));
     }
     Function FunctionNode::sum() const {
@@ -221,7 +221,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         TensorBasis sumBasis = tensor_basis() + basis;
         std::vector< Argument > args = Argument::from_vector(sumBasis.arguments());
         std::vector< AnyTensor > eval_g = sumBasis.evaluation_grid();
-        int n_dims_grid = eval_g.size();
+        casadi_int n_dims_grid = eval_g.size();
 
         AnyTensor A =  sumBasis.grid_eval(eval_g, args, false);
         AnyTensor B = shared_from_this<Function>().grid_eval(eval_g, args, false);
@@ -229,15 +229,15 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         A = A.flatten_first(n_dims_grid);
         B = B.flatten_first(n_dims_grid);
 
-        std::vector< int > elemShape = B.dims();
-        elemShape = std::vector<int>(elemShape.begin()+1, elemShape.end());
+        std::vector< casadi_int > elemShape = B.dims();
+        elemShape = std::vector<casadi_int>(elemShape.begin()+1, elemShape.end());
 
         A = A.flatten_last(n_dims_grid);
         B = B.flatten_last(2);
         AnyTensor C = A.solve(B);
 
-        std::vector< int > shapeCoef = elemShape;
-        std::vector< int > shapeBasis = sumBasis.dimension();
+        std::vector< casadi_int > shapeCoef = elemShape;
+        std::vector< casadi_int > shapeBasis = sumBasis.dimension();
         shapeBasis.insert(shapeBasis.end(), shapeCoef.begin(), shapeCoef.end());
 
         C = C.shape(shapeBasis);
@@ -251,7 +251,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
             // Not supported for BSpline
         }
         Function b2 = b.basis_functions();
-        Function f = reshape(std::vector< int >{1,spline::product(shape())});
+        Function f = reshape(std::vector< casadi_int >{1,casadi::product(shape())});
 
         Function b22 = b2.mtimes(b2.transpose());
         Function b2f = b2.mtimes(f); //f already is a row vector
@@ -261,16 +261,16 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
 
         AnyTensor C = B22.solve(B2f);
 
-        std::vector< int > M = b.dimension();
-        std::vector< int > N = shape();
-        std::vector< int > shapeC = M;
+        std::vector< casadi_int > M = b.dimension();
+        std::vector< casadi_int > N = shape();
+        std::vector< casadi_int > shapeC = M;
         shapeC.insert(shapeC.end(), N.begin(), N.end());
         C = C.shape(shapeC);
 
         return Function(b,C);
     }
 
-    Function FunctionNode::reshape(const std::vector< int >& shape) const {
+    Function FunctionNode::reshape(const std::vector< casadi_int >& shape) const {
         return Function(tensor_basis(), coeff().reshape(shape));
     }
 
@@ -278,7 +278,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Function(tensor_basis(), coeff_tensor().get_slice(i, j));
     }
 
-    int FunctionNode::n_inputs() const {
+    casadi_int FunctionNode::n_inputs() const {
         return tensor_basis().n_inputs();
     }
 
@@ -301,7 +301,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
     }
 
     Function FunctionNode::insert_knots(const std::vector<AnyVector> & new_knots,
-            const std::vector<int> & arg_ind) const {
+            const std::vector<casadi_int> & arg_ind) const {
         spline_assert(arg_ind.size() == new_knots.size())
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
@@ -310,8 +310,8 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Function(new_tbasis, new_coefficient);
     }
 
-    Function FunctionNode::midpoint_refinement(const std::vector<int>& refinement,
-            const std::vector< int >& arg_ind) const {
+    Function FunctionNode::midpoint_refinement(const std::vector<casadi_int>& refinement,
+            const std::vector< casadi_int >& arg_ind) const {
         spline_assert(arg_ind.size() == refinement.size())
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
@@ -321,8 +321,8 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Function(new_tbasis, new_coefficient);
     }
 
-    Function FunctionNode::degree_elevation(const std::vector<int>& elevation,
-            const std::vector< int >& arg_ind) const {
+    Function FunctionNode::degree_elevation(const std::vector<casadi_int>& elevation,
+            const std::vector< casadi_int >& arg_ind) const {
         spline_assert(arg_ind.size() == elevation.size());
         std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
@@ -335,7 +335,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
     Function FunctionNode::kick_boundary(const TensorDomain& boundary) const {
         // apply on all directions
         NumericIndexVector arg_ind(tensor_basis().n_basis());
-        for (int k=0; k<arg_ind.size(); k++) {
+        for (casadi_int k=0; k<arg_ind.size(); k++) {
             arg_ind[k] = k;
         }
         return kick_boundary(boundary, arg_ind);
@@ -350,7 +350,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         std::vector<AnyTensor> T;
         TensorBasis new_tbasis = tensor_basis().kick_boundary(boundary, args, T);
         NumericIndexVector arg_ind(args.size());
-        for (int i=0; i<args.size(); i++) {
+        for (casadi_int i=0; i<args.size(); i++) {
             arg_ind[i] = tensor_basis().indexArgument(args[i]);
         }
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
@@ -365,8 +365,8 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Function(new_tbasis, new_coefficient);
     }
 
-    Function FunctionNode::derivative(const std::vector<int>& orders,
-            const std::vector< int >& arg_ind) const {
+    Function FunctionNode::derivative(const std::vector<casadi_int>& orders,
+            const std::vector< casadi_int >& arg_ind) const {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
@@ -376,8 +376,8 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         return Function(new_tbasis, new_coefficient);
     }
 
-    Function FunctionNode::antiderivative(const std::vector<int>& orders,
-            const std::vector< int >& arg_ind) const {
+    Function FunctionNode::antiderivative(const std::vector<casadi_int>& orders,
+            const std::vector< casadi_int >& arg_ind) const {
         spline_assert(orders.size() == arg_ind.size())  // each direction should have an order
             std::vector<AnyTensor> T;
         TensorBasis tbasis = tensor_basis();
@@ -388,7 +388,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
 
     std::vector<Function> FunctionNode::jacobian() const {
         std::vector<Function> Jacobian(n_inputs());
-        for (int i=0; i<n_inputs(); i++) {
+        for (casadi_int i=0; i<n_inputs(); i++) {
             Jacobian[i] = derivative({ 1 }, {i});
         }
         return Jacobian;
@@ -398,8 +398,8 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         spline_assert(is_scalar());
         std::vector<std::vector<Function> > ret(n_inputs());
         for (std::vector<Function> & e : ret) e.resize(n_inputs());
-        for (int i=0; i<n_inputs(); i++) {
-            for (int j=i; j<n_inputs(); j++) {
+        for (casadi_int i=0; i<n_inputs(); i++) {
+            for (casadi_int j=i; j<n_inputs(); j++) {
               if (i==j) {
                 ret[i][j] = derivative({2},{i});
               } else {
@@ -426,7 +426,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
     AnyTensor FunctionNode::integral(const TensorDomain& domain) const {
         std::vector<AnyTensor> T = tensor_basis().integral(domain);
         NumericIndexVector arg_ind(tensor_basis().n_basis());
-        for (int i=0; i<tensor_basis().n_basis(); i++) {
+        for (casadi_int i=0; i<tensor_basis().n_basis(); i++) {
             arg_ind[i] = i;
         }
         Coefficient new_coefficient = coeff().transform(T, arg_ind);
@@ -438,7 +438,7 @@ std::vector< int > FunctionNode::shape() const {         return coeff_.shape(); 
         std::vector<AnyTensor> T;
         TensorBasis new_tbasis = tensor_basis().partial_integral(domain, args, T);
         NumericIndexVector arg_ind(args.size());
-        for (int i=0; i<args.size(); i++) {
+        for (casadi_int i=0; i<args.size(); i++) {
             arg_ind[i] = tensor_basis().indexArgument(args[i]);
         }
         Coefficient new_coefficient = coeff().transform(T, arg_ind);

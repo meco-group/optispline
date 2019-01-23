@@ -8,17 +8,17 @@ namespace spline{
 
     Function::Function(){}
     Function::Function(const TensorBasis& basis, const Coefficient& coeff) {
-        std::vector< int > dim_basis = basis.dimension();
-        std::vector< int > dim_coef = coeff.data().dims();
+        std::vector< casadi_int > dim_basis = basis.dimension();
+        std::vector< casadi_int > dim_coef = coeff.data().dims();
 
-        int total_size_coef = dim_coef.size();
+        casadi_int total_size_coef = dim_coef.size();
         spline_assert_message(dim_basis.size() <= total_size_coef,
                 "Dimensions of basis " << dim_basis << " and coefficient " <<
                 dim_coef << " can not be connected.");
         spline_assert_message(dim_basis.size() + 2 >= total_size_coef,
                 "Dimensions of basis " << dim_basis << " and coefficient " <<
                 dim_coef << " can not be connected.");
-        for (int i = 0; i < dim_basis.size(); i++) {
+        for (casadi_int i = 0; i < dim_basis.size(); i++) {
             spline_assert_message(dim_basis[i] == dim_coef[i],
                     "Mismatch of dimention " + std::to_string(i) + " between basis and coefficient: "
                     << "Got basis " << dim_basis << " and coefficient" << dim_coef <<".");
@@ -32,7 +32,7 @@ namespace spline{
         assign_node(new FunctionNode(tensor));
     }
 
-    Function::Function(const AnyScalar& value, const std::vector< int >& size) {
+    Function::Function(const AnyScalar& value, const std::vector< casadi_int >& size) {
         assign_node(new FunctionNode(AnyTensor::repeat(AnyTensor(value), size)));
     }
 
@@ -48,8 +48,8 @@ namespace spline{
         if (shape()[0]>1 && shape()[1]>1) {
           spline_assert(shape()[0]==shape()[1]);
           MT a = coeff_tensor().as_MT();
-          int n = coeff().dimension().size();
-          std::vector<int> reorder = casadi::range(n);
+          casadi_int n = coeff().dimension().size();
+          std::vector<casadi_int> reorder = casadi::range(n);
           reorder.insert(reorder.begin(), n);
           reorder.insert(reorder.begin(), n+1);
           casadi::MX b = a.reorder_dims(reorder).shape({shape()[0], casadi::product(coeff().dimension())*shape()[1]}).matrix();
@@ -112,18 +112,18 @@ namespace spline{
         return (transpose().mtimes(Function(t).transpose())).transpose();
     }
 
-    Function Function::pow(int power) const {
+    Function Function::pow(casadi_int power) const {
         spline_assert_message(power >= 0, "No negative power");
         Function r = Function(1, shape());
-        for(int i = 0; i < power; i++) r = operator*(r);
+        for(casadi_int i = 0; i < power; i++) r = operator*(r);
         return r;
     }
 
-    Function Function::mpow(int power) const {
+    Function Function::mpow(casadi_int power) const {
         spline_assert_message(shape()[0] == shape()[1], "matrix power only for square matrices");
         spline_assert_message(power >= 0, "No negative power");
         Function r = Function(1, shape());
-        for(int i = 0; i < power; i++) r = mtimes(r);
+        for(casadi_int i = 0; i < power; i++) r = mtimes(r);
         return r;
     }
 
@@ -132,7 +132,7 @@ namespace spline{
 
     Function Function::transpose() const { return (*this)->transpose() ;}
     Function Function::trace() const { return (*this)->trace() ;}
-    Function Function::sum(int axis) const { return (*this)->sum(axis) ;}
+    Function Function::sum(casadi_int axis) const { return (*this)->sum(axis) ;}
     Function Function::sum() const { return (*this)->sum() ;}
 
     Coefficient Function::coeff() const {return (*this)->coeff() ;}
@@ -150,30 +150,30 @@ namespace spline{
     bool Function::is_column() const { return (*this)->is_column() ;}
 
 
-    std::vector< int > Function::shape() const { return (*this)->shape() ;}
+    std::vector< casadi_int > Function::shape() const { return (*this)->shape() ;}
 
-    Function Function::reshape(const std::vector< int >& shape) const { return (*this)->reshape(shape) ;}
+    Function Function::reshape(const std::vector< casadi_int >& shape) const { return (*this)->reshape(shape) ;}
 
     Function Function::transform_to(const Basis& basis) const { return (*this)->transform_to(TensorBasis( basis )) ;}
     Function Function::transform_to(const TensorBasis& basis) const { return (*this)->transform_to( basis ) ;}
     Function Function::project_to(const Basis& basis) const { return (*this)->project_to(TensorBasis( basis )) ;}
     Function Function::project_to(const TensorBasis& basis) const { return (*this)->project_to(basis) ;}
 
-    int Function::n_inputs() const { return (*this)->n_inputs() ;}
+    casadi_int Function::n_inputs() const { return (*this)->n_inputs() ;}
     Function Function::insert_knots(const AnyVector & new_knots, const Argument& arg) const { return (*this)->insert_knots(vectorize(arg, new_knots), vectorize(arg)) ;}
     Function Function::insert_knots(const std::vector<AnyVector> & new_knots, const std::vector<Argument> & arg) const { return (*this)->insert_knots(new_knots, Argument::concrete(arg, tensor_basis().arguments()));}
 
-    Function Function::midpoint_refinement(int refinement, const Argument& arg) const {
+    Function Function::midpoint_refinement(casadi_int refinement, const Argument& arg) const {
         return (*this)->midpoint_refinement(vectorize(arg, refinement), vectorize(arg));
     }
-    Function Function::midpoint_refinement(const std::vector<int>& refinement, const std::vector< Argument >& arg_ind) const {
+    Function Function::midpoint_refinement(const std::vector<casadi_int>& refinement, const std::vector< Argument >& arg_ind) const {
         return (*this)->midpoint_refinement( refinement, Argument::concrete(arg_ind, tensor_basis().arguments()));
     }
 
-    Function Function::degree_elevation(int order, const Argument& arg) const {
+    Function Function::degree_elevation(casadi_int order, const Argument& arg) const {
         return (*this)->degree_elevation(vectorize(arg, order), vectorize(arg));
     }
-    Function Function::degree_elevation(const std::vector<int>& orders, const std::vector< Argument >& arg_ind) const {
+    Function Function::degree_elevation(const std::vector<casadi_int>& orders, const std::vector< Argument >& arg_ind) const {
         return (*this)->degree_elevation( orders, Argument::concrete(arg_ind, tensor_basis().arguments()));
     }
 
@@ -182,17 +182,17 @@ namespace spline{
     Function Function::kick_boundary(const TensorDomain& boundary, const std::vector<std::string> & args) const { return (*this)->kick_boundary( boundary, args);}
     Function Function::kick_boundary(const TensorDomain& boundary, const NumericIndexVector & arg_ind) const { return (*this)->kick_boundary( boundary, arg_ind) ;}
 
-    Function Function::derivative(int order, const Argument& arg) const {
+    Function Function::derivative(casadi_int order, const Argument& arg) const {
         return (*this)->derivative(vectorize(arg, order), vectorize(arg));
     }
-    Function Function::derivative(const std::vector<int>& orders, const std::vector< Argument >& arg_ind) const {
+    Function Function::derivative(const std::vector<casadi_int>& orders, const std::vector< Argument >& arg_ind) const {
         return (*this)->derivative( orders, Argument::concrete(arg_ind, tensor_basis().arguments()));
     }
 
-    Function Function::antiderivative(int order, const Argument& arg) const {
+    Function Function::antiderivative(casadi_int order, const Argument& arg) const {
         return (*this)->antiderivative(vectorize(arg, order), vectorize(arg));
     }
-    Function Function::antiderivative(const std::vector<int>& orders, const std::vector< Argument >& arg_ind) const {
+    Function Function::antiderivative(const std::vector<casadi_int>& orders, const std::vector< Argument >& arg_ind) const {
         return (*this)->antiderivative( orders, Argument::concrete(arg_ind, tensor_basis().arguments()));
     }
 
@@ -213,15 +213,15 @@ namespace spline{
 
     Function Function::blockcat(const std::vector< std::vector<spline::Function> >& f) {
         std::vector< spline::Function > flat;
-        int n = -1;
+        casadi_int n = -1;
         for (auto e : f) {
             if (n==-1) n = e.size();
             spline_assert(e.size()==n);
             flat.insert(flat.end(), e.begin(), e.end());
         }
         Function c = vertcat(flat);
-        int m = f.size();
-        return c.reshape(std::vector<int>{n, m});
+        casadi_int m = f.size();
+        return c.reshape(std::vector<casadi_int>{n, m});
     }
 
     Function Function::horzcat(const std::vector< spline::Function >& f) {
@@ -230,9 +230,9 @@ namespace spline{
 
     Function Function::blkdiag(const std::vector< spline::Function >& f) {
         Function b = f[0];
-        for (int i = 1; i < f.size(); i++) {
-            std::vector< int > shape12 = std::vector< int >{b.shape()[0], f[i].shape()[1]};
-            std::vector< int > shape21 = std::vector< int >{f[i].shape()[0], b.shape()[1]};
+        for (casadi_int i = 1; i < f.size(); i++) {
+            std::vector< casadi_int > shape12 = std::vector< casadi_int >{b.shape()[0], f[i].shape()[1]};
+            std::vector< casadi_int > shape21 = std::vector< casadi_int >{f[i].shape()[0], b.shape()[1]};
 
             Function zero12 = Function(0, shape12);
             Function zero21 = Function(0, shape21);
@@ -249,19 +249,19 @@ namespace spline{
     Function Function::cat(NumericIndex index,
             const std::vector< spline::Function >& functions) {
         TensorBasis unionBasis = functions[0].tensor_basis();  // load first basis
-        for (int i = 1; i< functions.size(); i++) {
+        for (casadi_int i = 1; i< functions.size(); i++) {
             unionBasis = unionBasis + functions[i].tensor_basis();  // add other bases
         }
 
         std::vector< Coefficient > coefVec;
-        for (int i = 0; i< functions.size(); i++) {
+        for (casadi_int i = 0; i< functions.size(); i++) {
             coefVec.push_back(functions[i].transform_to(unionBasis).coeff());
         }
 
         return Function(unionBasis, Coefficient::cat(index, coefVec));
     }
 
-    std::vector<int> Function::vectorize(const Argument& arg) const{
+    std::vector<casadi_int> Function::vectorize(const Argument& arg) const{
         if(arg.is_all()){
             return casadi::range(tensor_basis().n_basis());
         } else {
@@ -276,9 +276,9 @@ namespace spline{
     casadi::Function Function::to_casadi() const {
       std::vector<Basis> bases = tensor_basis().bases();
       std::vector< std::vector<double> > knots;
-      std::vector<int> degrees;
+      std::vector<casadi_int> degrees;
       std::vector<double> coeff;
-      for (int i=0;i<bases.size();++i) {
+      for (casadi_int i=0;i<bases.size();++i) {
         Basis b = bases[i];
         spline_assert(b.type()=="BSplineBasis");
 
@@ -297,9 +297,9 @@ namespace spline{
     AnyTensor Function::fast_eval(const AnyTensor& xy) const {
       std::vector<Basis> bases = tensor_basis().bases();
       std::vector< std::vector<double> > knots;
-      std::vector<int> degrees;
+      std::vector<casadi_int> degrees;
 
-      for (int i=0;i<bases.size();++i) {
+      for (casadi_int i=0;i<bases.size();++i) {
         Basis b = bases[i];
         spline_assert(b.type()=="BSplineBasis");
         BSplineBasis bb = b.get()->shared_from_this<BSplineBasis>();
@@ -311,7 +311,7 @@ namespace spline{
 
       spline_assert(xy.n_dims()==2);
       spline_assert(xy.dims()[0]==n_inputs());
-      std::vector<int> dims = shape();
+      std::vector<casadi_int> dims = shape();
       dims.insert(dims.begin(), xy.dims()[1]);
 
       if (xy.is_DT()) {

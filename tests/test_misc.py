@@ -38,7 +38,18 @@ class Test_Misc(BasisTestCase):
     jac = jacobian(expr, X)
 
     self.assertFalse(len(symvar(jac))==0)
-     
+
+  def test_numpy(self):
+    np.random.seed(0)
+    d1 = 3
+    nki1 = 8
+    k1 = np.r_[np.zeros(d1),np.linspace(0., 1., nki1), np.ones(d1)]
+    b1 = BSplineBasis(k1, d1)
+    C = casadi.MX(np.random.rand(b1.dimension()))
+    f = Function(b1,C)
+    #np.array([f,f])<0
+    #pass
+         
 if __name__ == '__main__':        
     unittest.main()
 

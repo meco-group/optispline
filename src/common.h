@@ -10,6 +10,8 @@
 #ifdef __linux__
 #include <execinfo.h>
 #endif
+#include <casadi/core/casadi_types.hpp>
+
 
 namespace spline {
 
@@ -25,7 +27,7 @@ class SplineException : public std::exception {
 #ifdef __linux__
     void *trace[256];
     char **messages = (char **)NULL;
-    int i, trace_size = 0;
+    casadi_int i, trace_size = 0;
 
     trace_size = backtrace(trace, 256);
     messages = backtrace_symbols(trace, trace_size);
@@ -42,7 +44,7 @@ class SplineException : public std::exception {
 
         {
           std::string command = "eu-addr2line -e " + libname + " " + symbol + "> .temp.txt"; //last parameter is the name of this app
-          int retcode = system(command.c_str());
+          casadi_int retcode = system(command.c_str());
           if (retcode) { msg_+="  install 'elfutils' to get a stacktrace\n"; break; }
           std::stringstream res; res << std::ifstream(".temp.txt").rdbuf();
 
@@ -57,7 +59,7 @@ class SplineException : public std::exception {
         }
         if (!symbol_name.empty()) {
           std::string command = "c++filt " + symbol_name + "> .temp.txt"; //last parameter is the name of this app
-          int retcode = system(command.c_str());
+          casadi_int retcode = system(command.c_str());
           if (retcode) { msg_+="    install 'c++filt' to get a stacktrace\n"; break; }
           std::stringstream res; res << std::ifstream(".temp.txt").rdbuf();
 
@@ -132,12 +134,8 @@ class SplineException : public std::exception {
 
 #define spline_error(msg) spline_assert_message(false, msg)
 
-#ifndef SWIG
-int product(const std::vector<int>& a);  // number of elements in vector
-int sum(const std::vector<int>& a);  // sum of elements in vector
-#endif
+double pow(double a, casadi_int n);
 
-double pow(double a, int n);
 
 } // namespace spline
 #endif  // COMMON_H

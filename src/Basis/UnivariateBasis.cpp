@@ -12,5 +12,5 @@ namespace spline {
 
     UnivariateBasisNode* UnivariateBasis::operator->() const { return get(); }
 
-    int  UnivariateBasis::degree() const { return (*this)->degree(); }
+    casadi_int  UnivariateBasis::degree() const { return (*this)->degree(); }
 }  // namespace spline

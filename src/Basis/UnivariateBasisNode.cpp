@@ -5,14 +5,14 @@
 #include "../common.h"
 
 namespace spline {
-    UnivariateBasisNode::UnivariateBasisNode(int degree, const Domain& domain) :
+    UnivariateBasisNode::UnivariateBasisNode(casadi_int degree, const Domain& domain) :
     BasisNode(domain), degree_(degree) { }
-    int  UnivariateBasisNode::degree() const { return degree_ ; }
+    casadi_int  UnivariateBasisNode::degree() const { return degree_ ; }
 
     std::string UnivariateBasisNode::to_string() const { return "UnivariateBasis of degree " +
                                                          std::to_string(degree()) + " on " + domain().to_string();}
 
-    int UnivariateBasisNode::n_inputs() const { return 1; }
+    casadi_int UnivariateBasisNode::n_inputs() const { return 1; }
 
     AnyTensor UnivariateBasisNode::integral(const Domain& domain) const {
         return integral(static_cast<Interval>(domain));

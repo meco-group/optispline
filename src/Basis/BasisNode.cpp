@@ -54,12 +54,12 @@ namespace spline {
         return Basis();
     }
 
-    Basis BasisNode::midpoint_refinement(int refinement, AnyTensor& T) const {
+    Basis BasisNode::midpoint_refinement(casadi_int refinement, AnyTensor& T) const {
         spline_assert_message(false, type() << " can not refine knots.");
         return Basis();
     }
 
-    Basis BasisNode::degree_elevation(int elevation, AnyTensor& T) const {
+    Basis BasisNode::degree_elevation(casadi_int elevation, AnyTensor& T) const {
         spline_assert_message(false, type() << " can not elevate the degree.");
         return Basis();
     }
@@ -109,12 +109,12 @@ namespace spline {
         return Function(shared_from_this<Basis>(), Coefficient(t));
     }
 
-    Basis BasisNode::derivative(int order, AnyTensor& T) const {
+    Basis BasisNode::derivative(casadi_int order, AnyTensor& T) const {
         spline_assert(false);
         return Basis();
     }
 
-    Basis BasisNode::antiderivative(int order, AnyTensor& T) const {
+    Basis BasisNode::antiderivative(casadi_int order, AnyTensor& T) const {
         spline_assert(false);
         return Basis();
     }

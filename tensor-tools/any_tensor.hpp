@@ -144,7 +144,7 @@ class AnyScalar {
     casadi::MX data_mx;
 };
 
-AnyScalar pow(const AnyScalar&x, int i);
+AnyScalar pow(const AnyScalar&x, casadi_int i);
 
 class AnyTensor : public spline::PrintableObject<AnyTensor> {
   public:
@@ -153,7 +153,7 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
 #endif
     AnyTensor(const AnyScalar& s);
     AnyTensor(const AnyTensor& s);
-    //AnyTensor(const AnyTensor&, const std::vector<int>& dim);
+    //AnyTensor(const AnyTensor&, const std::vector<casadi_int>& dim);
     AnyTensor(const DT & t);
     AnyTensor(const ST & t);
     AnyTensor(const MT & t);
@@ -172,11 +172,11 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
     static bool is_ST(const std::vector<AnyTensor>& v) {return type(v)==TENSOR_SX;}
     static bool is_MT(const std::vector<AnyTensor>& v) {return type(v)==TENSOR_MX;}
 
-    static AnyTensor ones(const std::vector<int>& dims) {
-      return DT(casadi::DM::ones(spline::product(dims)), dims);
+    static AnyTensor ones(const std::vector<casadi_int>& dims) {
+      return DT(casadi::DM::ones(casadi::product(dims)), dims);
     }
-    static AnyTensor zeros(const std::vector<int>& dims) {
-      return DT(casadi::DM::zeros(spline::product(dims)), dims);
+    static AnyTensor zeros(const std::vector<casadi_int>& dims) {
+      return DT(casadi::DM::zeros(casadi::product(dims)), dims);
     }
     //bool equals(const AnyTensor&rhs) const;
 
@@ -189,12 +189,12 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
     explicit operator MT() const;
 #endif
     static AnyTensor vertcat(const std::vector<AnyScalar>& v);
-    static AnyTensor concat(const std::vector<AnyTensor>& v, int axis);
+    static AnyTensor concat(const std::vector<AnyTensor>& v, casadi_int axis);
 
-    static AnyTensor repeat(const AnyTensor&e, const std::vector<int>& factors);
+    static AnyTensor repeat(const AnyTensor&e, const std::vector<casadi_int>& factors);
 
-    static AnyTensor pack(const std::vector<AnyTensor>& v, int axis);
-    static std::vector<AnyTensor> unpack(const AnyTensor& v, int axis);
+    static AnyTensor pack(const std::vector<AnyTensor>& v, casadi_int axis);
+    static std::vector<AnyTensor> unpack(const AnyTensor& v, casadi_int axis);
     std::vector< std::vector<AnyScalar> > unpack_2() const;
     std::vector< AnyScalar > unpack_1() const;
 
@@ -209,11 +209,11 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
       return DT();
     }
 
-    AnyTensor reorder_dims(const std::vector<int>& order) const {
+    AnyTensor reorder_dims(const std::vector<casadi_int>& order) const {
       ANYTENSOR_METHOD(reorder_dims(order));
       return DT();
     }
-    AnyTensor shape(const std::vector<int>& dims) const {
+    AnyTensor shape(const std::vector<casadi_int>& dims) const {
       ANYTENSOR_METHOD(shape(dims));
       return DT();
     }
@@ -230,22 +230,22 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
       return 0;
     }
 
-  AnyTensor flatten_first(int n) const {
+  AnyTensor flatten_first(casadi_int n) const {
     tensor_assert(n<=n_dims());
-    std::vector<int> new_shape;
-    std::vector<int> old_dims = dims();
-    int prod = 1;
-    for (int i=0;i<n;++i) prod*=old_dims[i];
+    std::vector<casadi_int> new_shape;
+    std::vector<casadi_int> old_dims = dims();
+    casadi_int prod = 1;
+    for (casadi_int i=0;i<n;++i) prod*=old_dims[i];
     new_shape.push_back(prod);
     new_shape.insert(new_shape.end(), old_dims.begin()+n, old_dims.end());
     return shape(new_shape);
   }
-  AnyTensor flatten_last(int n) const {
+  AnyTensor flatten_last(casadi_int n) const {
     tensor_assert(n<=n_dims());
-    std::vector<int> new_shape;
-    std::vector<int> old_dims = dims();
-    int prod = 1;
-    for (int i=0;i<n;++i) prod*=old_dims[old_dims.size()-i-1];
+    std::vector<casadi_int> new_shape;
+    std::vector<casadi_int> old_dims = dims();
+    casadi_int prod = 1;
+    for (casadi_int i=0;i<n;++i) prod*=old_dims[old_dims.size()-i-1];
     new_shape.insert(new_shape.end(), old_dims.begin(), old_dims.begin()+old_dims.size()-n);
     new_shape.push_back(prod);
     return shape(new_shape);
@@ -263,44 +263,44 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
       return DT();
     }
     AnyTensor squeeze_tailing() const {
-      std::vector<int> squeeze_dims {};
+      std::vector<casadi_int> squeeze_dims {};
       bool tailing_dims_trivial = true;
-      for (int i=n_dims() - 1; i >= 0 ;--i) {
+      for (casadi_int i=n_dims() - 1; i >= 0 ;--i) {
           tailing_dims_trivial &= ( dims()[i] == 1 );
           if (!tailing_dims_trivial) squeeze_dims.insert(squeeze_dims.begin(), dims()[i]);
       }
       return shape(squeeze_dims);
     }
     AnyTensor squeeze() const {
-      std::vector<int> squeeze_dims;
-      for (int i=0;i<n_dims();++i) {
+      std::vector<casadi_int> squeeze_dims;
+      for (casadi_int i=0;i<n_dims();++i) {
         if (dims()[i]!=1) squeeze_dims.push_back(dims()[i]);
       }
       return shape(squeeze_dims);
     }
-    std::vector<int> dims() const {
+    std::vector<casadi_int> dims() const {
       ANYTENSOR_METHOD(dims());
-      return std::vector<int>();
+      return std::vector<casadi_int>();
     }
-    int numel() const {
+    casadi_int numel() const {
       ANYTENSOR_METHOD(numel());
       return 0;
     }
-    int n_dims() const {
+    casadi_int n_dims() const {
       ANYTENSOR_METHOD(n_dims());
       return 0;
     }
 
-    AnyTensor index(const std::vector<int>& ind) const {
+    AnyTensor index(const std::vector<casadi_int>& ind) const {
       ANYTENSOR_METHOD(index(ind));
       return DT();
     }
 
-    AnyTensor sum(int axis) const {
+    AnyTensor sum(casadi_int axis) const {
       ANYTENSOR_METHOD(sum(axis));
       return DT();
     }
-    AnyTensor diff(int n=1, const spline::NumericIndex& axis=0) const {
+    AnyTensor diff(casadi_int n=1, const spline::NumericIndex& axis=0) const {
       ANYTENSOR_METHOD(diff(n, axis));
       return DT();
     }
@@ -316,7 +316,7 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
     AnyTensor inner(const AnyTensor&b) const {
       ANYTENSOR_BINARY((*this), b, inner);
     }
-    AnyTensor transform(const AnyTensor &b, int axis) const {
+    AnyTensor transform(const AnyTensor &b, casadi_int axis) const {
       switch (AnyScalar::merge(t, b.t)) {
         case TENSOR_DOUBLE:
           return data_double.transform(b.data_double, axis);
@@ -364,7 +364,7 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
       ANYTENSOR_BINARY((*this), rhs, trailing_rmtimes);
     }
 
-    AnyTensor einstein(const AnyTensor &B, const std::vector<int>& a, const std::vector<int>& b, const std::vector<int>& c) const {
+    AnyTensor einstein(const AnyTensor &B, const std::vector<casadi_int>& a, const std::vector<casadi_int>& b, const std::vector<casadi_int>& c) const {
       const AnyTensor& X = *this;
       const AnyTensor& Y = B;
       switch (AnyScalar::merge(X.t, Y.t)) {
@@ -379,7 +379,7 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
       }
     }
 
-    AnyTensor einstein(const std::vector<int>& a, const std::vector<int>& c) const {
+    AnyTensor einstein(const std::vector<casadi_int>& a, const std::vector<casadi_int>& c) const {
       const AnyTensor& X = *this;
       switch (X.type()) {
         case TENSOR_DOUBLE:
@@ -421,8 +421,8 @@ class AnyVector : public AnyTensor {
     AnyVector(const MT & t);
    // AnyVector& operator=(const AnyTensor& s);
     AnyVector();
-    AnyScalar operator[](int index) const;
-    int size() const {
+    AnyScalar operator[](casadi_int index) const;
+    casadi_int size() const {
       return dims()[0];
     }
     std::vector<AnyScalar> to_scalar_vector() const;
@@ -437,7 +437,7 @@ namespace casadi {
   class casadi_limits<AnyScalar>{
   public:
     static bool is_zero(const AnyScalar& val);
-    //static bool is_equal(const AnyScalar& x, const AnyScalar& y, int depth);
+    //static bool is_equal(const AnyScalar& x, const AnyScalar& y, casadi_int depth);
     static bool is_one(const AnyScalar& val);
   };
 }

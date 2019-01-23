@@ -26,7 +26,7 @@ namespace spline {
         UnivariateBasisNode* operator->() const ;
 #endif // SWIG
 
-        int degree () const ;
+        casadi_int degree () const ;
     };
 } // namespace spline
 

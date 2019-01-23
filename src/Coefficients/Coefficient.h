@@ -20,14 +20,14 @@ namespace spline {
         CoefficientNode(const AnyTensor& t) : data_(t) {}
         CoefficientNode(const std::vector< double >& v);
 
-        std::vector< int > shape() const;
-        std::vector< int > dimension() const;
+        std::vector< casadi_int > shape() const;
+        std::vector< casadi_int > dimension() const;
 
         virtual std::string type() const;
         virtual std::string to_string() const override;
 
-        Coefficient add_trival_dimension(int i) const;
-        int n_coeff() const;
+        Coefficient add_trival_dimension(casadi_int i) const;
+        casadi_int n_coeff() const;
         // Coefficient operator+ (Coefficient & other) const;
         AnyTensor data() const {return data_;}
 
@@ -36,9 +36,9 @@ namespace spline {
         Coefficient transpose() const;
         Coefficient rm_direction(const std::vector<NumericIndex>& indices) const;
 
-        Coefficient reshape(const std::vector< int >& shape) const;
+        Coefficient reshape(const std::vector< casadi_int >& shape) const;
         Coefficient trace() const;
-        Coefficient sum(int axis) const;
+        Coefficient sum(casadi_int axis) const;
         Coefficient sum() const;
 
         Coefficient to_matrix_valued() const;
@@ -61,15 +61,15 @@ namespace spline {
         CoefficientNode* get() const ;
         CoefficientNode* operator->() const ;
 
-        Coefficient add_trival_dimension(int i) const;
-        int n_coeff() const;
+        Coefficient add_trival_dimension(casadi_int i) const;
+        casadi_int n_coeff() const;
     #endif // SWIG
         Coefficient();
         Coefficient(const AnyTensor& t);
         Coefficient(const std::vector< double >& v);
 
-        std::vector< int > shape() const;  //
-        std::vector< int > dimension() const;  // Related to the number of basis functions
+        std::vector< casadi_int > shape() const;  //
+        std::vector< casadi_int > dimension() const;  // Related to the number of basis functions
 
         std::string type() const;
         Coefficient operator-() const ;
@@ -82,7 +82,7 @@ namespace spline {
         AnyTensor transform(const std::vector<AnyTensor>& T, const NumericIndexVector& direction) const;
         Coefficient transpose() const;
         Coefficient rm_direction(const std::vector<NumericIndex>& indices) const;
-        Coefficient reshape(const std::vector< int >& shape) const;
+        Coefficient reshape(const std::vector< casadi_int >& shape) const;
         Coefficient trace() const;
         Coefficient sum(NumericIndex axis) const;
         Coefficient sum() const;

@@ -37,14 +37,14 @@ namespace spline {
             return false;
         }
         if (! (hasArguments() && other.hasArguments())) {
-            for (int i=0; i<n_domains(); i++) {
+            for (casadi_int i=0; i<n_domains(); i++) {
                 if (!(domain(i) == other.domain(i))) {
                     return false;
                 }
             }
         } else {
             std::string arg;
-            for (int i=0; i<n_domains(); i++) {
+            for (casadi_int i=0; i<n_domains(); i++) {
                 arg = argument(i);
                 if (!(domain(i) == other.domain(arg))) {
                     return false;
@@ -54,8 +54,8 @@ namespace spline {
         return true;
     }
 
-    int TensorDomain::n_domains() const { return (*this)->n_domains(); }
-    int TensorDomainNode::n_domains() const {
+    casadi_int TensorDomain::n_domains() const { return (*this)->n_domains(); }
+    casadi_int TensorDomainNode::n_domains() const {
 
         return domains_.size();
     }
@@ -67,17 +67,17 @@ namespace spline {
         return arguments_;
     }
 
-    std::string TensorDomain::argument(int index) const {
+    std::string TensorDomain::argument(casadi_int index) const {
         return (*this)->argument(index);
     }
-    std::string TensorDomainNode::argument(int index) const {
+    std::string TensorDomainNode::argument(casadi_int index) const {
         return arguments_[index];
     }
 
-    int TensorDomain::indexArgument(std::string a) const { return (*this)->indexArgument(a); }
-    int TensorDomainNode::indexArgument(std::string a) const {
+    casadi_int TensorDomain::indexArgument(std::string a) const { return (*this)->indexArgument(a); }
+    casadi_int TensorDomainNode::indexArgument(std::string a) const {
         auto it = std::find(arguments_.begin(), arguments_.end(), a);
-        int index;
+        casadi_int index;
         if (it == arguments_.end()) {
             index = -1;
         } else {
@@ -104,14 +104,14 @@ namespace spline {
 
     Domain TensorDomain::domain(const std::string& a) const { return (*this)->domain(a); }
     Domain TensorDomainNode::domain(const std::string& a) const {
-        int index = indexArgument(a);
+        casadi_int index = indexArgument(a);
         spline_assert(index >= 0);
         return domain(index);
     }
 
     Domain TensorDomain::domain(const Argument& index) const { return (*this)->domain(index); }
     Domain TensorDomainNode::domain(const Argument& index) const {
-        int ind = index.concrete(arguments());
+        casadi_int ind = index.concrete(arguments());
         spline_assert(ind < n_domains());
         return domains()[ind];
     }
@@ -124,7 +124,7 @@ namespace spline {
 
         std::string str_domain;  // domain info
         if (hasArguments()){
-            for (int i=0 ; i<domains_.size(); i++) {
+            for (casadi_int i=0 ; i<domains_.size(); i++) {
                 str_domain += "\t";
                 str_domain += argument(i) + ": ";
                 str_domain += domains_[i].to_string();
@@ -134,7 +134,7 @@ namespace spline {
                 std::to_string(arguments_.size()) + " arguments: \n " + str_domain;
         }
         else {
-            for (int i=0 ; i<domains_.size(); i++) {
+            for (casadi_int i=0 ; i<domains_.size(); i++) {
                 str_domain += "\t";
                 str_domain += domains_[i].to_string();
                 str_domain += "\n";
@@ -153,13 +153,13 @@ namespace spline {
             " != " << other.n_domains() << ".")
         std::vector< Domain > int_domains(n_domains());
         if (! (hasArguments() && other.hasArguments()) ) {
-            for (int i=0; i<n_domains(); i++) {
+            for (casadi_int i=0; i<n_domains(); i++) {
                 int_domains[i] = domain(i).intersection(other.domain(i));
             }
             return TensorDomain(int_domains);
         } else {
             std::string arg;
-            for (int i=0; i<n_domains(); i++) {
+            for (casadi_int i=0; i<n_domains(); i++) {
                 arg = argument(i);
                 spline_assert_message(other.indexArgument(arg) >= 0,
                     "Domains have incompatible arguments!")

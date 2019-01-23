@@ -20,10 +20,10 @@ namespace spline {
 
     class UnivariateBasisNode : public BasisNode {
     public:
-        UnivariateBasisNode(int degree, const Domain& domain);
+        UnivariateBasisNode(casadi_int degree, const Domain& domain);
 
-        int degree() const;
-        int n_inputs() const;
+        casadi_int degree() const;
+        casadi_int n_inputs() const;
         virtual std::string to_string() const override;
         virtual std::string type() const override {return "UnivariateBasis";}
 
@@ -33,7 +33,7 @@ namespace spline {
         virtual Basis kick_boundary(const Interval& domain, AnyTensor& T) const;
 
     protected:
-        int degree_;
+        casadi_int degree_;
     };
 
 } // namespace spline

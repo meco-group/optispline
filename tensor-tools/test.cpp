@@ -30,7 +30,7 @@ void assert_equal(AnyTensor a, AnyTensor b) {
   //assert(a.data()==b.data());
 }
 
-int main() {
+casadi_int main() {
 
   ST t = ST::sym("t", {2, 4, 5});
 
@@ -46,10 +46,10 @@ int main() {
   std::cout << "t" << t5 << endl;
 
   // test sub2ind, ind2sub
-  std::vector<int> dims = {3, 2, 4};
-  for (int i=0;i<3*2*4;i++) {
-    std::vector<int> ind = Tensor<DM>::sub2ind(dims, i);
-    int j = Tensor<DM>::ind2sub(dims, ind);
+  std::vector<casadi_int> dims = {3, 2, 4};
+  for (casadi_int i=0;i<3*2*4;i++) {
+    std::vector<casadi_int> ind = Tensor<DM>::sub2ind(dims, i);
+    casadi_int j = Tensor<DM>::ind2sub(dims, ind);
     assert(i==j);
   }
 
@@ -86,7 +86,7 @@ int main() {
   DT t9 = DT(DM(std::vector<double>{1, 2}), {2, 1});
 
   DT t10 = t8.outer_product(t9);
-  assert((t10.dims()==std::vector<int>{2, 2, 2, 1}));
+  assert((t10.dims()==std::vector<casadi_int>{2, 2, 2, 1}));
 
   expected = DM({{3, 4, 6, 8}, {1, 7, 2, 14}});
   got = t10.data();
@@ -97,7 +97,7 @@ int main() {
   t9 = DT(DM(std::vector<double>{1, 2}), {1, 2});
 
   t10 = t8.outer_product(t9);
-  assert((t10.dims()==std::vector<int>{2, 2, 1, 2}));
+  assert((t10.dims()==std::vector<casadi_int>{2, 2, 1, 2}));
 
   expected = DM({{3, 4, 6, 8}, {1, 7, 2, 14}});
   got = t10.data();
@@ -107,7 +107,7 @@ int main() {
   t9 = DT(DM(std::vector<double>{1, 2}), {2});
 
   t10 = t8.outer_product(t9);
-  assert((t10.dims()==std::vector<int>{2, 2, 2}));
+  assert((t10.dims()==std::vector<casadi_int>{2, 2, 2}));
 
   expected = DM({{3, 4, 6, 8}, {1, 7, 2, 14}});
   got = t10.data();

@@ -47,10 +47,10 @@ public:
 
         virtual std::string type() const;
 
-        int n_basis() const;  // Number of bases, building up the TensorBasis
-        int n_inputs() const; // Total number of inputs, over all bases
-        std::vector< int > n_inputs_list() const;
-        std::vector<int> dimension() const; // Vector containing number of basis functions in each basis
+        casadi_int n_basis() const;  // Number of bases, building up the TensorBasis
+        casadi_int n_inputs() const; // Total number of inputs, over all bases
+        std::vector< casadi_int > n_inputs_list() const;
+        std::vector<casadi_int> dimension() const; // Vector containing number of basis functions in each basis
 
         std::vector< std::string > arguments() const;
         std::vector<Argument> arguments_temp() const;
@@ -69,7 +69,7 @@ public:
         Basis basis(const std::string& a) const;
         Basis basis(const Argument& index) const;
         // Basis operator[](std::string a) const;
-        // Basis operator[](int index) const;
+        // Basis operator[](casadi_int index) const;
 
         std::vector< Basis > bases() const;
         // TensorBasis tensor_basis() const;
@@ -89,15 +89,15 @@ public:
 
         virtual bool operator==(const TensorBasis& rhs) const;
 
-        int totalNumberBasisFunctions() const;
+        casadi_int totalNumberBasisFunctions() const;
 
         AnyTensor const_coeff_tensor(const AnyTensor& t) const;
 
         TensorBasis insert_knots(const std::vector<AnyVector> & new_knots,
             const std::vector<Argument>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-        TensorBasis midpoint_refinement(const std::vector<int> & refinement,
+        TensorBasis midpoint_refinement(const std::vector<casadi_int> & refinement,
             const std::vector<Argument>& args, std::vector<AnyTensor> & SWIG_OUTPUT(T)) const;
-        TensorBasis degree_elevation(const std::vector<int>& elevation,
+        TensorBasis degree_elevation(const std::vector<casadi_int>& elevation,
             const std::vector<Argument>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         TensorBasis kick_boundary(const TensorDomain& boundary,
             const std::vector<std::string>& args, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
@@ -106,12 +106,12 @@ public:
 
         TensorBasis derivative(const std::vector<Argument>& arg,
           std::vector<AnyTensor>& SWIG_OUTPUT(T)) const; // default order = 1
-        TensorBasis derivative(const std::vector<int>& order,
+        TensorBasis derivative(const std::vector<casadi_int>& order,
           const std::vector<Argument>& arg, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
         TensorBasis antiderivative(const std::vector<Argument>& arg,
           std::vector<AnyTensor>& SWIG_OUTPUT(T)) const; // default order = 1
-        TensorBasis antiderivative(const std::vector<int>& order,
+        TensorBasis antiderivative(const std::vector<casadi_int>& order,
           const std::vector<Argument>& arg, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
 
         std::vector<AnyTensor> integral(const TensorDomain& domain) const;
@@ -124,7 +124,7 @@ public:
         TensorBasis transform_to(const TensorBasis& b, std::vector<AnyTensor>& SWIG_OUTPUT(T)) const;
         spline::Function basis_functions() const ;
 
-        std::vector< int > get_permutation(const TensorBasis& grid) const;
+        std::vector< casadi_int > get_permutation(const TensorBasis& grid) const;
 
       private:
           template<class T>
@@ -138,7 +138,7 @@ public:
               return ret;
           }
 
-          std::vector<int> vectorize(const Argument& arg) const;
+          std::vector<casadi_int> vectorize(const Argument& arg) const;
 
 };
 

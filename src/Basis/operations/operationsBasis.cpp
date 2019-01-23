@@ -45,7 +45,7 @@ namespace spline {
         } else {
             spline_assert_message(b1.n_basis() == b2.n_basis(),
               "Mismatch dimension");
-            for (int i = 0; i < b1.n_basis(); i++) {
+            for (casadi_int i = 0; i < b1.n_basis(); i++) {
                 Basis subBasis1 = b1.basis(i);
                 Basis subBasis2 = b2.basis(i);
                 Basis sum = bc(subBasis1, subBasis2);

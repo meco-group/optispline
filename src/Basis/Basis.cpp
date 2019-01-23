@@ -44,7 +44,7 @@ namespace spline {
         std::vector< AnyTensor > ret ;
         std::vector< std::vector< AnyScalar > > unpacked_x = x.unpack_2();
 
-        for (int i = 0; i < unpacked_x.size(); i++) {
+        for (casadi_int i = 0; i < unpacked_x.size(); i++) {
             ret.push_back((*this)->operator()(unpacked_x[i]));
         }
         return AnyVector::pack(ret, 0);
@@ -64,7 +64,7 @@ namespace spline {
         std::vector< AnyTensor > ret ;
         std::vector< std::vector< AnyScalar > > unpacked_x = x.unpack_2();
 
-        for (int i = 0; i < unpacked_x.size(); i++) {
+        for (casadi_int i = 0; i < unpacked_x.size(); i++) {
             ret.push_back((*this)->operator()(unpacked_x[i]));
         }
         return AnyVector::pack(ret, 0);
@@ -77,11 +77,11 @@ namespace spline {
         return (*this)->insert_knots(new_knots, T);
     }
 
-    Basis Basis::midpoint_refinement(int refinement, AnyTensor& T) const {
+    Basis Basis::midpoint_refinement(casadi_int refinement, AnyTensor& T) const {
         return (*this)->midpoint_refinement(refinement, T);
     }
 
-    Basis Basis::degree_elevation(int elevation, AnyTensor & T) const {
+    Basis Basis::degree_elevation(casadi_int elevation, AnyTensor & T) const {
         return (*this)->degree_elevation(elevation, T);
     }
 
@@ -101,14 +101,14 @@ namespace spline {
         return (*this)->basis_functions();
     }
 
-    int Basis::dimension() const { return (*this)->dimension();}
-    int Basis::n_inputs() const { return (*this)->n_inputs();}
+    casadi_int Basis::dimension() const { return (*this)->dimension();}
+    casadi_int Basis::n_inputs() const { return (*this)->n_inputs();}
 
     Basis Basis::derivative(AnyTensor& T) const {
         return (*this)->derivative(1, T);
     }
 
-    Basis Basis::derivative(int order, AnyTensor& T) const {
+    Basis Basis::derivative(casadi_int order, AnyTensor& T) const {
         return (*this)->derivative(order, T);
     }
 
@@ -116,7 +116,7 @@ namespace spline {
         return (*this)->antiderivative(1, T);
     }
 
-    Basis Basis::antiderivative(int order, AnyTensor& T) const {
+    Basis Basis::antiderivative(casadi_int order, AnyTensor& T) const {
         return (*this)->antiderivative(order, T);
     }
 

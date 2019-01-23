@@ -17,7 +17,7 @@ namespace spline {
         bases_(bases), allArguments(args)
     {}
 
-    int TensorBasisNode::n_basis() const {
+    casadi_int TensorBasisNode::n_basis() const {
         return bases_.size();
     }
 
@@ -31,30 +31,30 @@ namespace spline {
         return arg_temp;
     }
 
-    std::string TensorBasisNode::argument(int index) const {
+    std::string TensorBasisNode::argument(casadi_int index) const {
         return allArguments.at(index);
     }
 
-    int TensorBasisNode::index_argument(const Argument& a) const {
+    casadi_int TensorBasisNode::index_argument(const Argument& a) const {
         return Argument::concrete(a, shared_from_this<TensorBasis>());
     }
 
-    int TensorBasisNode::indexArgument(const std::string& a) const {
+    casadi_int TensorBasisNode::indexArgument(const std::string& a) const {
         return Argument::concrete(a, shared_from_this<TensorBasis>());
     }
 
     bool TensorBasisNode::valid_argument_list(const std::vector<Argument>& args) const {
         if(n_basis() == 0) return true;
-        std::vector< int > number_occurence = n_inputs_list();
-        std::vector< int > index = Argument::concrete(args, shared_from_this<TensorBasis>());
+        std::vector< casadi_int > number_occurence = n_inputs_list();
+        std::vector< casadi_int > index = Argument::concrete(args, shared_from_this<TensorBasis>());
         for ( auto &i : index){
             if (i >= 0 && i < n_basis()) number_occurence.at( i )--;
         }
-        return std::all_of(number_occurence.begin(), number_occurence.end(), [](int i){ return i == 0; });
+        return std::all_of(number_occurence.begin(), number_occurence.end(), [](casadi_int i){ return i == 0; });
     }
 
     bool TensorBasisNode::valid_argument(const Argument& a) const{
-        int index = index_argument(a);
+        casadi_int index = index_argument(a);
         if (index < 0) return false;
         if (index >= n_basis()) return false;
         return true;
@@ -74,12 +74,12 @@ namespace spline {
     }
 
     Basis TensorBasisNode::basis(const std::string& a) const {
-        int index = indexArgument(a);
+        casadi_int index = indexArgument(a);
         return basis(index);
     }
 
     Basis TensorBasisNode::basis(const Argument& index) const {
-        int ind = index.concrete(arguments());
+        casadi_int ind = index.concrete(arguments());
         if (ind < 0 || ind >= n_basis()) {
             return EmptyBasis();
         }
@@ -104,8 +104,8 @@ namespace spline {
             const std::vector<Basis>& bases) const {
         spline_assert(indices.size() == bases.size());
         std::vector<Basis> new_bases(0);
-        for (int i = 0; i < n_basis(); i++) {
-            int j;
+        for (casadi_int i = 0; i < n_basis(); i++) {
+            casadi_int j;
             for (j = 0; j < indices.size(); j++) {
                 if (i == indices[j].concrete(arguments())) {
                     break;
@@ -120,8 +120,8 @@ namespace spline {
         return TensorBasis(new_bases, allArguments);
     }
 
-    std::vector<int> TensorBasisNode::dimension() const {
-        std::vector<int> shape;
+    std::vector<casadi_int> TensorBasisNode::dimension() const {
+        std::vector<casadi_int> shape;
         for (auto const& b : bases()) {
             shape.push_back(b.dimension());
         }
@@ -130,7 +130,7 @@ namespace spline {
 
     TensorDomain TensorBasisNode::domain() const {
         std::vector<Domain> doms(n_basis());
-        for (int i=0; i<n_basis(); i++) {
+        for (casadi_int i=0; i<n_basis(); i++) {
             doms[i] = basis(i).domain();
         }
         if (hasArguments()) {
@@ -148,7 +148,7 @@ namespace spline {
         std::string str_basis;  // basis info
         std::vector<std::string> args = arguments();
         if (args.size() == 0){
-            for (int i=0 ; i<bases_.size(); i++) {
+            for (casadi_int i=0 ; i<bases_.size(); i++) {
                 str_basis += "\t";
                 str_basis += bases_[i].to_string();
                 // str_basis += " over "
@@ -160,7 +160,7 @@ namespace spline {
         }
 
         else{
-            for (int i=0 ; i<bases_.size(); i++) {
+            for (casadi_int i=0 ; i<bases_.size(); i++) {
                 str_basis += "\t";
                 str_basis += args[i] + ": ";
                 str_basis += bases_[i].to_string();
@@ -181,28 +181,28 @@ namespace spline {
     }
 
     AnyTensor TensorBasisNode::operator() (const std::vector< AnyScalar > &  x,
-            const std::vector< int >& arg_ind, bool reorder_output) const {
+            const std::vector< casadi_int >& arg_ind, bool reorder_output) const {
 
         AnyTensor ret = AnyTensor::unity();
 
         if(n_basis() == 0) return ret;
-        std::vector< int > input_border_ = input_border();
+        std::vector< casadi_int > input_border_ = input_border();
         std::vector< AnyScalar > x_ = x;
-        std::vector< int > arg_ind_ = arg_ind;
+        std::vector< casadi_int > arg_ind_ = arg_ind;
 
-        for(int i = x.size() - 1; i >= 0; i--){
+        for(casadi_int i = x.size() - 1; i >= 0; i--){
             if(arg_ind_[i] < 0){
                 x_.erase(x_.begin() + i);
                 arg_ind_.erase(arg_ind_.begin() + i);
             }
         }
 
-        for (int i = 0; i < n_basis(); i++) {
+        for (casadi_int i = 0; i < n_basis(); i++) {
             Basis b = basis(i);
-            int index_arg = arg_ind_[i];
+            casadi_int index_arg = arg_ind_[i];
             std::vector< AnyScalar > input = {};
 
-            for (int j = input_border_[index_arg]; j < input_border_[index_arg + 1]; ++j) {
+            for (casadi_int j = input_border_[index_arg]; j < input_border_[index_arg + 1]; ++j) {
                 input.push_back(x_[j]);
             }
             ret = ret.outer_product(b(AnyVector(input)));
@@ -220,16 +220,16 @@ namespace spline {
     }
 
     AnyTensor TensorBasisNode::grid_eval (const std::vector< AnyTensor > &  x,
-            const std::vector< int >& arg_ind_, bool reorder_output) const {
+            const std::vector< casadi_int >& arg_ind_, bool reorder_output) const {
         if(n_basis() == 0){// constant
-            std::vector< int > dims_grid(x.size());
-            for(int i = 0; i < x.size(); i++) dims_grid[i] = x[i].dims()[0];
+            std::vector< casadi_int > dims_grid(x.size());
+            for(casadi_int i = 0; i < x.size(); i++) dims_grid[i] = x[i].dims()[0];
             return AnyTensor::ones(dims_grid);
         }
-        int length_argument = arg_ind_.size();
-        std::vector< int > arg_ind;
+        casadi_int length_argument = arg_ind_.size();
+        std::vector< casadi_int > arg_ind;
         if(length_argument == 0){// no argument list is given
-            for(int i = 0; i < x.size(); i++) arg_ind.push_back(i);
+            for(casadi_int i = 0; i < x.size(); i++) arg_ind.push_back(i);
             length_argument = x.size();
         } else {
             arg_ind = arg_ind_;
@@ -237,9 +237,9 @@ namespace spline {
         spline_assert(x.size() == length_argument);
         AnyTensor ret = AnyTensor::unity();
 
-        std::vector< int > reorder(2*length_argument ,0);
+        std::vector< casadi_int > reorder(2*length_argument ,0);
 
-        for (int i = 0; i < length_argument; i++) {
+        for (casadi_int i = 0; i < length_argument; i++) {
             ret = ret.outer_product(basis(arg_ind[i]).list_eval(x[i]));
             reorder[i] = 2*i;
             reorder[i + length_argument] = 2*i + 1;
@@ -247,8 +247,8 @@ namespace spline {
 
         if(reorder_output){
             ret = ret.reorder_dims(reorder);
-            std::vector< int > dims = ret.dims();
-            for (int i = 0; i < length_argument; i++) {
+            std::vector< casadi_int > dims = ret.dims();
+            for (casadi_int i = 0; i < length_argument; i++) {
                 if(arg_ind[i] < 0){
                     dims.erase(dims.begin() + length_argument + i );
                 }
@@ -256,8 +256,8 @@ namespace spline {
             return ret.shape(dims);
         }
 
-        int dim_to_pop = 0;
-        for (int i = 0; i < length_argument; i++) {
+        casadi_int dim_to_pop = 0;
+        for (casadi_int i = 0; i < length_argument; i++) {
             if(arg_ind[i] < 0){
                 dim_to_pop++;
                 reorder[2*length_argument - dim_to_pop] = 2*i + 1;
@@ -266,34 +266,34 @@ namespace spline {
             }
         }
         ret = ret.reorder_dims(reorder);
-        std::vector< int > dims = ret.dims();
+        std::vector< casadi_int > dims = ret.dims();
         dims.erase(dims.end() - dim_to_pop, dims.end());
         return ret.shape(dims);
     }
 
     bool TensorBasisNode::operator==(const TensorBasis& rhs) const {
         if( this->n_basis() != rhs.n_basis()) return false;
-        for( int i = 0; i < n_basis(); i++){
+        for( casadi_int i = 0; i < n_basis(); i++){
             if( !( this->bases()[i] == rhs.bases()[i])) return false;
         }
         return true;
     }
 
-    int TensorBasisNode::totalNumberBasisFunctions() const {
-        return spline::product(dimension());
+    casadi_int TensorBasisNode::totalNumberBasisFunctions() const {
+        return casadi::product(dimension());
     }
 
-    int TensorBasisNode::n_inputs() const {
-        int r = 0;
+    casadi_int TensorBasisNode::n_inputs() const {
+        casadi_int r = 0;
         for (auto const& b : bases()) {
             r += b.n_inputs();
         }
         return r;
     }
 
-    std::vector< int > TensorBasisNode::n_inputs_list() const {
-        std::vector< int > ret ( n_basis(), 0 );
-        for (int i =0 ; i < n_basis(); i++) {
+    std::vector< casadi_int > TensorBasisNode::n_inputs_list() const {
+        std::vector< casadi_int > ret ( n_basis(), 0 );
+        for (casadi_int i =0 ; i < n_basis(); i++) {
             ret[i] = basis(i).n_inputs();
         }
         return ret;
@@ -302,9 +302,9 @@ namespace spline {
     AnyTensor TensorBasisNode::const_coeff_tensor(const AnyTensor& t) const {
         AnyTensor prod = AnyTensor::unity();
 
-        for (int i = 0; i < n_basis(); i++) {
+        for (casadi_int i = 0; i < n_basis(); i++) {
             AnyTensor temp = bases_[i].const_coeff_tensor(AnyTensor(AnyScalar(1)));
-            prod = prod.outer_product(temp.shape(std::vector< int >(1, temp.numel())));
+            prod = prod.outer_product(temp.shape(std::vector< casadi_int >(1, temp.numel())));
         }
 
         return prod.outer_product(t);
@@ -315,31 +315,31 @@ namespace spline {
         spline_assert(arg_ind.size() == new_knots.size());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
-        for (int i = 0; i < arg_ind.size(); i++) {
+        for (casadi_int i = 0; i < arg_ind.size(); i++) {
             new_bases[i] = basis(arg_ind[i]).insert_knots(new_knots[i], T_[i]);
         }
         T = T_;
         return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
-    TensorBasis TensorBasisNode::midpoint_refinement(const std::vector<int>& refinement,
-            const std::vector<int>& arg_ind, std::vector<AnyTensor> & T) const {
+    TensorBasis TensorBasisNode::midpoint_refinement(const std::vector<casadi_int>& refinement,
+            const std::vector<casadi_int>& arg_ind, std::vector<AnyTensor> & T) const {
         spline_assert(arg_ind.size() == refinement.size());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
-        for (int i = 0; i < arg_ind.size(); i++) {
+        for (casadi_int i = 0; i < arg_ind.size(); i++) {
             new_bases[i] = basis(arg_ind[i]).midpoint_refinement(refinement[i], T_[i]);
         }
         T = T_;
         return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
-    TensorBasis TensorBasisNode::degree_elevation(const std::vector<int>& elevation,
-            const std::vector<int>& arg_ind, std::vector<AnyTensor> & T) const {
+    TensorBasis TensorBasisNode::degree_elevation(const std::vector<casadi_int>& elevation,
+            const std::vector<casadi_int>& arg_ind, std::vector<AnyTensor> & T) const {
         spline_assert(arg_ind.size() == elevation.size());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
-        for (int i = 0; i < arg_ind.size(); i++) {
+        for (casadi_int i = 0; i < arg_ind.size(); i++) {
             new_bases[i] = basis(arg_ind[i]).degree_elevation(elevation[i], T_[i]);
         }
         T = T_;
@@ -351,7 +351,7 @@ namespace spline {
         spline_assert(arg_ind.size() == boundary.n_domains());
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
-        for (int i = 0; i < arg_ind.size(); i++) {
+        for (casadi_int i = 0; i < arg_ind.size(); i++) {
             new_bases[i] = basis(arg_ind[i]).kick_boundary(boundary.domain(i), T_[i]);
         }
         T = T_;
@@ -362,12 +362,12 @@ namespace spline {
             const std::vector<std::string>& args, std::vector<AnyTensor> & T) const {
         spline_assert(boundary.n_domains() == args.size());
         NumericIndexVector arg_ind(args.size());
-        for (int i=0; i<args.size(); i++) {
+        for (casadi_int i=0; i<args.size(); i++) {
             arg_ind[i] = indexArgument(args[i]);
         }
         if (boundary.hasArguments()) { // order domain
             std::vector<Domain> doms(args.size());
-            for (int i=0; i<args.size(); i++) {
+            for (casadi_int i=0; i<args.size(); i++) {
                 doms[i] = boundary.domain(args[i]);
             }
             TensorDomain boundary2 = TensorDomain(doms, args);
@@ -376,24 +376,24 @@ namespace spline {
         return kick_boundary(boundary, arg_ind, T);
     }
 
-    TensorBasis TensorBasisNode::derivative(const std::vector<int>& orders,
+    TensorBasis TensorBasisNode::derivative(const std::vector<casadi_int>& orders,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
         // Call derivative on basis, for corresponding direction
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
-        for (int i = 0; i < arg_ind.size(); i++) {
+        for (casadi_int i = 0; i < arg_ind.size(); i++) {
             new_bases[i] = basis(arg_ind[i]).derivative(orders[i], T_[i]);
         }
         T = T_;
         return substitute_bases(Argument::from_vector(arg_ind), new_bases);
     }
 
-    TensorBasis TensorBasisNode::antiderivative(const std::vector<int>& orders,
+    TensorBasis TensorBasisNode::antiderivative(const std::vector<casadi_int>& orders,
             const NumericIndexVector& arg_ind, std::vector<AnyTensor>& T) const {
         // Call antiderivative on basis, for corresponding direction
         std::vector<Basis> new_bases(arg_ind.size());
         std::vector<AnyTensor> T_(arg_ind.size());
-        for (int i = 0; i < arg_ind.size(); i++) {
+        for (casadi_int i = 0; i < arg_ind.size(); i++) {
             new_bases[i] = basis(arg_ind[i]).antiderivative(orders[i], T_[i]);
         }
         T = T_;
@@ -403,7 +403,7 @@ namespace spline {
     std::vector<AnyTensor> TensorBasisNode::integral(const TensorDomain& dom) const {
         spline_assert(dom.n_domains() == n_basis());
         std::vector<AnyTensor> ret(n_basis());
-        for (int i=0; i<n_basis(); i++) {
+        for (casadi_int i=0; i<n_basis(); i++) {
             if (dom.hasArguments()) {
                 ret[i] = basis(i).integral(dom.domain(argument(i)));
             } else {
@@ -419,11 +419,11 @@ namespace spline {
         std::vector<Basis> bases(0);
         std::vector<std::string> args(0);
         std::vector<AnyTensor> T_(arg_ind.size());
-        for (int i=0; i<arg_ind.size(); i++) {
+        for (casadi_int i=0; i<arg_ind.size(); i++) {
             T_[i] = basis(arg_ind[i]).integral(dom.domain(i));
         }
-        int i;
-        for (int j=0; j<n_basis(); j++) {
+        casadi_int i;
+        for (casadi_int j=0; j<n_basis(); j++) {
             for (i=0; i<arg_ind.size(); i++) {
                 if (arg_ind[i] == j) {
                     break;
@@ -444,12 +444,12 @@ namespace spline {
             const std::vector<std::string>& args, std::vector<AnyTensor>& T) const {
         spline_assert(dom.n_domains() == args.size());
         NumericIndexVector arg_ind(args.size());
-        for (int i=0; i<args.size(); i++) {
+        for (casadi_int i=0; i<args.size(); i++) {
             arg_ind[i] = indexArgument(args[i]);
         }
         if (dom.hasArguments()) { // order domain
             std::vector<Domain> doms(args.size());
-            for (int i=0; i<args.size(); i++) {
+            for (casadi_int i=0; i<args.size(); i++) {
                 doms[i] = dom.domain(args[i]);
             }
             TensorDomain dom2 = TensorDomain(doms, args);
@@ -461,9 +461,9 @@ namespace spline {
     spline::Function TensorBasisNode::basis_functions() const {
         // Construct coefficient based on outer product of eye's
         AnyTensor C = DT(casadi::DM::densify(casadi::DM::eye(dimension()[0])));
-        std::vector< int > dims_even = std::vector< int >{0};
-        std::vector< int > dims_odd = std::vector< int >{1};
-        for(int i = 1; i < n_basis(); i++) {
+        std::vector< casadi_int > dims_even = std::vector< casadi_int >{0};
+        std::vector< casadi_int > dims_odd = std::vector< casadi_int >{1};
+        for(casadi_int i = 1; i < n_basis(); i++) {
             C = C.outer_product(DT(casadi::DM::densify(casadi::DM::eye(dimension()[i]))));
             dims_even.push_back(2*i);
             dims_odd.push_back(2*i+1);
@@ -474,9 +474,9 @@ namespace spline {
         C = C.reorder_dims(dims_even);
 
         // reshape tensor-valued function to vector-valued
-        std::vector< int > shape = C.dims();
+        std::vector< casadi_int > shape = C.dims();
         shape.erase(shape.begin() + shape.size()/2, shape.end());
-        shape.push_back(product(shape));
+        shape.push_back(casadi::product(shape));
         C = C.shape(shape);
 
         spline::Function basis_functions_ = spline::Function(shared_from_this<TensorBasis>(), Coefficient(C));
@@ -495,9 +495,9 @@ namespace spline {
 
         AnyTensor T = B22.solve(B21);
 
-        std::vector< int > M = b.dimension();
-        std::vector< int > N = dimension();
-        std::vector< int > shapeT = M;
+        std::vector< casadi_int > M = b.dimension();
+        std::vector< casadi_int > N = dimension();
+        std::vector< casadi_int > shapeT = M;
         shapeT.insert(shapeT.end(), N.begin(), N.end());
 
         return T.shape(shapeT);
@@ -507,8 +507,8 @@ namespace spline {
         spline_assert(n_basis() == tb.n_basis());
         std::vector<Basis> new_bases(n_basis());
         std::vector<AnyTensor> T_(n_basis());
-        std::vector< int > args_other = Argument::concrete(Argument::from_vector(tb.arguments()), shared_from_this<TensorBasis>());
-        for (int i = 0; i <n_basis(); i++) {
+        std::vector< casadi_int > args_other = Argument::concrete(Argument::from_vector(tb.arguments()), shared_from_this<TensorBasis>());
+        for (casadi_int i = 0; i <n_basis(); i++) {
             new_bases[i] = basis(i).transform_to(tb.basis(args_other[i]), T_[args_other[i]]);
         }
         T = T_;
@@ -519,24 +519,24 @@ namespace spline {
         }
     }
 
-    std::vector< int > TensorBasisNode::get_permutation(const TensorBasis& grid_basis) const{
-        std::vector< int > index;
+    std::vector< casadi_int > TensorBasisNode::get_permutation(const TensorBasis& grid_basis) const{
+        std::vector< casadi_int > index;
         if(grid_basis.hasArguments() && hasArguments()){
             for(auto & a : grid_basis.arguments()){
                 index.push_back(indexArgument(a));
             }
         }else{
             spline_assert(grid_basis.n_basis() == n_basis());
-            for(int i = 0; i < grid_basis.n_basis(); i++){
+            for(casadi_int i = 0; i < grid_basis.n_basis(); i++){
                 index.push_back(i);
             }
         }
         return index;
     }
 
-    std::vector< int > TensorBasisNode::input_border() const {
-        std::vector< int > s = { 0 };
-        for(int i = 0; i < n_basis() ; i++){
+    std::vector< casadi_int > TensorBasisNode::input_border() const {
+        std::vector< casadi_int > s = { 0 };
+        for(casadi_int i = 0; i < n_basis() ; i++){
             s.push_back(s[i] + basis(i).n_inputs());
         }
         return  s;
