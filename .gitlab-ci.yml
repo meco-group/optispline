@@ -1,4 +1,4 @@
-image: jgillis/meco_builder:xenial
+image: jgillis/meco_builder:vivid
 
 #pma-rob-dbs.mech.kuleuven.be/meco/meco
 
