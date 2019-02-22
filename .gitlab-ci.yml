@@ -3,8 +3,8 @@ image: jgillis/meco_builder:xenial
 #pma-rob-dbs.mech.kuleuven.be/meco/meco
 
 stages:
-#  - tests
   - binaries
+  - tests
 
 variables:
     CI_PROJECT_NAME: cpp_splines
