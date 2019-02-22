@@ -1,7 +1,7 @@
 #include "any_tensor.hpp"
 #include <memory>
 
-//#include <casadi/core/function/function_internal.hpp>
+#include <casadi/core/function_internal.hpp>
 
 std::vector<casadi_int> invert_order(const std::vector<casadi_int>& order) {
   std::vector<casadi_int> ret(order.size());
@@ -463,19 +463,24 @@ std::vector<AnyScalar> AnyVector::to_scalar_vector() const {
 }
 
 namespace casadi {
-  class Sorter : public casadi::Callback {
+  class Sorter : public casadi::FunctionInternal {
   public:
-    Sorter(casadi_int size, casadi_int ascending) : size_(size), ascending_(ascending) {
-      construct("sorter");
+
+
+    Sorter(casadi_int size, casadi_int ascending) : FunctionInternal("sorter"), size_(size), ascending_(ascending) {
     };
+
+    static Function create(casadi_int size, casadi_int ascending) {
+      return casadi::Function::create(new Sorter(size, ascending), Dict());
+    }
 
     /** \brief  Destructor */
     ~Sorter() override {};
 
     ///@{
     /** \brief Number of function inputs and outputs */
-    casadi_int get_n_in() override { return 1; };
-    casadi_int get_n_out() override { return 1; };
+    size_t get_n_in() override { return 1; };
+    size_t get_n_out() override { return 1; };
     ///@}
 
     /// @{
@@ -523,31 +528,28 @@ namespace casadi {
       return 0;
     }
 
+    std::string class_name() const override { return "Sorter"; }
+
     casadi_int size_;
     bool ascending_;
 
-    static Sorter& construct_cached(casadi_int size, bool ascending) {
-      static std::map<std::pair<casadi_int, bool>, std::unique_ptr<casadi::Sorter> > cache;
-      std::pair<casadi_int, bool> key = {size, ascending};
-      auto it = cache.find(key);
-      if (it==cache.end()) cache[key] = std::unique_ptr<casadi::Sorter>(new casadi::Sorter(key.first, key.second));
-      it = cache.find(key);
-      return *it->second;
-    }
   };
 
-class Uniquifier : public casadi::Callback {
+class Uniquifier : public casadi::FunctionInternal {
   public:
-
-    Uniquifier(casadi_int size) : size_(size) { construct("uniquifier"); };
+    static Function create(casadi_int size) {
+      return casadi::Function::create(new Uniquifier(size), Dict());
+    }
+    Uniquifier(casadi_int size) : FunctionInternal("uniquifier"), size_(size) {
+    };
 
     /** \brief  Destructor */
     ~Uniquifier() override {};
 
     ///@{
     /** \brief Number of function inputs and outputs */
-    casadi_int get_n_in() override { return 1; };
-    casadi_int get_n_out() override { return 1; };
+    size_t get_n_in() override { return 1; };
+    size_t get_n_out() override { return 1; };
     ///@}
 
     /// @{
@@ -584,14 +586,7 @@ class Uniquifier : public casadi::Callback {
 
     casadi_int size_;
 
-    static Uniquifier& construct_cached(casadi_int size) {
-      static std::map<casadi_int, std::unique_ptr<casadi::Uniquifier> > cache;
-      casadi_int key = size;
-      auto it = cache.find(key);
-      if (it==cache.end()) cache[key] = std::unique_ptr<casadi::Uniquifier>(new casadi::Uniquifier(key));
-      it = cache.find(key);
-      return *it->second;
-    }
+    std::string class_name() const override { return "Uniquifier"; }
 
   };
 
@@ -601,7 +596,7 @@ AnyVector AnyVector::sort(bool ascending) const {
   if (is_ST()) return *this;
   tensor_assert(!is_ST());
 
-  casadi::Sorter& sorter = casadi::Sorter::construct_cached(dims()[0], ascending);
+  casadi::Function sorter = casadi::Sorter::create(dims()[0], ascending);
   if (is_DT()) {
     return DT(sorter(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});
   } else {
@@ -612,7 +607,7 @@ AnyVector AnyVector::sort(bool ascending) const {
 AnyVector AnyVector::uniquify() const {
   tensor_assert(!is_ST());
 
-  casadi::Uniquifier& uniquifier = casadi::Uniquifier::construct_cached(dims()[0]);
+  casadi::Function uniquifier = casadi::Uniquifier::create(dims()[0]);
 
   if (is_DT()) {
     return DT(uniquifier(std::vector<casadi::DM>{as_DT().data()})[0], {dims()[0]});

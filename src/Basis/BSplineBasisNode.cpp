@@ -6,8 +6,15 @@
 
 namespace casadi {
 
-      casadi_int BSplineEvaluator::get_n_in() { return 2; }
-      casadi_int BSplineEvaluator::get_n_out() { return 1; }
+      casadi::Function  BSplineEvaluator::create(casadi_int n_knots, casadi_int degree,
+         const Dict& opts) {
+        BSplineEvaluator ss(n_knots, degree);
+        BSplineEvaluator* s = new BSplineEvaluator(n_knots, degree);
+        return casadi::Function::create(s, opts);
+      }
+
+      size_t BSplineEvaluator::get_n_in() { return 2; }
+      size_t BSplineEvaluator::get_n_out() { return 1; }
 
       Sparsity BSplineEvaluator::get_sparsity_in(casadi_int i) {
         if (i == 0) {
@@ -25,14 +32,18 @@ namespace casadi {
         return Sparsity();
       }
 
-
-      BSplineEvaluator::BSplineEvaluator(casadi_int n_knots, casadi_int degree) :
-        n_knots_(n_knots), degree_(degree) {
-           construct("BSplineEvaluator");
+      void BSplineEvaluator::disp_more(std::ostream &stream) const {
+        stream << "#knots: " << n_knots_ << std::endl;
+        stream << "degree: " << degree_ << std::endl;
       }
 
-      void BSplineEvaluator::init() {
-        casadi::Callback::init();
+      BSplineEvaluator::BSplineEvaluator(casadi_int n_knots, casadi_int degree) :
+        casadi::FunctionInternal("BSplineEvaluator"), n_knots_(n_knots), degree_(degree) {
+
+      }
+
+      void BSplineEvaluator::init(const Dict& opts) {
+        casadi::FunctionInternal::init(opts);
         alloc_w((degree_+1)*(n_knots_-1), true);
       }
 
@@ -53,7 +64,7 @@ namespace casadi {
         MX delta_knots_inv = 1/delta_knots;
         MX T = MX(sp_diag, -delta_knots_inv) + MX(sp_band, delta_knots_inv);
 
-        Callback& bspline_evaluator = BSplineEvaluator::construct_cached(n_knots_-2, degree_-1);
+        Function bspline_evaluator = BSplineEvaluator::create(n_knots_-2, degree_-1);
 
         MX res = bspline_evaluator({knots(range(1, n_knots_-1)), x})[0];
 
@@ -72,15 +83,6 @@ namespace casadi {
         return 0;
       }
 
-
-      BSplineEvaluator& BSplineEvaluator::construct_cached(casadi_int n_knots, casadi_int degree) {
-        static std::map<std::pair<casadi_int, casadi_int>, std::unique_ptr<BSplineEvaluator> > cache;
-        std::pair<casadi_int, casadi_int> key = {n_knots, degree};
-        auto it = cache.find(key);
-        if (it==cache.end()) cache[key] = std::unique_ptr<BSplineEvaluator>(new casadi::BSplineEvaluator(key.first, key.second));
-        it = cache.find(key);
-        return *it->second;
-      }
 }
 
 namespace spline {
@@ -163,7 +165,7 @@ namespace spline {
 
     BSplineBasisNode::BSplineBasisNode(const std::vector<AnyScalar>& knots, casadi_int degree)
         : UnivariateBasisNode(degree, Interval(knots[degree], knots[knots.size()-degree-1])),
-      bspline_evaluator_(casadi::BSplineEvaluator::construct_cached(knots.size(), degree)) {
+      bspline_evaluator_(casadi::BSplineEvaluator::create(knots.size(), degree)) {
         AnyVector kn(vertcat(knots));
         knots_ = kn.sort().to_scalar_vector();
       }

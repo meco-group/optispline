@@ -4,15 +4,16 @@
 #include <any_tensor.hpp>
 #include <vector>
 
-#include <casadi/core/callback.hpp>
+#include <casadi/core/function_internal.hpp>
 
 #include "Basis.h"
 #include "UnivariateBasisNode.h"
 
 namespace casadi {
 
-    class BSplineEvaluator : public casadi::Callback {
+    class BSplineEvaluator : public casadi::FunctionInternal {
         public:
+            static casadi::Function create(casadi_int n_knots, casadi_int degree, const Dict& opts=Dict());
             BSplineEvaluator(casadi_int n_knots, casadi_int degree);
 
             /** \brief  Destructor */
@@ -20,8 +21,8 @@ namespace casadi {
 
             ///@{
             /** \brief Number of function inputs and outputs */
-            casadi_int get_n_in() override;
-            casadi_int get_n_out() override;
+            size_t get_n_in() override;
+            size_t get_n_out() override;
             ///@}
 
             /// @{
@@ -31,7 +32,7 @@ namespace casadi {
             /// @}
 
             /** \brief  Initialize */
-            void init() override;
+            void init(const Dict& opts) override;
 
             /** \brief  Evaluate numerically, work vectors given */
             int eval(const double** arg, double** res, casadi_int* iw, double* w, void* mem) const override;
@@ -81,11 +82,14 @@ namespace casadi {
                     const std::vector<std::string>& onames,
                     const Dict& opts) const override;
 
+            /** \brief  Print description */
+            void disp_more(std::ostream &stream) const override;
+        
+            std::string class_name() const override { return "BSplineEvaluator"; }
+      private:
             casadi_int n_knots_;
             casadi_int degree_;
 
-
-            static BSplineEvaluator& construct_cached(casadi_int n_knots, casadi_int degree);
     };
 
 }
@@ -141,7 +145,7 @@ namespace spline{
 
         private:
             std::vector<AnyScalar> knots_;
-            casadi::Callback& bspline_evaluator_;
+            casadi::Function bspline_evaluator_;
     };
 
 }
