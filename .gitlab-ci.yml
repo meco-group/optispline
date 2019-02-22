@@ -29,10 +29,10 @@ before_script:
     - pwd
     - ls
     - echo $CASADI_PREFIX
-    - sudo apt-get install -y xvfb mesa-utils libgl1-mesa-glx
-    - Xvfb :0 -screen 0 800x600x24 &
-    - export DISPLAY=:0
-    - export LIBGL_DEBUG=verbose
+    #- sudo apt-get install -y xvfb mesa-utils libgl1-mesa-glx
+    #- Xvfb :0 -screen 0 800x600x24 &
+    #- export DISPLAY=:0
+    #- export LIBGL_DEBUG=verbose
 
 after_script:
     - source env.sh
