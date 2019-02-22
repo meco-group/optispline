@@ -3,7 +3,7 @@ image: jgillis/meco_builder:xenial
 #pma-rob-dbs.mech.kuleuven.be/meco/meco
 
 stages:
-  - tests
+#  - tests
   - binaries
 
 variables:
