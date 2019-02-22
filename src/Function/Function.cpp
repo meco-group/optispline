@@ -316,9 +316,7 @@ namespace spline{
 
       if (xy.is_DT()) {
         std::vector<double> points = xy.as_DT().data().nonzeros();
-        casadi::Function dual = casadi::Function::bspline_dual("dual", knots, points, degrees);
-        casadi::Function J = dual.jacobian();
-        casadi::DM jac = sparsify(J(std::vector<casadi::DM>{0, 0})[0]);
+        casadi::DM jac = casadi::MX::bspline_dual(points, knots, degrees);
         AnyTensor c = coeff_tensor();
         if (c.is_DT()) {
           casadi::DM r = casadi::DM::mtimes(jac, casadi::DM::reshape(c.as_DT().data(), jac.size2(), -1));
