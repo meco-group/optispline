@@ -55,7 +55,7 @@ add_library(splines SHARED
     ../tensor-tools/slice.cpp
     )
 target_link_libraries(splines ${CASADI_LIBRARIES})
-add_definitions(-DSHARED_LIBRARY)
+add_definitions(-DSHARED_LIBRARY -DCASADI_WITH_THREAD)
 
 target_include_directories(splines PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-tools ${CASADI_INCLUDE_DIR})
 
