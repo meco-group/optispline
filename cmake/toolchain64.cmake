@@ -11,7 +11,7 @@ set(CMAKE_RC_COMPILER x86_64-w64-mingw32-windres)
         
 # where is the target environment 
 SET(CMAKE_FIND_ROOT_PATH  /usr/x86_64-w64-mingw32)
-SET(CMAKE_CXX_FLAGS "-fno-ipa-cp-clone $CPPFLAGS" CACHE STRING "" FORCE)
+SET(CMAKE_CXX_FLAGS "-fno-ipa-cp-clone $ENV{CPPFLAGS}" CACHE STRING "" FORCE)
           
 # search for programs in the build host directories
 SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
