@@ -56,6 +56,9 @@ endforeach()
 endif()
 
 add_definitions(-DCASADI_WITH_THREAD)
+if(WIN32)
+add_definitions(-DCASADI_WITH_THREAD_MINGW)
+endif()
 
 add_executable(main main.cpp)
 target_link_libraries(main splines)
