@@ -56,6 +56,9 @@ add_library(splines SHARED
     )
 target_link_libraries(splines ${CASADI_LIBRARIES})
 add_definitions(-DSHARED_LIBRARY -DCASADI_WITH_THREAD)
+if(WIN32)
+add_definitions(-DCASADI_WITH_THREAD_MINGW)
+endif()
 
 target_include_directories(splines PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../tensor-tools ${CASADI_INCLUDE_DIR})
 
