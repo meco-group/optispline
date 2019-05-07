@@ -125,7 +125,7 @@ windows-matlab:
         MATLABRELEASE: R2014a
         BUILD_LANG: matlab$MATLABRELEASE
   script:
-    - git clone git@github.com:jgillis/mingw-std-threads.git
+    - git clone https://github.com/jgillis/mingw-std-threads.git
     - export CPPFLAGS="$CPPFLAGS -I$(pwd)/mingw-std-threads"
     - set -e
     - export CASADI_PREFIX_REL=$BUILD_LANG/casadi/$CASADIVERSION/
