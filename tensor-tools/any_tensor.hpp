@@ -333,9 +333,20 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
     }
     AnyTensor solve(const AnyTensor&b) const {
       if (is_DT() && !b.is_DT()) {
-         casadi::DM A = as_DT().matrix();
-         casadi::DM Ainv = sparsify(casadi::DM::solve(A, casadi::DM::eye(A.size1()), "lapackqr", casadi::Dict()),1e-10);
-         return AnyTensor(DT(Ainv)).mtimes(b);
+          casadi::DM A = sparsify(as_DT().matrix(),1e-10);
+          if (b.dims().size()<=2) {
+            casadi::DM Ainv = sparsify(casadi::DM::solve(A, casadi::DM::eye(A.size1()), "csparse", casadi::Dict()),1e-10);
+            if (b.is_ST()) {
+              casadi::SX bs = b.as_ST().matrix();
+              return ST(casadi::SX::mtimes(Ainv, bs));
+            } else {
+              casadi::MX bs = b.as_MT().matrix();
+              return MT(casadi::MX::mtimes(Ainv, bs));
+            }
+          } else {
+            casadi::DM Ainv = sparsify(casadi::DM::solve(A, casadi::DM::eye(A.size1()), "lapackqr", casadi::Dict()),1e-10);
+            return AnyTensor(DT(Ainv)).mtimes(b);
+          }
       }
       ANYTENSOR_BINARY((*this), b, solve);
     }
