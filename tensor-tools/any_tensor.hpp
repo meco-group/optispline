@@ -334,7 +334,7 @@ class AnyTensor : public spline::PrintableObject<AnyTensor> {
     AnyTensor solve(const AnyTensor&b) const {
       if (is_DT() && !b.is_DT()) {
          casadi::DM A = as_DT().matrix();
-         casadi::DM Ainv = casadi::DM::solve(A, casadi::DM::eye(A.size1()), "lapackqr", casadi::Dict());
+         casadi::DM Ainv = sparsify(casadi::DM::solve(A, casadi::DM::eye(A.size1()), "lapackqr", casadi::Dict()),1e-10);
          return AnyTensor(DT(Ainv)).mtimes(b);
       }
       ANYTENSOR_BINARY((*this), b, solve);
