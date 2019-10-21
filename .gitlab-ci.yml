@@ -3,8 +3,8 @@ image: jgillis/meco_builder:xenial-win-py36
 #pma-rob-dbs.mech.kuleuven.be/meco/meco
 
 stages:
-  - binaries
   - tests
+  - binaries
 
 variables:
     CI_PROJECT_NAME: cpp_splines
@@ -51,11 +51,11 @@ coverage:
   variables:
         BUILD_OS: debian
         BUILD_LANG: python27
-        CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy2.7/lib/libpython2.7.so"
-        CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy2.7/include/python2.7"
+    CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy3.6/lib/libpython3.6m.so"
+    CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy3.6/include/python3.6m"
   script:
     - set -e
-    - source activate condapy2.7
+    - source activate condapy3.6
     - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - pushd build
     - cmake -DWITH_COVERAGE=ON -DPYTHON_LIBRARY=$CMAKE_PYTHON_LIBRARY -DPYTHON_INCLUDE_DIR=$CMAKE_PYTHON_INCLUDE_DIR -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
