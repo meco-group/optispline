@@ -1,4 +1,4 @@
-image: jgillis/meco_builder:xenial
+image: jgillis/meco_builder:xenial-win-py36
 
 #pma-rob-dbs.mech.kuleuven.be/meco/meco
 
@@ -99,16 +99,7 @@ debian-matlab:
     - ctest -V -R python
     - if [ $WITH_VALGRIND ]; then ctest -V -R valgrind; fi
 
-debian-python27:
-  <<: *debian_python_definition
-  variables:
-     BUILD_OS: debian
-     PYTHON_VERSION: "2.7"
-     BUILD_LANG: python27
-     WITH_VALGRIND: "ON"
-     CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy2.7/lib/libpython2.7.so"
-     CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy2.7/include/python2.7"
-    
+
 debian-python36:
   <<: *debian_python_definition
   variables:
@@ -137,34 +128,29 @@ windows-matlab:
     - make VERBOSE=1
     - cp src/*.dll swig
 
-windows-python:
+windows-python36:
   stage: binaries
   variables:
         BUILD_OS: windows
-        BUILD_LANG: python27
+        BUILD_LANG: python36
   script:
     - set -e
-    - export NUMPYSUFFIX=win32
     - export CASADI_PREFIX_REL=$BUILD_LANG/casadi/$CASADIVERSION
     - export CASADI_PREFIX=$WINDOWS_BINARIES/$CASADI_PREFIX_REL
     - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
-    - echo "find_library(PYTHON_LIBRARY NAMES python27 PATHS $HOME/.wine/drive_c/Python27/libs NO_SYSTEM_ENVIRONMENT_PATH)" > tmp.txt
-    - echo "find_path(PYTHON_INCLUDE_DIR NAMES Python.h PATHS $HOME/.wine/drive_c/Python27/include NO_SYSTEM_ENVIRONMENT_PATH)" >> tmp.txt
-    - echo "set(PYTHON_EXECUTABLE $HOME/.wine/drive_c/Python27/python.exe)" >> tmp.txt
-    - echo "set(NUMPY_INCLUDE_DIR $HOME/.wine/drive_c/Python27/Lib/site-packages/numpy-1.9.1-py2.7-$NUMPYSUFFIX.egg/numpy/core/include)" >> tmp.txt
-    - echo "set(NUMPY_INCLUDED_DIRS $HOME/.wine/drive_c/Python27/Lib/site-packages/numpy-1.9.1-py2.7-$NUMPYSUFFIX.egg/numpy/core/include/numpy)" >> tmp.txt
-    - echo "set(NUMPY_PATH $HOME/.wine/drive_c/Python27/Lib/site-packages/numpy-1.9.1-py2.7-$NUMPYSUFFIX.egg/numpy/core/include/numpy)" >> tmp.txt
+    - echo "find_library(PYTHON_LIBRARY NAMES python36 PATHS $HOME/.wine/drive_c/Python36/libs NO_SYSTEM_ENVIRONMENT_PATH)" > tmp.txt
+    - echo "find_path(PYTHON_INCLUDE_DIR NAMES Python.h PATHS $HOME/.wine/drive_c/Python36/include NO_SYSTEM_ENVIRONMENT_PATH)" >> tmp.txt
+    - echo "set(PYTHON_EXECUTABLE $HOME/.wine/drive_c/Python36/python.exe)" >> tmp.txt
     - cat swig/CMakeLists.txt >> tmp.txt
     - mv tmp.txt swig/CMakeLists.txt
     - which swig
     - mkdir -p swig/python && pushd swig && swig -I$SWIG_LIB/python -co pyrun.swg && sed -i -e 's/\"SwigPyObject\"/\"SwigPyCasadiObject\"/g' pyrun.swg && popd
     - pushd build
-    - cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain32.cmake -DWITH_MATLAB=OFF ..
+    - cmake -DPYTHON_VERSION="3.6" -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain64.cmake -DWITH_MATLAB=OFF ..
     - make VERBOSE=1
     - cp src/*.dll swig
     - sed -i -e "s/'SwigPyObject'/'SwigPyCasadiObject'/g" swig/splines.py
 
-osx-matlab:
   stage: binaries
   variables:
         BUILD_OS: osx
