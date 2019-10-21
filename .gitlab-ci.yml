@@ -150,7 +150,8 @@ windows-python36:
     - make VERBOSE=1
     - cp src/*.dll swig
     - sed -i -e "s/'SwigPyObject'/'SwigPyCasadiObject'/g" swig/splines.py
-
+    
+osx-matlab:
   stage: binaries
   variables:
         BUILD_OS: osx
