@@ -50,12 +50,13 @@ coverage:
   stage: tests
   variables:
         BUILD_OS: debian
+        PYTHON_VERSION: "3.6"
         BUILD_LANG: python36
         CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy3.6/lib/libpython3.6m.so"
         CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy3.6/include/python3.6m"
   script:
     - set -e
-    - source activate condapy3.6
+    - source activate condapy$PYTHON_VERSION
     - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
     - pushd build
     - cmake -DWITH_COVERAGE=ON -DPYTHON_LIBRARY=$CMAKE_PYTHON_LIBRARY -DPYTHON_INCLUDE_DIR=$CMAKE_PYTHON_INCLUDE_DIR -DCMAKE_BUILD_TYPE=Debug -DWITH_MATLAB=OFF ..
