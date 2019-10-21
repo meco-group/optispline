@@ -149,33 +149,34 @@ windows-python36:
     - cp src/*.dll swig
     - sed -i -e "s/'SwigPyObject'/'SwigPyCasadiObject'/g" swig/splines.py
     
-osx-matlab:
-  stage: binaries
-  variables:
-        BUILD_OS: osx
-        MATLABRELEASE: R2014a
-        BUILD_LANG: matlab$MATLABRELEASE
-  script:
-    - set -e
-    - pushd build
-    - export CASADI_PREFIX_REL=$BUILD_LANG/casadi/$CASADIVERSION/
-    - export CASADI_PREFIX=$OSX_BINARIES/$CASADI_PREFIX_REL
-    - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
-    - export MATLAB_ROOT=/repo/matlabR2014a-osx
-    - ls /repo
-    - ls /Dropbox
-    - ls $MATLAB_ROOT
+#osx-matlab:
+#  stage: binaries
+#  variables:
+#        BUILD_OS: osx
+#        MATLABRELEASE: R2014a
+#        BUILD_LANG: matlab$MATLABRELEASE
+#  script:
+#    - set -e
+#    - pushd build
+#    - export CASADI_PREFIX_REL=$BUILD_LANG/casadi/$CASADIVERSION/
+#    - export CASADI_PREFIX=$OSX_BINARIES/$CASADI_PREFIX_REL
+#    - rclone sync dropbox:$BINARIES/$CASADI_PREFIX_REL $CASADI_PREFIX
+#    - export MATLAB_ROOT=/repo/matlabR2014a-osx
+#    - ls /repo
+#    - ls /Dropbox
+#    - ls $MATLAB_ROOT
+#
+#    - export CXX=/usr/osxcross/bin/o64-clang++-stdc++  #libc++
+#    - export CC=/usr/osxcross/bin/o64-clang
+#    - printenv | grep -v rclone > /builds/env.txt
+#    - printenv
+#    - env
+#    - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild cmake -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_TOOLCHAIN_FILE=/usr/share/cmake-3.0/Modules/Platform/Darwin.cmake -DWITH_PYTHON=OFF -DMATLAB_INCLUDE_DIR="$MATLAB_ROOT/extern/include" -DMATLAB_LIBRARIES="$MATLAB_ROOT/bin/maci64/libut.dylib;$MATLAB_ROOT/bin/maci64/libmex.dylib;$MATLAB_ROOT/bin/maci64/libmx.dylib;$MATLAB_ROOT/bin/maci64/libeng.dylib" -DMATLAB_EXTRA_CXXFLAGS="-D__STDC_UTF_16__" -DMATLAB_MEX_EXT="mexmaci64" ..
+#    - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild make VERBOSE=1
+#    - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild install_name_tool -change `realpath src/libsplines.dylib` "@rpath/libsplines.dylib" swig/splinesMEX.mexmaci64
+#    - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild install_name_tool -add_rpath "@loader_path/" swig/splinesMEX.mexmaci64
+#    - cp src/*.dylib swig
+#
+#    - export PATH=$PATH:$MATLAB_ROOT/bin/
 
-    - export CXX=/usr/osxcross/bin/o64-clang++-libc++
-    - export CC=/usr/osxcross/bin/o64-clang
-    - printenv | grep -v rclone > /builds/env.txt
-    - printenv
-    - env
-    - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild cmake -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_TOOLCHAIN_FILE=/usr/share/cmake-3.0/Modules/Platform/Darwin.cmake -DWITH_PYTHON=OFF -DMATLAB_INCLUDE_DIR="$MATLAB_ROOT/extern/include" -DMATLAB_LIBRARIES="$MATLAB_ROOT/bin/maci64/libut.dylib;$MATLAB_ROOT/bin/maci64/libmex.dylib;$MATLAB_ROOT/bin/maci64/libmx.dylib;$MATLAB_ROOT/bin/maci64/libeng.dylib" -DMATLAB_EXTRA_CXXFLAGS="-D__STDC_UTF_16__" -DMATLAB_MEX_EXT="mexmaci64" ..
-    - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild make VERBOSE=1
-    - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild install_name_tool -change `realpath src/libsplines.dylib` "@rpath/libsplines.dylib" swig/splinesMEX.mexmaci64
-    - docker run -i --rm --env-file /builds/env.txt -v /home/meco/builds:/builds:rw -v /home/meco/repo:/repo:rw -v /home/meco/Dropbox:/Dropbox:rw -e CROSS_TRIPLE=x86_64-apple-darwin -w `pwd` multiarch/crossbuild install_name_tool -add_rpath "@loader_path/" swig/splinesMEX.mexmaci64
-    - cp src/*.dylib swig
-
-    - export PATH=$PATH:$MATLAB_ROOT/bin/
 
