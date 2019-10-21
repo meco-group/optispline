@@ -50,9 +50,9 @@ coverage:
   stage: tests
   variables:
         BUILD_OS: debian
-        BUILD_LANG: python27
-    CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy3.6/lib/libpython3.6m.so"
-    CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy3.6/include/python3.6m"
+        BUILD_LANG: python36
+        CMAKE_PYTHON_LIBRARY: "/root/miniconda2/envs/condapy3.6/lib/libpython3.6m.so"
+        CMAKE_PYTHON_INCLUDE_DIR: "/root/miniconda2/envs/condapy3.6/include/python3.6m"
   script:
     - set -e
     - source activate condapy3.6
