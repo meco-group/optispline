@@ -158,6 +158,17 @@ using namespace spline;
       #endif
     }
 
+    void interpret_NumericIndex_out(spline::NumericIndex& a) {
+      #ifdef SWIGMATLAB
+        a++;
+      #endif
+    }
+    void interpret_NumericIndex_out(std::vector<spline::NumericIndex>& a) {
+      #ifdef SWIGMATLAB
+        for (auto& e: a) e++;
+      #endif
+    }
+
     bool to_ptr(GUESTOBJECT *p, AnyScalar** m);
     bool to_ptr(GUESTOBJECT *p, std::vector<AnyScalar>** m);
     bool to_ptr(GUESTOBJECT *p, AnyTensor** m);
@@ -1013,6 +1024,12 @@ using namespace spline;
   interpret_NumericIndex($1);
   }
 
+%typemap(out, doc="index", noblock=1, fragment="casadi_all") spline::NumericIndex {
+  interpret_NumericIndex_out($1);
+  if(!($result = casadi::from_ref($1))) SWIG_exception_fail(SWIG_TypeError,"Failed to convert output to type ' index '.");
+  }
+
+
 %typemap(in, doc="index", noblock=1, fragment="casadi_all") const spline::NumericIndex & (spline::NumericIndex m) {
   $1 = &m;
   if (!casadi::to_ptr($input, &$1)) SWIG_exception_fail(SWIG_TypeError,"Failed to convert input $argnum to type ' index '.");
@@ -1026,6 +1043,10 @@ using namespace spline;
   interpret_NumericIndex(m);
  }
 
+%typemap(out, doc="index", noblock=1, fragment="casadi_all") spline::NumericIndexVector {
+  interpret_NumericIndex_out($1);
+  if(!($result = casadi::from_ref($1))) SWIG_exception_fail(SWIG_TypeError,"Failed to convert output to type ' [index] '.");
+  }
 
 %include <src/SharedObject/PrintableObject.h>
 %template(PrintSharedObject) spline::PrintableObject<spline::SharedObject>;
