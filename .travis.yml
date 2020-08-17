@@ -2,8 +2,8 @@ services:
   - docker
 
 before_install:
-  - git clone https://github.com/meco-group/mockups.git
-  - rm -f /local/cmake/FindMATLAB.cmake
+  - ls
+  - rm -f cmake/FindMATLAB.cmake
 
 install:
   - docker run --rm -v `pwd`:/local -it jgillis/meco_builder:xenial-win-py36 /bin/bash "source /local/travis.sh"
