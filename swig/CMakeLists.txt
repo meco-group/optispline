@@ -16,10 +16,7 @@ if(WITH_PYTHON)
   include_directories(${PYTHON_INCLUDE_PATH})
 endif()
 if(WITH_MATLAB)
-  if(NOT MATLAB_LIBRARIES)
-  find_package(MATLAB)
-  endif()
-  include_directories(${MATLAB_INCLUDE_DIR})
+  find_package(MATLAB REQUIRED)
 endif()
 
 set(CMAKE_SWIG_FLAGS "")
@@ -36,7 +33,7 @@ set(CMAKE_SWIG_FLAGS ${CMAKE_SWIG_FLAGS} "-DWITH_PYTHON3")
 endif()
 
 set_source_files_properties(splines.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE splines.i PROPERTY SWIG_FLAGS "-I${PROJECT_SOURCE_DIR}" "-I${CASADI_INCLUDE_DIR}" "-I${CASADI_INCLUDE_DIR}" ${MATLAB_EXTRA_CXXFLAGS} ${SWIG_EXTRA_FLAGS})
+set_property(SOURCE splines.i PROPERTY SWIG_FLAGS "-I${PROJECT_SOURCE_DIR}" "-I${CASADI_INCLUDE_DIR}" "-I${CASADI_INCLUDE_DIR}" ${SWIG_EXTRA_FLAGS})
 
 #set(SWIG_MODULE_splines_EXTRA_DEPS ${CMAKE_SOURCE_DIR}/src/libsplines${CMAKE_SHARED_LIBRARY_SUFFIX})
   
@@ -53,7 +50,7 @@ endif()
 
 if(WITH_MATLAB)
    swig_add_module(splinesMEX matlab splines.i)
-   swig_link_libraries(splinesMEX ${MATLAB_LIBRARIES} splines ${CASADI_LIBRARIES})
+   swig_link_libraries(splinesMEX matlab::matlab splines ${CASADI_LIBRARIES})
    set_target_properties(splinesMEX PROPERTIES PREFIX "" SUFFIX .${MATLAB_MEX_EXT})
    add_custom_target(splines_matlab DEPENDS splinesMEX splines)
    add_custom_command(TARGET splinesMEX
